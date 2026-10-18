@@ -1,0 +1,16 @@
+/* ========================================================
+   HOME PAGE CONTAINER & GLOBAL HOMEPAGE STYLES
+   ======================================================== */
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--navbar-height, 80px);
+}
+
+.home-page-container {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
