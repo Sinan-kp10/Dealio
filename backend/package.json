@@ -21,6 +21,7 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
+    "lint": "eslint .",
     "postinstall": "prisma skills sync || exit 0",
     "prisma:validate": "prisma validate",
     "prisma:generate": "prisma generate"
