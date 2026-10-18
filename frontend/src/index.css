@@ -1,0 +1,218 @@
+@import "tailwindcss";
+
+:root {
+  /* Global Layout Tokens */
+  --navbar-height: 5rem;
+  --container-wide: 1680px;
+  --container-standard: 1440px;
+  --container-narrow: 1120px;
+  --container-focused: 640px;
+  --container-padding: clamp(1rem, 3.5vw, 3.5rem);
+  --content-max-prose: 68ch;
+  --form-max-width: 32rem;
+
+  /* Brand Colors */
+  --color-primary: #355982;
+  --color-primary-hover: #294668;
+  --color-primary-active: #203650;
+  --color-primary-light: #EEF4FA;
+  --color-secondary: #4D79A8;
+  --color-secondary-hover: #3D638D;
+  --color-tertiary: #69ACCC;
+  --color-dark: #0E2238;
+
+  /* Typography & Text */
+  --text-headline: #0F1D2F;
+  --text-body: #334155;
+  --text-muted: #64748B;
+  --text-placeholder: #94A3B8;
+
+  /* Backgrounds & Surfaces */
+  --bg-canvas: #F0F6FB;
+  --bg-surface: #FFFFFF;
+
+  /* Borders & Dividers */
+  --color-border: #E2E8F0;
+  --color-border-alt: #DDE5ED;
+
+  /* Status & Feedback */
+  --color-success: #059669;
+  --color-success-bg: #ECFDF5;
+  --color-warning: #D97706;
+  --color-warning-bg: #FEF3C7;
+  --color-danger: #DC2626;
+  --color-danger-bg: #FEF2F2;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--text-body);
+  background-color: var(--bg-surface);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ========================================================
+   GLOBAL CONTAINER SYSTEM
+   Adapts cleanly across laptops, Full HD, and large monitors
+   ======================================================== */
+
+/* Wide container for headers, navbars, landing sections & wide overviews */
+.container-wide {
+  width: 100%;
+  max-width: var(--container-wide);
+  margin-inline: auto;
+  padding-inline: var(--container-padding);
+}
+
+/* Standard content container for articles, features, and balanced views */
+.container-standard {
+  width: 100%;
+  max-width: var(--container-standard);
+  margin-inline: auto;
+  padding-inline: var(--container-padding);
+}
+
+/* Narrow container for focused articles and reading layouts */
+.container-narrow {
+  width: 100%;
+  max-width: var(--container-narrow);
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 2.5vw, 2.5rem);
+}
+
+/* Fluid full-width container for dashboards, data tables, and analytics */
+.container-fluid {
+  width: 100%;
+  max-width: 100%;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 2.5vw, 3rem);
+}
+
+/* Focused narrow container for authentication, settings, and focused forms */
+.container-focused {
+  width: 100%;
+  max-width: var(--container-focused);
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 2vw, 2rem);
+}
+
+/* ========================================================
+   LARGE MONITOR & ULTRA-WIDE MEDIA QUERIES
+   Expands containers smoothly for 1080p, 1440p, and 4K displays
+   ======================================================== */
+@media (min-width: 1920px) {
+  :root {
+    --container-wide: 1800px;
+    --container-standard: 1560px;
+    --container-narrow: 1200px;
+    --container-padding: clamp(2rem, 4vw, 5rem);
+  }
+}
+
+@media (min-width: 2560px) {
+  :root {
+    --container-wide: 2080px;
+    --container-standard: 1760px;
+    --container-narrow: 1320px;
+    --container-padding: clamp(2.5rem, 5vw, 6rem);
+  }
+}
+
+/* ========================================================
+   SHARED RESPONSIVE COMPONENT & LAYOUT PATTERNS
+   For current and future pages, dashboards, tables, & forms
+   ======================================================== */
+
+/* Dashboard Layout & Data Grid Wrappers */
+.dashboard-container {
+  width: 100%;
+  max-width: var(--container-wide);
+  margin-inline: auto;
+  padding-inline: var(--container-padding);
+}
+
+.table-responsive-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-border);
+  background-color: var(--bg-surface);
+}
+
+.table-fluid {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+/* Responsive Grid Utilities */
+.grid-responsive-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.5rem, 3vw, 3rem);
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .grid-responsive-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.grid-responsive-3 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.5rem, 2.5vw, 2.5rem);
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .grid-responsive-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-responsive-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.grid-responsive-4 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.25rem, 2vw, 2rem);
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .grid-responsive-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-responsive-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Readable Form Layouts (Keeps forms comfortable even on ultra-wide screens) */
+.form-container {
+  width: 100%;
+  max-width: var(--form-max-width, 32rem);
+  margin-inline: auto;
+}
+
+.prose-readable {
+  max-width: var(--content-max-prose, 68ch);
+}
+
+
