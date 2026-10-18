@@ -1,11 +1,14 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { PublicLayout } from "../../components/layouts/PublicLayout";
 import { HomePage } from "../../features/home/pages/HomePage";
 
 export function AppRouter() {
   return (
     <BrowserRouter>
-        <Routes>
-            <Route path="/" element={<HomePage />} />
+      <Routes>
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<HomePage />} />
+        </Route>
 
 
             <Route path="/login" element={<div>Login Page</div>} />
