@@ -1,7 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
   provider = "prisma-client"
@@ -10,4 +6,66 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+
+enum user_role {
+  SUPER_ADMIN
+  ENTERPRISE_MANAGER
+  CUSTOMER
+}
+
+enum user_status {
+  ACTIVE
+  SUSPENDED
+  PENDING
+  REJECTED
+}
+
+model users {
+  id                  String      @id @default(uuid()) @db.Uuid
+  name                String      @db.VarChar(255)
+  email               String      @unique @db.VarChar(255)
+  password_hash       String      @db.VarChar(255)
+  role                user_role
+  enterprise_id       String?     @db.Uuid
+  phone               String?     @db.VarChar(255)
+  profile_picture_url String?     @db.VarChar(255)
+  email_verified_at   DateTime?   @db.Timestamptz
+  status              user_status @default(PENDING)
+  created_at          DateTime    @default(now()) @db.Timestamptz
+  updated_at          DateTime    @updatedAt @db.Timestamptz
+  suspended_at        DateTime?   @db.Timestamptz
+  suspended_by        String?     @db.Uuid
+  suspension_reason   String?     @db.Text
+
+  enterprise          enterprises?  @relation("enterprise_members", fields: [enterprise_id], references: [id])
+  reviewed_enterprises enterprises[] @relation("enterprise_reviewer")
+  suspended_users     users[]        @relation("user_suspension")
+  suspended_by_user   users?         @relation("user_suspension", fields: [suspended_by], references: [id])
+
+  @@map("users")
+}
+
+
+model enterprises {
+  id               String    @id @default(uuid()) @db.Uuid
+  name             String    @db.VarChar(255)
+  subcategory_id   String?   @db.Uuid
+  address          String?   @db.VarChar(255)
+  city             String?   @db.VarChar(255)
+  state            String?   @db.VarChar(255)
+  postal_code      String?   @db.VarChar(20)
+  description      String?   @db.Text
+  profile_picture_url String? @db.Text
+  rejection_reason String?   @db.Text
+  reviewed_by      String?   @db.Uuid
+  reviewed_at      DateTime? @db.Timestamptz
+  created_at       DateTime  @default(now()) @db.Timestamptz
+  updated_at       DateTime  @updatedAt @db.Timestamptz
+
+  users            users[]   @relation("enterprise_members")
+  reviewer         users?    @relation("enterprise_reviewer", fields: [reviewed_by], references: [id])
+
+  @@map("enterprises")
 }
