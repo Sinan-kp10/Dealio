@@ -3,18 +3,47 @@ import { useForm } from "react-hook-form";
 import type { CustomerSignupFormData } from "../types/customerSignup.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { customerSignupSchema } from "../schemas/customerSignup.schema";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { User, Mail, Lock, ShieldCheck, Eye, EyeOff, ArrowRight } from "lucide-react";
+import { registerCustomer } from "../services/customer-auth.service";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 export function CustomerSignupPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [loading, setLoading] = useState(false)
+    const navigate = useNavigate()
 
     const { register, handleSubmit, formState: {errors, isSubmitting}} = useForm<CustomerSignupFormData>({ resolver: zodResolver(customerSignupSchema)});
 
-    const onSubmit = (data: CustomerSignupFormData) => {
-        console.log("Customer signup submitted", data);
+    const onSubmit = async (data: CustomerSignupFormData) => {
+        setLoading(true)
+
+        try {
+            await registerCustomer({
+                name: data.name,
+                email: data.email,
+                password: data.password,
+                confirmPassword: data.confirmPassword,
+            })
+
+            toast.success("Account created successfully!")
+            navigate("/login");
+            
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                const message = error.response?.data?.message ?? "Registration failed. Please try again."
+                toast.error(message)
+            }else {
+                toast.error("Something went wrong. Please try again.");
+            }
+        }finally{
+            setLoading(false)
+        }
+
     };
+
 
     return (
         <main className="min-h-screen w-full flex flex-col bg-[radial-gradient(circle_at_50%_0%,#f7faff_0%,#edf3f9_100%)] box-border">
@@ -163,7 +192,7 @@ export function CustomerSignupPage() {
                         <button
                             type="submit"
                             className="w-full h-12 mt-1.5 bg-[#2e4d75] hover:not-disabled:bg-[#233b5c] text-white border-0 rounded-xl text-[0.95rem] font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-[0_4px_14px_rgba(46,77,117,0.3)] hover:not-disabled:shadow-[0_6px_18px_rgba(46,77,117,0.35)] hover:not-disabled:-translate-y-0.5 active:not-disabled:translate-y-0 disabled:opacity-65 disabled:cursor-not-allowed transition-all duration-200"
-                            disabled={isSubmitting}
+                            disabled={loading || isSubmitting}
                         >
                             {isSubmitting ? (
                                 "Creating account..."
