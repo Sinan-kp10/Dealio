@@ -20,13 +20,8 @@ export const registerCustomerSchema = z.object({
 
   confirmPassword: z
     .string()
-    .min(1, "Please confirm your password"),
+    .min(1, "Please confirm your password")
 
-  phone: z
-    .string()
-    .trim()
-    .max(255, "Phone number is too long")
-    .optional(),
 }).refine(
   (data) => data.password === data.confirmPassword,
   {
@@ -35,6 +30,4 @@ export const registerCustomerSchema = z.object({
   },
 );
 
-export type RegisterCustomerInput = z.infer<
-  typeof registerCustomerSchema
->;
+export type RegisterCustomerInput = z.infer<typeof registerCustomerSchema>;
