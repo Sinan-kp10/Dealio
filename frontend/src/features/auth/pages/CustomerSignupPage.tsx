@@ -35,7 +35,7 @@ export function CustomerSignupPage() {
                         Selling with Dealio?
                     </span>
                     <Link
-                        to="/signup/enterprise"
+                        to="/register/enterprise"
                         className="inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-semibold text-[#355982] bg-transparent border border-slate-300 rounded-lg px-2.5 sm:px-3.5 py-1.5 transition-all duration-200 hover:bg-[#eef4fa] hover:border-[#355982] hover:text-[#203650] hover:-translate-y-0.5 hover:shadow-sm active:translate-y-0 whitespace-nowrap"
                     >
                         Join as Enterprise

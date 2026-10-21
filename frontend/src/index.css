@@ -44,6 +44,11 @@
   --color-danger-bg: #FEF2F2;
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--navbar-height, 5rem);
+}
+
 body {
   margin: 0;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;

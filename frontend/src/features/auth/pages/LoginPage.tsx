@@ -118,25 +118,24 @@ export function LoginPage() {
                     </button>
                 </form>
 
-                <div className="text-center text-sm text-slate-500 mt-6 flex flex-col gap-1.5">
-                    <p className="m-0">
-                        Don't have a customer account?{" "}
+                <div className="mt-7 text-center">
+                    <p className="text-sm text-slate-500 mb-3">
+                        New to Dealio?
+                    </p>
+                    <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
                         <Link
-                            to="/signup/customer"
-                            className="text-[#0e2238] font-semibold hover:underline"
+                            to="/register/customer"
+                            className="inline-flex items-center justify-center px-4 py-2 sm:px-4.5 sm:py-2.5 text-sm font-medium text-[#0e2238] bg-white border border-[#cfdbe7] rounded-xl hover:bg-slate-50 hover:border-slate-300 hover:text-[#0e2238] transition-all duration-150 shadow-xs"
                         >
                             Join as a Customer
                         </Link>
-                    </p>
-                    <p className="m-0">
-                        Don't have an enterprise account?{" "}
                         <Link
-                            to="/signup/enterprise"
-                            className="text-[#0e2238] font-semibold hover:underline"
+                            to="/register/enterprise"
+                            className="inline-flex items-center justify-center px-4 py-2 sm:px-4.5 sm:py-2.5 text-sm font-medium text-[#0e2238] bg-white border border-[#cfdbe7] rounded-xl hover:bg-slate-50 hover:border-slate-300 hover:text-[#0e2238] transition-all duration-150 shadow-xs"
                         >
                             Join as an Enterprise
                         </Link>
-                    </p>
+                    </div>
                 </div>
             </div>
         </main>
