@@ -27,7 +27,8 @@ export class RegisterCustomerUseCase {
             password_hash,
             role: "CUSTOMER",
             enterprise_id: null,
-            phone: data.phone?.trim() || null,
+            phone : null,
+            status: "ACTIVE",
         })
     }
 }

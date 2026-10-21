@@ -1,4 +1,3 @@
-import "./home.css";
 import { HeroSection } from "../components/HeroSection";
 import { HowItWorksSection } from "../components/HowItWorksSection";
 import { CustomerSection } from "../components/CustomerSection";
@@ -7,7 +6,7 @@ import { CallToActionSection } from "../components/CallToActionSection";
 
 export function HomePage() {
   return (
-    <div className="home-page-container">
+    <div className="min-h-screen w-full bg-white flex flex-col">
       <HeroSection />
       <HowItWorksSection />
       <CustomerSection />

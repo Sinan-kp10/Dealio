@@ -1,4 +1,4 @@
-import type { User } from "../entities/user.entity";
+import type { User, UserStatus } from "../entities/user.entity";
 
 export type CreateUserData = {
   name: string;
@@ -7,6 +7,7 @@ export type CreateUserData = {
   role: User["role"];
   enterprise_id?: string | null;
   phone?: string | null;
+  status : UserStatus
 };
 
 export interface UserRepository {

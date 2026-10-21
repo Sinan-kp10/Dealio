@@ -56,15 +56,9 @@
 }
 
 .navbar-nav-links {
-  display: none;
+  display: flex;
   align-items: center;
-  gap: 2rem;
-}
-
-@media (min-width: 768px) {
-  .navbar-nav-links {
-    display: flex;
-  }
+  gap: clamp(1rem, 2vw, 2rem);
 }
 
 .nav-link {
@@ -80,15 +74,9 @@
 }
 
 .navbar-actions {
-  display: none;
+  display: flex;
   align-items: center;
   gap: 1rem;
-}
-
-@media (min-width: 768px) {
-  .navbar-actions {
-    display: flex;
-  }
 }
 
 .btn-login {
@@ -127,109 +115,5 @@
 
 .btn-get-started:active {
   background-color: var(--color-primary-active);
-}
-
-.navbar-mobile-toggle {
-  display: flex;
-  align-items: center;
-}
-
-@media (min-width: 768px) {
-  .navbar-mobile-toggle {
-    display: none;
-  }
-}
-
-.btn-toggle {
-  padding: 0.5rem;
-  border-radius: 0.375rem;
-  color: var(--text-body);
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-toggle:hover {
-  color: var(--color-dark);
-  background-color: #f1f5f9;
-}
-
-.icon-menu {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-
-.navbar-mobile-menu {
-  border-top: 1px solid var(--color-border);
-  background-color: #ffffff;
-  padding: 1rem 1rem 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-}
-
-@media (min-width: 768px) {
-  .navbar-mobile-menu {
-    display: none;
-  }
-}
-
-.mobile-nav-link {
-  display: block;
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--text-body);
-  text-decoration: none;
-  padding: 0.5rem 0;
-}
-
-.mobile-nav-link:hover {
-  color: var(--color-dark);
-}
-
-.mobile-actions {
-  padding-top: 1rem;
-  border-top: 1px solid var(--color-border);
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.btn-mobile-login {
-  width: 100%;
-  text-align: center;
-  padding: 0.625rem 0;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--text-body);
-  border: 1px solid var(--color-border);
-  border-radius: 0.5rem;
-  text-decoration: none;
-}
-
-.btn-mobile-login:hover {
-  color: var(--color-dark);
-  background-color: #f8fafc;
-}
-
-.btn-mobile-get-started {
-  width: 100%;
-  text-align: center;
-  padding: 0.625rem 0;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #ffffff;
-  background-color: var(--color-primary);
-  border-radius: 0.5rem;
-  text-decoration: none;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.btn-mobile-get-started:hover {
-  background-color: var(--color-primary-hover);
 }
 

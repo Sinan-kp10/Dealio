@@ -5,12 +5,10 @@ export const registerCustomerSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(2, "Name must contain at least 2 characters")
+    .min(3, "Name must contain at least 3 characters")
     .max(255, "Name cannot exceed 255 characters"),
 
   email: z
-    .string()
-    .trim()
     .email("Please provide a valid email address")
     .max(255, "Email cannot exceed 255 characters"),
 
@@ -22,13 +20,8 @@ export const registerCustomerSchema = z.object({
 
   confirmPassword: z
     .string()
-    .min(1, "Please confirm your password"),
+    .min(1, "Please confirm your password")
 
-  phone: z
-    .string()
-    .trim()
-    .max(255, "Phone number is too long")
-    .optional(),
 }).refine(
   (data) => data.password === data.confirmPassword,
   {
@@ -37,6 +30,4 @@ export const registerCustomerSchema = z.object({
   },
 );
 
-export type RegisterCustomerInput = z.infer<
-  typeof registerCustomerSchema
->;
+export type RegisterCustomerInput = z.infer<typeof registerCustomerSchema>;
