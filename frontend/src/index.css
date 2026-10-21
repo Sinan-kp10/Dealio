@@ -44,6 +44,11 @@
   --color-danger-bg: #FEF2F2;
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--navbar-height, 5rem);
+}
+
 body {
   margin: 0;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -57,10 +62,7 @@ body {
   box-sizing: border-box;
 }
 
-/* ========================================================
-   GLOBAL CONTAINER SYSTEM
-   Adapts cleanly across laptops, Full HD, and large monitors
-   ======================================================== */
+/* GLOBAL CONTAINER SYSTEM Adapts cleanly across laptops, Full HD, and large monitors */
 
 /* Wide container for headers, navbars, landing sections & wide overviews */
 .container-wide {
@@ -102,10 +104,7 @@ body {
   padding-inline: clamp(1rem, 2vw, 2rem);
 }
 
-/* ========================================================
-   LARGE MONITOR & ULTRA-WIDE MEDIA QUERIES
-   Expands containers smoothly for 1080p, 1440p, and 4K displays
-   ======================================================== */
+/* LARGE MONITOR & ULTRA-WIDE MEDIA QUERIES Expands containers smoothly for 1080p, 1440p, and 4K displays */
 @media (min-width: 1920px) {
   :root {
     --container-wide: 1800px;
@@ -124,10 +123,7 @@ body {
   }
 }
 
-/* ========================================================
-   SHARED RESPONSIVE COMPONENT & LAYOUT PATTERNS
-   For current and future pages, dashboards, tables, & forms
-   ======================================================== */
+/* SHARED RESPONSIVE COMPONENT & LAYOUT PATTERNS */
 
 /* Dashboard Layout & Data Grid Wrappers */
 .dashboard-container {
@@ -214,5 +210,115 @@ body {
 .prose-readable {
   max-width: var(--content-max-prose, 68ch);
 }
+
+/* GLOBAL FORM & INPUT STYLES (SHARED)*/
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input-icon-left {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-placeholder, #94a3b8);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-field {
+  width: 100%;
+  height: 48px;
+  padding: 0 1rem 0 2.75rem;
+  font-size: 0.9375rem;
+  color: var(--text-headline, #0f1d2f);
+  background-color: var(--bg-surface, #ffffff);
+  border: 1.5px solid var(--color-border, #e2e8f0);
+  border-radius: 12px;
+  box-sizing: border-box;
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-field::placeholder {
+  color: var(--text-placeholder, #94a3b8);
+}
+
+.input-field:hover {
+  border-color: #cbd5e1;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--color-primary, #355982);
+  box-shadow: 0 0 0 3px rgba(53, 89, 130, 0.12);
+}
+
+.input-field-has-toggle {
+  padding-right: 2.75rem;
+}
+
+.input-field-error {
+  border-color: #ef4444 !important;
+}
+
+.input-field-error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12) !important;
+}
+
+.input-toggle-btn {
+  position: absolute;
+  right: 0.875rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  padding: 0.25rem;
+  color: var(--text-placeholder, #94a3b8);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: color 0.2s ease;
+}
+
+.input-toggle-btn:hover {
+  color: #475569;
+}
+
+.input-toggle-btn:focus-visible {
+  outline: 2px solid var(--color-primary, #355982);
+  outline-offset: 2px;
+}
+
+.field-error {
+  color: #ef4444;
+  font-size: 0.8125rem;
+  margin-top: 0.375rem;
+  margin-bottom: 0;
+  line-height: 1.35;
+  font-weight: 500;
+}
+
 
 

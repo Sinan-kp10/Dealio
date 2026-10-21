@@ -15,15 +15,11 @@ export class  RegisterCustomerController {
             const user = await this.registerCustomerUseCase.execute(data)
 
             res.status(201).json({
-                status: "success",
+                success: true,
                 message: "Customer registered successfully",
                 data: {
-                    id: user.id,
-                    name: user.name,
                     email: user.email,
-                    role: user.role,
-                    status: user.status,
-                    created_at: user.created_at,
+                    role: user.role
                 },
             });
             

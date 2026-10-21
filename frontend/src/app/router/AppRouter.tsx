@@ -1,6 +1,10 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { PublicLayout } from "../../components/layouts/PublicLayout";
 import { HomePage } from "../../features/home/pages/HomePage";
+import CustomerSignupPage from "../../features/auth/pages/CustomerSignupPage";
+import EnterpriseSignupPage from "../../features/auth/pages/EnterpriseSignupPage";
+import LoginPage from "../../features/auth/pages/LoginPage";
+import NotFoundPage from "../../pages/NotFoundPage";
 
 export function AppRouter() {
   return (
@@ -10,14 +14,13 @@ export function AppRouter() {
           <Route path="/" element={<HomePage />} />
         </Route>
 
+          <Route path="/login" element={<LoginPage />} />
 
-            <Route path="/login" element={<div>Login Page</div>} />
+          <Route path="/register/customer" element={<CustomerSignupPage />}/>
 
-            <Route path="/signup/customer" element={<div>Customer Signup Page</div>}/>
+          <Route path="/register/enterprise" element={<EnterpriseSignupPage/>}/>
 
-            <Route path="/signup/enterprise" element={<div>Enterprise Signup Page</div>}/>
-
-            <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
     </BrowserRouter>
   );

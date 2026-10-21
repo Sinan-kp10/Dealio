@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./HeroSection.css";
 
 export function HeroSection() {
@@ -18,12 +19,12 @@ export function HeroSection() {
 
         {/* Action Buttons */}
         <div className="hero-cta-group">
-          <a href="/login" className="hero-btn-primary">
+          <Link to="/signup/customer" className="hero-btn-primary">
             Create a Quotation
-          </a>
-          <a href="#for-enterprises" className="hero-btn-secondary">
+          </Link>
+          <Link to="/signup/enterprise" className="hero-btn-secondary">
             Join as an Enterprise
-          </a>
+          </Link>
         </div>
       </div>
     </section>

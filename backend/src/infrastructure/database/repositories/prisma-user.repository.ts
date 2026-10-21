@@ -25,6 +25,7 @@ export class PrismaUserRepository implements UserRepository {
                 role: data.role,
                 enterprise_id: data.enterprise_id ?? null,
                 phone: data.phone ?? null,
+                status: data.status,
 
             }
         })
