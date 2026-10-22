@@ -17,12 +17,11 @@ export interface User {
   role: UserRole;
   enterprise_id: string | null;
   phone: string | null;
-  profile_picture_url: string | null;
-  email_verified_at: Date | null;
+  profile_picture_key: string | null;
+  email_verified: boolean
   status: UserStatus;
   created_at: Date;
   updated_at: Date;
   suspended_at: Date | null;
-  suspended_by: string | null;
   suspension_reason: string | null;
 }
