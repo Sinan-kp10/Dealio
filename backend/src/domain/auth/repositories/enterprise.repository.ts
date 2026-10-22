@@ -18,6 +18,7 @@ export type CreatedEnterpriseResult = {
     name: string;
     email: string;
     status: UserStatus;
+    role : string
   }
 }
 

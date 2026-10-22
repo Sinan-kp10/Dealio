@@ -1,5 +1,6 @@
 import axiosInstance from "../../../app/lib/axios";
 import type { CustomerSignupRequest, CustomerSignupResponse } from "../types/customerSignup.types";
+import type { EnterpriseSignupRequest, EnterpriseSignupResponse } from "../types/enterpriseSignup.types";
 
 export const registerCustomer = async(payload : CustomerSignupRequest) : Promise<CustomerSignupResponse> => {
 
@@ -9,3 +10,9 @@ export const registerCustomer = async(payload : CustomerSignupRequest) : Promise
 
 }
 
+export const registerEnterprise = async (payload : EnterpriseSignupRequest) : Promise<EnterpriseSignupResponse> => {
+
+    const response = await axiosInstance.post<EnterpriseSignupResponse>("/auth/register/enterprise", payload)
+
+    return response.data
+}

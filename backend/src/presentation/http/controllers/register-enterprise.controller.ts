@@ -16,7 +16,12 @@ export  class RegisterEnterpriseController {
             res.status(201).json({
                 status: "success",
                 message: "Enterprise registered successfully",
-                data: result,
+                data: {
+                    enterpriseName : result.enterprise.name,
+                    contactPersonName : result.data.name,
+                    email : result.data.email,
+                    role : result.data.role
+                }
             });
             
         } catch (error) {

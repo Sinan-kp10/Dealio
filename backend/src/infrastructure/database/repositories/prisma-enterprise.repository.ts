@@ -29,7 +29,6 @@ export class PrismaEnterpriseRepository implements EnterpriseRepository {
                     role : "ENTERPRISE_MANAGER",
                     status : "PENDING",
                     enterprise_id : enterprise.id
-
                 }
             })
 
@@ -43,6 +42,7 @@ export class PrismaEnterpriseRepository implements EnterpriseRepository {
                     name: user.name,
                     email: user.email,
                     status: user.status,
+                    role : user.role
                 },
             }
         })
