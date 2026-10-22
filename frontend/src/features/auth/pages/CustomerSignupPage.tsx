@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { customerSignupSchema } from "../schemas/customerSignup.schema";
 import { Link, useNavigate } from "react-router-dom";
 import { User, Mail, Lock, ShieldCheck, Eye, EyeOff, ArrowRight } from "lucide-react";
-import { registerCustomer } from "../services/customer-auth.service";
+import { registerCustomer } from "../services/auth.service";
 import { toast } from "react-toastify";
 import axios from "axios";
 

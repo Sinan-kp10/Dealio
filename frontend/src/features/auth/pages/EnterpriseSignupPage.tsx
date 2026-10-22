@@ -1,20 +1,50 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Building2, User, Mail, Phone, Lock, ShieldCheck, Eye, EyeOff, ArrowRight,} from "lucide-react";
 
 import { enterpriseSignupSchema } from "../schemas/enterpriseSignup.schema";
 import type { EnterpriseSignupFormData } from "../types/enterpriseSignup.types";
+import { registerEnterprise } from "../services/auth.service";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 export function EnterpriseSignupPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [loading, setLoading] = useState(false)
+    const navigate = useNavigate()
 
     const {register, handleSubmit, formState: {errors, isSubmitting}} = useForm<EnterpriseSignupFormData>({ resolver: zodResolver(enterpriseSignupSchema)});
 
     const onSubmit = async (data: EnterpriseSignupFormData) => {
-        console.log("Enterprise signup submitted", data);
+        setLoading(true)
+
+        try {
+
+            await registerEnterprise({
+                companyName : data.companyName,
+                contactPersonName : data.contactPersonName,
+                email : data.email,
+                phone : data.phone,
+                password : data.password,
+                confirmPassword : data.confirmPassword
+            })
+
+            toast.success("Enterprise registered successfully!")
+            navigate("/login")
+            
+        } catch (error) {
+            if(axios.isAxiosError(error)){
+                const message = error.response?.data?.message ?? "Registration failed. Please try again."
+                toast.error(message)
+            }else{
+                toast.error("Something went wrong. Please try again.");
+            }
+        }finally{
+            setLoading(false)
+        }
     };
 
     return (
@@ -245,7 +275,7 @@ export function EnterpriseSignupPage() {
                         <button
                             type="submit"
                             className="w-full h-12 mt-1 sm:mt-2 bg-[#2e4d75] hover:not-disabled:bg-[#233b5c] text-white border-0 rounded-xl text-[0.95rem] font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-[0_4px_14px_rgba(46,77,117,0.3)] hover:not-disabled:shadow-[0_6px_18px_rgba(46,77,117,0.35)] hover:not-disabled:-translate-y-0.5 active:not-disabled:translate-y-0 disabled:opacity-65 disabled:cursor-not-allowed transition-all duration-200"
-                            disabled={isSubmitting}
+                            disabled={loading || isSubmitting}
                         >
                             {isSubmitting ? (
                                 "Creating account..."
