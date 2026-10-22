@@ -1,19 +1,23 @@
 
-import type { User } from "../../../domain/auth/entities/user.entity";
+
 import type { UserRepository,} from "../../../domain/auth/repositories/user.repository";
 import type {RegisterCustomerDto,} from "../dto/register-customer.dto";
 import { AppError } from "../../../shared/errors/app-error";
 import { PasswordService } from "../../../infrastructure/security/password.service";
+import { OtpService } from "../../../infrastructure/security/otp.service";
+import { EmailService } from "../../../infrastructure/email/email.service";
 
 export class RegisterCustomerUseCase {
 
     constructor( 
         private readonly userRepository: UserRepository,
-        private readonly passwordService : PasswordService
+        private readonly passwordService : PasswordService,
+        private readonly otpService : OtpService,
+        private readonly emailService : EmailService
 
     ) {}
 
-    execute = async (data: RegisterCustomerDto): Promise<User> => {
+    execute = async (data: RegisterCustomerDto): Promise<void> => {
 
         const email = data.email.trim().toLowerCase();
 
@@ -25,14 +29,22 @@ export class RegisterCustomerUseCase {
 
         const passwordHash = await this.passwordService.hash(data.password)
 
-        return this.userRepository.create({
+        const registrationData = {
             name: data.name.trim(),
             email,
             passwordHash,
-            role: "CUSTOMER",
-            enterprise_id: null,
-            phone : null,
-            status: "ACTIVE",
-        })
+        };
+
+        const otp = await this.otpService.generateAndStore(email, registrationData)
+
+        try {
+            await this.emailService.sendOtp(email,otp)
+            
+        } catch{
+            await this.otpService.delete(email);
+
+            throw new AppError("Failed to send verification email", 502);
+        }
+
     }
 }

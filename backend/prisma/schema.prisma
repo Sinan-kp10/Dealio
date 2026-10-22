@@ -30,19 +30,16 @@ model users {
   role                user_role
   enterprise_id       String?     @db.Uuid
   phone               String?     @db.VarChar(255)
-  profile_picture_url String?     @db.VarChar(255)
-  email_verified_at   DateTime?   @db.Timestamptz
+  profile_picture_key String?     @db.VarChar(255)
+  email_verified   Boolean @default(false)
   status              user_status @default(PENDING)
   created_at          DateTime    @default(now()) @db.Timestamptz
   updated_at          DateTime    @updatedAt @db.Timestamptz
   suspended_at        DateTime?   @db.Timestamptz
-  suspended_by        String?     @db.Uuid
   suspension_reason   String?     @db.Text
 
   enterprise          enterprises?  @relation("enterprise_members", fields: [enterprise_id], references: [id])
   reviewed_enterprises enterprises[] @relation("enterprise_reviewer")
-  suspended_users     users[]        @relation("user_suspension")
-  suspended_by_user   users?         @relation("user_suspension", fields: [suspended_by], references: [id])
 
   @@map("users")
 }

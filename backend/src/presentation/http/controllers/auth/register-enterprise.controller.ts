@@ -1,5 +1,5 @@
-import { RegisterEnterpriseDto } from "../../../application/auth/dto/register-enterprise.dto";
-import { RegisterEnterpriseUseCase } from "../../../application/auth/use-cases/register-enterprise.use-case";
+import { RegisterEnterpriseDto } from "../../../../application/auth/dto/register-enterprise.dto";
+import { RegisterEnterpriseUseCase } from "../../../../application/auth/use-cases/register-enterprise.use-case";
 import type { Request, Response, NextFunction } from "express";
 
 export  class RegisterEnterpriseController {
