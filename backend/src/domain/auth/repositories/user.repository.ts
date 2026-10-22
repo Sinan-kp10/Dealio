@@ -3,7 +3,7 @@ import type { User, UserStatus } from "../entities/user.entity";
 export type CreateUserData = {
   name: string;
   email: string;
-  password_hash: string;
+  passwordHash: string;
   role: User["role"];
   enterprise_id?: string | null;
   phone?: string | null;
