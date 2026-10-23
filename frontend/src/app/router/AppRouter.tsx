@@ -5,6 +5,7 @@ import CustomerSignupPage from "../../features/auth/pages/CustomerSignupPage";
 import EnterpriseSignupPage from "../../features/auth/pages/EnterpriseSignupPage";
 import LoginPage from "../../features/auth/pages/LoginPage";
 import NotFoundPage from "../../pages/NotFoundPage";
+import OtpVerificationPage from "../../features/auth/pages/OtpVerificationPage";
 
 export function AppRouter() {
   return (
@@ -19,6 +20,8 @@ export function AppRouter() {
           <Route path="/register/customer" element={<CustomerSignupPage />}/>
 
           <Route path="/register/enterprise" element={<EnterpriseSignupPage/>}/>
+          <Route path="/verify-email" element={<OtpVerificationPage />}/>
+
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
