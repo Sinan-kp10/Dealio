@@ -10,6 +10,8 @@ import { VerifyCustomerOtpuseCase } from "../../application/auth/use-cases/verif
 import { VerifyCustomerOtpController } from "../../presentation/http/controllers/auth/verify-customer-otp.controller";
 import { VerifyEnterpriseOtpuseCase } from "../../application/auth/use-cases/verify-enterprise-otp.usecase";
 import { VerifyEnterpriseOtpController } from "../../presentation/http/controllers/auth/verify-enterprise-otp.controller";
+import { ResendOtpUseCase } from "../../application/auth/use-cases/resend-otp.use-case";
+import { ResendOtpController } from "../../presentation/http/controllers/auth/resend-otp.controller";
 
 // Customer Signup
 const userRepository = new PrismaUserRepository()
@@ -26,3 +28,7 @@ export const registerEnterpriseController = new RegisterEnterpriseController(reg
 
 const verifyEnterpriseOtpuseCase = new VerifyEnterpriseOtpuseCase(enterpriseRepository, otpService)
 export const verifyEnterpriseController = new VerifyEnterpriseOtpController(verifyEnterpriseOtpuseCase)
+
+//resend OTP
+const resendOtpUseCase = new ResendOtpUseCase(otpService, emailService)
+export const resendOtpController = new ResendOtpController(resendOtpUseCase)

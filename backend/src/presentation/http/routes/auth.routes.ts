@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { validateRequest } from "../middlewares/validate-request.middleware";
 import { registerCustomerSchema } from "../validators/register-customer.schema";
-import { registerCustomerController, registerEnterpriseController, verifyCustomerOtpController, verifyEnterpriseController} from "../../../infrastructure/container/auth.container";
+import { registerCustomerController, registerEnterpriseController, resendOtpController, verifyCustomerOtpController, verifyEnterpriseController} from "../../../infrastructure/container/auth.container";
 import { registerEnterpriseSchema } from "../validators/register-enterprise.schema";
 import { verifyOtpSchema } from "../validators/verify-otp.validator";
+import { resendOtpSchema } from "../validators/resend-otp.schema";
 
 
 const authRouter = Router();
@@ -12,6 +13,7 @@ authRouter.post("/register/customer",validateRequest(registerCustomerSchema),reg
 authRouter.post("/register/enterprise", validateRequest(registerEnterpriseSchema),registerEnterpriseController.handle)
 authRouter.post("/customer/verify-email-otp", validateRequest(verifyOtpSchema), verifyCustomerOtpController.handle)
 authRouter.post("/enterprise/verify-email-otp", validateRequest(verifyOtpSchema), verifyEnterpriseController.handle)
+authRouter.post("/resend-email-otp", validateRequest(resendOtpSchema), resendOtpController.handle)
 
 
 export { authRouter };
