@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const verifyCustomerOtpSchema = z.object({
+export const verifyOtpSchema = z.object({
   email: z
     .email("Please provide a valid email address")
     .max(255, "Email cannot exceed 255 characters")
@@ -11,4 +11,4 @@ export const verifyCustomerOtpSchema = z.object({
     .regex(/^\d{6}$/, "OTP must be exactly 6 digits"),
 });
 
-export type VerifyCustomerOtpInput = z.infer<typeof verifyCustomerOtpSchema>;
+export type VerifyCustomerOtpInput = z.infer<typeof verifyOtpSchema>;

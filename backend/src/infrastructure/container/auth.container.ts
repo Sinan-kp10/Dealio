@@ -8,20 +8,21 @@ import { PrismaEnterpriseRepository } from "../database/repositories/prisma-ente
 import { RegisterEnterpriseController } from "../../presentation/http/controllers/auth/register-enterprise.controller";
 import { VerifyCustomerOtpuseCase } from "../../application/auth/use-cases/verify-customer-otp.use-case";
 import { VerifyCustomerOtpController } from "../../presentation/http/controllers/auth/verify-customer-otp.controller";
+import { VerifyEnterpriseOtpuseCase } from "../../application/auth/use-cases/verify-enterprise-otp.usecase";
+import { VerifyEnterpriseOtpController } from "../../presentation/http/controllers/auth/verify-enterprise-otp.controller";
 
 // Customer Signup
 const userRepository = new PrismaUserRepository()
 const registerCustomerUseCase = new RegisterCustomerUseCase(userRepository,passwordService, otpService, emailService)
 export const registerCustomerController = new RegisterCustomerController(registerCustomerUseCase);
 
+const verifyCustomerOtpUseCase = new VerifyCustomerOtpuseCase(userRepository,otpService)
+export const verifyCustomerOtpController = new VerifyCustomerOtpController(verifyCustomerOtpUseCase)
 
 // Enterprise Signup
 const enterpriseRepository = new PrismaEnterpriseRepository();
-const registerEnterpriseUseCase = new RegisterEnterpriseUseCase(enterpriseRepository,passwordService)
+const registerEnterpriseUseCase = new RegisterEnterpriseUseCase(enterpriseRepository,passwordService, otpService, emailService)
 export const registerEnterpriseController = new RegisterEnterpriseController(registerEnterpriseUseCase)
 
-//otp
-
-
-const verifyCustomerOtpUseCase = new VerifyCustomerOtpuseCase(userRepository,otpService)
-export const verifyCustomerOtpController = new VerifyCustomerOtpController(verifyCustomerOtpUseCase)
+const verifyEnterpriseOtpuseCase = new VerifyEnterpriseOtpuseCase(enterpriseRepository, otpService)
+export const verifyEnterpriseController = new VerifyEnterpriseOtpController(verifyEnterpriseOtpuseCase)

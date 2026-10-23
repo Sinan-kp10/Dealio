@@ -26,9 +26,10 @@ export class PrismaEnterpriseRepository implements EnterpriseRepository {
                     email : data.email,
                     phone : data.phone,
                     password_hash : data.passwordHash,
-                    role : "ENTERPRISE_MANAGER",
+                    role : data.role,
                     status : "PENDING",
-                    enterprise_id : enterprise.id
+                    enterprise_id : enterprise.id,
+                    email_verified: true,
                 }
             })
 

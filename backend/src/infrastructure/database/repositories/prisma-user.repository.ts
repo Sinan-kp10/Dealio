@@ -26,6 +26,7 @@ export class PrismaUserRepository implements UserRepository {
                 enterprise_id: data.enterprise_id ?? null,
                 phone: data.phone ?? null,
                 status: data.status,
+                email_verified: true,
 
             }
         })
