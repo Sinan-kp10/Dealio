@@ -5,15 +5,20 @@ import { Mail, ArrowRight } from "lucide-react";
 import { otpSchema, type OtpFormData } from "../schemas/otp.schema";
 import { toast } from "react-toastify";
 import type { VerifyOtpRequest } from "../types/otp.types";
-import { verifyCustomerOtp, verifyEnterpriseOtp } from "../services/auth.service";
+import { resendEmailOtp, verifyCustomerOtp, verifyEnterpriseOtp } from "../services/auth.service";
 import axios from "axios";
 import OtpInput from "../components/OTPinput";
+import { useEffect, useState } from "react";
 
 function OtpVerificationPage() {
     const { register, handleSubmit, setValue, formState: { errors, isSubmitting },} = useForm<OtpFormData>({ resolver: zodResolver(otpSchema)})
 
     const location = useLocation()
     const navigate = useNavigate()
+    const [countdown, setCountdown] = useState(()=>{
+        return Number(sessionStorage.getItem("otp-countdown")) || 60
+    })
+    const [isResending, setIsResending] = useState(false);
 
     const verificationState = location.state as | {email : string, role : "ENTERPRISE_MANAGER" | "CUSTOMER" } | null
 
@@ -57,8 +62,46 @@ function OtpVerificationPage() {
                 toast.error("Something went wrong. Please try again.");
             }
         }
-        
-    };
+    }
+
+    const handleResendOtp = async() => {
+        if (!email || isResending || countdown > 0) return
+
+        setIsResending(true)
+
+        try {
+
+            const response = await resendEmailOtp({email})
+            toast.success(response.message)
+            setCountdown(60)
+            sessionStorage.setItem("otp-countdown", "60");
+            
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+
+                toast.error( error.response?.data?.message ?? "Failed to resend OTP. Please try again.")
+            } else {
+                toast.error("Something went wrong. Please try again.");
+            }
+        }finally{
+
+            setIsResending(false)
+        }
+    }
+
+    useEffect(()=> {
+        if (countdown <= 0) return;
+
+        const timer = window.setTimeout(()=>{
+            setCountdown((prev)=> {
+                const next = prev - 1
+                sessionStorage.setItem("otp-countdown", String(next))
+                return next
+            })
+        },1000)
+
+        return () => window.clearTimeout(timer);
+    },[countdown])
 
     return (
         <main className="min-h-screen w-full flex items-center justify-center bg-[radial-gradient(circle_at_50%_0%,#f7faff_0%,#edf3f9_100%)] p-4 sm:p-6 md:p-8 box-border">
@@ -115,17 +158,22 @@ function OtpVerificationPage() {
                     </button>
                 </form>
 
-                <p className="mt-6 text-center text-sm text-slate-500 m-0">
-                    Didn't receive the code? Resend code in{" "}
-                    <button
-                        type="button"
-                        onClick={() => {
-                            console.log("Resend OTP clicked");
-                        }}
-                        className="font-semibold text-[#0e2238] hover:text-[#2e4d75] hover:underline cursor-pointer transition-colors border-0 bg-transparent p-0"
-                    >
-                        00:26
-                    </button>
+                <p className="text-center text-sm text-slate-500 mt-6 mb-0">
+                    Didn't receive the code?{" "}
+                    {countdown > 0 ? (
+                        <span className="text-slate-500 font-medium">
+                            Resend code in {String(countdown).padStart(2, "0")}
+                        </span>
+                    ) : (
+                        <button
+                            type="button"
+                            onClick={handleResendOtp}
+                            disabled={isResending}
+                            className="font-semibold text-[#2e4d75] hover:text-[#203650] transition-colors disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+                        >
+                            {isResending ? "Sending..." : "Resend code"}
+                        </button>
+                    )}
                 </p>
             </div>
         </main>

@@ -26,3 +26,12 @@ export interface EnterpriseVerifyOtpResponse {
     role : string
   };
 }
+
+export interface ResendOtpRequest {
+  email: string;
+}
+
+export interface ResendOtpResponse {
+  status: "success";
+  message: string;
+}
