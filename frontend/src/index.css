@@ -43,17 +43,19 @@
   --color-danger: #DC2626;
   --color-danger-bg: #FEF2F2;
 
-  /* Toast Notifications */
-  --toastify-color-light: #FFFFFF;
-  --toastify-color-success: var(--color-success, #059669);
-  --toastify-color-error: var(--color-danger, #DC2626);
-  --toastify-color-warning: var(--color-warning, #D97706);
-  --toastify-color-info: var(--color-primary, #355982);
-  --toastify-text-color-light: var(--text-headline, #0F1D2F);
+  /* Toast Notifications (Dealio Theme #0E2238) */
+  --toastify-color-light: #0E2238;
+  --toastify-color-dark: #0E2238;
+  --toastify-color-success: #25B66A;
+  --toastify-color-error: #EF4444;
+  --toastify-color-warning: #F59E0B;
+  --toastify-color-info: var(--color-tertiary, #69ACCC);
+  --toastify-text-color-light: #FFFFFF;
+  --toastify-text-color-dark: #FFFFFF;
   --toastify-font-family: inherit;
-  --toastify-toast-width: 420px;
-  --toastify-toast-min-height: 52px;
-  --toastify-toast-bd-radius: 16px;
+  --toastify-toast-width: 440px;
+  --toastify-toast-min-height: 48px;
+  --toastify-toast-bd-radius: 12px;
   --toastify-z-index: 99999;
 }
 
@@ -218,10 +220,6 @@ body {
   max-width: var(--content-max-prose, 68ch);
 }
 
-/* ==========================================================================
-   Dealio Toast Notification Styling (React-Toastify Overrides)
-   ========================================================================== */
-
 /* Top-Center Container: visible, floating, centered across all viewports */
 .Toastify__toast-container--top-center {
   top: max(env(safe-area-inset-top, 0px) + 20px, 20px) !important;
@@ -229,30 +227,38 @@ body {
   transform: translateX(-50%) !important;
   width: auto !important;
   min-width: min(360px, calc(100vw - 32px)) !important;
-  max-width: min(440px, calc(100vw - 32px)) !important;
+  max-width: min(480px, calc(100vw - 32px)) !important;
   margin: 0 !important;
   padding: 0 !important;
   z-index: 99999 !important;
   pointer-events: none !important;
 }
 
-/* Toast Card styling matching Dealio's clean, modern visual identity */
+/* Toast Card styling matching Dealio's theme #0E2238 */
 .Toastify__toast {
   position: relative !important;
-  min-height: 52px !important;
-  padding: 12px 16px !important;
+  min-height: 48px !important;
+  padding: 10px 18px !important;
   margin-bottom: 10px !important;
-  border-radius: 16px !important;
-  background-color: #ffffff !important;
-  color: var(--text-headline, #0F1D2F) !important;
+  border-radius: 12px !important;
+  background-color: #0E2238 !important;
+  background: #0E2238 !important;
+  color: #FFFFFF !important;
   font-family: inherit !important;
   font-size: 0.875rem !important;
   font-weight: 500 !important;
   line-height: 1.45 !important;
-  box-shadow: 0 10px 28px -4px rgba(15, 30, 60, 0.12), 0 2px 8px -1px rgba(15, 30, 60, 0.06), 0 0 0 1px rgba(15, 30, 60, 0.08) !important;
-  border: 1px solid rgba(226, 234, 243, 0.8) !important;
+  box-shadow: 0 14px 34px -4px rgba(0, 0, 0, 0.45), 0 4px 12px -2px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
   pointer-events: auto !important;
   overflow: hidden !important;
+}
+
+.Toastify__toast-theme--dark,
+.Toastify__toast-theme--light {
+  background-color: #0E2238 !important;
+  background: #0E2238 !important;
+  color: #FFFFFF !important;
 }
 
 /* Body & Content Layout */
@@ -262,22 +268,38 @@ body {
   display: flex !important;
   align-items: center !important;
   gap: 12px !important;
-  color: var(--text-headline, #0F1D2F) !important;
+  color: #FFFFFF !important;
   font-size: 0.875rem !important;
-  font-weight: 500 !important;
+  font-weight: 600 !important;
 }
 
 /* Toast Icons */
 .Toastify__toast-icon {
-  width: 22px !important;
-  height: 22px !important;
+  width: 20px !important;
+  height: 20px !important;
   margin-inline-end: 12px !important;
   flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.Toastify__toast--success {
+  --toastify-icon-color-success: #25B66A !important;
+}
+.Toastify__toast--error {
+  --toastify-icon-color-error: #EF4444 !important;
+}
+.Toastify__toast--warning {
+  --toastify-icon-color-warning: #F59E0B !important;
+}
+.Toastify__toast--info {
+  --toastify-icon-color-info: #69ACCC !important;
 }
 
 /* Close Button */
 .Toastify__close-button {
-  color: #94a3b8 !important;
+  color: #94A3B8 !important;
   opacity: 0.7 !important;
   align-self: center !important;
   transition: opacity 0.15s ease, color 0.15s ease !important;
@@ -286,14 +308,20 @@ body {
 }
 
 .Toastify__close-button:hover {
-  color: #334155 !important;
+  color: #FFFFFF !important;
   opacity: 1 !important;
 }
 
-/* Progress Bar */
-.Toastify__progress-bar {
-  height: 3px !important;
-  opacity: 0.85 !important;
+.Toastify__close-button > svg {
+  fill: currentColor !important;
+}
+
+/* Progress Bar - Invisible so autoClose animation timer runs without showing progress bar */
+.Toastify__progress-bar--wrp,
+.Toastify__progress-bar,
+.Toastify__progress-bar--bg {
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 /* Mobile Responsiveness: override default 100vw flat banner behavior */
@@ -309,10 +337,10 @@ body {
   }
 
   .Toastify__toast {
-    min-height: 48px !important;
+    min-height: 46px !important;
     padding: 10px 14px !important;
     margin-bottom: 8px !important;
-    border-radius: 14px !important;
-    box-shadow: 0 8px 20px -3px rgba(15, 30, 60, 0.14), 0 2px 6px -1px rgba(15, 30, 60, 0.06), 0 0 0 1px rgba(15, 30, 60, 0.08) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 24px -3px rgba(0, 0, 0, 0.5), 0 2px 6px -1px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
   }
 }

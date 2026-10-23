@@ -32,7 +32,7 @@ export function EnterpriseSignupPage() {
                 confirmPassword : data.confirmPassword
             })
 
-            toast.success("otp sended successfully!")
+            toast.success("OTP sent successfully!");
             navigate("/verify-email", {
                 state: {
                     email: data.email.trim().toLowerCase(),

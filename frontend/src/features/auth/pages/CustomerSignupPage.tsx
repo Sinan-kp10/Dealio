@@ -28,7 +28,7 @@ export function CustomerSignupPage() {
                 confirmPassword: data.confirmPassword,
             })
 
-            toast.success("Otp sended created successfully!")
+            toast.success("OTP sent successfully!");
             navigate("/verify-email", {
                 state: {
                     email: data.email.trim().toLowerCase(),
