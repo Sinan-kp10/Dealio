@@ -1,19 +1,62 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 
 import { loginSchema } from "../schemas/login.schema";
 import type { LoginFromData } from "../types/login.type";
+import { login } from "../services/auth.service";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 export function LoginPage() {
-    const [showPassword, setShowPassword] = useState(false);
+    const [showPassword, setShowPassword] = useState(false)
+    const { register, handleSubmit, formState: { errors, isSubmitting }} = useForm<LoginFromData>({resolver: zodResolver(loginSchema)})
 
-    const { register, handleSubmit, formState: { errors, isSubmitting }} = useForm<LoginFromData>({resolver: zodResolver(loginSchema),});
+    const navigate = useNavigate() 
 
-    const onSubmit = (data: LoginFromData) => {
-        console.log(data);
+    const onSubmit = async(data: LoginFromData) => {
+        try {
+
+            const response = await login(data)
+            const user = response.data?.user
+
+            if (!user) {
+                toast.error("Invalid login response. Please try again");
+                return;
+            }
+
+            toast.success("Successfully logged in!");
+
+            switch (user.role) {
+                
+                case "ADMIN":
+                    navigate("/admin");
+                    break;
+
+                case "ENTERPRISE_MANAGER":
+                    navigate("/enterprise");
+                    break;
+
+                case "CUSTOMER":
+                    navigate("/customer");
+                    break;
+
+                default:
+                    navigate("/login");
+                    break;
+            }
+            
+        } catch (error) {
+            if(axios.isAxiosError(error)){
+                const message = error.response?.data?.message ?? "Login failed. Please try again"
+                toast.error(message)
+            }else{
+                toast.error("Something went wrong. Please try again");
+            }
+            
+        }
     };
 
     return (
