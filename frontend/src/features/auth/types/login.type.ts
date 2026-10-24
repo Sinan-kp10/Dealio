@@ -8,15 +8,19 @@ export interface LoginRequest {
     password : string
 }
 
+export type UserRole = "ADMIN" | "ENTERPRISE_MANAGER" | "CUSTOMER";
+
+export interface AuthUser {
+    id: string;
+    email: string;
+    role: UserRole;
+}
+
 export interface LoginResponse {
     success: "success"
     message: string
-    data? : {
+    data: {
         accessToken : string,
-        user: {
-            id : string
-            email: string
-            role: "CUSTOMER" | "ENTERPRISE_MANAGER" | "ADMIN"
-        }
+        user: AuthUser
     }
 }

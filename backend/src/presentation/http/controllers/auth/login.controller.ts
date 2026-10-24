@@ -13,6 +13,14 @@ export class  LoginController {
             const data = req.body as LoginDto
 
             const result = await this.loginrUseCase.execute(data)
+            
+            res.cookie("accessToken", result.accessToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                path: "/",
+                maxAge: 15 * 60 * 1000,
+            });
 
             res.status(200).json({
                 success: "success",

@@ -3,6 +3,7 @@ import { AppError } from "../../shared/errors/app-error";
 
 export interface JwtPayload {
     userId: string;
+    email : string
     role: string;
 }
 
@@ -25,5 +26,34 @@ export class JwtTokenService {
         return jwt.sign(payload, this.secret, {
             expiresIn: this.expiresIn,
         });
+    }
+
+    verifyAccessToken(token: string): JwtPayload {
+        try {
+            const decoded = jwt.verify(token, this.secret);
+
+            if (
+                typeof decoded === "string" ||
+                typeof decoded.userId !== "string" ||
+                typeof decoded.email !== "string" ||
+                typeof decoded.role !== "string"
+            ) {
+                throw new AppError("Invalid access token.", 401);
+            }
+
+            return {
+                userId: decoded.userId,
+                email : decoded.email,
+                role: decoded.role,
+            }
+
+        } catch (error) {
+            
+            if (error instanceof AppError) {
+                throw error;
+            }
+
+            throw new AppError("Invalid or expired access token.", 401);
+        }
     }
 }

@@ -7,7 +7,7 @@ export class PasswordService {
         return bcrypt.hash(password, this.saltRound)
     }
 
-    verify = async ( hashedPassword: string, password : string) : Promise<boolean> => {
+    verify = async ( password: string, hashedPassword : string) : Promise<boolean> => {
         return bcrypt.compare(password, hashedPassword)
     }
 }

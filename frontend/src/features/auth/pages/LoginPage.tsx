@@ -20,7 +20,7 @@ export function LoginPage() {
         try {
 
             const response = await login(data)
-            const user = response.data?.user
+            const user = response.data.user
 
             if (!user) {
                 toast.error("Invalid login response. Please try again");
