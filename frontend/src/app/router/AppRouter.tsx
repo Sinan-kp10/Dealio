@@ -25,6 +25,7 @@ export function AppRouter() {
 
           <Route path="/register/enterprise" element={<EnterpriseSignupPage/>}/>
           <Route path="/verify-email" element={<OtpVerificationPage />}/>
+          <Route path="/not-found" element={<NotFoundPage />} />
 
 
           <Route path="*" element={<NotFoundPage />} />

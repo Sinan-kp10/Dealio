@@ -16,7 +16,7 @@ function ForgottenPasswordPage() {
     try {
 
       await forgotPassword(data)
-      navigate("/verify-email", {
+      navigate("/verify-reset-otp", {
         state: {
           email: data.email.trim().toLowerCase(),
         },
