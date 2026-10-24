@@ -1,6 +1,7 @@
 import axiosInstance from "../../../app/lib/axios";
 import type { CustomerSignupRequest, CustomerSignupResponse } from "../types/customerSignup.types";
 import type { EnterpriseSignupRequest, EnterpriseSignupResponse } from "../types/enterpriseSignup.types";
+import type { ForgottenPasswordRequest, ForgottenPasswordResponse } from "../types/forgottenPassword.types";
 import type { LoginRequest, LoginResponse } from "../types/login.type";
 import type { CustomerVerifyOtpResponse, EnterpriseVerifyOtpResponse, ResendOtpRequest, ResendOtpResponse, VerifyOtpRequest} from "../types/otp.types";
 
@@ -43,6 +44,13 @@ export const resendEmailOtp = async (payload : ResendOtpRequest) : Promise<Resen
 export const login = async(payload : LoginRequest) : Promise<LoginResponse> => {
 
     const response = await axiosInstance.post<LoginResponse>("/auth/login", payload)
+
+    return response.data
+}
+
+export const forgotPassword = async(payload : ForgottenPasswordRequest) : Promise<ForgottenPasswordResponse> => {
+
+    const response = await axiosInstance.post<ForgottenPasswordResponse>("/auth/forgot-password", payload)
 
     return response.data
 }

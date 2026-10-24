@@ -1,7 +1,7 @@
 import { EmailService } from "../../../infrastructure/email/email.service";
 import { OtpService } from "../../../infrastructure/security/otp.service";
 import { AppError } from "../../../shared/errors/app-error";
-import { ResendOtpDto } from "../dto/resend-otp.dto";
+import { EmailDto } from "../dto/email.dto";
 
 export class ResendOtpUseCase {
     constructor(
@@ -9,7 +9,7 @@ export class ResendOtpUseCase {
         private readonly emailService: EmailService,
     ) {}
 
-    execute = async(dto : ResendOtpDto) : Promise<void> => {
+    execute = async(dto : EmailDto) : Promise<void> => {
 
         const normalizedEmail = dto.email.trim().toLowerCase()
 

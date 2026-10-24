@@ -6,8 +6,12 @@ export class OtpService {
 
     private readonly OTP_EXPIRY_SECONDS = 3 * 60
 
+    private generateOtp = (): string => {
+        return randomInt(100000, 1000000).toString();
+    }
+
     generateAndStore = async(email: string,  registrationData: unknown) : Promise<string> =>{
-        const otp = randomInt(100000, 1000000).toString()
+        const otp = this.generateOtp()
 
         const key = `email-otp:${email.trim().toLowerCase()}`
 
@@ -65,7 +69,7 @@ export class OtpService {
 
         const parsed = JSON.parse(storedData) as {otp : string, registrationData: unknown;}
 
-        const otp = randomInt(100000, 1000000).toString()
+        const otp = this.generateOtp()
 
         await redis.set(key,JSON.stringify({
             ...parsed,
@@ -85,4 +89,31 @@ export class OtpService {
         await redis.del(key)
     }
 
+    generatePasswordResetOtp = async (email : string) : Promise<string> => {
+
+        const otp = this.generateOtp()
+        const key = `password-reset-otp:${email.trim().toLowerCase()}`
+
+        await redis.set(key, otp, {
+            EX: this.OTP_EXPIRY_SECONDS,
+        })
+
+        return otp
+    }
+
+    verifyPasswordResetOtp = async(email : string, otp : string) : Promise<"valid" | "invalid" | "expired"> => {
+
+        const key = `password-reset-otp:${email.trim().toLowerCase()}`
+        const storedOtp = await redis.get(key)
+
+        if (!storedOtp) {
+            return "expired";
+        }
+
+        if (storedOtp !== otp) {
+            return "invalid";
+        }
+
+        return "valid";
+    }
 }

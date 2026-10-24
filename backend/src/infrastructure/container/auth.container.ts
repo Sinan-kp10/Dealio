@@ -14,6 +14,8 @@ import { ResendOtpUseCase } from "../../application/auth/use-cases/resend-otp.us
 import { ResendOtpController } from "../../presentation/http/controllers/auth/resend-otp.controller";
 import { LoginUseCase } from "../../application/auth/use-cases/login.use-case";
 import { LoginController } from "../../presentation/http/controllers/auth/login.controller";
+import { ForgotPasswordUseCase } from "../../application/auth/use-cases/forgot-password.use-case";
+import { ForgotPasswordController } from "../../presentation/http/controllers/auth/forgot-password.controller";
 
 // Customer Signup
 const userRepository = new PrismaUserRepository()
@@ -39,3 +41,7 @@ export const resendOtpController = new ResendOtpController(resendOtpUseCase)
 //login
 const loginUseCase = new LoginUseCase(userRepository, passwordService, jwtTokenService)
 export const loginController = new LoginController(loginUseCase)
+
+//forgotten password
+const forgotPasswordUseCase = new ForgotPasswordUseCase(userRepository, otpService, emailService)
+export const forgotPasswordController = new ForgotPasswordController(forgotPasswordUseCase)

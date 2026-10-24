@@ -2,20 +2,34 @@ import { useForm } from "react-hook-form";
 import type { ForgottenPasswordFormData } from "../types/forgottenPassword.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ForgottenPasswordSchema } from "../schemas/forgottenPassword.schema";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Mail, ArrowRight } from "lucide-react";
+import { forgotPassword } from "../services/auth.service";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 function ForgottenPasswordPage() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<ForgottenPasswordFormData>({
-    resolver: zodResolver(ForgottenPasswordSchema),
-  });
+  const { register, handleSubmit, formState: { errors, isSubmitting }} = useForm<ForgottenPasswordFormData>({ resolver: zodResolver(ForgottenPasswordSchema)})
+  const navigate = useNavigate()
 
-  const onSubmit = (data: ForgottenPasswordFormData) => {
-    console.log(data);
+  const onSubmit = async(data: ForgottenPasswordFormData) => {
+    try {
+
+      await forgotPassword(data)
+      navigate("/verify-email", {
+        state: {
+          email: data.email.trim().toLowerCase(),
+        },
+      });
+      
+    } catch (error) {
+      if(axios.isAxiosError(error)){
+        const message = error.response?.data?.message ?? "Unable to process your password reset request. Please try again.";
+        toast.error(message)
+      }else{
+        toast.error("Something went wrong. Please try again.");
+      }
+    }
   };
 
   return (
