@@ -3,7 +3,7 @@ import { PrismaUserRepository } from "../database/repositories/prisma-user.repos
 import { RegisterCustomerUseCase } from "../../application/auth/use-cases/register-customer.use-case";
 import { RegisterCustomerController } from "../../presentation/http/controllers/auth/register-customer.controller";
 import { RegisterEnterpriseUseCase } from "../../application/auth/use-cases/register-enterprise.use-case";
-import { emailService, otpService, passwordService } from "./infrastructure.container";
+import { emailService, jwtTokenService, otpService, passwordService } from "./infrastructure.container";
 import { PrismaEnterpriseRepository } from "../database/repositories/prisma-enterprise.repository";
 import { RegisterEnterpriseController } from "../../presentation/http/controllers/auth/register-enterprise.controller";
 import { VerifyCustomerOtpuseCase } from "../../application/auth/use-cases/verify-customer-otp.use-case";
@@ -12,6 +12,8 @@ import { VerifyEnterpriseOtpuseCase } from "../../application/auth/use-cases/ver
 import { VerifyEnterpriseOtpController } from "../../presentation/http/controllers/auth/verify-enterprise-otp.controller";
 import { ResendOtpUseCase } from "../../application/auth/use-cases/resend-otp.use-case";
 import { ResendOtpController } from "../../presentation/http/controllers/auth/resend-otp.controller";
+import { LoginUseCase } from "../../application/auth/use-cases/login.use-case";
+import { LoginController } from "../../presentation/http/controllers/auth/login.controller";
 
 // Customer Signup
 const userRepository = new PrismaUserRepository()
@@ -32,3 +34,8 @@ export const verifyEnterpriseController = new VerifyEnterpriseOtpController(veri
 //resend OTP
 const resendOtpUseCase = new ResendOtpUseCase(otpService, emailService)
 export const resendOtpController = new ResendOtpController(resendOtpUseCase)
+
+
+//login
+const loginUseCase = new LoginUseCase(userRepository, passwordService, jwtTokenService)
+export const loginController = new LoginController(loginUseCase)

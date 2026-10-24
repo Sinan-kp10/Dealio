@@ -22,6 +22,13 @@ enum user_status {
   REJECTED
 }
 
+enum enterprise_status {
+  PENDING
+  APPROVED
+  REJECTED
+  SUSPENDED
+}
+
 model users {
   id                  String      @id @default(uuid()) @db.Uuid
   name                String      @db.VarChar(255)
@@ -45,15 +52,16 @@ model users {
 }
 
 model enterprises {
-  id             String    @id @default(uuid()) @db.Uuid
-  enterprise_name           String    @db.VarChar(255)
-  subcategory_id String?   @db.Uuid
-  description    String?   @db.Text
-  rejection_reason String? @db.Text
-  reviewed_by    String?   @db.Uuid
-  reviewed_at    DateTime? @db.Timestamptz
-  created_at     DateTime  @default(now()) @db.Timestamptz
-  updated_at     DateTime  @updatedAt @db.Timestamptz
+  id               String            @id @default(uuid()) @db.Uuid
+  enterprise_name  String            @db.VarChar(255)
+  subcategory_id   String?           @db.Uuid
+  description      String?           @db.Text
+  status           enterprise_status @default(PENDING)
+  rejection_reason String?           @db.Text
+  reviewed_by      String?           @db.Uuid
+  reviewed_at      DateTime?         @db.Timestamptz
+  created_at       DateTime          @default(now()) @db.Timestamptz
+  updated_at       DateTime          @updatedAt @db.Timestamptz
 
   users        users[] @relation("enterprise_members")
   reviewer     users?  @relation("enterprise_reviewer", fields: [reviewed_by], references: [id])
