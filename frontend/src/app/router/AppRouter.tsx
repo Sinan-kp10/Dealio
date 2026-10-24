@@ -4,6 +4,8 @@ import { HomePage } from "../../features/home/pages/HomePage";
 import CustomerSignupPage from "../../features/auth/pages/CustomerSignupPage";
 import EnterpriseSignupPage from "../../features/auth/pages/EnterpriseSignupPage";
 import LoginPage from "../../features/auth/pages/LoginPage";
+import ForgottenPasswordPage from "../../features/auth/pages/ForgottenPasswordPage";
+import ResetPassword from "../../features/auth/pages/ResetPasword";
 import NotFoundPage from "../../pages/NotFoundPage";
 import OtpVerificationPage from "../../features/auth/pages/OtpVerificationPage";
 
@@ -16,6 +18,8 @@ export function AppRouter() {
         </Route>
 
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/forgot-password" element={<ForgottenPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
 
           <Route path="/register/customer" element={<CustomerSignupPage />}/>
 
