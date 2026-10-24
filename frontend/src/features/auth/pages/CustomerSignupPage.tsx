@@ -28,8 +28,13 @@ export function CustomerSignupPage() {
                 confirmPassword: data.confirmPassword,
             })
 
-            toast.success("Account created successfully!")
-            navigate("/login");
+            toast.success("OTP sent successfully!");
+            navigate("/verify-email", {
+                state: {
+                    email: data.email.trim().toLowerCase(),
+                    role: "CUSTOMER",
+                },
+            });
             
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -84,31 +89,39 @@ export function CustomerSignupPage() {
                     </header>
 
                     <form className="flex flex-col gap-4 sm:gap-[1.15rem]" onSubmit={handleSubmit(onSubmit)}>
-                        <div className="form-group">
-                            <label htmlFor="name" className="form-label">
+                        <div className="flex flex-col">
+                            <label htmlFor="name" className="text-sm font-semibold text-slate-800 mb-1.5 block">
                                 Full Name
                             </label>
-                            <div className="input-wrapper">
-                                <span className="input-icon-left" aria-hidden="true">
+                            <div className="relative flex items-center w-full">
+                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center justify-center" aria-hidden="true">
                                     <User size={18} />
                                 </span>
                                 <input
                                     id="name"
                                     autoComplete="name"
                                     placeholder="Enter your full name"
-                                    className={`input-field ${errors.name ? "input-field-error" : ""}`}
+                                    className={`w-full h-12 pl-11 pr-4 text-[0.9375rem] text-[#0f1d2f] bg-white border-[1.5px] rounded-xl box-border font-inherit transition-all duration-200 placeholder:text-slate-400 hover:border-slate-300 focus:outline-none ${
+                                        errors.name
+                                            ? "border-red-500 focus:border-red-500 focus:ring-[3px] focus:ring-red-500/12"
+                                            : "border-slate-200 focus:border-[#355982] focus:ring-[3px] focus:ring-[#355982]/12"
+                                    }`}
                                     {...register("name")}
                                 />
                             </div>
-                            {errors.name && <p className="field-error">{errors.name.message}</p>}
+                            {errors.name && (
+                                <p className="text-red-500 text-[0.8125rem] mt-1.5 mb-0 leading-[1.35] font-medium">
+                                    {errors.name.message}
+                                </p>
+                            )}
                         </div>
 
-                        <div className="form-group">
-                            <label htmlFor="email" className="form-label">
+                        <div className="flex flex-col">
+                            <label htmlFor="email" className="text-sm font-semibold text-slate-800 mb-1.5 block">
                                 Email Address
                             </label>
-                            <div className="input-wrapper">
-                                <span className="input-icon-left" aria-hidden="true">
+                            <div className="relative flex items-center w-full">
+                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center justify-center" aria-hidden="true">
                                     <Mail size={18} />
                                 </span>
                                 <input
@@ -116,23 +129,27 @@ export function CustomerSignupPage() {
                                     type="email"
                                     autoComplete="email"
                                     placeholder="Enter your email address"
-                                    className={`input-field ${errors.email ? "input-field-error" : ""}`}
+                                    className={`w-full h-12 pl-11 pr-4 text-[0.9375rem] text-[#0f1d2f] bg-white border-[1.5px] rounded-xl box-border font-inherit transition-all duration-200 placeholder:text-slate-400 hover:border-slate-300 focus:outline-none ${
+                                        errors.email
+                                            ? "border-red-500 focus:border-red-500 focus:ring-[3px] focus:ring-red-500/12"
+                                            : "border-slate-200 focus:border-[#355982] focus:ring-[3px] focus:ring-[#355982]/12"
+                                    }`}
                                     {...register("email")}
                                 />
                             </div>
                             {errors.email && (
-                                <p className="field-error">
+                                <p className="text-red-500 text-[0.8125rem] mt-1.5 mb-0 leading-[1.35] font-medium">
                                     {errors.email.message}
                                 </p>
                             )}
                         </div>
 
-                        <div className="form-group">
-                            <label htmlFor="password" className="form-label">
+                        <div className="flex flex-col">
+                            <label htmlFor="password" className="text-sm font-semibold text-slate-800 mb-1.5 block">
                                 Password
                             </label>
-                            <div className="input-wrapper">
-                                <span className="input-icon-left" aria-hidden="true">
+                            <div className="relative flex items-center w-full">
+                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center justify-center" aria-hidden="true">
                                     <Lock size={18} />
                                 </span>
                                 <input
@@ -140,27 +157,35 @@ export function CustomerSignupPage() {
                                     type={showPassword ? "text" : "password"}
                                     autoComplete="new-password"
                                     placeholder="Create a password"
-                                    className={`input-field input-field-has-toggle ${errors.password ? "input-field-error" : ""}`}
+                                    className={`w-full h-12 pl-11 pr-11 text-[0.9375rem] text-[#0f1d2f] bg-white border-[1.5px] rounded-xl box-border font-inherit transition-all duration-200 placeholder:text-slate-400 hover:border-slate-300 focus:outline-none ${
+                                        errors.password
+                                            ? "border-red-500 focus:border-red-500 focus:ring-[3px] focus:ring-red-500/12"
+                                            : "border-slate-200 focus:border-[#355982] focus:ring-[3px] focus:ring-[#355982]/12"
+                                    }`}
                                     {...register("password")}
                                 />
                                 <button
                                     type="button"
-                                    className="input-toggle-btn"
+                                    className="absolute right-3.5 top-1/2 -translate-y-1/2 bg-transparent border-none p-1 text-slate-400 hover:text-slate-600 cursor-pointer flex items-center justify-center rounded-md transition-colors focus-visible:outline-2 focus-visible:outline-[#355982] focus-visible:outline-offset-2"
                                     onClick={() => setShowPassword((prev) => !prev)}
                                     aria-label={showPassword ? "Hide password" : "Show password"}
                                 >
                                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                 </button>
                             </div>
-                            {errors.password && <p className="field-error">{errors.password.message}</p>}
+                            {errors.password && (
+                                <p className="text-red-500 text-[0.8125rem] mt-1.5 mb-0 leading-[1.35] font-medium">
+                                    {errors.password.message}
+                                </p>
+                            )}
                         </div>
 
-                        <div className="form-group">
-                            <label htmlFor="confirmPassword" className="form-label">
+                        <div className="flex flex-col">
+                            <label htmlFor="confirmPassword" className="text-sm font-semibold text-slate-800 mb-1.5 block">
                                 Confirm Password
                             </label>
-                            <div className="input-wrapper">
-                                <span className="input-icon-left" aria-hidden="true">
+                            <div className="relative flex items-center w-full">
+                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center justify-center" aria-hidden="true">
                                     <ShieldCheck size={18} />
                                 </span>
                                 <input
@@ -168,12 +193,16 @@ export function CustomerSignupPage() {
                                     type={showConfirmPassword ? "text" : "password"}
                                     autoComplete="new-password"
                                     placeholder="Confirm your password"
-                                    className={`input-field input-field-has-toggle ${errors.confirmPassword ? "input-field-error" : ""}`}
+                                    className={`w-full h-12 pl-11 pr-11 text-[0.9375rem] text-[#0f1d2f] bg-white border-[1.5px] rounded-xl box-border font-inherit transition-all duration-200 placeholder:text-slate-400 hover:border-slate-300 focus:outline-none ${
+                                        errors.confirmPassword
+                                            ? "border-red-500 focus:border-red-500 focus:ring-[3px] focus:ring-red-500/12"
+                                            : "border-slate-200 focus:border-[#355982] focus:ring-[3px] focus:ring-[#355982]/12"
+                                    }`}
                                     {...register("confirmPassword")}
                                 />
                                 <button
                                     type="button"
-                                    className="input-toggle-btn"
+                                    className="absolute right-3.5 top-1/2 -translate-y-1/2 bg-transparent border-none p-1 text-slate-400 hover:text-slate-600 cursor-pointer flex items-center justify-center rounded-md transition-colors focus-visible:outline-2 focus-visible:outline-[#355982] focus-visible:outline-offset-2"
                                     onClick={() => setShowConfirmPassword((prev) => !prev)}
                                     aria-label={
                                         showConfirmPassword
@@ -185,7 +214,9 @@ export function CustomerSignupPage() {
                                 </button>
                             </div>
                             {errors.confirmPassword && (
-                                <p className="field-error">{errors.confirmPassword.message}</p>
+                                <p className="text-red-500 text-[0.8125rem] mt-1.5 mb-0 leading-[1.35] font-medium">
+                                    {errors.confirmPassword.message}
+                                </p>
                             )}
                         </div>
 

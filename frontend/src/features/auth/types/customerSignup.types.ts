@@ -15,8 +15,4 @@ export interface CustomerSignupRequest {
 export interface CustomerSignupResponse {
   success: boolean;
   message: string;
-  data?: {
-    email: string;
-    role: string;
-  };
 }

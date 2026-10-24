@@ -42,6 +42,21 @@
   --color-warning-bg: #FEF3C7;
   --color-danger: #DC2626;
   --color-danger-bg: #FEF2F2;
+
+  /* Toast Notifications (Dealio Theme #0E2238) */
+  --toastify-color-light: #0E2238;
+  --toastify-color-dark: #0E2238;
+  --toastify-color-success: #25B66A;
+  --toastify-color-error: #EF4444;
+  --toastify-color-warning: #F59E0B;
+  --toastify-color-info: var(--color-tertiary, #69ACCC);
+  --toastify-text-color-light: #FFFFFF;
+  --toastify-text-color-dark: #FFFFFF;
+  --toastify-font-family: inherit;
+  --toastify-toast-width: 440px;
+  --toastify-toast-min-height: 48px;
+  --toastify-toast-bd-radius: 12px;
+  --toastify-z-index: 99999;
 }
 
 html {
@@ -64,7 +79,6 @@ body {
 
 /* GLOBAL CONTAINER SYSTEM Adapts cleanly across laptops, Full HD, and large monitors */
 
-/* Wide container for headers, navbars, landing sections & wide overviews */
 .container-wide {
   width: 100%;
   max-width: var(--container-wide);
@@ -72,7 +86,6 @@ body {
   padding-inline: var(--container-padding);
 }
 
-/* Standard content container for articles, features, and balanced views */
 .container-standard {
   width: 100%;
   max-width: var(--container-standard);
@@ -80,7 +93,6 @@ body {
   padding-inline: var(--container-padding);
 }
 
-/* Narrow container for focused articles and reading layouts */
 .container-narrow {
   width: 100%;
   max-width: var(--container-narrow);
@@ -88,7 +100,6 @@ body {
   padding-inline: clamp(1rem, 2.5vw, 2.5rem);
 }
 
-/* Fluid full-width container for dashboards, data tables, and analytics */
 .container-fluid {
   width: 100%;
   max-width: 100%;
@@ -96,7 +107,6 @@ body {
   padding-inline: clamp(1rem, 2.5vw, 3rem);
 }
 
-/* Focused narrow container for authentication, settings, and focused forms */
 .container-focused {
   width: 100%;
   max-width: var(--container-focused);
@@ -125,7 +135,6 @@ body {
 
 /* SHARED RESPONSIVE COMPONENT & LAYOUT PATTERNS */
 
-/* Dashboard Layout & Data Grid Wrappers */
 .dashboard-container {
   width: 100%;
   max-width: var(--container-wide);
@@ -211,114 +220,127 @@ body {
   max-width: var(--content-max-prose, 68ch);
 }
 
-/* GLOBAL FORM & INPUT STYLES (SHARED)*/
-
-.form-group {
-  display: flex;
-  flex-direction: column;
+/* Top-Center Container: visible, floating, centered across all viewports */
+.Toastify__toast-container--top-center {
+  top: max(env(safe-area-inset-top, 0px) + 20px, 20px) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: auto !important;
+  min-width: min(360px, calc(100vw - 32px)) !important;
+  max-width: min(480px, calc(100vw - 32px)) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 99999 !important;
+  pointer-events: none !important;
 }
 
-.form-label {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #1e293b;
-  margin-bottom: 0.5rem;
-  display: block;
+/* Toast Card styling matching Dealio's theme #0E2238 */
+.Toastify__toast {
+  position: relative !important;
+  min-height: 48px !important;
+  padding: 10px 18px !important;
+  margin-bottom: 10px !important;
+  border-radius: 12px !important;
+  background-color: #0E2238 !important;
+  background: #0E2238 !important;
+  color: #FFFFFF !important;
+  font-family: inherit !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  line-height: 1.45 !important;
+  box-shadow: 0 14px 34px -4px rgba(0, 0, 0, 0.45), 0 4px 12px -2px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  pointer-events: auto !important;
+  overflow: hidden !important;
 }
 
-.input-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 100%;
+.Toastify__toast-theme--dark,
+.Toastify__toast-theme--light {
+  background-color: #0E2238 !important;
+  background: #0E2238 !important;
+  color: #FFFFFF !important;
 }
 
-.input-icon-left {
-  position: absolute;
-  left: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-placeholder, #94a3b8);
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Body & Content Layout */
+.Toastify__toast-body {
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  color: #FFFFFF !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
 }
 
-.input-field {
-  width: 100%;
-  height: 48px;
-  padding: 0 1rem 0 2.75rem;
-  font-size: 0.9375rem;
-  color: var(--text-headline, #0f1d2f);
-  background-color: var(--bg-surface, #ffffff);
-  border: 1.5px solid var(--color-border, #e2e8f0);
-  border-radius: 12px;
-  box-sizing: border-box;
-  font-family: inherit;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+/* Toast Icons */
+.Toastify__toast-icon {
+  width: 20px !important;
+  height: 20px !important;
+  margin-inline-end: 12px !important;
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
-.input-field::placeholder {
-  color: var(--text-placeholder, #94a3b8);
+.Toastify__toast--success {
+  --toastify-icon-color-success: #25B66A !important;
+}
+.Toastify__toast--error {
+  --toastify-icon-color-error: #EF4444 !important;
+}
+.Toastify__toast--warning {
+  --toastify-icon-color-warning: #F59E0B !important;
+}
+.Toastify__toast--info {
+  --toastify-icon-color-info: #69ACCC !important;
 }
 
-.input-field:hover {
-  border-color: #cbd5e1;
+/* Close Button */
+.Toastify__close-button {
+  color: #94A3B8 !important;
+  opacity: 0.7 !important;
+  align-self: center !important;
+  transition: opacity 0.15s ease, color 0.15s ease !important;
+  padding: 4px !important;
+  margin-left: 8px !important;
 }
 
-.input-field:focus {
-  outline: none;
-  border-color: var(--color-primary, #355982);
-  box-shadow: 0 0 0 3px rgba(53, 89, 130, 0.12);
+.Toastify__close-button:hover {
+  color: #FFFFFF !important;
+  opacity: 1 !important;
 }
 
-.input-field-has-toggle {
-  padding-right: 2.75rem;
+.Toastify__close-button > svg {
+  fill: currentColor !important;
 }
 
-.input-field-error {
-  border-color: #ef4444 !important;
+/* Progress Bar - Invisible so autoClose animation timer runs without showing progress bar */
+.Toastify__progress-bar--wrp,
+.Toastify__progress-bar,
+.Toastify__progress-bar--bg {
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
-.input-field-error:focus {
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12) !important;
+/* Mobile Responsiveness: override default 100vw flat banner behavior */
+@media only screen and (max-width: 640px) {
+  .Toastify__toast-container--top-center {
+    top: max(env(safe-area-inset-top, 0px) + 12px, 12px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: calc(100vw - 24px) !important;
+    max-width: 420px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+  }
+
+  .Toastify__toast {
+    min-height: 46px !important;
+    padding: 10px 14px !important;
+    margin-bottom: 8px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 24px -3px rgba(0, 0, 0, 0.5), 0 2px 6px -1px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
+  }
 }
-
-.input-toggle-btn {
-  position: absolute;
-  right: 0.875rem;
-  top: 50%;
-  transform: translateY(-50%);
-  background: transparent;
-  border: none;
-  padding: 0.25rem;
-  color: var(--text-placeholder, #94a3b8);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  transition: color 0.2s ease;
-}
-
-.input-toggle-btn:hover {
-  color: #475569;
-}
-
-.input-toggle-btn:focus-visible {
-  outline: 2px solid var(--color-primary, #355982);
-  outline-offset: 2px;
-}
-
-.field-error {
-  color: #ef4444;
-  font-size: 0.8125rem;
-  margin-top: 0.375rem;
-  margin-bottom: 0;
-  line-height: 1.35;
-  font-weight: 500;
-}
-
-
-

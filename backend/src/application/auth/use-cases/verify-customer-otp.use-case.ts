@@ -48,7 +48,7 @@ export class VerifyCustomerOtpuseCase {
             enterprise_id: null,
             phone: null,
             status: "ACTIVE",
-            email_verified: true,
+            emailVerified: true,
         })
 
         await this.otpService.delete(normalizedEmail);

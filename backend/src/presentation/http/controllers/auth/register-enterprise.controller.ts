@@ -11,17 +11,11 @@ export  class RegisterEnterpriseController {
 
             const data = req.body as RegisterEnterpriseDto
 
-            const result = await this.registerEnterpriseUseCase.execute(data)
+            await this.registerEnterpriseUseCase.execute(data)
 
-            res.status(201).json({
-                status: "success",
-                message: "Enterprise registered successfully",
-                data: {
-                    enterpriseName : result.enterprise.name,
-                    contactPersonName : result.data.name,
-                    email : result.data.email,
-                    role : result.data.role
-                }
+            res.status(200).json({
+                success: true,
+                message: "OTP sent successfully. Please verify your email.",
             });
             
         } catch (error) {

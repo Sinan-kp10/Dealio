@@ -8,7 +8,7 @@ export type CreateUserData = {
   enterprise_id?: string | null;
   phone?: string | null;
   status : UserStatus
-  email_verified: boolean
+  emailVerified: boolean
 };
 
 export interface UserRepository {

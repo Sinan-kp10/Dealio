@@ -20,10 +20,5 @@ export interface EnterpriseSignupRequest {
 export interface EnterpriseSignupResponse {
   success: boolean;
   message: string;
-  data?: {
-    enterpriseName : string
-    contactPersonName : string
-    email : string
-    role : string
-  };
+
 }
