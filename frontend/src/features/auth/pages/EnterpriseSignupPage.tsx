@@ -42,8 +42,7 @@ export function EnterpriseSignupPage() {
             
         } catch (error) {
             if(axios.isAxiosError(error)){
-                const message = error.response?.data?.message ?? "Registration failed. Please try again."
-                toast.error(message)
+                toast.error(error.response?.data?.message ?? "Registration failed. Please try again")
             }else{
                 toast.error("Something went wrong. Please try again.");
             }

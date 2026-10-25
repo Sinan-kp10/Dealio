@@ -3,18 +3,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router-dom";
 import { Mail, ArrowRight } from "lucide-react";
-import { otpSchema, type OtpFormData } from "../schemas/otp.schema";
+import { otpSchema,} from "../schemas/otp.schema";
 import OtpInput from "./OTPinput";
-
-export interface OtpVerificationFormProps {
-  email: string;
-  title: string;
-  countdownKey: string;
-  onSubmit: (otp: string) => Promise<void>;
-  onResend: () => Promise<void>;
-}
+import type { OtpVerificationFormProps } from "../types/otp-verification-form.types";
+import type { OtpFormData } from "../types/otp.types";
 
 export function OtpVerificationForm({ email, title, countdownKey, onSubmit, onResend,}: OtpVerificationFormProps) {
+
   const { register, handleSubmit, setValue, formState: { errors, isSubmitting },} = useForm<OtpFormData>({ resolver: zodResolver(otpSchema)})
 
   const [countdown, setCountdown] = useState(() => {
@@ -70,7 +65,7 @@ export function OtpVerificationForm({ email, title, countdownKey, onSubmit, onRe
   }, [countdown, countdownKey]);
 
   return (
-    <div className="w-full max-w-[440px] bg-white rounded-[24px] sm:rounded-[28px] shadow-[0_20px_45px_-15px_rgba(15,30,60,0.08),0_0_1px_rgba(15,30,60,0.06)] border border-slate-200/70 p-6 sm:p-8 md:p-9">
+    <div className="w-full max-w-[440px] bg-white rounded-[24px] sm:rounded-[28px] shadow-[0_20px_45px_-15px_rgba(15,30,60,0.08),0_0_1px_rgba(15,30,60,0.06)] border border-slate-200/70 p-5 sm:p-8 md:p-9">
       <header className="text-center mb-6">
         <Link
           to="/"
@@ -91,13 +86,13 @@ export function OtpVerificationForm({ email, title, countdownKey, onSubmit, onRe
         </p>
       </header>
 
-      <div className="flex items-center justify-center gap-2.5 py-3 px-4 bg-[#f0f6fc] border border-[#e2eaf3] rounded-2xl mb-6">
+      <div className="flex items-center justify-center gap-2.5 py-2.5 sm:py-3 px-3 sm:px-4 bg-[#f0f6fc] border border-[#e2eaf3] rounded-2xl mb-6 max-w-full">
         <Mail
           size={17}
           className="text-[#355982] shrink-0"
           aria-hidden="true"
         />
-        <p className="text-sm text-slate-600 m-0 truncate">
+        <p className="text-xs sm:text-sm text-slate-600 m-0 truncate">
           Sent to <span className="font-semibold text-slate-900">{email}</span>
         </p>
       </div>

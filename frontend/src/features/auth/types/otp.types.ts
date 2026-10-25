@@ -13,7 +13,7 @@ export interface CustomerVerifyOtpResponse {
   data?: {
     email: string;
     role: string;
-  };
+  }
 }
 
 export interface EnterpriseVerifyOtpResponse {
@@ -34,4 +34,17 @@ export interface ResendOtpRequest {
 export interface ResendOtpResponse {
   status: "success";
   message: string;
+}
+
+export interface VerifyPasswordResetOtpRequest {
+  email: string;
+  otp: string;
+}
+
+export interface VerifyPasswordResetOtpResponse {
+  status: "success";
+  message: string;
+  data: {
+    resetToken: string;
+  }
 }

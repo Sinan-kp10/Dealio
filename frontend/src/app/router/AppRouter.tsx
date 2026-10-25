@@ -5,9 +5,10 @@ import CustomerSignupPage from "../../features/auth/pages/CustomerSignupPage";
 import EnterpriseSignupPage from "../../features/auth/pages/EnterpriseSignupPage";
 import LoginPage from "../../features/auth/pages/LoginPage";
 import ForgottenPasswordPage from "../../features/auth/pages/ForgottenPasswordPage";
-import ResetPassword from "../../features/auth/pages/ResetPasword";
+import ResetPassword from "../../features/auth/pages/ResetPaswordPage";
 import NotFoundPage from "../../pages/NotFoundPage";
 import OtpVerificationPage from "../../features/auth/pages/OtpVerificationPage";
+import VerifyPasswordResetOtpPage from "../../features/auth/pages/VerifyPasswordResetOtpPage";
 
 export function AppRouter() {
   return (
@@ -20,9 +21,10 @@ export function AppRouter() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/forgot-password" element={<ForgottenPasswordPage />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/verify-reset-otp" element={<VerifyPasswordResetOtpPage />}/>
+
 
           <Route path="/register/customer" element={<CustomerSignupPage />}/>
-
           <Route path="/register/enterprise" element={<EnterpriseSignupPage/>}/>
           <Route path="/verify-email" element={<OtpVerificationPage />}/>
           <Route path="/not-found" element={<NotFoundPage />} />

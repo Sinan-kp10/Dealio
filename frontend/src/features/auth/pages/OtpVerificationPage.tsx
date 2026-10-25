@@ -5,29 +5,30 @@ import type { VerifyOtpRequest } from "../types/otp.types";
 import { resendEmailOtp, verifyCustomerOtp, verifyEnterpriseOtp } from "../services/auth.service";
 import OtpVerificationForm from "../components/OtpVerificationForm";
 import { useEffect } from "react";
-import { isVerificationState } from "../utils/registration-verification-state";
 import { OTP_COUNTDOWN_KEYS } from "../utils/otp-countdown-keys";
+import { isRegistrationVerificationState } from "../utils/registration-verification-state";
 
 function OtpVerificationPage() {
     const location = useLocation();
     const navigate = useNavigate();
 
     const state = location.state;
-    const isValidState = isVerificationState(state);
+    const isValidState = isRegistrationVerificationState(state);
 
     useEffect(() => {
         if (!isValidState) {
             navigate("/not-found", { replace: true });
         }
-    }, [isValidState, navigate]);
+    }, [isValidState, navigate])
+
+    if (!isValidState) {
+        return null
+    }
 
     const { email, role } = state;
 
     const onSubmit = async (otp: string) => {
-        const payload: VerifyOtpRequest = {
-            email,
-            otp,
-        };
+        const payload: VerifyOtpRequest = {email,otp};
 
         try {
             if (role === "CUSTOMER") {
@@ -35,19 +36,17 @@ function OtpVerificationPage() {
             } else {
                 await verifyEnterpriseOtp(payload);
             }
-            sessionStorage.removeItem(`${OTP_COUNTDOWN_KEYS.REGISTRATION}:${email.trim().toLowerCase()}`)
 
             toast.success("Email verified successfully!")
 
             navigate("/login", { replace: true })
 
         } catch (error) {
-            
+
             if (axios.isAxiosError(error)) {
-                const message = error.response?.data?.message ?? "OTP verification failed. Please try again.";
-                toast.error(message);
+                toast.error(error.response?.data?.message ?? "OTP verification failed")
             } else {
-                toast.error("Something went wrong. Please try again.");
+                toast.error("Something went wrong. Please try again");
             }
         }
     };
@@ -62,12 +61,7 @@ function OtpVerificationPage() {
             } else {
                 toast.error("Something went wrong. Please try again.");
             }
-            throw error;
         }
-    };
-
-    if (!isValidState) {
-        return null;
     }
 
     return (

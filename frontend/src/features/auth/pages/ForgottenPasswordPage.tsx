@@ -16,6 +16,7 @@ function ForgottenPasswordPage() {
     try {
 
       await forgotPassword(data)
+      toast.success("A password reset code has been sent")
       navigate("/verify-reset-otp", {
         state: {
           email: data.email.trim().toLowerCase(),
@@ -24,8 +25,7 @@ function ForgottenPasswordPage() {
       
     } catch (error) {
       if(axios.isAxiosError(error)){
-        const message = error.response?.data?.message ?? "Unable to process your password reset request. Please try again.";
-        toast.error(message)
+        toast.error(error.response?.data?.message ?? "Unable to process your password reset request")
       }else{
         toast.error("Something went wrong. Please try again.");
       }

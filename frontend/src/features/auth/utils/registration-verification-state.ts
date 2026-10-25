@@ -3,7 +3,11 @@ interface VerificationState {
     role: "ENTERPRISE_MANAGER" | "CUSTOMER";
 }
 
-export function isVerificationState( state: unknown,): state is VerificationState {
+interface ResetOtpLocationState {
+    email: string;
+}
+
+export function isRegistrationVerificationState( state: unknown,): state is VerificationState {
 
     if (typeof state !== "object" || state === null) {
         return false;
@@ -16,4 +20,12 @@ export function isVerificationState( state: unknown,): state is VerificationStat
     return (
         typeof state.email === "string" && state.email.trim().length > 0 &&(state.role === "CUSTOMER" || state.role === "ENTERPRISE_MANAGER")
     );
+}
+
+export function isPassswordResetOtpState(state: unknown): state is ResetOtpLocationState {
+    if (typeof state !== "object" || state === null || !("email" in state)) {
+        return false;
+    }
+
+    return typeof state.email === "string" && state.email.trim().length > 0;
 }

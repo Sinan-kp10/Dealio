@@ -3,14 +3,14 @@ import type { CustomerSignupRequest, CustomerSignupResponse } from "../types/cus
 import type { EnterpriseSignupRequest, EnterpriseSignupResponse } from "../types/enterpriseSignup.types";
 import type { ForgottenPasswordRequest, ForgottenPasswordResponse } from "../types/forgottenPassword.types";
 import type { LoginRequest, LoginResponse } from "../types/login.type";
-import type { CustomerVerifyOtpResponse, EnterpriseVerifyOtpResponse, ResendOtpRequest, ResendOtpResponse, VerifyOtpRequest} from "../types/otp.types";
+import type { CustomerVerifyOtpResponse, EnterpriseVerifyOtpResponse, ResendOtpRequest, ResendOtpResponse, VerifyOtpRequest, VerifyPasswordResetOtpRequest, VerifyPasswordResetOtpResponse} from "../types/otp.types";
+import type { ResetPasswordRequest, ResetPasswordResponse } from "../types/resetPassword.types";
 
 export const registerCustomer = async(payload : CustomerSignupRequest) : Promise<CustomerSignupResponse> => {
 
     const response = await axiosInstance.post<CustomerSignupResponse>("/auth/register/customer", payload)
 
     return response.data
-
 }
 
 export const registerEnterprise = async (payload : EnterpriseSignupRequest) : Promise<EnterpriseSignupResponse> => {
@@ -54,3 +54,16 @@ export const forgotPassword = async(payload : ForgottenPasswordRequest) : Promis
 
     return response.data
 }
+
+export const verifyPasswordResetOtp = async ( payload: VerifyPasswordResetOtpRequest): Promise<VerifyPasswordResetOtpResponse> => {
+
+    const response =  await axiosInstance.post<VerifyPasswordResetOtpResponse>("/auth/verify-password-reset-otp", payload);
+
+    return response.data;
+}
+
+export const resetPassword = async ( payload: ResetPasswordRequest): Promise<ResetPasswordResponse> => {
+    const response = await axiosInstance.post<ResetPasswordResponse>("/auth/reset-password", payload);
+
+    return response.data;
+};
