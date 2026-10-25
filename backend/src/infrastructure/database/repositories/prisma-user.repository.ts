@@ -25,9 +25,18 @@ export class PrismaUserRepository implements UserRepository {
                 role: data.role,
                 enterprise_id: data.enterprise_id ?? null,
                 phone: data.phone ?? null,
-                status: data.status,
                 email_verified: true,
 
+            }
+        })
+    }
+
+    updatePassword = async (id: string, passwordHash: string): Promise<void> => {
+        
+        await prisma.users.update({
+            where : {id},
+            data : {
+                password_hash : passwordHash
             }
         })
     }

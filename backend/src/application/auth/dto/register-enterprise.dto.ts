@@ -6,3 +6,11 @@ export interface RegisterEnterpriseDto {
   phone: string;
   password: string;
 }
+
+export interface EnterpriseRegistrationData {
+  companyName: string;
+  contactPersonName: string;
+  email: string;
+  phone: string;
+  passwordHash: string;
+}

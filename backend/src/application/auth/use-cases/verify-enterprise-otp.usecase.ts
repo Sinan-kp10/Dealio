@@ -1,14 +1,7 @@
 import { EnterpriseRepository } from "../../../domain/auth/repositories/enterprise.repository";
 import { OtpService } from "../../../infrastructure/security/otp.service";
 import { AppError } from "../../../shared/errors/app-error";
-
-export interface EnterpriseRegistrationData {
-  companyName: string;
-  contactPersonName: string;
-  email: string;
-  phone: string;
-  passwordHash: string;
-}
+import { EnterpriseRegistrationData } from "../dto/register-enterprise.dto";
 
 
 export class VerifyEnterpriseOtpuseCase {

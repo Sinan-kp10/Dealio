@@ -2,12 +2,7 @@ import { User } from "../../../domain/auth/entities/user.entity";
 import { UserRepository } from "../../../domain/auth/repositories/user.repository";
 import { OtpService } from "../../../infrastructure/security/otp.service";
 import { AppError } from "../../../shared/errors/app-error";
-
-interface CustomerRegistrationData {
-  name: string;
-  email: string;
-  passwordHash: string;
-}
+import { CustomerRegistrationData } from "../dto/register-customer.dto";
 
 export class VerifyCustomerOtpuseCase {
     constructor(
@@ -47,7 +42,6 @@ export class VerifyCustomerOtpuseCase {
             role: "CUSTOMER",
             enterprise_id: null,
             phone: null,
-            status: "ACTIVE",
             emailVerified: true,
         })
 

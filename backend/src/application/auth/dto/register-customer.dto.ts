@@ -4,3 +4,9 @@ export interface RegisterCustomerDto {
     email: string;
     password: string;
 }
+
+export interface CustomerRegistrationData {
+  name: string;
+  email: string;
+  passwordHash: string;
+}

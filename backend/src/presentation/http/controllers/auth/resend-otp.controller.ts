@@ -12,7 +12,7 @@ export class ResendOtpController {
 
             res.status(200).json({
                 status: "success",
-                message: "A new OTP has been sent to your email."
+                message: "New OTP sent successfully"
             })
 
         } catch (error) {
