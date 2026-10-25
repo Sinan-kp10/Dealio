@@ -29,5 +29,3 @@ export const registerCustomerSchema = z.object({
     path: ["confirmPassword"],
   },
 );
-
-export type RegisterCustomerInput = z.infer<typeof registerCustomerSchema>;

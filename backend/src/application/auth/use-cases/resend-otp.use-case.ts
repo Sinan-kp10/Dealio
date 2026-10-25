@@ -1,7 +1,7 @@
 import { EmailService } from "../../../infrastructure/email/email.service";
 import { OtpService } from "../../../infrastructure/security/otp.service";
 import { AppError } from "../../../shared/errors/app-error";
-import { EmailDto } from "../dto/email.dto";
+import { ResendOtpInput } from "../dto/verify-otp.dto";
 
 export class ResendOtpUseCase {
     constructor(
@@ -9,19 +9,23 @@ export class ResendOtpUseCase {
         private readonly emailService: EmailService,
     ) {}
 
-    execute = async(dto : EmailDto) : Promise<void> => {
+    execute = async(dto : ResendOtpInput) : Promise<void> => {
 
         const normalizedEmail = dto.email.trim().toLowerCase()
 
-        const otp = await this.otpService.resend(normalizedEmail)
+        const otp = dto.purpose === "PASSWORD_RESET" ? await this.otpService.resendPasswordResetOtp(normalizedEmail) 
+            : await this.otpService.resend(normalizedEmail);
 
         try {
-        
             await this.emailService.sendOtp(normalizedEmail,otp)
             
         } catch{
 
-            await this.otpService.delete(normalizedEmail);
+            if (dto.purpose === "REGISTRATION") {
+                await this.otpService.delete(normalizedEmail);
+            } else {
+                await this.otpService.deletePasswordResetOtp(normalizedEmail);
+            }
 
             throw new AppError("Failed to send verification email", 502);
         }

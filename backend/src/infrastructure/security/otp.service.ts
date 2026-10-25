@@ -116,4 +116,27 @@ export class OtpService {
 
         return "valid";
     }
+
+    resendPasswordResetOtp = async (email: string): Promise<string> => {
+
+        const key = `password-reset-otp:${email.trim().toLowerCase()}`
+        const storedOtp = await redis.get(key);
+
+        if (!storedOtp) {
+            throw new AppError("Password reset OTP has expired. Please request a new one.",400)
+        }
+
+        const otp = this.generateOtp();
+
+        await redis.set(key, otp, {
+            EX: this.OTP_EXPIRY_SECONDS,
+        });
+
+        return otp;
+    }
+
+    deletePasswordResetOtp = async (email: string): Promise<void> => {
+        const key = `password-reset-otp:${email.trim().toLowerCase()}`;
+        await redis.del(key);
+    };
 }

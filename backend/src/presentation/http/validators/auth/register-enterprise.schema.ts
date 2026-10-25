@@ -44,5 +44,3 @@ export const registerEnterpriseSchema = z
       path: ["confirmPassword"],
     },
   );
-
-export type RegisterEnterpriseInput = z.infer<typeof registerEnterpriseSchema>;

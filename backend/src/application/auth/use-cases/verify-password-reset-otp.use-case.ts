@@ -18,13 +18,17 @@ export class VerifyPasswordResetOtpUseCase {
         const user = this.userRespository.findByEmail(email)
 
         if (!user) {
-            throw new AppError("Invalid or expired password reset OTP", 400);
+            throw new AppError("Invalid or expired OTP", 400);
         }
 
         const result = await this.otpService.verifyPasswordResetOtp(email, dto.otp)
 
-        if (result !== "valid") {
-            throw new AppError("Invalid or expired password reset OTP", 400);
+        if (result === "invalid") {
+            throw new AppError("Invalid OTP. Please try again", 400);
+        }
+
+        if(result === "expired"){
+            throw new AppError("OTP has expired. Please request a new one", 400)
         }
 
         const resetToken = this.jwtTokenService.generatePasswordResetToken(email)

@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom"
 import { isPassswordResetOtpState } from "../utils/registration-verification-state";
 import { useEffect } from "react";
-import { verifyPasswordResetOtp } from "../services/auth.service";
+import { resendEmailOtp, verifyPasswordResetOtp } from "../services/auth.service";
 import { toast } from "react-toastify";
 import axios from "axios";
 import OtpVerificationForm from "../components/OtpVerificationForm";
@@ -53,9 +53,12 @@ function VerifyPasswordResetOtpPage(){
 
     const handleResendOtp = async () => {
         try {
-            
-            toast.success("");
+            const response = await resendEmailOtp({email, purpose: "PASSWORD_RESET" })
+
+            toast.success(response.message)
+
         } catch (error) {
+
             if (axios.isAxiosError(error)) {
                 toast.error(error.response?.data?.message ?? "Failed to resend OTP");
             } else {

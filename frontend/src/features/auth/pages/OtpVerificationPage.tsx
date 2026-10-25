@@ -53,7 +53,7 @@ function OtpVerificationPage() {
 
     const handleResendOtp = async () => {
         try {
-            const response = await resendEmailOtp({ email });
+            const response = await resendEmailOtp({ email, purpose : "REGITRATION" });
             toast.success(response.message);
         } catch (error) {
             if (axios.isAxiosError(error)) {

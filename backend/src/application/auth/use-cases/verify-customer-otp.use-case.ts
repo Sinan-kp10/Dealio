@@ -16,11 +16,11 @@ export class VerifyCustomerOtpuseCase {
         const result = await this.otpService.verify(normalizedEmail,otp)
 
         if (result === "invalid") {
-            throw new AppError("Invalid OTP. Please try again.", 400);
+            throw new AppError("Invalid OTP. Please try again", 400);
         }
 
         if(result === "expired"){
-            throw new AppError("OTP has expired. Please request a new one.", 400)
+            throw new AppError("OTP has expired. Please request a new one", 400)
         }
 
         const registrationData = await this.otpService.getRegistrationData<CustomerRegistrationData>(normalizedEmail)

@@ -10,5 +10,3 @@ export const verifyOtpSchema = z.object({
     .string()
     .regex(/^\d{6}$/, "OTP must be exactly 6 digits"),
 });
-
-export type VerifyCustomerOtpInput = z.infer<typeof verifyOtpSchema>;
