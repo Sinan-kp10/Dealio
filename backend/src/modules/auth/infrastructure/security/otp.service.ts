@@ -17,11 +17,15 @@ export class OtpService {
 
         await redis.set(key,JSON.stringify({
             otp,
-            registrationData
         }),
         {
             EX : this.OTP_EXPIRY_SECONDS
         })
+
+        await redis.set(`pending-registration:${email}`,
+            JSON.stringify(registrationData),
+            { EX: 15 * 60 },
+        );
 
         return otp
     }
@@ -29,64 +33,48 @@ export class OtpService {
     verify = async(email : string, otp : string) : Promise<"valid" | "invalid" | "expired"> => {
 
         const key = `email-otp:${email.trim().toLowerCase()}`
-        const storedData = await redis.get(key)
+        const storedOtp = await redis.get(key)
 
-        if (!storedData) {
-            return "expired";
-        }
-        const {otp : storedOtp} = JSON.parse(storedData) as {otp : string}
+        if (!storedOtp) return "expired";
 
-        if (storedOtp !== otp) {
-            return "invalid"
-        }
+        if (storedOtp !== otp) return "invalid"
 
         return "valid";
     }
 
     getRegistrationData = async<T>(email: string) : Promise<T | null> =>{
 
-        const key = `email-otp:${email.trim().toLowerCase()}`
+        const key = `pending-registration:${email.trim().toLowerCase()}`;
         const storedData = await redis.get(key);
 
-        if (!storedData) {
-            return null;
-        }
+        if (!storedData)  return null;
 
-        const parsed = JSON.parse(storedData) as {registrationData: T;};
-
-        return parsed.registrationData;
+        return JSON.parse(storedData) as T;
     }
 
-    resend = async (email: string) : Promise<string> => {
+    resend = async (email: string): Promise<string> => {
 
-        const key = `email-otp:${email.trim().toLowerCase()}`
+        const registrationKey = `pending-registration:${email}`;
 
-        const storedData = await redis.get(key)
+        const registrationData = await redis.get(registrationKey);
 
-        if(!storedData){
-            throw new AppError( "OTP has expired. Please register again.",400)
+        if (!registrationData) {
+            throw new AppError("Registration session has expired. Please register again",400,);
         }
 
-        const parsed = JSON.parse(storedData) as {otp : string, registrationData: unknown;}
+        const otp = this.generateOtp();
 
-        const otp = this.generateOtp()
-
-        await redis.set(key,JSON.stringify({
-            ...parsed,
+        await redis.set(`email-otp:${email}`,
             otp,
-        }),
-        {
-            EX : this.OTP_EXPIRY_SECONDS
-        })
+            { EX: this.OTP_EXPIRY_SECONDS },
+        );
 
-        return otp
-        
-    }
+        return otp;
+    };
 
     delete = async(email: string) : Promise<void> => {
-        const key = `email-otp:${email.trim().toLowerCase()}`
 
-        await redis.del(key)
+        await redis.del([`email-otp:${email}`,`pending-registration:${email}`])
     }
 
     generatePasswordResetOtp = async (email : string) : Promise<string> => {

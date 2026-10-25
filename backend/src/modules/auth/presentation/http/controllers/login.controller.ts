@@ -6,7 +6,7 @@ export class  LoginController {
 
     constructor(private readonly loginrUseCase : LoginUseCase){}
 
-    handle= async(req : Request, res : Response, next : NextFunction): Promise<void> => {
+    login = async(req : Request, res : Response, next : NextFunction): Promise<void> => {
 
         try {
 
