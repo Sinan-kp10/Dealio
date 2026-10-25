@@ -16,9 +16,9 @@ export function CustomerNavbar({ onToggleSidebar, isSidebarOpen }: CustomerNavba
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
-        if (  profileRef.current && !profileRef.current.contains(event.target as Node)){
-            setIsProfileOpen(false);
-        }
+            if (  profileRef.current && !profileRef.current.contains(event.target as Node)){
+                setIsProfileOpen(false);
+            }
         }
 
         document.addEventListener("mousedown", handleClickOutside);
@@ -72,11 +72,11 @@ export function CustomerNavbar({ onToggleSidebar, isSidebarOpen }: CustomerNavba
 
             <div className="relative" ref={profileRef}>
                 <button
-                type="button"
-                onClick={() => setIsProfileOpen((prev) => !prev)}
-                className="flex items-center gap-3 pl-1.5 pr-4 sm:pr-5 py-1.5 bg-[#f0f6fc] hover:bg-[#e7f0f9] border border-[#dce8f5] rounded-full transition-all duration-150 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#355982]/20 shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
-                aria-label="User profile menu"
-                aria-expanded={isProfileOpen}
+                    type="button"
+                    onClick={() => setIsProfileOpen((prev) => !prev)}
+                    className="flex items-center gap-3 pl-1.5 pr-4 sm:pr-5 py-1.5 bg-[#f0f6fc] hover:bg-[#e7f0f9] border border-[#dce8f5] rounded-full transition-all duration-150 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#355982]/20 shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
+                    aria-label="User profile menu"
+                    aria-expanded={isProfileOpen}
                 >
                 <div className="w-9 h-9 rounded-full bg-[#2f5581] flex items-center justify-center text-white shrink-0 shadow-xs">
                     <svg width="18" height="18"viewBox="0 0 24 24"fill="currentColor"aria-hidden="true">
@@ -97,13 +97,20 @@ export function CustomerNavbar({ onToggleSidebar, isSidebarOpen }: CustomerNavba
 
                 {isProfileOpen && (
                 <div className="absolute right-0 mt-3 w-72 bg-white rounded-[20px] shadow-[0_12px_36px_-6px_rgba(15,23,42,0.12),0_4px_12px_rgba(15,23,42,0.06)] border border-slate-200/80 py-2.5 z-50 animate-in fade-in duration-150">
-                    <div className="px-5 pt-3.5 pb-3 border-b border-slate-100">
-                    <p className="text-[15px] font-bold text-[#0e2238] tracking-[-0.01em] truncate">
-                        Alex Morgan
-                    </p>
-                    <p className="text-[13px] text-slate-500 truncate mt-0.5">
-                        abcd@example.com
-                    </p>
+                    <div className="px-5 pt-3.5 pb-3 border-b border-slate-100 flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-[#2f5581] flex items-center justify-center text-white shrink-0 shadow-xs">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                          <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z" />
+                        </svg>
+                      </div>
+                      <div className="flex flex-col min-w-0">
+                        <p className="text-[15px] font-bold text-[#0e2238] tracking-[-0.01em] truncate m-0">
+                          Alex Morgan
+                        </p>
+                        <p className="text-[12.5px] text-slate-500 truncate mt-0.5 m-0">
+                          abcd@example.com
+                        </p>
+                      </div>
                     </div>
 
                     <div className="py-1.5">

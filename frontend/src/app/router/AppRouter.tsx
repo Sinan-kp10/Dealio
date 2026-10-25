@@ -10,8 +10,12 @@ import NotFoundPage from "../../pages/NotFoundPage";
 import ForbiddenPage from "../../pages/ForbiddenPage";
 import OtpVerificationPage from "../../features/auth/pages/OtpVerificationPage";
 import VerifyPasswordResetOtpPage from "../../features/auth/pages/VerifyPasswordResetOtpPage";
-import { CustomerLayout } from "../../components/layouts/customer/CustomerLayout";
+import CustomerLayout from "../../components/layouts/customer/CustomerLayout";
 import CustomerQuotationsPage from "../../features/customer/pages/CustomerQuotationsPage";
+import AdminLayout from "../../components/layouts/admin/AdminLayout";
+import AdminDashboardPage from "../../features/admin/pages/AdminDashboardPage";
+import EnterpriseDashboardPage from "../../features/enterpriseManager/pages/EnterpriseDashboardPage";
+import EnterpriseManagerLayout from "../../components/layouts/enterpriseManager/EnterpriseManagerLayout";
 
 export function AppRouter() {
   return (
@@ -23,6 +27,14 @@ export function AppRouter() {
 
         <Route element={<CustomerLayout />}>
           <Route path="/customer" element={<CustomerQuotationsPage />} />
+        </Route>
+
+        <Route element={<AdminLayout />}>
+          <Route path="/admin" element={<AdminDashboardPage />} />
+        </Route>
+
+        <Route element={<EnterpriseManagerLayout />}>
+          <Route path="/enterprise" element={<EnterpriseDashboardPage />} />
         </Route>
 
           <Route path="/login" element={<LoginPage />} />

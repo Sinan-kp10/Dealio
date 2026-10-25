@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import { CustomerNavbar } from "./CustomerNavbar";
 import { CustomerSidebar } from "./CustomerSidebar";
 
-export function CustomerLayout() {
+function CustomerLayout() {
     const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
     const handleCloseSidebar = useCallback(() => {
