@@ -17,7 +17,7 @@ function OtpVerificationPage() {
 
     useEffect(() => {
         if (!isValidState) {
-            navigate("/not-found", { replace: true });
+            navigate("/login", { replace: true });
         }
     }, [isValidState, navigate])
 

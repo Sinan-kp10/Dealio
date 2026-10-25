@@ -24,7 +24,7 @@ function ResetPasswordPage() {
 
   useEffect(() => {
     if (!resetToken) {
-      navigate("/not-found", { replace: true });
+      navigate("/login", { replace: true });
     }
   }, [resetToken, navigate]);
 

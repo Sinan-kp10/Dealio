@@ -1,6 +1,7 @@
 import { FileText, BadgeCheck, CreditCard, MessageSquare, LogOut, X} from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { logout } from "../../../features/auth/services/auth.service";
 
 interface CustomerSidebarProps {
   isOpen: boolean;
@@ -10,10 +11,16 @@ interface CustomerSidebarProps {
 export function CustomerSidebar({ isOpen, onClose }: CustomerSidebarProps) {
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        toast.success("Successfully logged out");
-        navigate("/login");
-    };
+    const handleLogout = async () => {
+        try {
+            await logout();
+
+            toast.success("Successfully logged out");
+            navigate("/login", { replace: true });
+        } catch {
+            toast.error("Failed to log out");
+        }
+    }
 
     return (
         <>

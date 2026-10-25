@@ -31,7 +31,26 @@ export class  LoginController {
         } catch (error) {
             next(error);
         }
-
     }
+
+    logout = async(req : Request, res : Response, next : NextFunction): Promise<void> => {
+        try {
+
+            res.clearCookie("accessToken", {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                path: "/",
+            })
+
+            res.status(200).json({
+                success: true,
+                message: "Logged out successfully.",
+            });
+        } catch (error) {
+            next(error)
+        }
+    }
+
 
 }

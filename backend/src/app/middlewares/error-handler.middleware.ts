@@ -11,6 +11,12 @@ export const errorHandler : ErrorRequestHandler = (error : unknown, _req : Reque
             message : error.message
 
         })
+        return
     }
 
+    res.status(500).json({
+        success: false,
+        status: "error",
+        message: "Something went wrong."
+    })
 }

@@ -2,7 +2,7 @@ import axiosInstance from "../../../app/lib/axios";
 import type { CustomerSignupRequest, CustomerSignupResponse } from "../types/customerSignup.types";
 import type { EnterpriseSignupRequest, EnterpriseSignupResponse } from "../types/enterpriseSignup.types";
 import type { ForgottenPasswordRequest, ForgottenPasswordResponse } from "../types/forgottenPassword.types";
-import type { LoginRequest, LoginResponse } from "../types/login.type";
+import type { LoginRequest, LoginResponse, LogoutResponse } from "../types/login.type";
 import type { CustomerVerifyOtpResponse, EnterpriseVerifyOtpResponse, ResendOtpRequest, ResendOtpResponse, VerifyOtpRequest, VerifyPasswordResetOtpRequest, VerifyPasswordResetOtpResponse} from "../types/otp.types";
 import type { ResetPasswordRequest, ResetPasswordResponse } from "../types/resetPassword.types";
 
@@ -64,6 +64,12 @@ export const verifyPasswordResetOtp = async ( payload: VerifyPasswordResetOtpReq
 
 export const resetPassword = async ( payload: ResetPasswordRequest): Promise<ResetPasswordResponse> => {
     const response = await axiosInstance.post<ResetPasswordResponse>("/auth/reset-password", payload);
+
+    return response.data;
+};
+
+export const logout = async (): Promise<LogoutResponse> => {
+    const response = await axiosInstance.post<LogoutResponse>("/auth/logout")
 
     return response.data;
 };

@@ -21,5 +21,6 @@ authRouter.post("/login", validateRequest(loginSchema), loginController.login)
 authRouter.post("/forgot-password", validateRequest(emailSchema), passwordResetController.forgotPassword)
 authRouter.post("/verify-password-reset-otp", validateRequest(verifyOtpSchema),passwordResetController.verifyPasswordResetOtp)
 authRouter.post("/reset-password",validateRequest(resetPasswordSchema),passwordResetController.resetPassword)
+authRouter.post("/logout", loginController.logout);
 
 export { authRouter };

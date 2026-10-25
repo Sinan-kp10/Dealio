@@ -24,3 +24,8 @@ export interface LoginResponse {
         user: AuthUser
     }
 }
+
+export interface LogoutResponse {
+    email : string
+    password : string
+}

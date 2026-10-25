@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Bell, Menu, X, LogOut, UserRound, Moon } from "lucide-react";
 import { toast } from "react-toastify";
+import { logout } from "../../../features/auth/services/auth.service";
 
 interface CustomerNavbarProps {
   onToggleSidebar: () => void;
@@ -13,14 +14,9 @@ export function CustomerNavbar({ onToggleSidebar, isSidebarOpen }: CustomerNavba
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const profileRef = useRef<HTMLDivElement>(null);
 
-
-    // Close profile dropdown when clicking outside
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
-        if (
-            profileRef.current &&
-            !profileRef.current.contains(event.target as Node)
-        ) {
+        if (  profileRef.current && !profileRef.current.contains(event.target as Node)){
             setIsProfileOpen(false);
         }
         }
@@ -29,9 +25,15 @@ export function CustomerNavbar({ onToggleSidebar, isSidebarOpen }: CustomerNavba
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    const handleLogout = () => {
-        toast.success("Successfully logged out");
-        navigate("/login");
+    const handleLogout = async() => {
+        try {
+            await logout();
+
+            toast.success("Successfully logged out");
+            navigate("/login", { replace: true });
+        } catch {
+            toast.error("Failed to log out");
+        }
     };
 
     return (
