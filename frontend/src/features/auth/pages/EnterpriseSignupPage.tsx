@@ -32,8 +32,13 @@ export function EnterpriseSignupPage() {
                 confirmPassword : data.confirmPassword
             })
 
-            toast.success("Enterprise registered successfully!")
-            navigate("/login")
+            toast.success("OTP sent successfully!");
+            navigate("/verify-email", {
+                state: {
+                    email: data.email.trim().toLowerCase(),
+                    role: "ENTERPRISE_MANAGER",
+                },
+            });
             
         } catch (error) {
             if(axios.isAxiosError(error)){
@@ -91,15 +96,15 @@ export function EnterpriseSignupPage() {
                         noValidate
                     >
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-x-6 sm:gap-y-4.5">
-                            <div className="form-group">
+                            <div className="flex flex-col">
                                 <label
                                     htmlFor="companyName"
                                     className="text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 block"
                                 >
                                     Company Name
                                 </label>
-                                <div className="input-wrapper">
-                                    <span className="input-icon-left" aria-hidden="true">
+                                <div className="relative flex items-center w-full">
+                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center justify-center" aria-hidden="true">
                                         <Building2 size={18} />
                                     </span>
                                     <input
@@ -107,26 +112,30 @@ export function EnterpriseSignupPage() {
                                         type="text"
                                         autoComplete="organization"
                                         placeholder="Enter your company name"
-                                        className={`input-field ${errors.companyName ? "input-field-error" : ""}`}
+                                        className={`w-full h-12 pl-11 pr-4 text-[0.9375rem] text-[#0f1d2f] bg-white border-[1.5px] rounded-xl box-border font-inherit transition-all duration-200 placeholder:text-slate-400 hover:border-slate-300 focus:outline-none ${
+                                            errors.companyName
+                                                ? "border-red-500 focus:border-red-500 focus:ring-[3px] focus:ring-red-500/12"
+                                                : "border-slate-200 focus:border-[#355982] focus:ring-[3px] focus:ring-[#355982]/12"
+                                        }`}
                                         {...register("companyName")}
                                     />
                                 </div>
                                 {errors.companyName && (
-                                    <p className="field-error">
+                                    <p className="text-red-500 text-[0.8125rem] mt-1.5 mb-0 leading-[1.35] font-medium">
                                         {errors.companyName.message}
                                     </p>
                                 )}
                             </div>
 
-                            <div className="form-group">
+                            <div className="flex flex-col">
                                 <label
                                     htmlFor="contactPersonName"
                                     className="text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 block"
                                 >
                                     Contact Person Name
                                 </label>
-                                <div className="input-wrapper">
-                                    <span className="input-icon-left" aria-hidden="true">
+                                <div className="relative flex items-center w-full">
+                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center justify-center" aria-hidden="true">
                                         <User size={18} />
                                     </span>
                                     <input
@@ -134,26 +143,30 @@ export function EnterpriseSignupPage() {
                                         type="text"
                                         autoComplete="name"
                                         placeholder="Enter contact person's name"
-                                        className={`input-field ${errors.contactPersonName ? "input-field-error" : ""}`}
+                                        className={`w-full h-12 pl-11 pr-4 text-[0.9375rem] text-[#0f1d2f] bg-white border-[1.5px] rounded-xl box-border font-inherit transition-all duration-200 placeholder:text-slate-400 hover:border-slate-300 focus:outline-none ${
+                                            errors.contactPersonName
+                                                ? "border-red-500 focus:border-red-500 focus:ring-[3px] focus:ring-red-500/12"
+                                                : "border-slate-200 focus:border-[#355982] focus:ring-[3px] focus:ring-[#355982]/12"
+                                        }`}
                                         {...register("contactPersonName")}
                                     />
                                 </div>
                                 {errors.contactPersonName && (
-                                    <p className="field-error">
+                                    <p className="text-red-500 text-[0.8125rem] mt-1.5 mb-0 leading-[1.35] font-medium">
                                         {errors.contactPersonName.message}
                                     </p>
                                 )}
                             </div>
 
-                            <div className="form-group">
+                            <div className="flex flex-col">
                                 <label
                                     htmlFor="email"
                                     className="text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 block"
                                 >
                                     Work Email
                                 </label>
-                                <div className="input-wrapper">
-                                    <span className="input-icon-left" aria-hidden="true">
+                                <div className="relative flex items-center w-full">
+                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center justify-center" aria-hidden="true">
                                         <Mail size={18} />
                                     </span>
                                     <input
@@ -161,26 +174,30 @@ export function EnterpriseSignupPage() {
                                         type="email"
                                         autoComplete="email"
                                         placeholder="Enter your work email address"
-                                        className={`input-field ${errors.email ? "input-field-error" : ""}`}
+                                        className={`w-full h-12 pl-11 pr-4 text-[0.9375rem] text-[#0f1d2f] bg-white border-[1.5px] rounded-xl box-border font-inherit transition-all duration-200 placeholder:text-slate-400 hover:border-slate-300 focus:outline-none ${
+                                            errors.email
+                                                ? "border-red-500 focus:border-red-500 focus:ring-[3px] focus:ring-red-500/12"
+                                                : "border-slate-200 focus:border-[#355982] focus:ring-[3px] focus:ring-[#355982]/12"
+                                        }`}
                                         {...register("email")}
                                     />
                                 </div>
                                 {errors.email && (
-                                    <p className="field-error">
+                                    <p className="text-red-500 text-[0.8125rem] mt-1.5 mb-0 leading-[1.35] font-medium">
                                         {errors.email.message}
                                     </p>
                                 )}
                             </div>
 
-                            <div className="form-group">
+                            <div className="flex flex-col">
                                 <label
                                     htmlFor="phone"
                                     className="text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 block"
                                 >
                                     Phone
                                 </label>
-                                <div className="input-wrapper">
-                                    <span className="input-icon-left" aria-hidden="true">
+                                <div className="relative flex items-center w-full">
+                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center justify-center" aria-hidden="true">
                                         <Phone size={18} />
                                     </span>
                                     <input
@@ -190,26 +207,30 @@ export function EnterpriseSignupPage() {
                                         autoComplete="tel-national"
                                         maxLength={10}
                                         placeholder="Enter 10-digit mobile number"
-                                        className={`input-field ${errors.phone ? "input-field-error" : ""}`}
+                                        className={`w-full h-12 pl-11 pr-4 text-[0.9375rem] text-[#0f1d2f] bg-white border-[1.5px] rounded-xl box-border font-inherit transition-all duration-200 placeholder:text-slate-400 hover:border-slate-300 focus:outline-none ${
+                                            errors.phone
+                                                ? "border-red-500 focus:border-red-500 focus:ring-[3px] focus:ring-red-500/12"
+                                                : "border-slate-200 focus:border-[#355982] focus:ring-[3px] focus:ring-[#355982]/12"
+                                        }`}
                                         {...register("phone")}
                                     />
                                 </div>
                                 {errors.phone && (
-                                    <p className="field-error">
+                                    <p className="text-red-500 text-[0.8125rem] mt-1.5 mb-0 leading-[1.35] font-medium">
                                         {errors.phone.message}
                                     </p>
                                 )}
                             </div>
 
-                            <div className="form-group">
+                            <div className="flex flex-col">
                                 <label
                                     htmlFor="password"
                                     className="text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 block"
                                 >
                                     Password
                                 </label>
-                                <div className="input-wrapper">
-                                    <span className="input-icon-left" aria-hidden="true">
+                                <div className="relative flex items-center w-full">
+                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center justify-center" aria-hidden="true">
                                         <Lock size={18} />
                                     </span>
                                     <input
@@ -217,30 +238,38 @@ export function EnterpriseSignupPage() {
                                         type={showPassword ? "text" : "password"}
                                         autoComplete="new-password"
                                         placeholder="Create a password"
-                                        className={`input-field input-field-has-toggle ${errors.password ? "input-field-error" : ""}`}
+                                        className={`w-full h-12 pl-11 pr-11 text-[0.9375rem] text-[#0f1d2f] bg-white border-[1.5px] rounded-xl box-border font-inherit transition-all duration-200 placeholder:text-slate-400 hover:border-slate-300 focus:outline-none ${
+                                            errors.password
+                                                ? "border-red-500 focus:border-red-500 focus:ring-[3px] focus:ring-red-500/12"
+                                                : "border-slate-200 focus:border-[#355982] focus:ring-[3px] focus:ring-[#355982]/12"
+                                        }`}
                                         {...register("password")}
                                     />
                                     <button
                                         type="button"
-                                        className="input-toggle-btn"
+                                        className="absolute right-3.5 top-1/2 -translate-y-1/2 bg-transparent border-none p-1 text-slate-400 hover:text-slate-600 cursor-pointer flex items-center justify-center rounded-md transition-colors focus-visible:outline-2 focus-visible:outline-[#355982] focus-visible:outline-offset-2"
                                         onClick={() => setShowPassword((prev) => !prev)}
                                         aria-label={showPassword ? "Hide password" : "Show password"}
                                     >
                                         {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                     </button>
                                 </div>
-                                {errors.password && (<p className="field-error">{errors.password.message}</p>)}
+                                {errors.password && (
+                                    <p className="text-red-500 text-[0.8125rem] mt-1.5 mb-0 leading-[1.35] font-medium">
+                                        {errors.password.message}
+                                    </p>
+                                )}
                             </div>
 
-                            <div className="form-group">
+                            <div className="flex flex-col">
                                 <label
                                     htmlFor="confirmPassword"
                                     className="text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 block"
                                 >
                                     Confirm Password
                                 </label>
-                                <div className="input-wrapper">
-                                    <span className="input-icon-left" aria-hidden="true">
+                                <div className="relative flex items-center w-full">
+                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center justify-center" aria-hidden="true">
                                         <ShieldCheck size={18} />
                                     </span>
                                     <input
@@ -248,12 +277,16 @@ export function EnterpriseSignupPage() {
                                         type={showConfirmPassword ? "text" : "password"}
                                         autoComplete="new-password"
                                         placeholder="Confirm your password"
-                                        className={`input-field input-field-has-toggle ${errors.confirmPassword ? "input-field-error" : ""}`}
+                                        className={`w-full h-12 pl-11 pr-11 text-[0.9375rem] text-[#0f1d2f] bg-white border-[1.5px] rounded-xl box-border font-inherit transition-all duration-200 placeholder:text-slate-400 hover:border-slate-300 focus:outline-none ${
+                                            errors.confirmPassword
+                                                ? "border-red-500 focus:border-red-500 focus:ring-[3px] focus:ring-red-500/12"
+                                                : "border-slate-200 focus:border-[#355982] focus:ring-[3px] focus:ring-[#355982]/12"
+                                        }`}
                                         {...register("confirmPassword")}
                                     />
                                     <button
                                         type="button"
-                                        className="input-toggle-btn"
+                                        className="absolute right-3.5 top-1/2 -translate-y-1/2 bg-transparent border-none p-1 text-slate-400 hover:text-slate-600 cursor-pointer flex items-center justify-center rounded-md transition-colors focus-visible:outline-2 focus-visible:outline-[#355982] focus-visible:outline-offset-2"
                                         onClick={() => setShowConfirmPassword((prev) => !prev)}
                                         aria-label={
                                             showConfirmPassword
@@ -265,7 +298,7 @@ export function EnterpriseSignupPage() {
                                     </button>
                                 </div>
                                 {errors.confirmPassword && (
-                                    <p className="field-error">
+                                    <p className="text-red-500 text-[0.8125rem] mt-1.5 mb-0 leading-[1.35] font-medium">
                                         {errors.confirmPassword.message}
                                     </p>
                                 )}

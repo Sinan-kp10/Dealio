@@ -1,25 +1,62 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 
 import { loginSchema } from "../schemas/login.schema";
 import type { LoginFromData } from "../types/login.type";
+import { login } from "../services/auth.service";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 export function LoginPage() {
-    const [showPassword, setShowPassword] = useState(false);
+    const [showPassword, setShowPassword] = useState(false)
+    const { register, handleSubmit, formState: { errors, isSubmitting }} = useForm<LoginFromData>({resolver: zodResolver(loginSchema)})
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-    } = useForm<LoginFromData>({
-        resolver: zodResolver(loginSchema),
-    });
+    const navigate = useNavigate() 
 
-    const onSubmit = (data: LoginFromData) => {
-        console.log(data);
+    const onSubmit = async(data: LoginFromData) => {
+        try {
+
+            const response = await login(data)
+            const user = response.data.user
+
+            if (!user) {
+                toast.error("Invalid login response. Please try again");
+                return;
+            }
+
+            toast.success("Successfully logged in!");
+
+            switch (user.role) {
+                
+                case "ADMIN":
+                    navigate("/admin");
+                    break;
+
+                case "ENTERPRISE_MANAGER":
+                    navigate("/enterprise");
+                    break;
+
+                case "CUSTOMER":
+                    navigate("/customer");
+                    break;
+
+                default:
+                    navigate("/login");
+                    break;
+            }
+            
+        } catch (error) {
+            if(axios.isAxiosError(error)){
+                const message = error.response?.data?.message ?? "Login failed. Please try again"
+                toast.error(message)
+            }else{
+                toast.error("Something went wrong. Please try again");
+            }
+            
+        }
     };
 
     return (
@@ -46,12 +83,12 @@ export function LoginPage() {
                 </header>
 
                 <form className="flex flex-col gap-4 sm:gap-4.5" onSubmit={handleSubmit(onSubmit)} noValidate>
-                    <div className="form-group">
+                    <div className="flex flex-col">
                         <label htmlFor="email" className="text-sm font-semibold text-slate-800 mb-1.5 block">
                             Email
                         </label>
-                        <div className="input-wrapper">
-                            <span className="input-icon-left" aria-hidden="true">
+                        <div className="relative flex items-center w-full">
+                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center justify-center" aria-hidden="true">
                                 <Mail size={18} />
                             </span>
                             <input
@@ -59,14 +96,22 @@ export function LoginPage() {
                                 type="email"
                                 autoComplete="email"
                                 placeholder="Enter your email address"
-                                className={`input-field ${errors.email ? "input-field-error" : ""}`}
+                                className={`w-full h-12 pl-11 pr-4 text-[0.9375rem] text-[#0f1d2f] bg-white border-[1.5px] rounded-xl box-border font-inherit transition-all duration-200 placeholder:text-slate-400 hover:border-slate-300 focus:outline-none ${
+                                    errors.email
+                                        ? "border-red-500 focus:border-red-500 focus:ring-[3px] focus:ring-red-500/12"
+                                        : "border-slate-200 focus:border-[#355982] focus:ring-[3px] focus:ring-[#355982]/12"
+                                }`}
                                 {...register("email")}
                             />
                         </div>
-                        {errors.email && <p className="field-error">{errors.email.message}</p>}
+                        {errors.email && (
+                            <p className="text-red-500 text-[0.8125rem] mt-1.5 mb-0 leading-[1.35] font-medium">
+                                {errors.email.message}
+                            </p>
+                        )}
                     </div>
 
-                    <div className="form-group">
+                    <div className="flex flex-col">
                         <div className="flex items-center justify-between mb-1.5">
                             <label htmlFor="password" className="text-sm font-semibold text-slate-800 block">
                                 Password
@@ -78,8 +123,8 @@ export function LoginPage() {
                                 Forgot password?
                             </Link>
                         </div>
-                        <div className="input-wrapper">
-                            <span className="input-icon-left" aria-hidden="true">
+                        <div className="relative flex items-center w-full">
+                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center justify-center" aria-hidden="true">
                                 <Lock size={18} />
                             </span>
                             <input
@@ -87,19 +132,27 @@ export function LoginPage() {
                                 type={showPassword ? "text" : "password"}
                                 autoComplete="current-password"
                                 placeholder="Enter your password"
-                                className={`input-field input-field-has-toggle ${errors.password ? "input-field-error" : ""}`}
+                                className={`w-full h-12 pl-11 pr-11 text-[0.9375rem] text-[#0f1d2f] bg-white border-[1.5px] rounded-xl box-border font-inherit transition-all duration-200 placeholder:text-slate-400 hover:border-slate-300 focus:outline-none ${
+                                    errors.password
+                                        ? "border-red-500 focus:border-red-500 focus:ring-[3px] focus:ring-red-500/12"
+                                        : "border-slate-200 focus:border-[#355982] focus:ring-[3px] focus:ring-[#355982]/12"
+                                }`}
                                 {...register("password")}
                             />
                             <button
                                 type="button"
-                                className="input-toggle-btn"
+                                className="absolute right-3.5 top-1/2 -translate-y-1/2 bg-transparent border-none p-1 text-slate-400 hover:text-slate-600 cursor-pointer flex items-center justify-center rounded-md transition-colors focus-visible:outline-2 focus-visible:outline-[#355982] focus-visible:outline-offset-2"
                                 onClick={() => setShowPassword((prev) => !prev)}
                                 aria-label={showPassword ? "Hide password" : "Show password"}
                             >
                                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                             </button>
                         </div>
-                        {errors.password && <p className="field-error">{errors.password.message}</p>}
+                        {errors.password && (
+                            <p className="text-red-500 text-[0.8125rem] mt-1.5 mb-0 leading-[1.35] font-medium">
+                                {errors.password.message}
+                            </p>
+                        )}
                     </div>
 
                     <button

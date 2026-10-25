@@ -1,4 +1,4 @@
-import type { UserStatus } from "../entities/user.entity";
+import type { User, UserStatus } from "../entities/user.entity";
 
 export type CreateEnterpriseData = {
   companyName: string;
@@ -6,6 +6,8 @@ export type CreateEnterpriseData = {
   email: string;
   passwordHash: string;
   phone: string;
+  role: User["role"];
+  emailVerified : boolean
 }
 
 export type CreatedEnterpriseResult = {
