@@ -7,6 +7,7 @@ import { otpSchema,} from "../schemas/otp.schema";
 import OtpInput from "./OTPinput";
 import type { OtpVerificationFormProps } from "../types/otp-verification-form.types";
 import type { OtpFormData } from "../types/otp.types";
+import ButtonSpinner from "../../../components/common/ButtonSpinner";
 
 export function OtpVerificationForm({ email, title, countdownKey, onSubmit, onResend,}: OtpVerificationFormProps) {
 
@@ -121,8 +122,14 @@ export function OtpVerificationForm({ email, title, countdownKey, onSubmit, onRe
           disabled={isSubmitting}
           className="w-full h-12 mt-6 bg-[#2e4d75] hover:not-disabled:bg-[#233b5c] text-white border-0 rounded-xl text-[0.95rem] font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-[0_4px_14px_rgba(46,77,117,0.3)] hover:not-disabled:shadow-[0_6px_18px_rgba(46,77,117,0.35)] hover:not-disabled:-translate-y-0.5 active:not-disabled:translate-y-0 disabled:opacity-65 disabled:cursor-not-allowed transition-all duration-200"
         >
-          <span>Verify & Continue</span>
-          <ArrowRight size={18} aria-hidden="true" />
+          {isSubmitting ? (
+            <ButtonSpinner />
+          ) : (
+            <>
+              <span>Verify & Continue</span>
+              <ArrowRight size={18} aria-hidden="true" />
+            </>
+          )}
         </button>
       </form>
 

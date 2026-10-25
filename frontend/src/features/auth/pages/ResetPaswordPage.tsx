@@ -8,6 +8,7 @@ import { Lock, ShieldCheck, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { toast } from "react-toastify";
 import { resetPassword } from "../services/auth.service";
 import axios from "axios";
+import ButtonSpinner from "../../../components/common/ButtonSpinner";
 
 function ResetPasswordPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -146,7 +147,9 @@ function ResetPasswordPage() {
           <button type="submit" disabled={isSubmitting}
             className="w-full h-12 mt-2 bg-[#2e4d75] hover:not-disabled:bg-[#233b5c] text-white border-0 rounded-xl text-[0.95rem] font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-[0_4px_14px_rgba(46,77,117,0.3)] hover:not-disabled:shadow-[0_6px_18px_rgba(46,77,117,0.35)] hover:not-disabled:-translate-y-0.5 active:not-disabled:translate-y-0 disabled:opacity-65 disabled:cursor-not-allowed transition-all duration-200"
           >
-            {isSubmitting ? ("Resetting...") : (
+            {isSubmitting ? (
+              <ButtonSpinner />
+            ) : (
               <>
                 <span>Reset Password</span>
                 <ArrowRight size={18} aria-hidden="true" />

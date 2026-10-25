@@ -9,6 +9,7 @@ import type { LoginFromData } from "../types/login.type";
 import { login } from "../services/auth.service";
 import axios from "axios";
 import { toast } from "react-toastify";
+import ButtonSpinner from "../../../components/common/ButtonSpinner";
 
 export function LoginPage() {
     const [showPassword, setShowPassword] = useState(false)
@@ -160,7 +161,7 @@ export function LoginPage() {
                         disabled={isSubmitting}
                     >
                         {isSubmitting ? (
-                            "Logging in..."
+                            <ButtonSpinner />
                         ) : (
                             <>
                                 <span>Log In</span>

@@ -7,6 +7,7 @@ import { Mail, ArrowRight } from "lucide-react";
 import { forgotPassword } from "../services/auth.service";
 import axios from "axios";
 import { toast } from "react-toastify";
+import ButtonSpinner from "../../../components/common/ButtonSpinner";
 
 function ForgottenPasswordPage() {
   const { register, handleSubmit, formState: { errors, isSubmitting }} = useForm<ForgottenPasswordFormData>({ resolver: zodResolver(ForgottenPasswordSchema)})
@@ -100,7 +101,7 @@ function ForgottenPasswordPage() {
             className="w-full h-12 mt-6 bg-[#2e4d75] hover:not-disabled:bg-[#233b5c] text-white border-0 rounded-xl text-[0.95rem] font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-[0_4px_14px_rgba(46,77,117,0.3)] hover:not-disabled:shadow-[0_6px_18px_rgba(46,77,117,0.35)] hover:not-disabled:-translate-y-0.5 active:not-disabled:translate-y-0 disabled:opacity-65 disabled:cursor-not-allowed transition-all duration-200"
           >
             {isSubmitting ? (
-              "Sending..."
+              <ButtonSpinner />
             ) : (
               <>
                 <span>Send Verification Code</span>

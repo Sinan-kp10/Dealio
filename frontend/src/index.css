@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 :root {
   /* Global Layout Tokens */
   --navbar-height: 5rem;

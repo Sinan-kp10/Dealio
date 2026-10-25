@@ -7,8 +7,11 @@ import LoginPage from "../../features/auth/pages/LoginPage";
 import ForgottenPasswordPage from "../../features/auth/pages/ForgottenPasswordPage";
 import ResetPassword from "../../features/auth/pages/ResetPaswordPage";
 import NotFoundPage from "../../pages/NotFoundPage";
+import ForbiddenPage from "../../pages/ForbiddenPage";
 import OtpVerificationPage from "../../features/auth/pages/OtpVerificationPage";
 import VerifyPasswordResetOtpPage from "../../features/auth/pages/VerifyPasswordResetOtpPage";
+import { CustomerLayout } from "../../components/layouts/customer/CustomerLayout";
+import CustomerQuotationsPage from "../../features/customer/pages/CustomerQuotationsPage";
 
 export function AppRouter() {
   return (
@@ -16,6 +19,10 @@ export function AppRouter() {
       <Routes>
         <Route element={<PublicLayout />}>
           <Route path="/" element={<HomePage />} />
+        </Route>
+
+        <Route element={<CustomerLayout />}>
+          <Route path="/customer" element={<CustomerQuotationsPage />} />
         </Route>
 
           <Route path="/login" element={<LoginPage />} />
@@ -27,6 +34,8 @@ export function AppRouter() {
           <Route path="/register/customer" element={<CustomerSignupPage />}/>
           <Route path="/register/enterprise" element={<EnterpriseSignupPage/>}/>
           <Route path="/verify-email" element={<OtpVerificationPage />}/>
+          <Route path="/forbidden" element={<ForbiddenPage />} />
+          <Route path="/unauthorized" element={<ForbiddenPage />} />
           <Route path="/not-found" element={<NotFoundPage />} />
 
 
