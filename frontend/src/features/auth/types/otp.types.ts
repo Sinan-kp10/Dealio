@@ -29,7 +29,7 @@ export interface EnterpriseVerifyOtpResponse {
 
 export interface ResendOtpRequest {
   email: string;
-  purpose: "REGITRATION" | "PASSWORD_RESET"
+  purpose: "REGISTRATION" | "PASSWORD_RESET"
 }
 
 export interface ResendOtpResponse {
