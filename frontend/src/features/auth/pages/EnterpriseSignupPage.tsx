@@ -9,6 +9,7 @@ import type { EnterpriseSignupFormData } from "../types/enterpriseSignup.types";
 import { registerEnterprise } from "../services/auth.service";
 import { toast } from "react-toastify";
 import axios from "axios";
+import ButtonSpinner from "../../../components/common/ButtonSpinner";
 
 export function EnterpriseSignupPage() {
     const [showPassword, setShowPassword] = useState(false);
@@ -42,8 +43,7 @@ export function EnterpriseSignupPage() {
             
         } catch (error) {
             if(axios.isAxiosError(error)){
-                const message = error.response?.data?.message ?? "Registration failed. Please try again."
-                toast.error(message)
+                toast.error(error.response?.data?.message ?? "Registration failed. Please try again")
             }else{
                 toast.error("Something went wrong. Please try again.");
             }
@@ -310,8 +310,8 @@ export function EnterpriseSignupPage() {
                             className="w-full h-12 mt-1 sm:mt-2 bg-[#2e4d75] hover:not-disabled:bg-[#233b5c] text-white border-0 rounded-xl text-[0.95rem] font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-[0_4px_14px_rgba(46,77,117,0.3)] hover:not-disabled:shadow-[0_6px_18px_rgba(46,77,117,0.35)] hover:not-disabled:-translate-y-0.5 active:not-disabled:translate-y-0 disabled:opacity-65 disabled:cursor-not-allowed transition-all duration-200"
                             disabled={loading || isSubmitting}
                         >
-                            {isSubmitting ? (
-                                "Creating account..."
+                            {loading || isSubmitting ? (
+                                <ButtonSpinner />
                             ) : (
                                 <>
                                     <span>Create Enterprise Account</span>

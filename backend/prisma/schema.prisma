@@ -10,7 +10,7 @@ datasource db {
 
 
 enum user_role {
-  SUPER_ADMIN
+  ADMIN
   ENTERPRISE_MANAGER
   CUSTOMER
 }
@@ -18,8 +18,6 @@ enum user_role {
 enum user_status {
   ACTIVE
   SUSPENDED
-  PENDING
-  REJECTED
 }
 
 enum enterprise_status {
@@ -39,7 +37,7 @@ model users {
   phone               String?     @db.VarChar(255)
   profile_picture_key String?     @db.VarChar(255)
   email_verified   Boolean @default(false)
-  status              user_status @default(PENDING)
+  status              user_status @default(ACTIVE)
   created_at          DateTime    @default(now()) @db.Timestamptz
   updated_at          DateTime    @updatedAt @db.Timestamptz
   suspended_at        DateTime?   @db.Timestamptz

@@ -9,23 +9,22 @@ import type { LoginFromData } from "../types/login.type";
 import { login } from "../services/auth.service";
 import axios from "axios";
 import { toast } from "react-toastify";
+import ButtonSpinner from "../../../components/common/ButtonSpinner";
+import useAuthStore from "../stores/auth.store";
 
 export function LoginPage() {
     const [showPassword, setShowPassword] = useState(false)
     const { register, handleSubmit, formState: { errors, isSubmitting }} = useForm<LoginFromData>({resolver: zodResolver(loginSchema)})
 
     const navigate = useNavigate() 
+    const setUser = useAuthStore((state) => state.setUser)
 
     const onSubmit = async(data: LoginFromData) => {
         try {
 
             const response = await login(data)
-            const user = response.data.user
-
-            if (!user) {
-                toast.error("Invalid login response. Please try again");
-                return;
-            }
+            const user = response.data?.user
+            setUser(user)
 
             toast.success("Successfully logged in!");
 
@@ -50,8 +49,7 @@ export function LoginPage() {
             
         } catch (error) {
             if(axios.isAxiosError(error)){
-                const message = error.response?.data?.message ?? "Login failed. Please try again"
-                toast.error(message)
+                toast.error(error.response?.data?.message ?? "Login failed. Please try again")
             }else{
                 toast.error("Something went wrong. Please try again");
             }
@@ -161,7 +159,7 @@ export function LoginPage() {
                         disabled={isSubmitting}
                     >
                         {isSubmitting ? (
-                            "Logging in..."
+                            <ButtonSpinner />
                         ) : (
                             <>
                                 <span>Log In</span>

@@ -2,20 +2,35 @@ import { useForm } from "react-hook-form";
 import type { ForgottenPasswordFormData } from "../types/forgottenPassword.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ForgottenPasswordSchema } from "../schemas/forgottenPassword.schema";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Mail, ArrowRight } from "lucide-react";
+import { forgotPassword } from "../services/auth.service";
+import axios from "axios";
+import { toast } from "react-toastify";
+import ButtonSpinner from "../../../components/common/ButtonSpinner";
 
 function ForgottenPasswordPage() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<ForgottenPasswordFormData>({
-    resolver: zodResolver(ForgottenPasswordSchema),
-  });
+  const { register, handleSubmit, formState: { errors, isSubmitting }} = useForm<ForgottenPasswordFormData>({ resolver: zodResolver(ForgottenPasswordSchema)})
+  const navigate = useNavigate()
 
-  const onSubmit = (data: ForgottenPasswordFormData) => {
-    console.log(data);
+  const onSubmit = async(data: ForgottenPasswordFormData) => {
+    try {
+
+      await forgotPassword(data)
+      toast.success("A password reset code has been sent")
+      navigate("/verify-reset-otp", {
+        state: {
+          email: data.email.trim().toLowerCase(),
+        },
+      });
+      
+    } catch (error) {
+      if(axios.isAxiosError(error)){
+        toast.error(error.response?.data?.message ?? "Unable to process your password reset request")
+      }else{
+        toast.error("Something went wrong. Please try again.");
+      }
+    }
   };
 
   return (
@@ -86,7 +101,7 @@ function ForgottenPasswordPage() {
             className="w-full h-12 mt-6 bg-[#2e4d75] hover:not-disabled:bg-[#233b5c] text-white border-0 rounded-xl text-[0.95rem] font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-[0_4px_14px_rgba(46,77,117,0.3)] hover:not-disabled:shadow-[0_6px_18px_rgba(46,77,117,0.35)] hover:not-disabled:-translate-y-0.5 active:not-disabled:translate-y-0 disabled:opacity-65 disabled:cursor-not-allowed transition-all duration-200"
           >
             {isSubmitting ? (
-              "Sending..."
+              <ButtonSpinner />
             ) : (
               <>
                 <span>Send Verification Code</span>

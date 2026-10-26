@@ -7,5 +7,3 @@ export const otpSchema = z.object({
     .length(6, "OTP must contain exactly 6 digits")
     .regex(/^\d{6}$/, "OTP must contain only numbers"),
 });
-
-export type OtpFormData = z.infer<typeof otpSchema>;
