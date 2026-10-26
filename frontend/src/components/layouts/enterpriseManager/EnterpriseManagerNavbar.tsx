@@ -4,6 +4,7 @@ import { Bell, Menu, X, LogOut, UserRound, Moon } from "lucide-react";
 import { toast } from "react-toastify";
 import { logout } from "../../../features/auth/services/auth.service";
 import useAuthStore from "../../../features/auth/stores/auth.store";
+import ConfirmationModal from "../../common/confirmationModel/ConfirmationModal";
 
 interface EnterpriseManagerNavbarProps {
   onToggleSidebar: () => void;
@@ -13,9 +14,10 @@ interface EnterpriseManagerNavbarProps {
 export function EnterpriseManagerNavbar({ onToggleSidebar, isSidebarOpen,}: EnterpriseManagerNavbarProps) {
   const navigate = useNavigate();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const profileRef = useRef<HTMLDivElement>(null)
-  const user = useAuthStore((state) => state.user)
-    const clearAuth = useAuthStore((state) => state.clearAuth)
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
+  const user = useAuthStore((state) => state.user);
+  const clearAuth = useAuthStore((state) => state.clearAuth);
 
 
 
@@ -32,13 +34,14 @@ export function EnterpriseManagerNavbar({ onToggleSidebar, isSidebarOpen,}: Ente
 
   const handleLogout = async () => {
     try {
-      await logout()
-      clearAuth()
+      await logout();
+      clearAuth();
       toast.success("Successfully logged out");
-      navigate("/login", { replace: true })
-      
+      navigate("/login", { replace: true });
     } catch {
       toast.error("Failed to log out");
+    } finally {
+      setIsLogoutModalOpen(false);
     }
   };
 
@@ -160,7 +163,10 @@ export function EnterpriseManagerNavbar({ onToggleSidebar, isSidebarOpen,}: Ente
                 <div className="pt-1.5 border-t border-slate-100">
                   <button
                     type="button"
-                    onClick={handleLogout}
+                    onClick={() => {
+                      setIsProfileOpen(false);
+                      setIsLogoutModalOpen(true);
+                    }}
                     className="w-full flex items-center gap-3 px-5 py-3 text-[13.5px] font-medium text-red-600 hover:bg-red-50/60 transition-colors text-left cursor-pointer"
                   >
                     <LogOut size={18} className="text-red-500" />
@@ -172,6 +178,14 @@ export function EnterpriseManagerNavbar({ onToggleSidebar, isSidebarOpen,}: Ente
           </div>
         </div>
       </div>
+
+      <ConfirmationModal
+        isOpen={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
+        onConfirm={handleLogout}
+        title="Log Out"
+        message="Are you sure you want to log out?"
+      />
     </header>
   );
 }
