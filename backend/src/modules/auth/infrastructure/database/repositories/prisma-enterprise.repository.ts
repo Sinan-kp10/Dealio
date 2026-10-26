@@ -1,7 +1,16 @@
 import { CreatedEnterpriseResult, CreateEnterpriseData, EnterpriseRepository } from "../../../domain/repositories/enterprise.repository";
 import { prisma } from "../../../../../infrastructure/database/prisma/prisma-client";
+import { Enterprise } from "../../../domain/entities/enterprise.entity";
 
 export class PrismaEnterpriseRepository implements EnterpriseRepository {
+
+    findById = async (id: string): Promise<Enterprise | null> => {
+        return  await prisma.enterprises.findUnique({
+            where: { id },
+        });
+
+
+    };
 
     findUserByEmail= async(email: string): Promise<boolean> => {
         const user = await prisma.users.findUnique({

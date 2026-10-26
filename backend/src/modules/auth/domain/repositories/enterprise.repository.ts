@@ -1,3 +1,5 @@
+import { BaseRepository } from "../../../../shared/domian/base.repository";
+import { Enterprise } from "../entities/enterprise.entity";
 import type { User, UserStatus } from "../entities/user.entity";
 
 export type CreateEnterpriseData = {
@@ -24,7 +26,7 @@ export type CreatedEnterpriseResult = {
   }
 }
 
-export interface EnterpriseRepository {
+export interface EnterpriseRepository extends BaseRepository<Enterprise> {
   findUserByEmail(email: string): Promise<boolean>;
 
   create(data: CreateEnterpriseData): Promise<CreatedEnterpriseResult>;

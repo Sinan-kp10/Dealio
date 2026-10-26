@@ -15,7 +15,7 @@ export class VerifyPasswordResetOtpUseCase {
     execute = async (dto : VerifyOtpDto) : Promise<{resetToken : string}> => {
 
         const email = dto.email.trim().toLowerCase()
-        const user = this.userRespository.findByEmail(email)
+        const user = await this.userRespository.findByEmail(email)
 
         if (!user) {
             throw new AppError("Invalid or expired OTP", 400);
