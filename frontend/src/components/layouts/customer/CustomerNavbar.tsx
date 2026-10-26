@@ -84,7 +84,7 @@ export function CustomerNavbar({ onToggleSidebar, isSidebarOpen }: CustomerNavba
                 >
                 <div className="w-9 h-9 rounded-full bg-[#2f5581] flex items-center justify-center text-white shrink-0 shadow-xs">
                     <svg width="18" height="18"viewBox="0 0 24 24"fill="currentColor"aria-hidden="true">
-                    <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z" />
+                        <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z" />
                     </svg>
                 </div>
 

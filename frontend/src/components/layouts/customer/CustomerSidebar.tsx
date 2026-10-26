@@ -33,8 +33,8 @@ export function CustomerSidebar({ isOpen, onClose }: CustomerSidebarProps) {
 
             <aside
                 className={`
-                fixed inset-y-0 left-0 z-50 w-72 bg-white flex flex-col justify-between p-4 shadow-2xl transition-transform duration-300 ease-in-out
-                lg:static lg:z-auto lg:w-64 lg:shadow-none lg:border-r lg:border-slate-200/80 lg:min-h-[calc(100vh-68px)] lg:translate-x-0
+                fixed inset-y-0 left-0 z-50 w-72 bg-white flex flex-col justify-between p-4 shadow-2xl transition-transform duration-300 ease-in-out overflow-y-auto
+                lg:sticky lg:top-16 md:lg:top-[68px] lg:z-20 lg:w-64 lg:h-[calc(100vh-68px)] lg:shadow-none lg:border-r lg:border-slate-200/80 lg:translate-x-0 lg:overflow-y-auto
                 ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
                 `}
                 aria-label="Customer Navigation"
