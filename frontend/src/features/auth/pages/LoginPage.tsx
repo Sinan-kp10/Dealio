@@ -9,7 +9,7 @@ import type { LoginFromData } from "../types/login.type";
 import { login } from "../services/auth.service";
 import axios from "axios";
 import { toast } from "react-toastify";
-import ButtonSpinner from "../../../components/common/ButtonSpinner";
+import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
 import useAuthStore from "../stores/auth.store";
 
 export function LoginPage() {

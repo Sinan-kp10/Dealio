@@ -7,7 +7,7 @@ import { Mail, ArrowRight } from "lucide-react";
 import { forgotPassword } from "../services/auth.service";
 import axios from "axios";
 import { toast } from "react-toastify";
-import ButtonSpinner from "../../../components/common/ButtonSpinner";
+import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
 
 function ForgottenPasswordPage() {
   const { register, handleSubmit, formState: { errors, isSubmitting }} = useForm<ForgottenPasswordFormData>({ resolver: zodResolver(ForgottenPasswordSchema)})

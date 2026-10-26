@@ -11,13 +11,14 @@ import ForbiddenPage from "../../pages/ForbiddenPage";
 import OtpVerificationPage from "../../features/auth/pages/OtpVerificationPage";
 import VerifyPasswordResetOtpPage from "../../features/auth/pages/VerifyPasswordResetOtpPage";
 import CustomerLayout from "../../components/layouts/customer/CustomerLayout";
-import CustomerQuotationsPage from "../../features/customer/pages/CustomerQuotationsPage";
+import QuotationsPage from "../../features/quotations/pages/customer/QuotationsPage";
 import AdminLayout from "../../components/layouts/admin/AdminLayout";
-import AdminDashboardPage from "../../features/admin/pages/AdminDashboardPage";
-import EnterpriseDashboardPage from "../../features/enterpriseManager/pages/EnterpriseDashboardPage";
+import AdminDashboardPage from "../../features/dashboard/pages/AdminDashboardPage";
+import EnterpriseDashboardPage from "../../features/dashboard/pages/EnterpriseDashboardPage";
 import EnterpriseManagerLayout from "../../components/layouts/enterpriseManager/EnterpriseManagerLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import { PublicRoute } from "./PublicRoute";
+import CustomerManagementPage from "../../features/user-management/pages/CustomerManagementPage";
 
 export function AppRouter() {
   return (
@@ -26,13 +27,14 @@ export function AppRouter() {
 
         <Route element={<ProtectedRoute allowedRoles={["CUSTOMER"]} />}>
           <Route element={<CustomerLayout />}>
-            <Route path="/customer" element={<CustomerQuotationsPage />} />
+            <Route path="/customer" element={<QuotationsPage />} />
           </Route>
         </Route>
 
         <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
           <Route element={<AdminLayout />}>
             <Route path="/admin" element={<AdminDashboardPage />} />
+            <Route path="/admin/customers" element={<CustomerManagementPage />} />
           </Route>
         </Route>
 

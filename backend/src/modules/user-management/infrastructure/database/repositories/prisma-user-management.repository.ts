@@ -17,6 +17,8 @@ export class PrismaUserManagementRepository implements UserManagementRepository 
 
     findUsers = async(filters: UserListFiltersDto): Promise<PaginatedUsersDto> => {
 
+        const DEFAULT_LIMIT = 5;
+
         const {search, status, page, limit } = filters
         const searchTerm = search?.trim()
 
@@ -51,7 +53,7 @@ export class PrismaUserManagementRepository implements UserManagementRepository 
         const [users, total] = await Promise.all([
             prisma.users.findMany({
                 where,
-                skip: (page - 1) * limit,
+                skip: (page - 1) * (limit || DEFAULT_LIMIT),
                 take: limit,
                 orderBy: { created_at: "desc" },
                 select: userListSelect,

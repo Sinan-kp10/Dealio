@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
 import useAuthStore from "../../features/auth/stores/auth.store";
+import FullPageSpinner from "../../components/common/loading/FullPageSpinner";
 
 export function PublicRoute() {
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
@@ -9,7 +10,7 @@ export function PublicRoute() {
     const user = useAuthStore((state) => state.user);
 
     if(isLoading){
-        return <div>Loading...</div>;
+        return <FullPageSpinner />
     }
 
     if(isAuthenticated && user){
@@ -25,5 +26,5 @@ export function PublicRoute() {
         }
     }
 
-    return <Outlet />;
+    return <Outlet />
 }
