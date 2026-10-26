@@ -1,5 +1,6 @@
 import { Search, ChevronDown } from "lucide-react";
 import Pagination from "../../../components/common/pagination/Pagination";
+import TableSkeleton from "../../../components/common/loading/TableSkeleton";
 import { useEffect, useState } from "react";
 import type { Customer, CustomerStatus } from "../types/user-management.types";
 import { getCustomers } from "../service/user-management.service";
@@ -136,14 +137,7 @@ export function CustomerManagementPage() {
 
                         <tbody className="divide-y divide-slate-100">
                             {loading ? (
-                                <tr>
-                                <td colSpan={6} className="py-12 text-center">
-                                    <div className="flex items-center justify-center gap-2 text-sm text-slate-500">
-                                    <span className="w-4 h-4 border-2 border-slate-300 border-t-[#2d5178] rounded-full animate-spin" />
-                                    Loading customers...
-                                    </div>
-                                </td>
-                                </tr>
+                                <TableSkeleton rows={PAGE_LIMIT} columns={6} />
                             ) : customer.length === 0 ? (
                                 <tr>
                                 <td colSpan={6} className="py-12 text-center">
@@ -197,7 +191,6 @@ export function CustomerManagementPage() {
                                         )}
                                     </td>
 
-                                    {/* Actions */}
                                     <td className="py-4 px-6 text-center align-middle whitespace-nowrap">
                                     <div className="flex items-center justify-center gap-2">
                                         <button
@@ -226,7 +219,13 @@ export function CustomerManagementPage() {
                     </table>
                 </div>
 
-                {!loading && totalPages > 0 && (<Pagination currentPage={page} totalPages={totalPages} />)}
+                {totalPages > 0 && (
+                    <Pagination
+                        currentPage={page}
+                        totalPages={totalPages}
+                        onPageChange={setPage}
+                    />
+                )}
             </div>
         </div>
     );
