@@ -9,7 +9,7 @@ import type { EnterpriseSignupFormData } from "../types/enterpriseSignup.types";
 import { registerEnterprise } from "../services/auth.service";
 import { toast } from "react-toastify";
 import axios from "axios";
-import ButtonSpinner from "../../../components/common/ButtonSpinner";
+import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
 
 export function EnterpriseSignupPage() {
     const [showPassword, setShowPassword] = useState(false);

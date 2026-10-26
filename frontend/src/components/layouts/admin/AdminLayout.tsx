@@ -15,7 +15,7 @@ function AdminLayout() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-[#f8fafc] text-slate-800 flex flex-col antialiased">
+        <div className="min-h-screen bg-[#F0F6FB] text-slate-800 flex flex-col antialiased">
             <AdminNavbar
                 onToggleSidebar={handleToggleSidebar}
                 isSidebarOpen={isMobileSidebarOpen}
@@ -26,7 +26,7 @@ function AdminLayout() {
                 isOpen={isMobileSidebarOpen}
                 onClose={handleCloseSidebar}
                 />
-                <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 overflow-y-auto">
+                <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8">
                 <Outlet />
                 </main>
             </div>

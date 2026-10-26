@@ -8,7 +8,7 @@ import { User, Mail, Lock, ShieldCheck, Eye, EyeOff, ArrowRight } from "lucide-r
 import { registerCustomer } from "../services/auth.service";
 import { toast } from "react-toastify";
 import axios from "axios";
-import ButtonSpinner from "../../../components/common/ButtonSpinner";
+import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
 
 export function CustomerSignupPage() {
     const [showPassword, setShowPassword] = useState(false);

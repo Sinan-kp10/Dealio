@@ -7,7 +7,7 @@ import { otpSchema,} from "../schemas/otp.schema";
 import OtpInput from "./OTPinput";
 import type { OtpVerificationFormProps } from "../types/otp-verification-form.types";
 import type { OtpFormData } from "../types/otp.types";
-import ButtonSpinner from "../../../components/common/ButtonSpinner";
+import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
 
 export function OtpVerificationForm({ email, title, countdownKey, onSubmit, onResend,}: OtpVerificationFormProps) {
 

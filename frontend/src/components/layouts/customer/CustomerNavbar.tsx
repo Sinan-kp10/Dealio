@@ -1,9 +1,10 @@
-import { useState, useRef, useEffect} from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Bell, Menu, X, LogOut, UserRound, Moon } from "lucide-react";
 import { toast } from "react-toastify";
 import { logout } from "../../../features/auth/services/auth.service";
 import useAuthStore from "../../../features/auth/stores/auth.store";
+import ConfirmationModal from "../../common/confirmationModel/ConfirmationModal";
 
 interface CustomerNavbarProps {
   onToggleSidebar: () => void;
@@ -13,9 +14,10 @@ interface CustomerNavbarProps {
 export function CustomerNavbar({ onToggleSidebar, isSidebarOpen }: CustomerNavbarProps) {
     const navigate = useNavigate();
     const [isProfileOpen, setIsProfileOpen] = useState(false);
-    const profileRef = useRef<HTMLDivElement>(null)
-    const user = useAuthStore((state) => state.user)
-    const clearAuth = useAuthStore((state) => state.clearAuth)
+    const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+    const profileRef = useRef<HTMLDivElement>(null);
+    const user = useAuthStore((state) => state.user);
+    const clearAuth = useAuthStore((state) => state.clearAuth);
 
 
     useEffect(() => {
@@ -29,14 +31,16 @@ export function CustomerNavbar({ onToggleSidebar, isSidebarOpen }: CustomerNavba
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    const handleLogout = async() => {
+    const handleLogout = async () => {
         try {
             await logout();
-            clearAuth()
+            clearAuth();
             toast.success("Successfully logged out");
             navigate("/login", { replace: true });
         } catch {
             toast.error("Failed to log out");
+        } finally {
+            setIsLogoutModalOpen(false);
         }
     };
 
@@ -84,7 +88,7 @@ export function CustomerNavbar({ onToggleSidebar, isSidebarOpen }: CustomerNavba
                 >
                 <div className="w-9 h-9 rounded-full bg-[#2f5581] flex items-center justify-center text-white shrink-0 shadow-xs">
                     <svg width="18" height="18"viewBox="0 0 24 24"fill="currentColor"aria-hidden="true">
-                    <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z" />
+                        <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z" />
                     </svg>
                 </div>
 
@@ -139,7 +143,12 @@ export function CustomerNavbar({ onToggleSidebar, isSidebarOpen }: CustomerNavba
                     </div>
 
                     <div className="pt-1.5 border-t border-slate-100">
-                    <button type="button"onClick={handleLogout}
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setIsProfileOpen(false);
+                            setIsLogoutModalOpen(true);
+                        }}
                         className="w-full flex items-center gap-3 px-5 py-3 text-[13.5px] font-medium text-red-600 hover:bg-red-50/60 transition-colors text-left cursor-pointer"
                     >
                         <LogOut size={18} className="text-red-500" />
@@ -151,6 +160,14 @@ export function CustomerNavbar({ onToggleSidebar, isSidebarOpen }: CustomerNavba
             </div>
             </div>
         </div>
+
+        <ConfirmationModal
+            isOpen={isLogoutModalOpen}
+            onClose={() => setIsLogoutModalOpen(false)}
+            onConfirm={handleLogout}
+            title="Log Out"
+            message="Are you sure you want to log out?"
+        />
         </header>
     );
 }

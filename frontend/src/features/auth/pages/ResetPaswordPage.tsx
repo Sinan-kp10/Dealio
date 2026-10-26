@@ -8,7 +8,7 @@ import { Lock, ShieldCheck, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { toast } from "react-toastify";
 import { resetPassword } from "../services/auth.service";
 import axios from "axios";
-import ButtonSpinner from "../../../components/common/ButtonSpinner";
+import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
 
 function ResetPasswordPage() {
   const [showPassword, setShowPassword] = useState(false);

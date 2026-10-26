@@ -1,11 +1,12 @@
-import type { Request, Response, NextFunction, RequestHandler } from "express";
+import type { Request, NextFunction, RequestHandler } from "express";
 import { z } from "zod";
 import { AppError } from "../../shared/errors/app-error"; 
 
+export const validateRequest = ( schema: z.ZodType,source: "body" | "query" | "params" = "body",): RequestHandler => {
+    return (req : Request, _res , next : NextFunction): void => {
 
-export const validateRequest = (schema: z.ZodType): RequestHandler => {
-    return (req: Request, _res: Response, next: NextFunction): void => {
-        const result = schema.safeParse(req.body);
+        const input = req[source];
+        const result = schema.safeParse(input);
 
         if (!result.success) {
             const errors = result.error.issues.map((issue) => ({
@@ -17,7 +18,10 @@ export const validateRequest = (schema: z.ZodType): RequestHandler => {
             return;
         }
 
-        req.body = result.data;
+        if (source === "body") {
+            req.body = result.data;
+        }
+
         next();
     };
 };

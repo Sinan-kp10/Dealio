@@ -15,7 +15,7 @@ function EnterpriseManagerLayout() {
     }, []);
 
     return (
-      <div className="min-h-screen bg-[#f8fafc] text-slate-800 flex flex-col antialiased">
+      <div className="min-h-screen bg-[#F0F6FB] text-slate-800 flex flex-col antialiased">
         <EnterpriseManagerNavbar
           onToggleSidebar={handleToggleSidebar}
           isSidebarOpen={isMobileSidebarOpen}
