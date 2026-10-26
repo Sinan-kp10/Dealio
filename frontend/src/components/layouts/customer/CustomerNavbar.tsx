@@ -1,8 +1,9 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Bell, Menu, X, LogOut, UserRound, Moon } from "lucide-react";
 import { toast } from "react-toastify";
 import { logout } from "../../../features/auth/services/auth.service";
+import useAuthStore from "../../../features/auth/stores/auth.store";
 
 interface CustomerNavbarProps {
   onToggleSidebar: () => void;
@@ -12,7 +13,10 @@ interface CustomerNavbarProps {
 export function CustomerNavbar({ onToggleSidebar, isSidebarOpen }: CustomerNavbarProps) {
     const navigate = useNavigate();
     const [isProfileOpen, setIsProfileOpen] = useState(false);
-    const profileRef = useRef<HTMLDivElement>(null);
+    const profileRef = useRef<HTMLDivElement>(null)
+    const user = useAuthStore((state) => state.user)
+    const clearAuth = useAuthStore((state) => state.clearAuth)
+
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -28,7 +32,7 @@ export function CustomerNavbar({ onToggleSidebar, isSidebarOpen }: CustomerNavba
     const handleLogout = async() => {
         try {
             await logout();
-
+            clearAuth()
             toast.success("Successfully logged out");
             navigate("/login", { replace: true });
         } catch {
@@ -86,10 +90,10 @@ export function CustomerNavbar({ onToggleSidebar, isSidebarOpen }: CustomerNavba
 
                 <div className="flex flex-col text-left leading-tight">
                     <span className="text-[13.5px] font-bold text-[#0e2238] tracking-[-0.01em] truncate max-w-[120px] sm:max-w-[160px]">
-                    Alex Morgan
+                        {user?.name}
                     </span>
                     <span className="text-[11.5px] font-medium text-[#5c7797] truncate max-w-[120px] sm:max-w-[160px] hidden sm:inline mt-0.5">
-                    abcd@example.com
+                        {user?.email}
                     </span>
                 </div>
                 </button>
@@ -105,10 +109,10 @@ export function CustomerNavbar({ onToggleSidebar, isSidebarOpen }: CustomerNavba
                       </div>
                       <div className="flex flex-col min-w-0">
                         <p className="text-[15px] font-bold text-[#0e2238] tracking-[-0.01em] truncate m-0">
-                          Alex Morgan
+                           {user?.name}
                         </p>
                         <p className="text-[12.5px] text-slate-500 truncate mt-0.5 m-0">
-                          abcd@example.com
+                          {user?.email}
                         </p>
                       </div>
                     </div>

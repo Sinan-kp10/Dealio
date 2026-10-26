@@ -1,7 +1,9 @@
 import { AppRouter } from "./app/router/AppRouter";
+import useAuth from "./features/auth/hook/useAuth";
 
 function App() {
-  return <AppRouter />;
+  useAuth()
+  return <AppRouter />
 }
 
 export default App;

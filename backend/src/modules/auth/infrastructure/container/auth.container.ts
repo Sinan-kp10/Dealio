@@ -1,5 +1,6 @@
 
 import { ForgotPasswordUseCase } from "../../application/use-cases/forgot-password.use-case";
+import { GetCurrentUserUseCase } from "../../application/use-cases/get-current-user.use-case";
 import { LoginUseCase } from "../../application/use-cases/login.use-case";
 import { RegisterCustomerUseCase } from "../../application/use-cases/register-customer.use-case";
 import { RegisterEnterpriseUseCase } from "../../application/use-cases/register-enterprise.use-case";
@@ -8,6 +9,7 @@ import { ResetPasswordUseCase } from "../../application/use-cases/reset-password
 import { VerifyCustomerOtpuseCase } from "../../application/use-cases/verify-customer-otp.use-case";
 import { VerifyEnterpriseOtpuseCase } from "../../application/use-cases/verify-enterprise-otp.usecase";
 import { VerifyPasswordResetOtpUseCase } from "../../application/use-cases/verify-password-reset-otp.use-case";
+import { CurrentUserController } from "../../presentation/http/controllers/current-user.controller";
 import { LoginController } from "../../presentation/http/controllers/login.controller";
 import { OtpController } from "../../presentation/http/controllers/otp.controller";
 import { PasswordResetController } from "../../presentation/http/controllers/password-reset.controller";
@@ -39,3 +41,6 @@ export const passwordResetController = new PasswordResetController(forgotPasswor
 //login
 const loginUseCase = new LoginUseCase(userRepository, passwordService, jwtTokenService)
 export const loginController = new LoginController(loginUseCase)
+
+const getCurrentUserUseCase = new GetCurrentUserUseCase(userRepository)
+export const currentUserController = new CurrentUserController(getCurrentUserUseCase)

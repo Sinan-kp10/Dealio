@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Bell, Menu, X, LogOut, Settings, Moon } from "lucide-react";
 import { toast } from "react-toastify";
 import { logout } from "../../../features/auth/services/auth.service";
+import useAuthStore from "../../../features/auth/stores/auth.store";
 
 interface AdminNavbarProps {
   onToggleSidebar: () => void;
@@ -12,7 +13,10 @@ interface AdminNavbarProps {
 export function AdminNavbar({ onToggleSidebar, isSidebarOpen }: AdminNavbarProps) {
     const navigate = useNavigate();
     const [isProfileOpen, setIsProfileOpen] = useState(false);
-    const profileRef = useRef<HTMLDivElement>(null);
+    const profileRef = useRef<HTMLDivElement>(null)
+    const user = useAuthStore((state) => state.user)
+    const clearAuth = useAuthStore((state) => state.clearAuth)
+
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -28,6 +32,7 @@ export function AdminNavbar({ onToggleSidebar, isSidebarOpen }: AdminNavbarProps
     const handleLogout = async () => {
         try {
             await logout();
+            clearAuth()
             toast.success("Successfully logged out");
             navigate("/login", { replace: true });
         } catch {
@@ -92,10 +97,10 @@ export function AdminNavbar({ onToggleSidebar, isSidebarOpen }: AdminNavbarProps
 
                             <div className="flex flex-col text-left leading-tight">
                                 <span className="text-[13.5px] font-bold text-[#0e2238] tracking-[-0.01em] truncate max-w-[120px] sm:max-w-[160px]">
-                                    Admin
+                                    {user?.name}
                                 </span>
                                 <span className="text-[11.5px] font-medium text-[#5c7797] truncate max-w-[120px] sm:max-w-[160px] hidden sm:inline mt-0.5">
-                                    admin@dealio.com
+                                    {user?.email}
                                 </span>
                             </div>
                         </button>
@@ -111,10 +116,12 @@ export function AdminNavbar({ onToggleSidebar, isSidebarOpen }: AdminNavbarProps
                                 </div>
                                 <div className="flex flex-col min-w-0">
                                     <p className="text-[15px] font-bold text-[#0e2238] tracking-[-0.01em] truncate m-0">
-                                        Admin
+                                        {user?.name}
                                     </p>
                                     <p className="text-[12.5px] text-slate-500 truncate mt-0.5 m-0">
-                                        admin@dealio.com
+                                        {user?.email
+                                        
+                                        }
                                     </p>
                                 </div>
                             </div>

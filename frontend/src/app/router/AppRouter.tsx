@@ -16,43 +16,52 @@ import AdminLayout from "../../components/layouts/admin/AdminLayout";
 import AdminDashboardPage from "../../features/admin/pages/AdminDashboardPage";
 import EnterpriseDashboardPage from "../../features/enterpriseManager/pages/EnterpriseDashboardPage";
 import EnterpriseManagerLayout from "../../components/layouts/enterpriseManager/EnterpriseManagerLayout";
+import ProtectedRoute from "./ProtectedRoute";
+import { PublicRoute } from "./PublicRoute";
 
 export function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<PublicLayout />}>
-          <Route path="/" element={<HomePage />} />
+
+        <Route element={<ProtectedRoute allowedRoles={["CUSTOMER"]} />}>
+          <Route element={<CustomerLayout />}>
+            <Route path="/customer" element={<CustomerQuotationsPage />} />
+          </Route>
         </Route>
 
-        <Route element={<CustomerLayout />}>
-          <Route path="/customer" element={<CustomerQuotationsPage />} />
+        <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
+          <Route element={<AdminLayout />}>
+            <Route path="/admin" element={<AdminDashboardPage />} />
+          </Route>
         </Route>
 
-        <Route element={<AdminLayout />}>
-          <Route path="/admin" element={<AdminDashboardPage />} />
+        <Route element={<ProtectedRoute allowedRoles={["ENTERPRISE_MANAGER"]} />}>
+          <Route element={<EnterpriseManagerLayout />}>
+            <Route path="/enterprise" element={<EnterpriseDashboardPage />} />
+          </Route>
         </Route>
 
-        <Route element={<EnterpriseManagerLayout />}>
-          <Route path="/enterprise" element={<EnterpriseDashboardPage />} />
-        </Route>
 
+        <Route element={<PublicRoute />}>
+          <Route element={<PublicLayout />}>
+            <Route path="/" element={<HomePage />} />
+          </Route>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/forgot-password" element={<ForgottenPasswordPage />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/verify-reset-otp" element={<VerifyPasswordResetOtpPage />}/>
+          <Route path="/verify-reset-otp" element={<VerifyPasswordResetOtpPage />} />
 
+          <Route path="/register/customer" element={<CustomerSignupPage />} />
+          <Route path="/register/enterprise" element={<EnterpriseSignupPage />} />
+          <Route path="/verify-email" element={<OtpVerificationPage />} />
+        </Route>
 
-          <Route path="/register/customer" element={<CustomerSignupPage />}/>
-          <Route path="/register/enterprise" element={<EnterpriseSignupPage/>}/>
-          <Route path="/verify-email" element={<OtpVerificationPage />}/>
-          <Route path="/forbidden" element={<ForbiddenPage />} />
-          <Route path="/unauthorized" element={<ForbiddenPage />} />
-          <Route path="/not-found" element={<NotFoundPage />} />
+        <Route path="/forbidden" element={<ForbiddenPage />} />
+        <Route path="/not-found" element={<NotFoundPage />} />
+        <Route path="*" element={<NotFoundPage />} />
 
-
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+      </Routes>
     </BrowserRouter>
   );
 }

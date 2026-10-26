@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Bell, Menu, X, LogOut, UserRound, Moon } from "lucide-react";
 import { toast } from "react-toastify";
 import { logout } from "../../../features/auth/services/auth.service";
+import useAuthStore from "../../../features/auth/stores/auth.store";
 
 interface EnterpriseManagerNavbarProps {
   onToggleSidebar: () => void;
@@ -12,7 +13,10 @@ interface EnterpriseManagerNavbarProps {
 export function EnterpriseManagerNavbar({ onToggleSidebar, isSidebarOpen,}: EnterpriseManagerNavbarProps) {
   const navigate = useNavigate();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const profileRef = useRef<HTMLDivElement>(null);
+  const profileRef = useRef<HTMLDivElement>(null)
+  const user = useAuthStore((state) => state.user)
+    const clearAuth = useAuthStore((state) => state.clearAuth)
+
 
 
   useEffect(() => {
@@ -28,9 +32,11 @@ export function EnterpriseManagerNavbar({ onToggleSidebar, isSidebarOpen,}: Ente
 
   const handleLogout = async () => {
     try {
-      await logout();
+      await logout()
+      clearAuth()
       toast.success("Successfully logged out");
-      navigate("/login", { replace: true });
+      navigate("/login", { replace: true })
+      
     } catch {
       toast.error("Failed to log out");
     }
@@ -54,11 +60,7 @@ export function EnterpriseManagerNavbar({ onToggleSidebar, isSidebarOpen,}: Ente
             className="flex items-center gap-2 transition-transform duration-200 hover:scale-[1.01]"
             aria-label="Dealio home"
           >
-            <img
-              src="/dealio-logo.png"
-              alt="Dealio"
-              className="h-7 sm:h-8 w-auto object-contain"
-            />
+            <img src="/dealio-logo.png" alt="Dealio" className="h-7 sm:h-8 w-auto object-contain"/>
           </Link>
         </div>
 
@@ -98,10 +100,10 @@ export function EnterpriseManagerNavbar({ onToggleSidebar, isSidebarOpen,}: Ente
 
               <div className="flex flex-col text-left leading-tight">
                 <span className="text-[13.5px] font-bold text-[#0e2238] tracking-[-0.01em] truncate max-w-[120px] sm:max-w-[160px]">
-                  Alex Morgan
+                  {user?.name}
                 </span>
                 <span className="text-[11.5px] font-medium text-[#5c7797] truncate max-w-[120px] sm:max-w-[160px] hidden sm:inline mt-0.5">
-                  abc@example.com
+                  {user?.email}
                 </span>
               </div>
             </button>
@@ -122,10 +124,10 @@ export function EnterpriseManagerNavbar({ onToggleSidebar, isSidebarOpen,}: Ente
                   </div>
                   <div className="flex flex-col min-w-0">
                     <p className="text-[15px] font-bold text-[#0e2238] tracking-[-0.01em] truncate m-0">
-                      Alex Morgan
+                      {user?.name}
                     </p>
                     <p className="text-[12.5px] text-slate-500 truncate mt-0.5 m-0">
-                      abc@example.com
+                      {user?.email}
                     </p>
                   </div>
                 </div>

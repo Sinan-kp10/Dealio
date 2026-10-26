@@ -25,9 +25,10 @@ export class  LoginController {
             res.status(200).json({
                 success: "success",
                 message: "Login successful.",
-                data : result
-            });
-            
+                data : {
+                    user: result.user
+                }
+            })          
         } catch (error) {
             next(error);
         }

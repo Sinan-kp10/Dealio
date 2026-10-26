@@ -2,6 +2,7 @@ import { LayoutDashboard, FileCheck, BriefcaseBusiness, Users, Menu, DollarSign,
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { logout } from "../../../features/auth/services/auth.service";
+import useAuthStore from "../../../features/auth/stores/auth.store";
 
 interface AdminSidebarProps {
   isOpen: boolean;
@@ -9,15 +10,17 @@ interface AdminSidebarProps {
 }
 
 export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
-    const navigate = useNavigate();
+    const navigate = useNavigate()
+    const clearAuth = useAuthStore((state) => state.clearAuth)
 
     const handleLogout = async () => {
         try {
-        await logout();
-        toast.success("Successfully logged out");
-        navigate("/login", { replace: true });
+            await logout()
+            clearAuth()
+            toast.success("Successfully logged out");
+            navigate("/login", { replace: true });
         } catch {
-        toast.error("Failed to log out");
+            toast.error("Failed to log out");
         }
     };
 

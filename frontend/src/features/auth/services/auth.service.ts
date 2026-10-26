@@ -1,4 +1,5 @@
 import axiosInstance from "../../../app/lib/axios";
+import type { CurrentUserResponse } from "../types/auth.types";
 import type { CustomerSignupRequest, CustomerSignupResponse } from "../types/customerSignup.types";
 import type { EnterpriseSignupRequest, EnterpriseSignupResponse } from "../types/enterpriseSignup.types";
 import type { ForgottenPasswordRequest, ForgottenPasswordResponse } from "../types/forgottenPassword.types";
@@ -73,3 +74,9 @@ export const logout = async (): Promise<LogoutResponse> => {
 
     return response.data;
 };
+
+export const getCurrentUser = async (): Promise<CurrentUserResponse> => {
+  const response = await axiosInstance.get<CurrentUserResponse>("/auth/me")
+
+  return response.data;
+}

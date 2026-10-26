@@ -2,6 +2,7 @@ import { FileText, BadgeCheck, CreditCard, MessageSquare, LogOut, X} from "lucid
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { logout } from "../../../features/auth/services/auth.service";
+import useAuthStore from "../../../features/auth/stores/auth.store";
 
 interface CustomerSidebarProps {
   isOpen: boolean;
@@ -9,12 +10,14 @@ interface CustomerSidebarProps {
 }
 
 export function CustomerSidebar({ isOpen, onClose }: CustomerSidebarProps) {
-    const navigate = useNavigate();
+    const navigate = useNavigate()
+    const clearAuth = useAuthStore((state) => state.clearAuth)
+
 
     const handleLogout = async () => {
         try {
             await logout();
-
+            clearAuth()
             toast.success("Successfully logged out");
             navigate("/login", { replace: true });
         } catch {
