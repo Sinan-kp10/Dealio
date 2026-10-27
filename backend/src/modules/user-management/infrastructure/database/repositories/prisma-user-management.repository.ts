@@ -68,4 +68,30 @@ export class PrismaUserManagementRepository implements UserManagementRepository 
             totalPages: Math.ceil(total / limit),
         }
     }
+
+    suspendAccount= async(accountId: string, reason: string): Promise<void> =>{
+
+        await prisma.users.update({
+            where : {id : accountId},
+            data : {
+                status : "SUSPENDED",
+                suspended_at : new Date(),
+                suspension_reason: reason,
+            }
+        })
+
+    }
+
+    reactivateAccount = async (accountId: string): Promise<void> => {
+
+        await prisma.users.update({
+            where : {id : accountId},
+            data : {
+                status : "ACTIVE",
+                suspended_at : null,
+                suspension_reason: null,
+            }
+        })
+        
+    }
 }
