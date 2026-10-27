@@ -5,7 +5,7 @@ import { httpLogger } from "../modules/auth/infrastructure/logging/http-logger";
 import { errorHandler } from "./middlewares/error-handler.middleware"; 
 import { notFoundMiddleware } from "./middlewares/not-found.middleware";
 import { authRouter } from "../modules/auth/presentation/http/routes/auth.routes"; 
-import userManagementRoutes from "../modules/user-management/presentation/routes/user-management.routes";
+import customerManagementRoutes from "../modules/user-management/presentation/routes/customer-management.routes";
 import cookieParser from "cookie-parser";
 const app = express();
 app.use(helmet())
@@ -25,7 +25,7 @@ app.use(cookieParser());
 app.use(httpLogger)
 
 app.use("/api/auth", authRouter)
-app.use("/api/admin/customers", userManagementRoutes);
+app.use("/api/admin/customers", customerManagementRoutes);
 
 app.use(notFoundMiddleware)
 app.use(errorHandler)

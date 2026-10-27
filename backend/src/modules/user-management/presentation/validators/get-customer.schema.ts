@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const getUsersSchema = z.object({
+export const getCustomerSchema = z.object({
   search: z.string().optional(),
 
   status: z.enum(["ACTIVE", "SUSPENDED"]).optional(),

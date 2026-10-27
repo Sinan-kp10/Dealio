@@ -1,18 +1,18 @@
 import type { Request, Response, NextFunction } from "express";
-import { GetUsersUseCase } from "../../application/use-cases/get-users.use-case";
 import { SuspendAccountUseCase } from "../../application/use-cases/suspend-account.use-case";
 import { ReactivateAccountUseCase } from "../../application/use-cases/reactivate-account.use-case";
+import { GetCustomerUseCase } from "../../application/use-cases/get-customer.use-case";
 
-export class UserManagementController {
+export class CustomerManagementController {
     constructor(
-        private readonly getUsersUseCase : GetUsersUseCase,
+        private readonly getCustomerUseCase : GetCustomerUseCase,
         private readonly suspendAccountUseCase: SuspendAccountUseCase,
         private readonly reactivateAccountUseCase: ReactivateAccountUseCase,
     ){}
 
     getUsers = async (req: Request, res: Response, next: NextFunction,): Promise<void> => {
         try {
-            const result = await this.getUsersUseCase.execute({
+            const result = await this.getCustomerUseCase.execute({
                 search: req.query.search as string | undefined,
                 status: req.query.status as "ACTIVE" | "SUSPENDED" | undefined,
                 page: Number(req.query.page ?? 1),

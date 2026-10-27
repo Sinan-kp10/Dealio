@@ -1,11 +1,11 @@
 import { prisma } from "../../../../../infrastructure/database/prisma/prisma-client"
-import { PaginatedUsersDto, UserListFiltersDto, UserListItemDto } from "../../../application/dto/user-list-item.dto"
-import { UserManagementRepository } from "../../../domain/repositories/user-management.repository"
+import { CustomerListFiltersDto, CustomerListItemDto, PaginatedUsersDto,} from "../../../application/dto/user-list-item.dto"
+import { CustomerManagementRepository } from "../../../domain/repositories/customer-management.repository"
 import { userListSelect, UserManagementMapper } from "../../mappers/user-management.mapper"
 
-export class PrismaUserManagementRepository implements UserManagementRepository {
+export class PrismaCustomerManagementRepository implements CustomerManagementRepository {
 
-    findById = async (id : string) : Promise<UserListItemDto | null> => {
+    findById = async (id : string) : Promise<CustomerListItemDto | null> => {
 
         const user = await prisma.users.findUnique({
             where : {id},
@@ -15,7 +15,7 @@ export class PrismaUserManagementRepository implements UserManagementRepository 
         return user ? UserManagementMapper.toDto(user) : null
     }
 
-    findUsers = async(filters: UserListFiltersDto): Promise<PaginatedUsersDto> => {
+    findUsers = async(filters: CustomerListFiltersDto): Promise<PaginatedUsersDto> => {
 
         const DEFAULT_LIMIT = 5;
 

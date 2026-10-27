@@ -1,5 +1,5 @@
 import { Prisma } from "../../../../../generated/prisma/client";
-import type { UserListItemDto } from "../../application/dto/user-list-item.dto";
+import type { CustomerListItemDto } from "../../application/dto/user-list-item.dto";
 
 export const userListSelect = {
   id: true,
@@ -16,7 +16,7 @@ export const userListSelect = {
 export type UserListRecord = Prisma.usersGetPayload<{select: typeof userListSelect}>
 
 export class UserManagementMapper {
-    static toDto(user: UserListRecord): UserListItemDto {
+    static toDto(user: UserListRecord): CustomerListItemDto {
         return {
             id: user.id,
             name: user.name,

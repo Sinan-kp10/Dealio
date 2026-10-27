@@ -1,4 +1,4 @@
-export interface UserListItemDto {
+export interface CustomerListItemDto {
   id: string;
   name: string;
   email: string;
@@ -10,7 +10,7 @@ export interface UserListItemDto {
   suspensionReason: string | null;
 }
 
-export interface UserListFiltersDto {
+export interface CustomerListFiltersDto {
   search?: string;
   status?: "ACTIVE" | "SUSPENDED";
   page: number;
@@ -18,7 +18,7 @@ export interface UserListFiltersDto {
 }
 
 export interface PaginatedUsersDto {
-  items: UserListItemDto[];
+  items: CustomerListItemDto[];
   page: number;
   limit: number;
   totalPages : number
