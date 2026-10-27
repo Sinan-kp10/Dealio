@@ -3,32 +3,34 @@ import Pagination from "../../../components/common/pagination/Pagination";
 import TableSkeleton from "../../../components/common/loading/TableSkeleton";
 import { useEffect, useState } from "react";
 import type { Customer, CustomerStatus } from "../types/user-management.types";
-import { getCustomers, reactivateAccount, suspendAccount } from "../service/user-management.service";
 import axios from "axios";
 import { toast } from "react-toastify";
 import ReasonModal from "../../../components/common/ReasonModal/ReasonModel";
 import ConfirmationModal from "../../../components/common/confirmationModel/ConfirmationModal";
+import { getCustomers, reactivateCustomerAccount, suspendCustomerAccount } from "../service/user-management.service";
+import useDebounce from "../../../hook/useDebounce";
 
 const PAGE_LIMIT = 5;
 
-export function CustomerManagementPage() {
+function CustomerManagementPage() {
     const [customer, setCustomer] = useState<Customer[]>([]);
-    const [search, setSearch] = useState("");
     const [status, setStatus] = useState<"ALL" | CustomerStatus>("ALL");
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(1)
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(true);
     const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
-    const [actionLoading, setActionLoading] = useState(false);
+    const [actionLoading, setActionLoading] = useState(false)
+    const [search, setSearch] = useState("")
+    const debouncedSearch = useDebounce(search, 500)
 
     useEffect(() => {
         let cancelled = false;
 
         const fetchCustomer = async () => {
-            setLoading(true);
+            setLoading(true)
             try {
                 const response = await getCustomers({
-                    search: search.trim() || undefined,
+                    search: debouncedSearch.trim() || undefined,
                     status: status === "ALL" ? undefined : status,
                     page,
                     limit: PAGE_LIMIT,
@@ -37,15 +39,20 @@ export function CustomerManagementPage() {
                 if (cancelled) return;
 
                 setCustomer(response.data.items);
-                setTotalPages(response.data.totalPages);
+                setTotalPages(response.data.totalPages)
+
             } catch (error) {
-                if (cancelled) return;
+
+                if (cancelled) return
+
                 if (axios.isAxiosError(error)) {
                     toast.error(error.response?.data?.message ?? "Unable to load customers");
                 } else {
                     toast.error("Something went wrong. Please try again.");
                 }
+
             } finally {
+
                 if (!cancelled) {
                     setLoading(false);
                 }
@@ -56,7 +63,7 @@ export function CustomerManagementPage() {
         return () => {
             cancelled = true;
         };
-    }, [search, status, page]);
+    }, [debouncedSearch, status, page]);
 
     const handleSearchChange = (value: string) => {
         setSearch(value);
@@ -79,15 +86,11 @@ export function CustomerManagementPage() {
         if (!selectedCustomer) return;
         try {
             setActionLoading(true);
-            await suspendAccount(selectedCustomer.id, reason);
+            await suspendCustomerAccount(selectedCustomer.id, reason);
             toast.success("Customer suspended successfully");
             setCustomer((prev) =>
-                prev.map((c) =>
-                    c.id === selectedCustomer.id
-                        ? { ...c, status: "SUSPENDED" }
-                        : c
-                )
-            );
+                prev.map((c) =>  c.id === selectedCustomer.id ? { ...c, status: "SUSPENDED" }: c)
+            )
             setSelectedCustomer(null);
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -104,7 +107,7 @@ export function CustomerManagementPage() {
         if (!selectedCustomer) return;
         try {
             setActionLoading(true);
-            await reactivateAccount(selectedCustomer.id);
+            await reactivateCustomerAccount(selectedCustomer.id);
             toast.success("Customer reactivated successfully");
             setCustomer((prev) =>
                 prev.map((c) =>
@@ -147,7 +150,7 @@ export function CustomerManagementPage() {
                         onChange={(event) => handleSearchChange(event.target.value)}
                         placeholder="Search by name, email or phone"
                         aria-label="Search customers"
-                        className="w-full sm:w-[330px] h-10 pl-10 pr-3.5 bg-white border border-slate-200/90 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#355982]/20 focus:border-[#355982] shadow-xs transition-colors"
+                        className="w-full sm:w-[330px] h-10 pl-10 pr-3.5 bg-white border border-slate-200/90 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#355982]/20 focus:border-[#355982] shadow-xs transition-colors [&::-webkit-search-cancel-button]:cursor-pointer"
                     />
                 </div>
 
@@ -203,7 +206,7 @@ export function CustomerManagementPage() {
  
                                     <td className="py-4 px-6 align-middle">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-[#244673] text-white flex items-center justify-center shrink-0 shadow-2xs">
+                                        <div className="w-10 h-10 rounded-full bg-[#eef4fa] border border-[#d2e2f0] text-[#244673] flex items-center justify-center shrink-0 shadow-2xs">
                                             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                                                 <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z" />
                                             </svg>
@@ -278,7 +281,6 @@ export function CustomerManagementPage() {
                 )}
             </div>
 
-            {/* Reason Modal for Suspending Customer */}
             {selectedCustomer && selectedCustomer.status === "ACTIVE" && (
                 <ReasonModal
                     title="Suspend Customer Account"
@@ -288,13 +290,13 @@ export function CustomerManagementPage() {
                 />
             )}
 
-            {/* Confirmation Modal for Reactivating Customer */}
             <ConfirmationModal
                 isOpen={Boolean(selectedCustomer && selectedCustomer.status === "SUSPENDED")}
                 title="Reactivate Customer Account"
                 message={`Are you sure you want to reactivate ${selectedCustomer?.name}'s account?`}
                 onClose={() => setSelectedCustomer(null)}
                 onConfirm={handleReactivate}
+                loading={actionLoading}
             />
         </div>
     );

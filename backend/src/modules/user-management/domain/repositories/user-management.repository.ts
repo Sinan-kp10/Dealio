@@ -1,9 +1,11 @@
 import { BaseRepository } from "../../../../shared/domian/base.repository";
-import type { PaginatedUsersDto, UserListFiltersDto, UserListItemDto,} from "../../application/dto/user-list-item.dto";
+import type { CustomerListFiltersDto, CustomerListItemDto, PaginatedCustomerDto,} from "../../application/dto/customer-list-item.dto";
+import { EnterpriseListFiltersDto, PaginatedEnterprisesDto } from "../../application/dto/enterprise-list-item.dto";
 
-export interface UserManagementRepository extends BaseRepository<UserListItemDto> {
+export interface UserManagementRepository extends BaseRepository<CustomerListItemDto> {
 
-  findUsers(filters: UserListFiltersDto): Promise<PaginatedUsersDto>
+  findCustomers(filters: CustomerListFiltersDto): Promise<PaginatedCustomerDto>
+  findEnterprises(filters: EnterpriseListFiltersDto): Promise<PaginatedEnterprisesDto>
   suspendAccount(accountId: string, reason: string): Promise<void>
   reactivateAccount(accountId: string): Promise<void>
 
