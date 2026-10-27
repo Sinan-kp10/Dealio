@@ -15,12 +15,9 @@ export class OtpService {
 
         const key = `email-otp:${email.trim().toLowerCase()}`
 
-        await redis.set(key,JSON.stringify({
-            otp,
-        }),
-        {
-            EX : this.OTP_EXPIRY_SECONDS
-        })
+        await redis.set(key, otp, {
+            EX: this.OTP_EXPIRY_SECONDS,
+        });
 
         await redis.set(`pending-registration:${email}`,
             JSON.stringify(registrationData),

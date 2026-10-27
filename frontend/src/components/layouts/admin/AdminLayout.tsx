@@ -15,7 +15,7 @@ function AdminLayout() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-[#F0F6FB] text-slate-800 flex flex-col antialiased">
+        <div className="min-h-screen bg-[#F4F7FB] text-slate-800 flex flex-col antialiased">
             <AdminNavbar
                 onToggleSidebar={handleToggleSidebar}
                 isSidebarOpen={isMobileSidebarOpen}

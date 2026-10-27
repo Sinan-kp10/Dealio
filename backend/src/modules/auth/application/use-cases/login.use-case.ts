@@ -29,7 +29,7 @@ export class LoginUseCase {
         }
 
         if (user.status === "SUSPENDED") {
-            throw new AppError("Your account has been suspended by the administration.",403);
+            throw new AppError(user.suspension_reason || "Your account has been suspended by the administration",403)
         }
 
         const accessToken = this.jwtTokenService.generateAccessToken({

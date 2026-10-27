@@ -3,6 +3,7 @@ export interface UserListItemDto {
   name: string;
   email: string;
   phone: string | null;
+  role : "ADMIN" | "CUSTOMER" | "ENTERPRISE_MANAGER"
   status: "ACTIVE" | "SUSPENDED";
   createdAt: Date;
   suspendedAt: Date | null;
