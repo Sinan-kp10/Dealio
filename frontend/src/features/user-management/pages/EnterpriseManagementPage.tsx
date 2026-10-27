@@ -325,6 +325,7 @@ export function EnterpriseManagementPage() {
                 message={`Are you sure you want to reactivate ${selectedEnterprise?.enterpriseName}'s account?`}
                 onClose={() => setSelectedEnterprise(null)}
                 onConfirm={handleReactivate}
+                loading={actionLoading}
             />
         </div>
     );

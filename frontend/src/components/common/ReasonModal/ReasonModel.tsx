@@ -10,19 +10,12 @@ export interface ReasonModalProps {
     onConfirm: (reason: string) => Promise<void> | void;
 }
 
-function ReasonModal({
-    title,
-    description,
-    onClose,
-    onConfirm,
-}: ReasonModalProps) {
+function ReasonModal({ title, description, onClose, onConfirm}: ReasonModalProps) {
     const [reason, setReason] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const handleSubmit = async (
-        event: React.FormEvent<HTMLFormElement>,
-    ): Promise<void> => {
+    const handleSubmit = async ( event: React.FormEvent<HTMLFormElement>): Promise<void> => {
         event.preventDefault();
 
         const result = reasonSchema.safeParse(reason);
@@ -42,26 +35,17 @@ function ReasonModal({
     };
 
     return (
-        <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
             onMouseDown={(event) => {
                 if (event.target === event.currentTarget && !loading) {
                     onClose();
                 }
             }}
         >
-            <div
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="reason-modal-title"
-                className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl"
-            >
+            <div role="dialog" aria-modal="true" aria-labelledby="reason-modal-title" className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
                 <div className="mb-5 flex items-start justify-between gap-4">
                     <div>
-                        <h2
-                            id="reason-modal-title"
-                            className="text-lg font-bold text-[#0F1D2F]"
-                        >
+                        <h2 id="reason-modal-title" className="text-lg font-bold text-[#0F1D2F]">
                             {title}
                         </h2>
 
@@ -70,29 +54,17 @@ function ReasonModal({
                         </p>
                     </div>
 
-                    <button
-                        type="button"
-                        onClick={onClose}
-                        disabled={loading}
-                        aria-label="Close modal"
-                        className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
+                    <button type="button" onClick={onClose} disabled={loading} aria-label="Close modal" className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
                         <X size={20} />
                     </button>
                 </div>
 
                 <form onSubmit={handleSubmit} noValidate>
-                    <label
-                        htmlFor="reason-modal-input"
-                        className="mb-2 block text-sm font-semibold text-slate-700"
-                    >
+                    <label htmlFor="reason-modal-input" className="mb-2 block text-sm font-semibold text-slate-700">
                         Reason
                     </label>
 
-                    <textarea
-                        id="reason-modal-input"
-                        value={reason}
-                        disabled={loading}
+                    <textarea id="reason-modal-input" value={reason} disabled={loading}
                         onChange={(event) => {
                             setReason(event.target.value);
                             if (error) setError("");
@@ -130,20 +102,11 @@ function ReasonModal({
                     </div>
 
                     <div className="mt-6 flex justify-end gap-3">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            disabled={loading}
-                            className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
+                        <button type="button" onClick={onClose} disabled={loading} className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
                             Cancel
                         </button>
 
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="min-w-[84px] h-[38px] flex items-center justify-center rounded-lg bg-[#e04f5f] px-4 py-2 text-sm font-semibold text-white hover:bg-red-600 cursor-pointer disabled:opacity-65 disabled:cursor-not-allowed transition-all"
-                        >
+                        <button type="submit" disabled={loading} className="min-w-[84px] h-[38px] flex items-center justify-center rounded-lg bg-[#e04f5f] px-4 py-2 text-sm font-semibold text-white hover:bg-red-600 cursor-pointer disabled:opacity-65 disabled:cursor-not-allowed transition-all">
                             {loading ? <ButtonSpinner size="sm" /> : "Confirm"}
                         </button>
                     </div>

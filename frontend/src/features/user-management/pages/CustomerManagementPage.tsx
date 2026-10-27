@@ -8,18 +8,20 @@ import { toast } from "react-toastify";
 import ReasonModal from "../../../components/common/ReasonModal/ReasonModel";
 import ConfirmationModal from "../../../components/common/confirmationModel/ConfirmationModal";
 import { getCustomers, reactivateCustomerAccount, suspendCustomerAccount } from "../service/user-management.service";
+import useDebounce from "../../../hook/useDebounce";
 
 const PAGE_LIMIT = 5;
 
 function CustomerManagementPage() {
     const [customer, setCustomer] = useState<Customer[]>([]);
-    const [search, setSearch] = useState("");
     const [status, setStatus] = useState<"ALL" | CustomerStatus>("ALL");
     const [page, setPage] = useState(1)
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(true);
     const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
-    const [actionLoading, setActionLoading] = useState(false);
+    const [actionLoading, setActionLoading] = useState(false)
+    const [search, setSearch] = useState("")
+    const debouncedSearch = useDebounce(search, 500)
 
     useEffect(() => {
         let cancelled = false;
@@ -28,7 +30,7 @@ function CustomerManagementPage() {
             setLoading(true)
             try {
                 const response = await getCustomers({
-                    search: search.trim() || undefined,
+                    search: debouncedSearch.trim() || undefined,
                     status: status === "ALL" ? undefined : status,
                     page,
                     limit: PAGE_LIMIT,
@@ -61,7 +63,7 @@ function CustomerManagementPage() {
         return () => {
             cancelled = true;
         };
-    }, [search, status, page]);
+    }, [debouncedSearch, status, page]);
 
     const handleSearchChange = (value: string) => {
         setSearch(value);
@@ -87,12 +89,8 @@ function CustomerManagementPage() {
             await suspendCustomerAccount(selectedCustomer.id, reason);
             toast.success("Customer suspended successfully");
             setCustomer((prev) =>
-                prev.map((c) =>
-                    c.id === selectedCustomer.id
-                        ? { ...c, status: "SUSPENDED" }
-                        : c
-                )
-            );
+                prev.map((c) =>  c.id === selectedCustomer.id ? { ...c, status: "SUSPENDED" }: c)
+            )
             setSelectedCustomer(null);
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -298,6 +296,7 @@ function CustomerManagementPage() {
                 message={`Are you sure you want to reactivate ${selectedCustomer?.name}'s account?`}
                 onClose={() => setSelectedCustomer(null)}
                 onConfirm={handleReactivate}
+                loading={actionLoading}
             />
         </div>
     );
