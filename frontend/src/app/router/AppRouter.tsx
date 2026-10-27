@@ -20,6 +20,7 @@ import EnterpriseManagerLayout from "../../components/layouts/enterpriseManager/
 import ProtectedRoute from "./ProtectedRoute";
 import { PublicRoute } from "./PublicRoute";
 import CustomerManagementPage from "../../features/user-management/pages/CustomerManagementPage";
+import EnterpriseManagementPage from "../../features/user-management/pages/EnterpriseManagementPage";
 
 export function AppRouter() {
   return (
@@ -36,6 +37,7 @@ export function AppRouter() {
           <Route element={<AdminLayout />}>
             <Route path="/admin" element={<AdminDashboardPage />} />
             <Route path="/admin/customers" element={<CustomerManagementPage />} />
+            <Route path="/admin/enterprises" element={<EnterpriseManagementPage />} />
           </Route>
         </Route>
 

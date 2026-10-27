@@ -330,6 +330,11 @@ body {
   pointer-events: none !important;
 }
 
+/* Search input native clear/cancel button cursor */
+input[type="search"]::-webkit-search-cancel-button {
+  cursor: pointer;
+}
+
 /* Mobile Responsiveness: override default 100vw flat banner behavior */
 @media only screen and (max-width: 640px) {
   .Toastify__toast-container--top-center {

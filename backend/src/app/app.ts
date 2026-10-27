@@ -25,7 +25,7 @@ app.use(cookieParser());
 app.use(httpLogger)
 
 app.use("/api/auth", authRouter)
-app.use("/api/admin/customers", userManagementRoutes);
+app.use("/api/admin", userManagementRoutes)
 
 app.use(notFoundMiddleware)
 app.use(errorHandler)

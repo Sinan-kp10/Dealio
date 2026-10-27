@@ -1,6 +1,5 @@
-
 import { AppError } from "../../../../shared/errors/app-error";
-import type { UserManagementRepository } from "../../domain/repositories/user-management.repository";
+import { UserManagementRepository } from "../../domain/repositories/user-management.repository";
 import { ReactivateAccountDto } from "../dto/suspend-account.dto";
 
 export class ReactivateAccountUseCase {
