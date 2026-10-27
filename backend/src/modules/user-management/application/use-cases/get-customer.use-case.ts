@@ -1,12 +1,12 @@
-import { CustomerManagementRepository } from "../../domain/repositories/customer-management.repository";
-import type {CustomerListFiltersDto, PaginatedUsersDto,} from "../dto/user-list-item.dto";
+import { UserManagementRepository } from "../../domain/repositories/user-management.repository";
+import type {CustomerListFiltersDto, PaginatedCustomerDto,} from "../dto/customer-list-item.dto";
 
 export class GetCustomerUseCase {
     
-    constructor( private readonly userManagementRepository: CustomerManagementRepository) {}
+    constructor( private readonly userManagementRepository: UserManagementRepository) {}
 
-    execute = async ( filters: CustomerListFiltersDto): Promise<PaginatedUsersDto> => {
+    execute = async ( filters: CustomerListFiltersDto): Promise<PaginatedCustomerDto> => {
 
-        return this.userManagementRepository.findUsers(filters);
+        return this.userManagementRepository.findCustomers(filters);
     }
 }

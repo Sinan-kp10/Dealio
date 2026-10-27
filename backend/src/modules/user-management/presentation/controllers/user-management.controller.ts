@@ -2,10 +2,12 @@ import type { Request, Response, NextFunction } from "express";
 import { SuspendAccountUseCase } from "../../application/use-cases/suspend-account.use-case";
 import { ReactivateAccountUseCase } from "../../application/use-cases/reactivate-account.use-case";
 import { GetCustomerUseCase } from "../../application/use-cases/get-customer.use-case";
+import { GetEnterpriseUseCase } from "../../application/use-cases/get-enterprise.use-case";
 
-export class CustomerManagementController {
+export class UserManagementController {
     constructor(
         private readonly getCustomerUseCase : GetCustomerUseCase,
+        private readonly getEntterpriseUseCase : GetEnterpriseUseCase,
         private readonly suspendAccountUseCase: SuspendAccountUseCase,
         private readonly reactivateAccountUseCase: ReactivateAccountUseCase,
     ){}
@@ -15,6 +17,26 @@ export class CustomerManagementController {
             const result = await this.getCustomerUseCase.execute({
                 search: req.query.search as string | undefined,
                 status: req.query.status as "ACTIVE" | "SUSPENDED" | undefined,
+                page: Number(req.query.page ?? 1),
+                limit: Number(req.query.limit ?? 10),
+            });
+
+            res.status(200).json({
+                success: true,
+                data: result,
+            })
+
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    getEnterprise = async (req: Request, res: Response, next: NextFunction,): Promise<void> => {
+        try {
+            const result = await this.getEntterpriseUseCase.execute({
+                search: req.query.search as string | undefined,
+                status: req.query.status as "ACTIVE" | "SUSPENDED" | undefined,
+                category : req.query.category as string | undefined,
                 page: Number(req.query.page ?? 1),
                 limit: Number(req.query.limit ?? 10),
             });

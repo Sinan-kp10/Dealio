@@ -1,11 +1,11 @@
 import { AppError } from "../../../../shared/errors/app-error";
-import { CustomerManagementRepository } from "../../domain/repositories/customer-management.repository";
+import { UserManagementRepository } from "../../domain/repositories/user-management.repository";
 import { SuspendAccountDto } from "../dto/suspend-account.dto";
 
 export class SuspendAccountUseCase {
 
     constructor(
-        private readonly userManagementRepository: CustomerManagementRepository,
+        private readonly userManagementRepository: UserManagementRepository,
     ){}
 
     execute = async( dto : SuspendAccountDto) : Promise<void> => {

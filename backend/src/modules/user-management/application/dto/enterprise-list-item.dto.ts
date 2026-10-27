@@ -1,25 +1,26 @@
-export interface CustomerListItemDto {
+export interface EnterpriseListItemDto {
   id: string;
-  name: string;
+  enterpriseName: string;
   email: string;
   phone: string | null;
-  role : "ADMIN" | "CUSTOMER" | "ENTERPRISE_MANAGER"
+  category: string | null;
   status: "ACTIVE" | "SUSPENDED";
   createdAt: Date;
   suspendedAt: Date | null;
   suspensionReason: string | null;
 }
 
-export interface CustomerListFiltersDto {
+export interface EnterpriseListFiltersDto {
   search?: string;
   status?: "ACTIVE" | "SUSPENDED";
+  category?: string;
   page: number;
   limit: number;
 }
 
-export interface PaginatedUsersDto {
-  items: CustomerListItemDto[];
+export interface PaginatedEnterprisesDto {
+  items: EnterpriseListItemDto[];
   page: number;
   limit: number;
-  totalPages : number
+  totalPages: number;
 }
