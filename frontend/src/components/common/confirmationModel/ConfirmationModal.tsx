@@ -8,13 +8,7 @@ export interface ConfirmationModalProps {
   message?: string;
 }
 
-export function ConfirmationModal({
-  isOpen,
-  onClose,
-  onConfirm,
-  title = "Are you sure?",
-  message = "Are you sure?",
-}: ConfirmationModalProps) {
+export function ConfirmationModal({ isOpen, onClose, onConfirm, title = "Log Out?", message = "Are you sure?"}: ConfirmationModalProps) {
   if (!isOpen) return null;
 
   return (

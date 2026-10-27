@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Bell, Menu, X, LogOut, UserRound, Moon } from "lucide-react";
+import { Bell, Menu, X, LogOut, UserRound,} from "lucide-react";
 import { toast } from "react-toastify";
 import { logout } from "../../../features/auth/services/auth.service";
 import useAuthStore from "../../../features/auth/stores/auth.store";
@@ -130,16 +130,7 @@ export function CustomerNavbar({ onToggleSidebar, isSidebarOpen }: CustomerNavba
                         <span>My Profile</span>
                     </button>
 
-                    <div className="w-full flex items-center justify-between px-5 py-3 text-[13.5px] font-medium text-slate-700 hover:bg-slate-50/80 transition-colors cursor-default select-none">
-                        <div className="flex items-center gap-3">
-                        <Moon size={18} className="text-slate-400" />
-                        <span>Theme Mode</span>
-                        </div> 
 
-                        <div className="w-10 h-6 rounded-full p-0.5 bg-slate-200 flex items-center justify-start">
-                        <div className="w-5 h-5 rounded-full bg-white shadow-xs" />
-                        </div>
-                    </div>
                     </div>
 
                     <div className="pt-1.5 border-t border-slate-100">

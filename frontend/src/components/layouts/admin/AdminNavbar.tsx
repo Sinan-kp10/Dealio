@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Bell, Menu, X, LogOut, Settings, Moon } from "lucide-react";
+import { Bell, Menu, X, LogOut, Settings } from "lucide-react";
 import { toast } from "react-toastify";
 import { logout } from "../../../features/auth/services/auth.service";
 import useAuthStore from "../../../features/auth/stores/auth.store";
@@ -17,7 +17,7 @@ export function AdminNavbar({ onToggleSidebar, isSidebarOpen }: AdminNavbarProps
     const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
     const profileRef = useRef<HTMLDivElement>(null);
     const user = useAuthStore((state) => state.user);
-    const clearAuth = useAuthStore((state) => state.clearAuth);
+    const clearAuth = useAuthStore((state) => state.clearAuth)
 
 
     useEffect(() => {
@@ -133,28 +133,12 @@ export function AdminNavbar({ onToggleSidebar, isSidebarOpen }: AdminNavbarProps
                             <div className="py-1.5">
                                 <button
                                     type="button"
-                                    onClick={() => {
-                                    setIsProfileOpen(false);
-                                    navigate("/admin/settings");
-                                    }}
+                                    onClick={() => {setIsProfileOpen(false);navigate("/admin/settings")}}
                                     className="w-full flex items-center gap-3 px-5 py-3 text-[13.5px] font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50/80 transition-colors text-left cursor-pointer"
                                 >
                                     <Settings size={18} className="text-slate-400" />
                                     <span>Settings</span>
                                 </button>
-
-                                {/* Option 2: Theme Mode (Static UI) */}
-                                <div className="w-full flex items-center justify-between px-5 py-3 text-[13.5px] font-medium text-slate-700 hover:bg-slate-50/80 transition-colors cursor-default select-none">
-                                    <div className="flex items-center gap-3">
-                                        <Moon size={18} className="text-slate-400" />
-                                        <span>Theme Mode</span>
-                                    </div>
-
-        
-                                    <div className="w-10 h-6 rounded-full p-0.5 bg-slate-200 flex items-center justify-start">
-                                        <div className="w-5 h-5 rounded-full bg-white shadow-xs" />
-                                    </div>
-                                </div>
                             </div>
 
                             <div className="pt-1.5 border-t border-slate-100">

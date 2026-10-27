@@ -3,79 +3,127 @@ import Pagination from "../../../components/common/pagination/Pagination";
 import TableSkeleton from "../../../components/common/loading/TableSkeleton";
 import { useEffect, useState } from "react";
 import type { Customer, CustomerStatus } from "../types/user-management.types";
-import { getCustomers } from "../service/user-management.service";
+import { getCustomers, reactivateAccount, suspendAccount } from "../service/user-management.service";
 import axios from "axios";
 import { toast } from "react-toastify";
-
+import ReasonModal from "../../../components/common/ReasonModal/ReasonModel";
+import ConfirmationModal from "../../../components/common/confirmationModel/ConfirmationModal";
 
 const PAGE_LIMIT = 5;
 
 export function CustomerManagementPage() {
-
-    const [customer, setCustomer] = useState<Customer[]>([])
-    const [search, setSearch] = useState("")
-    const [status, setStatus] = useState<"ALL" | CustomerStatus>("ALL")
-    const [page, setPage] = useState(1)
-    const [totalPages, setTotalPages] = useState(0)
+    const [customer, setCustomer] = useState<Customer[]>([]);
+    const [search, setSearch] = useState("");
+    const [status, setStatus] = useState<"ALL" | CustomerStatus>("ALL");
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
+    const [actionLoading, setActionLoading] = useState(false);
 
-    useEffect(()=>{
+    useEffect(() => {
+        let cancelled = false;
 
-        let cancelled = false
-
-    
-        const fetchCustomer= async()=>{
-            setLoading(true)
+        const fetchCustomer = async () => {
+            setLoading(true);
             try {
-
                 const response = await getCustomers({
-                    search : search.trim() || undefined,
-                    status : status === "ALL" ? undefined : status,
+                    search: search.trim() || undefined,
+                    status: status === "ALL" ? undefined : status,
                     page,
-                    limit : PAGE_LIMIT
+                    limit: PAGE_LIMIT,
+                });
 
-                })
+                if (cancelled) return;
 
-                if(cancelled) return
-
-                setCustomer(response.data.items)
-                setTotalPages(response.data.totalPages)
-                
+                setCustomer(response.data.items);
+                setTotalPages(response.data.totalPages);
             } catch (error) {
                 if (cancelled) return;
                 if (axios.isAxiosError(error)) {
-                    toast.error(error.response?.data?.message ?? "Unable to load customers")
-                }else {
+                    toast.error(error.response?.data?.message ?? "Unable to load customers");
+                } else {
                     toast.error("Something went wrong. Please try again.");
                 }
-            }finally {
+            } finally {
                 if (!cancelled) {
                     setLoading(false);
                 }
             }
-        }
-        void fetchCustomer()
+        };
+        void fetchCustomer();
 
-        return () => {cancelled = true}
-        
-    },[search, status, page])
+        return () => {
+            cancelled = true;
+        };
+    }, [search, status, page]);
 
     const handleSearchChange = (value: string) => {
         setSearch(value);
         setPage(1);
     };
 
-    const handleStatusChange = (value : "ALL" | CustomerStatus) => {
-        setStatus(value)
-        setPage(1)
-    }
+    const handleStatusChange = (value: "ALL" | CustomerStatus) => {
+        setStatus(value);
+        setPage(1);
+    };
 
     const formatDate = (date: string) =>
         new Date(date).toLocaleDateString("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-    })
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+        });
+
+    const handleSuspend = async (reason: string) => {
+        if (!selectedCustomer) return;
+        try {
+            setActionLoading(true);
+            await suspendAccount(selectedCustomer.id, reason);
+            toast.success("Customer suspended successfully");
+            setCustomer((prev) =>
+                prev.map((c) =>
+                    c.id === selectedCustomer.id
+                        ? { ...c, status: "SUSPENDED" }
+                        : c
+                )
+            );
+            setSelectedCustomer(null);
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                toast.error(error.response?.data?.message ?? "Unable to suspend customer");
+            } else {
+                toast.error("Something went wrong. Please try again.");
+            }
+        } finally {
+            setActionLoading(false);
+        }
+    };
+
+    const handleReactivate = async () => {
+        if (!selectedCustomer) return;
+        try {
+            setActionLoading(true);
+            await reactivateAccount(selectedCustomer.id);
+            toast.success("Customer reactivated successfully");
+            setCustomer((prev) =>
+                prev.map((c) =>
+                    c.id === selectedCustomer.id
+                        ? { ...c, status: "ACTIVE" }
+                        : c
+                )
+            );
+            setSelectedCustomer(null);
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                toast.error(error.response?.data?.message ?? "Unable to reactivate customer");
+            } else {
+                toast.error("Something went wrong. Please try again.");
+            }
+        } finally {
+            setActionLoading(false);
+        }
+    };
 
 
     return (
@@ -202,7 +250,9 @@ export function CustomerManagementPage() {
 
                                         <button
                                         type="button"
-                                        className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg border transition-all cursor-pointer shadow-2xs min-w-[78px] ${
+                                        onClick={() => setSelectedCustomer(customer)}
+                                        disabled={actionLoading}
+                                        className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg border transition-all cursor-pointer shadow-2xs min-w-[78px] disabled:opacity-50 disabled:cursor-not-allowed ${
                                             customer.status === "ACTIVE"
                                             ? "bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300"
                                             : "bg-white border-red-200 text-[#e04f5f] hover:bg-red-50/50 hover:border-red-300"
@@ -227,6 +277,25 @@ export function CustomerManagementPage() {
                     />
                 )}
             </div>
+
+            {/* Reason Modal for Suspending Customer */}
+            {selectedCustomer && selectedCustomer.status === "ACTIVE" && (
+                <ReasonModal
+                    title="Suspend Customer Account"
+                    description={`Provide a reason for suspending ${selectedCustomer.name}'s account.`}
+                    onClose={() => setSelectedCustomer(null)}
+                    onConfirm={handleSuspend}
+                />
+            )}
+
+            {/* Confirmation Modal for Reactivating Customer */}
+            <ConfirmationModal
+                isOpen={Boolean(selectedCustomer && selectedCustomer.status === "SUSPENDED")}
+                title="Reactivate Customer Account"
+                message={`Are you sure you want to reactivate ${selectedCustomer?.name}'s account?`}
+                onClose={() => setSelectedCustomer(null)}
+                onConfirm={handleReactivate}
+            />
         </div>
     );
 }
