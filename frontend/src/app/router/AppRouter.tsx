@@ -8,6 +8,7 @@ import ForgottenPasswordPage from "../../features/auth/pages/ForgottenPasswordPa
 import ResetPassword from "../../features/auth/pages/ResetPaswordPage";
 import NotFoundPage from "../../pages/NotFoundPage";
 import ForbiddenPage from "../../pages/ForbiddenPage";
+import AccountSuspendedPage from "../../pages/AccountSuspendedPage";
 import OtpVerificationPage from "../../features/auth/pages/OtpVerificationPage";
 import VerifyPasswordResetOtpPage from "../../features/auth/pages/VerifyPasswordResetOtpPage";
 import CustomerLayout from "../../components/layouts/customer/CustomerLayout";
@@ -60,6 +61,7 @@ export function AppRouter() {
         </Route>
 
         <Route path="/forbidden" element={<ForbiddenPage />} />
+        <Route path="/account-suspended" element={<AccountSuspendedPage />} />
         <Route path="/not-found" element={<NotFoundPage />} />
         <Route path="*" element={<NotFoundPage />} />
 

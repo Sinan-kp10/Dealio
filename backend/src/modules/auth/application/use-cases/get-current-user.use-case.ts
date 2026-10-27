@@ -13,6 +13,10 @@ export class GetCurrentUserUseCase {
             throw new AppError("User not found.", 401);
         }
 
+        if (user.status === "SUSPENDED") {
+            throw new AppError(user.suspension_reason || "Your account has been suspended by the administration.", 403);
+        }
+
         return {
             id: user.id,
             name : user.name,

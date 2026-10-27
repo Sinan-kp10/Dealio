@@ -49,9 +49,21 @@ export function LoginPage() {
             
         } catch (error) {
             if(axios.isAxiosError(error)){
-                toast.error(error.response?.data?.message ?? "Login failed. Please try again")
+                
+                const response = error.response;
+
+                if (response?.status === 403) {
+                    navigate("/account-suspended", {
+                        state: {
+                            reason: response.data?.message ?? "Your account has been suspended by the administration",
+                        },
+                    });
+                    return
+                }
+
+                toast.error( response?.data?.message ?? "Login failed. Please try again")
             }else{
-                toast.error("Something went wrong. Please try again");
+                toast.error("Something went wrong. Please try again")
             }
             
         }
