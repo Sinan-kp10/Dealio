@@ -8,17 +8,16 @@ import { User, Mail, Lock, ShieldCheck, Eye, EyeOff, ArrowRight } from "lucide-r
 import { registerCustomer } from "../services/auth.service";
 import { toast } from "react-toastify";
 import axios from "axios";
+import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
 
 export function CustomerSignupPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
 
     const { register, handleSubmit, formState: {errors, isSubmitting}} = useForm<CustomerSignupFormData>({ resolver: zodResolver(customerSignupSchema)});
 
     const onSubmit = async (data: CustomerSignupFormData) => {
-        setLoading(true)
 
         try {
             await registerCustomer({
@@ -38,17 +37,13 @@ export function CustomerSignupPage() {
             
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                const message = error.response?.data?.message ?? "Registration failed. Please try again."
-                toast.error(message)
+                toast.error(error.response?.data?.message ?? "Registration failed. Please try again")
             }else {
                 toast.error("Something went wrong. Please try again.");
             }
-        }finally{
-            setLoading(false)
         }
 
     };
-
 
     return (
         <main className="min-h-screen w-full flex flex-col bg-[radial-gradient(circle_at_50%_0%,#f7faff_0%,#edf3f9_100%)] box-border">
@@ -223,10 +218,10 @@ export function CustomerSignupPage() {
                         <button
                             type="submit"
                             className="w-full h-12 mt-1.5 bg-[#2e4d75] hover:not-disabled:bg-[#233b5c] text-white border-0 rounded-xl text-[0.95rem] font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-[0_4px_14px_rgba(46,77,117,0.3)] hover:not-disabled:shadow-[0_6px_18px_rgba(46,77,117,0.35)] hover:not-disabled:-translate-y-0.5 active:not-disabled:translate-y-0 disabled:opacity-65 disabled:cursor-not-allowed transition-all duration-200"
-                            disabled={loading || isSubmitting}
+                            disabled={isSubmitting}
                         >
                             {isSubmitting ? (
-                                "Creating account..."
+                                <ButtonSpinner />
                             ) : (
                                 <>
                                     <span>Create Account</span>

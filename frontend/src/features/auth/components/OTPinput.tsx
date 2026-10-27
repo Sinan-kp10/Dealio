@@ -102,7 +102,7 @@ export function OtpInput({ onChange, hasError = false }: OTPinputProps) {
     };
 
     return (
-        <div className="flex items-center justify-between gap-2 sm:gap-2.5">
+        <div className="flex items-center justify-between gap-1.5 sm:gap-2.5 w-full">
             {digits.map((digit, index) => (
                 <input
                     key={index}
@@ -122,7 +122,7 @@ export function OtpInput({ onChange, hasError = false }: OTPinputProps) {
                     onFocus={(event) => event.target.select()}
                     aria-label={`OTP digit ${index + 1}`}
                     aria-invalid={hasError}
-                    className={`w-11 h-13 sm:w-12 sm:h-14 text-center text-xl sm:text-2xl font-bold text-[#0f1d2f] bg-white border-[1.5px] rounded-xl sm:rounded-2xl transition-all duration-200 hover:border-slate-300 focus:outline-none ${
+                    className={`flex-1 min-w-0 max-w-[48px] sm:max-w-[52px] h-12 sm:h-14 text-center text-lg sm:text-2xl font-bold text-[#0f1d2f] bg-white border-[1.5px] rounded-xl sm:rounded-2xl transition-all duration-200 hover:border-slate-300 focus:outline-none ${
                         hasError
                             ? "border-red-500 focus:border-red-500 focus:ring-[3px] focus:ring-red-500/12"
                             : "border-slate-200 focus:border-[#355982] focus:ring-[3px] focus:ring-[#355982]/12"

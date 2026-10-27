@@ -7,7 +7,7 @@ import { ToastProvider } from './app/providers/ToastProvider'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+      <App />
     <ToastProvider />
   </StrictMode>
 )
