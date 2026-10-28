@@ -78,12 +78,15 @@ export class PrismaUserManagementRepository implements UserManagementRepository 
         const searchTerm = search?.trim()
 
         const where = {
+            status: "APPROVED" as const,
+
             users: {
                 some: {
                     role: "ENTERPRISE_MANAGER" as const,
                     ...(status ? { status } : {}),
                 },
             },
+
             ...(category
                 ? {
                     subcategory: {
@@ -99,7 +102,8 @@ export class PrismaUserManagementRepository implements UserManagementRepository 
                         },
                     },
                 }
-                : {}),
+            : {}),
+
             ...(searchTerm
                 ? {
                     OR: [
