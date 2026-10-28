@@ -83,7 +83,6 @@ export class PrismaUserManagementRepository implements UserManagementRepository 
             users: {
                 some: {
                     role: "ENTERPRISE_MANAGER" as const,
-                    status: "ACTIVE" as const,
                     ...(status ? { status } : {}),
                 },
             },
@@ -102,7 +101,7 @@ export class PrismaUserManagementRepository implements UserManagementRepository 
                             },
                         },
                     },
-                } 
+                }
             : {}),
 
             ...(searchTerm
@@ -118,7 +117,6 @@ export class PrismaUserManagementRepository implements UserManagementRepository 
                             users: {
                                 some: {
                                     role: "ENTERPRISE_MANAGER" as const,
-                                    status: "ACTIVE" as const,
                                     OR: [
                                         {
                                             name: {
