@@ -1,4 +1,4 @@
-import { User } from "../../domain/entities/user.entity";
+import { SafeUser } from "../../domain/entities/user.entity";
 import { UserRepository } from "../../domain/repositories/user.repository";
 import { OtpService } from "../../infrastructure/security/otp.service";
 import { AppError } from "../../../../shared/errors/app-error";
@@ -10,7 +10,7 @@ export class VerifyCustomerOtpuseCase {
         private readonly otpService : OtpService
     ){}
 
-    execute = async (email: string, otp : string) : Promise<User> => {
+    execute = async (email: string, otp : string) : Promise<SafeUser> => {
         const normalizedEmail = email.trim().toLowerCase()
 
         const result = await this.otpService.verify(normalizedEmail,otp)
