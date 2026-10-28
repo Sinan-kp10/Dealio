@@ -24,7 +24,7 @@ export class PasswordResetController {
             
             res.status(200).json({
                 success: "success",
-                message: "A password reset code has been sent."
+                message: "A password reset code has been sent"
             })
             
         } catch (error) {
@@ -40,7 +40,7 @@ export class PasswordResetController {
 
             res.status(200).json({
                 status: "success",
-                message: "OTP verified successfully.",
+                message: "OTP verified successfully",
                 data: {
                     resetToken: result.resetToken,
                 },
@@ -58,7 +58,7 @@ export class PasswordResetController {
 
             res.status(200).json({
                 status: "success",
-                message: "Password has been reset successfully.",
+                message: "Password reset successful",
             })
 
         } catch (error) {
