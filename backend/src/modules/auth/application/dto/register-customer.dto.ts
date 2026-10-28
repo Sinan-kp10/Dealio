@@ -1,8 +1,8 @@
 
 export interface RegisterCustomerDto {
-    name: string;
-    email: string;
-    password: string;
+  name: string;
+  email: string;
+  password: string;
 }
 
 export interface CustomerRegistrationData {
