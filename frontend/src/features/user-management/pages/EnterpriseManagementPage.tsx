@@ -9,7 +9,7 @@ import ReasonModal from "../../../components/common/ReasonModal/ReasonModel";
 import ConfirmationModal from "../../../components/common/confirmationModel/ConfirmationModal";
 import { getEnterprise, reactivateEnterpriseAccount, suspendEnterpriseAccount } from "../service/user-management.service";
 
-const PAGE_LIMIT = 1;
+const PAGE_LIMIT = 5
 
 export function EnterpriseManagementPage() {
     const [enterprise, setEnterprise] = useState<Enterprise[]>([]);

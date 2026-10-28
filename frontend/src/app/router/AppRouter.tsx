@@ -22,7 +22,7 @@ const QuotationsPage = lazy(()=> import("../../features/quotations/pages/custome
 const AdminDashboardPage = lazy(()=> import("../../features/dashboard/pages/AdminDashboardPage"))
 const EnterpriseDashboardPage = lazy(()=> import("../../features/dashboard/pages/EnterpriseDashboardPage"))
 const CustomerManagementPage = lazy(()=> import("../../features/user-management/pages/CustomerManagementPage"))
-// import EnterpriseManagementPage from "../../features/user-management/pages/EnterpriseManagementPage";
+const EnterpriseManagementPage = lazy(()=> import("../../features/user-management/pages/EnterpriseManagementPage"))
 
 export function AppRouter() {
   return (
@@ -40,7 +40,7 @@ export function AppRouter() {
             <Route element={<AdminLayout />}>
               <Route path="/admin" element={<AdminDashboardPage />} />
               <Route path="/admin/customers" element={<CustomerManagementPage />} />
-              {/* <Route path="/admin/enterprises" element={<EnterpriseManagementPage />} /> */}
+              <Route path="/admin/enterprises" element={<EnterpriseManagementPage />} />
             </Route>
           </Route>
 
