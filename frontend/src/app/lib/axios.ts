@@ -22,7 +22,6 @@ axiosInstance.interceptors.response.use(
             if (isAuthenticated) {
                 if (errorCode === "ACCOUNT_SUSPENDED") {
                     clearAuth();
-                    toast.error("Your account has been suspended by the administration")
                     return Promise.reject(error);
                 }
 
