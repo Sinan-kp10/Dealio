@@ -19,7 +19,7 @@ export class SuspendAccountUseCase {
 
         const user = await this.userManagementRepository.findById(accountId)
 
-         if (!user) {
+        if (!user) {
             throw new AppError("Account not found.", 404);
         }
 

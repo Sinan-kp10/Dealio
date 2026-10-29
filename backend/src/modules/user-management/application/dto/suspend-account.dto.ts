@@ -4,5 +4,5 @@ export interface SuspendAccountDto {
 }
 
 export interface ReactivateAccountDto {
-    accountId: string;
+  accountId: string;
 }
