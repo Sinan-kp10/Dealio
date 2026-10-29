@@ -10,16 +10,16 @@ export class GetCurrentUserUseCase {
         const user = await this.userRepository.findById(userId);
 
         if (!user) {
-            throw new AppError("User not found.", 401);
+            throw new AppError("User not found.", 401, "UNAUTHENTICATED");
         }
 
         if (user.status === "SUSPENDED") {
-            throw new AppError(user.suspension_reason || "Your account has been suspended by the administration.", 403);
+            throw new AppError("Your account has been suspended by the administration",403,"ACCOUNT_SUSPENDED")
         }
 
         return {
             id: user.id,
-            name : user.name,
+            name: user.name,
             email: user.email,
             role: user.role,
         };

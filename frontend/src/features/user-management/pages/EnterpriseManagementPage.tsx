@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import ReasonModal from "../../../components/common/ReasonModal/ReasonModel";
 import ConfirmationModal from "../../../components/common/confirmationModel/ConfirmationModal";
 import { getEnterprise, reactivateEnterpriseAccount, suspendEnterpriseAccount } from "../service/user-management.service";
+import useDebounce from "../../../hook/useDebounce";
 
 const PAGE_LIMIT = 5
 
@@ -22,6 +23,7 @@ export function EnterpriseManagementPage() {
     const [loading, setLoading] = useState(true);
     const [selectedEnterprise, setSelectedEnterprise] = useState<Enterprise | null>(null);
     const [actionLoading, setActionLoading] = useState(false);
+    const debouncedSearch = useDebounce(search, 500)
 
     useEffect(() => {
         let cancelled = false;
@@ -30,7 +32,7 @@ export function EnterpriseManagementPage() {
             setLoading(true);
             try {
                 const response = await getEnterprise({
-                    search: search.trim() || undefined,
+                    search: debouncedSearch.trim() || undefined,
                     status: status === "ALL" ? undefined : status,
                     category: category === "ALL" ? undefined : category,
                     page,
@@ -72,7 +74,7 @@ export function EnterpriseManagementPage() {
         return () => {
             cancelled = true;
         };
-    }, [search, status, category, page]);
+    }, [debouncedSearch, status, category, page]);
 
     const handleSearchChange = (value: string) => {
         setSearch(value);
