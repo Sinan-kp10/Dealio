@@ -80,3 +80,8 @@ export const getCurrentUser = async (): Promise<CurrentUserResponse> => {
 
   return response.data;
 }
+
+
+export const refreshToken = async (): Promise<void> => {
+  await axiosInstance.post("/auth/refresh");
+};

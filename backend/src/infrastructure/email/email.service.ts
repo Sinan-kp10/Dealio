@@ -1,12 +1,13 @@
 import nodemailer, { type Transporter } from "nodemailer";
-import { AppError } from "../../../../shared/errors/app-error";
+import { AppError } from "../../shared/errors/app-error";
+import { env } from "../../config/env.js";
 
 export class EmailService {
     private readonly transporter: Transporter;
 
     constructor() {
-        const email = process.env.SMTP_USER;
-        const password = process.env.SMTP_PASS;
+        const email = env.smtp.user;
+        const password = env.smtp.pass;
 
         if (!email || !password) {
             throw new AppError("Email service is not configured", 500);
@@ -26,7 +27,7 @@ export class EmailService {
       await this.transporter.sendMail({
         from: {
           name: "Dealio",
-          address: process.env.SMTP_USER!,
+          address: env.smtp.user,
         },
         to: email,
         subject: "Your Dealio verification code",

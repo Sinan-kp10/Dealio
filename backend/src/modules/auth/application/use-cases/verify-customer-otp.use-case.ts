@@ -1,17 +1,17 @@
-import { SafeUser } from "../../domain/entities/user.entity";
-import { UserRepository } from "../../domain/repositories/user.repository";
-import { OtpService } from "../../infrastructure/security/otp.service";
+import { IUserRepository } from "../../domain/repositories/user.repository";
+import { OtpService } from "../../../../infrastructure/security/otp.service";
 import { AppError } from "../../../../shared/errors/app-error";
 import { CustomerRegistrationData } from "../dto/register-customer.dto";
+import { AuthUserDto } from "../dto/user.dto";
 
 export class VerifyCustomerOtpuseCase {
     constructor(
-        private readonly userRepository : UserRepository,
+        private readonly userRepository : IUserRepository,
         private readonly otpService : OtpService
     ){}
 
-    execute = async (email: string, otp : string) : Promise<SafeUser> => {
-        const normalizedEmail = email.trim().toLowerCase()
+    execute = async (email: string, otp : string) : Promise<AuthUserDto> => {
+        const normalizedEmail = email.trim().toLowerCase();
 
         const result = await this.otpService.verify(normalizedEmail,otp)
 
@@ -43,10 +43,15 @@ export class VerifyCustomerOtpuseCase {
             enterprise_id: null,
             phone: null,
             emailVerified: true,
-        })
+        });
 
         await this.otpService.delete(normalizedEmail);
 
-        return user;
-    }
+        return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+        };
+    };
 }

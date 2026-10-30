@@ -1,9 +1,9 @@
 import { SafeUser, User } from "../../../domain/entities/user.entity";
 import { prisma } from "../../../../../infrastructure/database/prisma/prisma-client";
-import { CreateUserData, UserRepository } from "../../../domain/repositories/user.repository";
+import { CreateUserData, IUserRepository } from "../../../domain/repositories/user.repository";
 import { customerSelect, CustomerMapper } from "../../mappers/customer.mappers";
 
-export class PrismaUserRepository implements UserRepository {
+export class PrismaUserRepository implements IUserRepository {
 
     findById = async (id: string): Promise<SafeUser | null> => {
         const user = await prisma.users.findUnique({
