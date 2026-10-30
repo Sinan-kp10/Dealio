@@ -15,7 +15,7 @@ export class GetAuthenticatedUserUseCase {
         }
 
         if (user.status === "SUSPENDED") {
-            throw new AppError("Your account has been suspended by the administration", 403, "ACCOUNT_SUSPENDED");
+            throw new AppError("Your account has been suspended by the administration.", 403, "ACCOUNT_SUSPENDED");
         }
 
         return {

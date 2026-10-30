@@ -2,6 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import { AppError } from "../../shared/errors/app-error"; 
 import { jwtTokenService } from "../../modules/auth/infrastructure/container/infrastructure.container"; 
 import { prisma } from "../../infrastructure/database/prisma/prisma-client";
+import { env } from "../../config/env.js";
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
@@ -17,13 +18,13 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
 
         const user = await prisma.users.findUnique({
             where: { id: payload.userId },
-            select: { status: true, suspension_reason: true },
+            select: { status: true },
         });
 
         if (!user) {
             res.clearCookie("accessToken", {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
+                secure: env.isProduction,
                 sameSite: "lax",
                 path: "/",
             });
@@ -33,7 +34,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
         if (user.status === "SUSPENDED") {
             res.clearCookie("accessToken", {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
+                secure: env.isProduction,
                 sameSite: "lax",
                 path: "/",
             });
