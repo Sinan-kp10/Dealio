@@ -11,6 +11,9 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
         const token = req.cookies?.accessToken;
 
         if (!token) {
+            if (req.cookies?.refreshToken) {
+                throw new AppError("Access token expired.", 401, "TOKEN_EXPIRED");
+            }
             throw new AppError("Authentication required.", 401, "UNAUTHENTICATED");
         }
 
