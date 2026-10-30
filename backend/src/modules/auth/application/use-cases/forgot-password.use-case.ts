@@ -1,8 +1,8 @@
 import { EmailDto } from "../dto/email.dto";
 import { UserRepository } from "../../domain/repositories/user.repository";
-import { OtpService } from "../../infrastructure/security/otp.service";
-import { EmailService } from "../../infrastructure/email/email.service";
+import { OtpService } from "../../../../infrastructure/security/otp.service";
 import { AppError } from "../../../../shared/errors/app-error";
+import { EmailService } from "../../../../infrastructure/email/email.service";
 
 export class ForgotPasswordUseCase {
     constructor(

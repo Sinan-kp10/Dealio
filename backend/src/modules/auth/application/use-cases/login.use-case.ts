@@ -1,6 +1,6 @@
 import { UserRepository } from "../../domain/repositories/user.repository";
-import { JwtTokenService } from "../../infrastructure/security/jwt-token.service";
-import { PasswordService } from "../../infrastructure/security/password.service";
+import { JwtTokenService } from "../../../../infrastructure/security/jwt-token.service";
+import { PasswordService } from "../../../../infrastructure/security/password.service";
 import { AppError } from "../../../../shared/errors/app-error";
 import { LoginDto } from "../dto/login.dto";
 

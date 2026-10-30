@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import { httpLogger } from "../modules/auth/infrastructure/logging/http-logger"; 
+import { httpLogger } from "../infrastructure/logging/http-logger"; 
 import { errorHandler } from "./middlewares/error-handler.middleware"; 
 import { notFoundMiddleware } from "./middlewares/not-found.middleware";
 import { authRouter } from "../modules/auth/presentation/http/routes/auth.routes"; 

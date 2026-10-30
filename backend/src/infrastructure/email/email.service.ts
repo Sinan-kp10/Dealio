@@ -1,5 +1,5 @@
 import nodemailer, { type Transporter } from "nodemailer";
-import { AppError } from "../../../../shared/errors/app-error";
+import { AppError } from "../../shared/errors/app-error";
 
 export class EmailService {
     private readonly transporter: Transporter;

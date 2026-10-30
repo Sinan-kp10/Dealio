@@ -1,4 +1,3 @@
-
 import { ForgotPasswordUseCase } from "../../application/use-cases/forgot-password.use-case";
 import { GetCurrentUserUseCase } from "../../application/use-cases/get-current-user.use-case";
 import { LoginUseCase } from "../../application/use-cases/login.use-case";
@@ -24,19 +23,19 @@ const userRepository = new PrismaUserRepository()
 const enterpriseRepository = new PrismaEnterpriseRepository();
 const registerCustomerUseCase = new RegisterCustomerUseCase(userRepository,passwordService, otpService, emailService)
 const registerEnterpriseUseCase = new RegisterEnterpriseUseCase(enterpriseRepository,passwordService, otpService, emailService)
-export const registrationController = new RegistrationController(registerCustomerUseCase, registerEnterpriseUseCase);
+export const registrationController = new RegistrationController(registerCustomerUseCase, registerEnterpriseUseCase)
 
 //otp
 const verifyCustomerOtpUseCase = new VerifyCustomerOtpuseCase(userRepository,otpService)
 const verifyEnterpriseOtpuseCase = new VerifyEnterpriseOtpuseCase(enterpriseRepository, otpService)
 const resendOtpUseCase = new ResendOtpUseCase(otpService, emailService)
-export const otpController = new OtpController(verifyCustomerOtpUseCase,verifyEnterpriseOtpuseCase,resendOtpUseCase);
+export const otpController = new OtpController(verifyCustomerOtpUseCase,verifyEnterpriseOtpuseCase,resendOtpUseCase)
 
 // reset password
 const forgotPasswordUseCase = new ForgotPasswordUseCase(userRepository, otpService, emailService)
 const verifyPasswordResetOtpUseCase = new VerifyPasswordResetOtpUseCase(userRepository, otpService, jwtTokenService)
 const resetPasswordUseCase = new ResetPasswordUseCase(userRepository, passwordService, jwtTokenService)
-export const passwordResetController = new PasswordResetController(forgotPasswordUseCase,verifyPasswordResetOtpUseCase, resetPasswordUseCase,)
+export const passwordResetController = new PasswordResetController(forgotPasswordUseCase,verifyPasswordResetOtpUseCase, resetPasswordUseCase)
 
 //login
 const loginUseCase = new LoginUseCase(userRepository, passwordService, jwtTokenService)

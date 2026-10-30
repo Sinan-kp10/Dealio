@@ -1,5 +1,5 @@
 import jwt, { type SignOptions } from "jsonwebtoken";
-import { AppError } from "../../../../shared/errors/app-error";
+import { AppError } from "../../shared/errors/app-error";
 import crypto from "node:crypto";
 
 export interface JwtPayload {

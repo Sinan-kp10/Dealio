@@ -1,9 +1,9 @@
-import { PasswordService } from "../../infrastructure/security/password.service";
+import { PasswordService } from "../../../../infrastructure/security/password.service";
 import { RegisterEnterpriseDto } from "../dto/register-enterprise.dto";
 import { EnterpriseRepository } from "../../domain/repositories/enterprise.repository";
 import { AppError } from "../../../../shared/errors/app-error";
-import { OtpService } from "../../infrastructure/security/otp.service";
-import { EmailService } from "../../infrastructure/email/email.service";
+import { OtpService } from "../../../../infrastructure/security/otp.service";
+import { EmailService } from "../../../../infrastructure/email/email.service";
 
 export class  RegisterEnterpriseUseCase {
     constructor(

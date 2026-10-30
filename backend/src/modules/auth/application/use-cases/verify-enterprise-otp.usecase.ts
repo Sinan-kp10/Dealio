@@ -1,5 +1,5 @@
 import { EnterpriseRepository } from "../../domain/repositories/enterprise.repository";
-import { OtpService } from "../../infrastructure/security/otp.service";
+import { OtpService } from "../../../../infrastructure/security/otp.service";
 import { AppError } from "../../../../shared/errors/app-error";
 import { EnterpriseRegistrationData } from "../dto/register-enterprise.dto";
 
