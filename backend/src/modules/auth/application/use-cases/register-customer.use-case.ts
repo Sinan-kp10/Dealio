@@ -1,6 +1,6 @@
 
 
-import type { UserRepository,} from "../../domain/repositories/user.repository";
+import type { IUserRepository,} from "../../domain/repositories/user.repository";
 import type {RegisterCustomerDto,} from "../dto/register-customer.dto";
 import { AppError } from "../../../../shared/errors/app-error";
 import { PasswordService } from "../../../../infrastructure/security/password.service";
@@ -10,7 +10,7 @@ import { EmailService } from "../../../../infrastructure/email/email.service";
 export class RegisterCustomerUseCase {
 
     constructor( 
-        private readonly userRepository: UserRepository,
+        private readonly userRepository: IUserRepository,
         private readonly passwordService : PasswordService,
         private readonly otpService : OtpService,
         private readonly emailService : EmailService

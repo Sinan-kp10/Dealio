@@ -1,4 +1,4 @@
-import { UserRepository } from "../../domain/repositories/user.repository";
+import { IUserRepository } from "../../domain/repositories/user.repository";
 import { JwtTokenService } from "../../../../infrastructure/security/jwt-token.service";
 import { OtpService } from "../../../../infrastructure/security/otp.service";
 import { AppError } from "../../../../shared/errors/app-error";
@@ -7,7 +7,7 @@ import { VerifyOtpDto } from "../dto/verify-otp.dto";
 export class VerifyPasswordResetOtpUseCase {
 
     constructor(
-        private readonly userRespository : UserRepository,
+        private readonly userRespository : IUserRepository,
         private readonly otpService : OtpService,
         private readonly jwtTokenService : JwtTokenService
     ){}

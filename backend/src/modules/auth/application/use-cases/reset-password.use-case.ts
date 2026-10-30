@@ -1,4 +1,4 @@
-import { UserRepository } from "../../domain/repositories/user.repository";
+import { IUserRepository } from "../../domain/repositories/user.repository";
 import { JwtTokenService } from "../../../../infrastructure/security/jwt-token.service";
 import { ResetPasswordDto } from "../dto/reset-password.dto";
 import { AppError } from "../../../../shared/errors/app-error";
@@ -7,7 +7,7 @@ import { PasswordService } from "../../../../infrastructure/security/password.se
 export class ResetPasswordUseCase {
 
     constructor(
-        private readonly userRepository : UserRepository,
+        private readonly userRepository : IUserRepository,
         private readonly passwordService : PasswordService,
         private readonly jwtTokenService : JwtTokenService
     ){}

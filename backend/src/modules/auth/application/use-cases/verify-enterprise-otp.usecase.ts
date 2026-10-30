@@ -1,4 +1,4 @@
-import { EnterpriseRepository } from "../../domain/repositories/enterprise.repository";
+import { IEnterpriseRepository } from "../../domain/repositories/enterprise.repository";
 import { OtpService } from "../../../../infrastructure/security/otp.service";
 import { AppError } from "../../../../shared/errors/app-error";
 import { EnterpriseRegistrationData } from "../dto/register-enterprise.dto";
@@ -6,7 +6,7 @@ import { EnterpriseRegistrationData } from "../dto/register-enterprise.dto";
 
 export class VerifyEnterpriseOtpuseCase {
     constructor(
-        private readonly enterpriseRepository : EnterpriseRepository,
+        private readonly enterpriseRepository : IEnterpriseRepository,
         private readonly otpService : OtpService
     ){}
 
