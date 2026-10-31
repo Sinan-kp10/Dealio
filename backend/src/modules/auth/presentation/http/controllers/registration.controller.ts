@@ -2,6 +2,7 @@ import type { RegisterCustomerDto } from "../../../application/dto/register-cust
 import type { RegisterEnterpriseDto } from "../../../application/dto/register-enterprise.dto"; 
 import type { IUseCase } from "../../../../../shared/application/base.usecase";
 import type { IApiResponse } from "../../../../../shared/application/api-response";
+import { HttpStatusCode } from "../../../../../shared/presentation/enums/http-status-code.enum.js";
 import type { Request, Response, NextFunction } from "express";
 
 export class RegistrationController {
@@ -16,7 +17,7 @@ export class RegistrationController {
 
             await this.registerCustomerUseCase.execute(data);
 
-            res.status(200).json({
+            res.status(HttpStatusCode.OK).json({
                 status: true,
                 message: "OTP sent successfully. Please verify your email",
             });
@@ -31,7 +32,7 @@ export class RegistrationController {
 
             await this.registerEnterpriseUseCase.execute(data);
 
-            res.status(200).json({
+            res.status(HttpStatusCode.OK).json({
                 status: true,
                 message: "OTP sent successfully. Please verify your email",
             });

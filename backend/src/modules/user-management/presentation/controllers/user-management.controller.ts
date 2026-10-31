@@ -4,6 +4,7 @@ import type { CustomerListFiltersDto, PaginatedCustomerDto } from "../../applica
 import type { EnterpriseListFiltersDto, PaginatedEnterprisesDto } from "../../application/dto/enterprise-list-item.dto";
 import type { SuspendAccountDto, ReactivateAccountDto } from "../../application/dto/suspend-account.dto";
 import type { IApiResponse } from "../../../../shared/application/api-response";
+import { HttpStatusCode } from "../../../../shared/presentation/enums/http-status-code.enum.js";
 
 export class UserManagementController {
     constructor(
@@ -22,7 +23,7 @@ export class UserManagementController {
                 limit: Number(req.query.limit ?? 10),
             });
 
-            res.status(200).json({
+            res.status(HttpStatusCode.OK).json({
                 status: true,
                 message: "Customers retrieved successfully",
                 data: result,
@@ -43,7 +44,7 @@ export class UserManagementController {
                 limit: Number(req.query.limit ?? 10),
             });
 
-            res.status(200).json({
+            res.status(HttpStatusCode.OK).json({
                 status: true,
                 message: "Enterprises retrieved successfully",
                 data: result,
@@ -61,7 +62,7 @@ export class UserManagementController {
                 reason: req.body.reason,
             });
 
-            res.status(200).json({
+            res.status(HttpStatusCode.OK).json({
                 status: true,
                 message: "Account suspended successfully",
             });
@@ -76,7 +77,7 @@ export class UserManagementController {
                 accountId: req.params.accountId as string,
             });
 
-            res.status(200).json({
+            res.status(HttpStatusCode.OK).json({
                 status: true,
                 message: "Account reactivated successfully",
             });

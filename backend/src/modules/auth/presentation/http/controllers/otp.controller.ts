@@ -4,6 +4,7 @@ import type { VerifyOtpDto, ResendOtpInput } from "../../../application/dto/veri
 import type { AuthUserDto } from "../../../application/dto/user.dto";
 import type { CreatedEnterpriseResult } from "../../../domain/repositories/enterprise.repository";
 import type { IApiResponse } from "../../../../../shared/application/api-response";
+import { HttpStatusCode } from "../../../../../shared/presentation/enums/http-status-code.enum.js";
 
 export class OtpController {
     constructor(
@@ -18,7 +19,7 @@ export class OtpController {
 
             const user = await this.verifyCustomerOtpUseCase.execute(data);
 
-            res.status(201).json({
+            res.status(HttpStatusCode.CREATED).json({
                 status: true,
                 message: "Email verified and account created successfully",
                 data: {
@@ -38,7 +39,7 @@ export class OtpController {
 
             const result = await this.verifyEnterpriseOtpUseCase.execute(data);
 
-            res.status(201).json({
+            res.status(HttpStatusCode.CREATED).json({
                 status: true,
                 message: "Email verified and account created successfully",
                 data: {
@@ -59,7 +60,7 @@ export class OtpController {
 
             await this.resendOtpUseCase.execute(data);
 
-            res.status(200).json({
+            res.status(HttpStatusCode.OK).json({
                 status: true,
                 message: "New OTP sent successfully",
             });

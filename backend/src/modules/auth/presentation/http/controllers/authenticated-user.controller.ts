@@ -2,6 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import type { IUseCase } from "../../../../../shared/application/base.usecase";
 import type { AuthUserDto } from "../../../application/dto/user.dto";
 import type { IApiResponse } from "../../../../../shared/application/api-response";
+import { HttpStatusCode } from "../../../../../shared/presentation/enums/http-status-code.enum.js";
 
 export class AuthenticatedUserController {
     constructor(
@@ -12,7 +13,7 @@ export class AuthenticatedUserController {
         try {
             const user = await this.getAuthenticatedUserUseCase.execute(req.auth!.userId);
 
-            res.status(200).json({
+            res.status(HttpStatusCode.OK).json({
                 status: true,
                 message: "User profile retrieved successfully",
                 data: { user },

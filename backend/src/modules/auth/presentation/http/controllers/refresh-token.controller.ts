@@ -2,6 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import type { IUseCase } from "../../../../../shared/application/base.usecase";
 import type { RefreshTokenResponseDto } from "../../../application/use-cases/refresh-token.use-case";
 import type { IApiResponse } from "../../../../../shared/application/api-response";
+import { HttpStatusCode } from "../../../../../shared/presentation/enums/http-status-code.enum.js";
 import { env } from "../../../../../config/env.js";
 
 export class RefreshTokenController {
@@ -29,7 +30,7 @@ export class RefreshTokenController {
                 maxAge: env.auth.refreshTokenMaxAgeMs,
             });
 
-            res.status(200).json({
+            res.status(HttpStatusCode.OK).json({
                 status: true,
                 message: "Token refreshed successfully.",
                 data: {

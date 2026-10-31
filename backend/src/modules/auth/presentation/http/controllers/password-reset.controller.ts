@@ -4,6 +4,7 @@ import type { EmailDto } from "../../../application/dto/email.dto";
 import type { VerifyOtpDto } from "../../../application/dto/verify-otp.dto";
 import type { ResetPasswordDto } from "../../../application/dto/reset-password.dto";
 import type { IApiResponse } from "../../../../../shared/application/api-response";
+import { HttpStatusCode } from "../../../../../shared/presentation/enums/http-status-code.enum.js";
 
 export class PasswordResetController {
 
@@ -19,7 +20,7 @@ export class PasswordResetController {
 
             await this.forgotPasswordUseCase.execute(data);
             
-            res.status(200).json({
+            res.status(HttpStatusCode.OK).json({
                 status: true,
                 message: "A password reset code has been sent",
             });
@@ -34,7 +35,7 @@ export class PasswordResetController {
 
             const result = await this.verifyPasswordResetOtpUseCase.execute(data);
 
-            res.status(200).json({
+            res.status(HttpStatusCode.OK).json({
                 status: true,
                 message: "OTP verified successfully",
                 data: {
@@ -52,7 +53,7 @@ export class PasswordResetController {
 
             await this.resetPasswordUseCase.execute(data);
 
-            res.status(200).json({
+            res.status(HttpStatusCode.OK).json({
                 status: true,
                 message: "Password reset successful",
             });
