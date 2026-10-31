@@ -1,6 +1,7 @@
 import type { RegisterCustomerDto } from "../../../application/dto/register-customer.dto";
 import type { RegisterEnterpriseDto } from "../../../application/dto/register-enterprise.dto"; 
 import type { IUseCase } from "../../../../../shared/application/base.usecase";
+import type { IApiResponse } from "../../../../../shared/application/api-response";
 import type { Request, Response, NextFunction } from "express";
 
 export class RegistrationController {
@@ -9,14 +10,14 @@ export class RegistrationController {
         private readonly registerEnterpriseUseCase: IUseCase<RegisterEnterpriseDto, void>
     ){}
 
-    registerCustomer = async(req : Request, res : Response, next : NextFunction): Promise<void> => {
+    registerCustomer = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
         try {
             const data = req.body as RegisterCustomerDto;
 
             await this.registerCustomerUseCase.execute(data);
 
             res.status(200).json({
-                success: true,
+                status: true,
                 message: "OTP sent successfully. Please verify your email",
             });
         } catch (error) {
@@ -24,14 +25,14 @@ export class RegistrationController {
         }
     };
 
-    registerEnterprise = async (req : Request, res : Response, next : NextFunction) : Promise<void> => {
+    registerEnterprise = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
         try {
             const data = req.body as RegisterEnterpriseDto;
 
             await this.registerEnterpriseUseCase.execute(data);
 
             res.status(200).json({
-                success: true,
+                status: true,
                 message: "OTP sent successfully. Please verify your email",
             });
         } catch (error) {

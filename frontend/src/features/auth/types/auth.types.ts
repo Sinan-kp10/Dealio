@@ -17,7 +17,8 @@ export interface AuthState {
 
 
 export interface CurrentUserResponse {
-  success: boolean;
+  status: boolean;
+  message: string;
   data: {
     user: AuthUser;
   };

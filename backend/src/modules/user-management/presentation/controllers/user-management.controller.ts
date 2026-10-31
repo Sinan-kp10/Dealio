@@ -3,6 +3,7 @@ import type { IUseCase } from "../../../../shared/application/base.usecase";
 import type { CustomerListFiltersDto, PaginatedCustomerDto } from "../../application/dto/customer-list-item.dto";
 import type { EnterpriseListFiltersDto, PaginatedEnterprisesDto } from "../../application/dto/enterprise-list-item.dto";
 import type { SuspendAccountDto, ReactivateAccountDto } from "../../application/dto/suspend-account.dto";
+import type { IApiResponse } from "../../../../shared/application/api-response";
 
 export class UserManagementController {
     constructor(
@@ -12,7 +13,7 @@ export class UserManagementController {
         private readonly reactivateAccountUseCase: IUseCase<ReactivateAccountDto, void>,
     ){}
 
-    getUsers = async (req: Request, res: Response, next: NextFunction,): Promise<void> => {
+    getUsers = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
         try {
             const result = await this.getCustomerUseCase.execute({
                 search: req.query.search as string | undefined,
@@ -22,7 +23,8 @@ export class UserManagementController {
             });
 
             res.status(200).json({
-                success: true,
+                status: true,
+                message: "Customers retrieved successfully",
                 data: result,
             });
 
@@ -31,7 +33,7 @@ export class UserManagementController {
         }
     };
 
-    getEnterprise = async (req: Request, res: Response, next: NextFunction,): Promise<void> => {
+    getEnterprise = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
         try {
             const result = await this.getEnterpriseUseCase.execute({
                 search: req.query.search as string | undefined,
@@ -42,7 +44,8 @@ export class UserManagementController {
             });
 
             res.status(200).json({
-                success: true,
+                status: true,
+                message: "Enterprises retrieved successfully",
                 data: result,
             });
 
@@ -51,7 +54,7 @@ export class UserManagementController {
         }
     };
 
-    suspendAccount = async ( req: Request, res: Response, next: NextFunction,): Promise<void> => {
+    suspendAccount = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
         try {
             await this.suspendAccountUseCase.execute({
                 accountId: req.params.accountId as string,
@@ -59,7 +62,7 @@ export class UserManagementController {
             });
 
             res.status(200).json({
-                success: true,
+                status: true,
                 message: "Account suspended successfully",
             });
         } catch (error) {
@@ -67,14 +70,14 @@ export class UserManagementController {
         }
     };
 
-    reactivateAccount = async ( req: Request, res: Response, next: NextFunction,): Promise<void> => {
+    reactivateAccount = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
         try {
             await this.reactivateAccountUseCase.execute({
                 accountId: req.params.accountId as string,
             });
 
             res.status(200).json({
-                success: true,
+                status: true,
                 message: "Account reactivated successfully",
             });
         } catch (error) {

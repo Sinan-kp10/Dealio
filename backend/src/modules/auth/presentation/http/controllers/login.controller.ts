@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import type { IUseCase } from "../../../../../shared/application/base.usecase"; 
 import type { LoginDto, LoginResponseDto } from "../../../application/dto/login.dto"; 
+import type { IApiResponse } from "../../../../../shared/application/api-response";
 import { RefreshTokenService } from "../../../../../infrastructure/security/refresh-token.service.js";
 import { env } from "../../../../../config/env.js";
 
@@ -11,7 +12,7 @@ export class LoginController {
         private readonly refreshTokenService: RefreshTokenService
     ) {}
 
-    login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    login = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
         try {
             const data = req.body as LoginDto;
 
@@ -34,8 +35,8 @@ export class LoginController {
             });
 
             res.status(200).json({
-                success: true,
-                message: "Login successful.",
+                status: true,
+                message: "Login successful",
                 data: {
                     user: result.user,
                 },
@@ -45,7 +46,7 @@ export class LoginController {
         }
     };
 
-    logout = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    logout = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
         try {
             const userId = req.auth?.userId;
 
@@ -68,7 +69,7 @@ export class LoginController {
             });
 
             res.status(200).json({
-                success: true,
+                status: true,
                 message: "Logged out successfully.",
             });
         } catch (error) {

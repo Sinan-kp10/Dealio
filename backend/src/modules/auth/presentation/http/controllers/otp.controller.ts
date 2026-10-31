@@ -3,6 +3,7 @@ import type { IUseCase } from "../../../../../shared/application/base.usecase";
 import type { VerifyOtpDto, ResendOtpInput } from "../../../application/dto/verify-otp.dto";
 import type { AuthUserDto } from "../../../application/dto/user.dto";
 import type { CreatedEnterpriseResult } from "../../../domain/repositories/enterprise.repository";
+import type { IApiResponse } from "../../../../../shared/application/api-response";
 
 export class OtpController {
     constructor(
@@ -11,14 +12,14 @@ export class OtpController {
         private readonly resendOtpUseCase: IUseCase<ResendOtpInput, void>,
     ) {}
 
-    verifyCustomerOtp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    verifyCustomerOtp = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
         try {
             const data = req.body as VerifyOtpDto;
 
             const user = await this.verifyCustomerOtpUseCase.execute(data);
 
             res.status(201).json({
-                status: "success",
+                status: true,
                 message: "Email verified and account created successfully",
                 data: {
                     name: user.name,
@@ -31,14 +32,14 @@ export class OtpController {
         }
     };
 
-    verifyEnterpriseOtp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    verifyEnterpriseOtp = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
         try {
             const data = req.body as VerifyOtpDto;
 
             const result = await this.verifyEnterpriseOtpUseCase.execute(data);
 
             res.status(201).json({
-                status: "success",
+                status: true,
                 message: "Email verified and account created successfully",
                 data: {
                     enterpriseName: result.enterprise.name,
@@ -52,14 +53,14 @@ export class OtpController {
         }
     };
 
-    resendOtp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    resendOtp = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
         try {
             const data = req.body as ResendOtpInput;
 
             await this.resendOtpUseCase.execute(data);
 
             res.status(200).json({
-                status: "success",
+                status: true,
                 message: "New OTP sent successfully",
             });
         } catch (error) {
