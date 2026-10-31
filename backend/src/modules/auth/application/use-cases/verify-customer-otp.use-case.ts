@@ -1,19 +1,21 @@
-import { User } from "../../domain/entities/user.entity";
-import { UserRepository } from "../../domain/repositories/user.repository";
-import { OtpService } from "../../infrastructure/security/otp.service";
+import { IUserRepository } from "../../domain/repositories/user.repository";
+import { OtpService } from "../../../../infrastructure/security/otp.service";
 import { AppError } from "../../../../shared/errors/app-error";
 import { CustomerRegistrationData } from "../dto/register-customer.dto";
+import { AuthUserDto } from "../dto/user.dto";
+import { VerifyOtpDto } from "../dto/verify-otp.dto";
+import type { IUseCase } from "../../../../shared/application/base.usecase";
 
-export class VerifyCustomerOtpuseCase {
+export class VerifyCustomerOtpuseCase implements IUseCase<VerifyOtpDto, AuthUserDto> {
     constructor(
-        private readonly userRepository : UserRepository,
+        private readonly userRepository : IUserRepository,
         private readonly otpService : OtpService
     ){}
 
-    execute = async (email: string, otp : string) : Promise<User> => {
-        const normalizedEmail = email.trim().toLowerCase()
+    execute = async (dto: VerifyOtpDto): Promise<AuthUserDto> => {
+        const normalizedEmail = dto.email.trim().toLowerCase();
 
-        const result = await this.otpService.verify(normalizedEmail,otp)
+        const result = await this.otpService.verify(normalizedEmail, dto.otp);
 
         if (result === "invalid") {
             throw new AppError("Invalid OTP. Please try again", 400);
@@ -43,10 +45,15 @@ export class VerifyCustomerOtpuseCase {
             enterprise_id: null,
             phone: null,
             emailVerified: true,
-        })
+        });
 
         await this.otpService.delete(normalizedEmail);
 
-        return user;
-    }
+        return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+        };
+    };
 }

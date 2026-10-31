@@ -1,4 +1,4 @@
-import type { JwtPayload } from "../modules/auth/infrastructure/security/jwt-token.service";
+import type { JwtPayload } from "../infrastructure/security/jwt-token.service"
 
 declare global {
     namespace Express {
@@ -8,4 +8,4 @@ declare global {
     }
 }
 
-export {};
+export {}

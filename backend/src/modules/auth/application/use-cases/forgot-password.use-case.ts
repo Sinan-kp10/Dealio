@@ -1,12 +1,14 @@
 import { EmailDto } from "../dto/email.dto";
-import { UserRepository } from "../../domain/repositories/user.repository";
-import { OtpService } from "../../infrastructure/security/otp.service";
-import { EmailService } from "../../infrastructure/email/email.service";
+import { IUserRepository } from "../../domain/repositories/user.repository";
+import { OtpService } from "../../../../infrastructure/security/otp.service";
 import { AppError } from "../../../../shared/errors/app-error";
+import { EmailService } from "../../../../infrastructure/email/email.service";
 
-export class ForgotPasswordUseCase {
+import type { IUseCase } from "../../../../shared/application/base.usecase";
+
+export class ForgotPasswordUseCase implements IUseCase<EmailDto, void> {
     constructor(
-        private readonly userRepository: UserRepository,
+        private readonly userRepository: IUserRepository,
         private readonly otpService: OtpService,
         private readonly emailService: EmailService,
     ) {}

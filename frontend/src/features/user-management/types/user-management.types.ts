@@ -26,6 +26,7 @@ export interface PaginatedCustomers {
 }
 
 export interface CustomerListResponse {
-  success: boolean;
+  status: boolean;
+  message: string;
   data: PaginatedCustomers;
 }

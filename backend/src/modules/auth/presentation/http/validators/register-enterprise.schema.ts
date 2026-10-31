@@ -6,13 +6,15 @@ export const registerEnterpriseSchema = z
       .string()
       .trim()
       .min(2, "Company name must contain at least 2 characters")
-      .max(255, "Company name cannot exceed 255 characters"),
+      .max(255, "Company name cannot exceed 255 characters")
+      .regex(/[a-zA-Z0-9]/, "Company name cannot contain only special characters"),
 
     contactPersonName: z
       .string()
       .trim()
       .min(2, "Contact person name must contain at least 2 characters")
-      .max(255, "Contact person name cannot exceed 255 characters"),
+      .max(255, "Contact person name cannot exceed 255 characters")
+      .regex(/^[a-zA-Z\s]+$/, "Contact person name cannot contain numbers or special characters"),
 
     email: z
       .email("Please provide a valid work email address")
@@ -21,10 +23,10 @@ export const registerEnterpriseSchema = z
     phone: z
       .string()
       .trim()
-      .regex(/^[6-9]\d{9}$/,"Enter a valid 10-digit phone number")
+      .regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit phone number")
       .refine(
         (value) => !/^(\d)\1{9}$/.test(value),
-        "Enter a valid phone number",
+        "Enter a valid phone number"
       ),
 
     password: z
@@ -37,10 +39,7 @@ export const registerEnterpriseSchema = z
       .string()
       .min(1, "Please confirm your password"),
   })
-  .refine(
-    (data) => data.password === data.confirmPassword,
-    {
-      message: "Passwords do not match",
-      path: ["confirmPassword"],
-    },
-  );
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });

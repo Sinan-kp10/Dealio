@@ -1,16 +1,18 @@
-
 import { z } from "zod";
 
-export const enterpriseSignupSchema = z.object({
+export const enterpriseSignupSchema = z
+  .object({
     companyName: z
       .string()
       .trim()
-      .min(2, "Company name must contain at least 2 characters"),
+      .min(2, "Company name must contain at least 2 characters")
+      .regex(/[a-zA-Z0-9]/, "Company name cannot contain only special characters"),
 
     contactPersonName: z
       .string()
       .trim()
-      .min(2, "Name must contain at least 2 characters"),
+      .min(2, "Contact person name must contain at least 2 characters")
+      .regex(/^[a-zA-Z\s]+$/, "Contact person name cannot contain numbers or special characters"),
 
     email: z
       .string()
@@ -18,12 +20,12 @@ export const enterpriseSignupSchema = z.object({
       .pipe(z.email("Enter a valid work email address")),
 
     phone: z
-        .string()
-        .trim()
-        .refine(
-            (value) =>/^[6-9]\d{9}$/.test(value) && !/^(\d)\1{9}$/.test(value),
-            "Enter a valid 10-digit phone number",
-        ),
+      .string()
+      .trim()
+      .refine(
+        (value) => /^[6-9]\d{9}$/.test(value) && !/^(\d)\1{9}$/.test(value),
+        "Enter a valid 10-digit phone number"
+      ),
 
     password: z
       .string()

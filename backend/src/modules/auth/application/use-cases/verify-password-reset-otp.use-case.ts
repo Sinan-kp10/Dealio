@@ -1,13 +1,14 @@
-import { UserRepository } from "../../domain/repositories/user.repository";
-import { JwtTokenService } from "../../infrastructure/security/jwt-token.service";
-import { OtpService } from "../../infrastructure/security/otp.service";
+import { IUserRepository } from "../../domain/repositories/user.repository";
+import { JwtTokenService } from "../../../../infrastructure/security/jwt-token.service";
+import { OtpService } from "../../../../infrastructure/security/otp.service";
 import { AppError } from "../../../../shared/errors/app-error";
 import { VerifyOtpDto } from "../dto/verify-otp.dto";
+import type { IUseCase } from "../../../../shared/application/base.usecase";
 
-export class VerifyPasswordResetOtpUseCase {
+export class VerifyPasswordResetOtpUseCase implements IUseCase<VerifyOtpDto, { resetToken: string }> {
 
     constructor(
-        private readonly userRespository : UserRepository,
+        private readonly userRespository : IUserRepository,
         private readonly otpService : OtpService,
         private readonly jwtTokenService : JwtTokenService
     ){}

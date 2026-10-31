@@ -13,6 +13,6 @@ export interface CustomerSignupRequest {
 }
 
 export interface CustomerSignupResponse {
-  success: boolean;
+  status: boolean;
   message: string;
 }

@@ -1,22 +1,20 @@
 import type { Request, Response, NextFunction, ErrorRequestHandler } from "express";
-import { AppError } from "../../shared/errors/app-error"; 
+import { AppError } from "../../shared/errors/app-error.js"; 
+import { HttpStatusCode } from "../../shared/presentation/enums/http-status-code.enum.js";
 
+export const errorHandler: ErrorRequestHandler = (error: unknown, _req: Request, res: Response, _next: NextFunction): void => {
 
-export const errorHandler : ErrorRequestHandler = (error : unknown, _req : Request, res : Response, _next:NextFunction) : void=>{
-
-    if(error instanceof AppError){
+    if (error instanceof AppError) {
         res.status(error.statusCode).json({
-            success : false,
-            status : error.status,
-            message : error.message
-
-        })
-        return
+            status: false,
+            message: error.message,
+            ...(error.errorCode && { errorCode: error.errorCode }),
+        });
+        return;
     }
 
-    res.status(500).json({
-        success: false,
-        status: "error",
-        message: "Something went wrong."
-    })
-}
+    res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        status: false,
+        message: "Something went wrong.",
+    });
+};
