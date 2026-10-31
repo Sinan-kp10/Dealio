@@ -1,6 +1,6 @@
 import { IUserRepository } from "../../domain/repositories/user.repository";
-import { JwtTokenService } from "../../../../infrastructure/security/jwt-token.service";
-import { RefreshTokenService } from "../../../../infrastructure/security/refresh-token.service";
+import { JwtTokenService } from "../../infrastructure/security/jwt-token.service";
+import { RefreshTokenService } from "../../infrastructure/security/refresh-token.service";
 import { AppError } from "../../../../shared/errors/app-error";
 import { AuthUserDto } from "../dto/user.dto";
 import type { IUseCase } from "../../../../shared/application/base.usecase";

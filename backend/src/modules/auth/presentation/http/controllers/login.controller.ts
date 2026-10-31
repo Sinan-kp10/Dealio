@@ -3,7 +3,7 @@ import type { IUseCase } from "../../../../../shared/application/base.usecase";
 import type { LoginDto, LoginResponseDto } from "../../../application/dto/login.dto"; 
 import type { IApiResponse } from "../../../../../shared/application/api-response";
 import { HttpStatusCode } from "../../../../../shared/presentation/enums/http-status-code.enum.js";
-import { RefreshTokenService } from "../../../../../infrastructure/security/refresh-token.service.js";
+import { RefreshTokenService } from "../../../infrastructure/security/refresh-token.service.js";
 import { env } from "../../../../../config/env.js";
 
 export class LoginController {

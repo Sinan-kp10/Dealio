@@ -1,6 +1,6 @@
 import { IUserRepository } from "../../domain/repositories/user.repository";
-import { JwtTokenService } from "../../../../infrastructure/security/jwt-token.service";
-import { OtpService } from "../../../../infrastructure/security/otp.service";
+import { JwtTokenService } from "../../infrastructure/security/jwt-token.service";
+import { OtpService } from "../../infrastructure/security/otp.service";
 import { AppError } from "../../../../shared/errors/app-error";
 import { VerifyOtpDto } from "../dto/verify-otp.dto";
 import type { IUseCase } from "../../../../shared/application/base.usecase";

@@ -1,5 +1,5 @@
-import { redis } from "../database/redis/redis-client.js";
-import { env } from "../../config/env.js";
+import { redis } from "../../../../infrastructure/database/redis/redis-client.js";
+import { env } from "../../../../config/env.js";
 
 export class RefreshTokenService {
 

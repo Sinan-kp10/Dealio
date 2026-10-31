@@ -1,4 +1,4 @@
-import { OtpService } from "../../../../infrastructure/security/otp.service";
+import { OtpService } from "../../infrastructure/security/otp.service";
 import { AppError } from "../../../../shared/errors/app-error";
 import { ResendOtpInput } from "../dto/verify-otp.dto";
 import { EmailService } from "../../../../infrastructure/email/email.service";

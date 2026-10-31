@@ -1,6 +1,6 @@
 import { randomInt } from "node:crypto";
-import { redis } from "../database/redis/redis-client";
-import { AppError } from "../../shared/errors/app-error";
+import { redis } from "../../../../infrastructure/database/redis/redis-client";
+import { AppError } from "../../../../shared/errors/app-error";
 
 export class OtpService {
 
