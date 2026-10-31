@@ -4,8 +4,9 @@ import { PasswordService } from "../../../../infrastructure/security/password.se
 import { RefreshTokenService } from "../../../../infrastructure/security/refresh-token.service";
 import { AppError } from "../../../../shared/errors/app-error";
 import { LoginDto, LoginResponseDto } from "../dto/login.dto";
+import type { IUseCase } from "../../../../shared/application/base.usecase";
 
-export class LoginUseCase {
+export class LoginUseCase implements IUseCase<LoginDto, LoginResponseDto> {
     constructor(
         private readonly userRepository: IUserRepository,
         private readonly passwordService: PasswordService,

@@ -10,6 +10,6 @@ export interface ResetPasswordRequest {
 }
 
 export interface ResetPasswordResponse {
-    status: "success";
+    status: boolean;
     message: string;
 }

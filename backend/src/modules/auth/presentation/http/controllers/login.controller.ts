@@ -1,17 +1,19 @@
 import type { Request, Response, NextFunction } from "express";
-import { LoginUseCase } from "../../../application/use-cases/login.use-case"; 
-import { LoginDto } from "../../../application/dto/login.dto"; 
+import type { IUseCase } from "../../../../../shared/application/base.usecase"; 
+import type { LoginDto, LoginResponseDto } from "../../../application/dto/login.dto"; 
+import type { IApiResponse } from "../../../../../shared/application/api-response";
+import { HttpStatusCode } from "../../../../../shared/presentation/enums/http-status-code.enum.js";
 import { RefreshTokenService } from "../../../../../infrastructure/security/refresh-token.service.js";
 import { env } from "../../../../../config/env.js";
 
 export class LoginController {
 
     constructor(
-        private readonly loginUseCase: LoginUseCase,
+        private readonly loginUseCase: IUseCase<LoginDto, LoginResponseDto>,
         private readonly refreshTokenService: RefreshTokenService
     ) {}
 
-    login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    login = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
         try {
             const data = req.body as LoginDto;
 
@@ -33,9 +35,9 @@ export class LoginController {
                 maxAge: env.auth.refreshTokenMaxAgeMs,
             });
 
-            res.status(200).json({
-                success: true,
-                message: "Login successful.",
+            res.status(HttpStatusCode.OK).json({
+                status: true,
+                message: "Login successful",
                 data: {
                     user: result.user,
                 },
@@ -45,7 +47,7 @@ export class LoginController {
         }
     };
 
-    logout = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    logout = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
         try {
             const userId = req.auth?.userId;
 
@@ -67,8 +69,8 @@ export class LoginController {
                 path: "/",
             });
 
-            res.status(200).json({
-                success: true,
+            res.status(HttpStatusCode.OK).json({
+                status: true,
                 message: "Logged out successfully.",
             });
         } catch (error) {

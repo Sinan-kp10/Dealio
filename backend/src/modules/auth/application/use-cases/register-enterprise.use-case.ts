@@ -5,7 +5,9 @@ import { AppError } from "../../../../shared/errors/app-error";
 import { OtpService } from "../../../../infrastructure/security/otp.service";
 import { EmailService } from "../../../../infrastructure/email/email.service";
 
-export class  RegisterEnterpriseUseCase {
+import type { IUseCase } from "../../../../shared/application/base.usecase";
+
+export class RegisterEnterpriseUseCase implements IUseCase<RegisterEnterpriseDto, void> {
     constructor(
         private readonly enterpriseRepository : IEnterpriseRepository,
         private readonly passwordService : PasswordService,

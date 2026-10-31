@@ -3,8 +3,9 @@ import { JwtTokenService } from "../../../../infrastructure/security/jwt-token.s
 import { OtpService } from "../../../../infrastructure/security/otp.service";
 import { AppError } from "../../../../shared/errors/app-error";
 import { VerifyOtpDto } from "../dto/verify-otp.dto";
+import type { IUseCase } from "../../../../shared/application/base.usecase";
 
-export class VerifyPasswordResetOtpUseCase {
+export class VerifyPasswordResetOtpUseCase implements IUseCase<VerifyOtpDto, { resetToken: string }> {
 
     constructor(
         private readonly userRespository : IUserRepository,
