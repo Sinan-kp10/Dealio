@@ -1,51 +1,43 @@
-import { RegisterCustomerDto } from "../../../application/dto/register-customer.dto";
-import { RegisterEnterpriseDto } from "../../../application/dto/register-enterprise.dto"; 
-import { RegisterCustomerUseCase } from "../../../application/use-cases/register-customer.use-case";
-import { RegisterEnterpriseUseCase } from "../../../application/use-cases/register-enterprise.use-case"; 
+import type { RegisterCustomerDto } from "../../../application/dto/register-customer.dto";
+import type { RegisterEnterpriseDto } from "../../../application/dto/register-enterprise.dto"; 
+import type { IUseCase } from "../../../../../shared/application/base.usecase";
+import type { IApiResponse } from "../../../../../shared/application/api-response";
+import { HttpStatusCode } from "../../../../../shared/presentation/enums/http-status-code.enum.js";
 import type { Request, Response, NextFunction } from "express";
 
-export  class RegistrationController {
+export class RegistrationController {
     constructor(
-        private readonly registerCustomerUseCase: RegisterCustomerUseCase,
-        private readonly registerEnterpriseUseCase : RegisterEnterpriseUseCase
+        private readonly registerCustomerUseCase: IUseCase<RegisterCustomerDto, void>,
+        private readonly registerEnterpriseUseCase: IUseCase<RegisterEnterpriseDto, void>
     ){}
 
-    registerCustomer = async(req : Request, res : Response, next : NextFunction): Promise<void> => {
-    
+    registerCustomer = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
         try {
+            const data = req.body as RegisterCustomerDto;
 
-            const data = req.body as RegisterCustomerDto
+            await this.registerCustomerUseCase.execute(data);
 
-            await this.registerCustomerUseCase.execute(data)
-
-            res.status(200).json({
-                success: true,
+            res.status(HttpStatusCode.OK).json({
+                status: true,
                 message: "OTP sent successfully. Please verify your email",
             });
-            
         } catch (error) {
             next(error);
         }
+    };
 
-    }
-
-    registerEnterprise = async (req : Request, res : Response, next : NextFunction) : Promise<void> => {
-
+    registerEnterprise = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
         try {
+            const data = req.body as RegisterEnterpriseDto;
 
-            const data = req.body as RegisterEnterpriseDto
+            await this.registerEnterpriseUseCase.execute(data);
 
-            await this.registerEnterpriseUseCase.execute(data)
-
-            res.status(200).json({
-                success: true,
+            res.status(HttpStatusCode.OK).json({
+                status: true,
                 message: "OTP sent successfully. Please verify your email",
             });
-            
         } catch (error) {
-
-            next(error)
-            
+            next(error);
         }
-    }
+    };
 }

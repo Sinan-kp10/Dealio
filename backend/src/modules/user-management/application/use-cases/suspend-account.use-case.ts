@@ -1,11 +1,13 @@
 import { AppError } from "../../../../shared/errors/app-error";
-import { UserManagementRepository } from "../../domain/repositories/user-management.repository";
+import { IUserManagementRepository } from "../../domain/repositories/user-management.repository";
 import { SuspendAccountDto } from "../dto/suspend-account.dto";
 
-export class SuspendAccountUseCase {
+import type { IUseCase } from "../../../../shared/application/base.usecase";
+
+export class SuspendAccountUseCase implements IUseCase<SuspendAccountDto, void> {
 
     constructor(
-        private readonly userManagementRepository: UserManagementRepository,
+        private readonly userManagementRepository: IUserManagementRepository,
     ){}
 
     execute = async( dto : SuspendAccountDto) : Promise<void> => {

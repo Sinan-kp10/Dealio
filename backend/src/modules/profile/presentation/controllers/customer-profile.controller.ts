@@ -1,54 +1,49 @@
-import { Request, Response, NextFunction } from "express";
-import { GetCustomerProfileUseCase } from "../../application/use-cases/get-customer-profile.use-case";
-import { EditCustomerProfileUseCase } from "../../application/use-cases/edit-customer-profile.use-case";
-
+import type { Request, Response, NextFunction } from "express";
+import type { IUseCase } from "../../../../shared/application/base.usecase.js";
+import type { CustomerEditProfileDto, CustomerProfileDto, UpdatedCustomerProfileFieldsDto } from "../../application/dto/customer-profile.dto.js";
+import type { IApiResponse } from "../../../../shared/application/api-response.js";
+import { HttpStatusCode } from "../../../../shared/presentation/enums/http-status-code.enum.js";
 
 export class CustomerProfileController {
-
     constructor(
-        private readonly getCustomerProfileUseCase : GetCustomerProfileUseCase,
-        private readonly editCustomerProfileUseCase : EditCustomerProfileUseCase
-    ){}
+        private readonly getCustomerProfileUseCase: IUseCase<string, CustomerProfileDto>,
+        private readonly editCustomerProfileUseCase: IUseCase<CustomerEditProfileDto, UpdatedCustomerProfileFieldsDto>
+    ) {}
 
-    getProfile = async (req: Request,res: Response,next: NextFunction): Promise<void> => {
+    getProfile = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
         try {
+            const userId = req.auth?.userId;
 
-        const userId = req.auth?.userId
+            const profile = await this.getCustomerProfileUseCase.execute(userId!);
 
-        const profile = await this.getCustomerProfileUseCase.execute(userId!);
-
-        res.status(200).json({
-            status: "success",
-            data: profile,
-        });
-
+            res.status(HttpStatusCode.OK).json({
+                status: true,
+                message: "Customer profile retrieved successfully",
+                data: profile,
+            });
         } catch (error) {
             next(error);
         }
-    }
+    };
 
-    editProfile = async(req: Request,res: Response,next: NextFunction) :Promise<void> => {
-
+    editProfile = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
         try {
-
-            const userId = req.auth?.userId
-            const {name, phone} = req.body
+            const userId = req.auth?.userId;
+            const { name, phone } = req.body;
 
             const updatedFields = await this.editCustomerProfileUseCase.execute({
-                userId : userId!,
-                name : name,
-                phone : phone
-            })
+                userId: userId!,
+                name: name,
+                phone: phone,
+            });
 
-            res.status(200).json({
-                success: true,
+            res.status(HttpStatusCode.OK).json({
+                status: true,
                 message: "Profile updated successfully",
-                data: updatedFields
-            })
-
+                data: updatedFields,
+            });
         } catch (error) {
-            next(error)
+            next(error);
         }
-        
-    }
+    };
 }

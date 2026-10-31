@@ -1,15 +1,15 @@
 import { Router } from "express";
-import { customerProfileController } from "../../infrastructure/container/profile.container";
-import { authMiddleware } from "../../../../app/middlewares/auth.middleware";
-import { requireRole } from "../../../../app/middlewares/role.middleware";
-import { validateRequest } from "../../../../app/middlewares/validate-request.middleware";
-import { editCustomerProfileSchema } from "../validators/edit-customer-profile.schema";
+import { customerProfileController } from "../../infrastructure/container/profile.container.js";
+import { authMiddleware } from "../../../../app/middlewares/auth.middleware.js";
+import { requireRole } from "../../../../app/middlewares/role.middleware.js";
+import { validateRequest } from "../../../../app/middlewares/validate-request.middleware.js";
+import { editCustomerProfileSchema } from "../validators/edit-customer-profile.schema.js";
 
 const router = Router();
 
-router.use(authMiddleware)
-router.use(requireRole("CUSTOMER"))
-router.get("/profile", customerProfileController.getProfile)
-router.patch("/profile/edit", validateRequest(editCustomerProfileSchema), customerProfileController.editProfile)
+router.use(authMiddleware);
+router.use(requireRole("CUSTOMER"));
+router.get("/profile", customerProfileController.getProfile);
+router.patch("/profile/edit", validateRequest(editCustomerProfileSchema), customerProfileController.editProfile);
 
-export default router
+export default router;

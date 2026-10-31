@@ -7,6 +7,7 @@ export interface CustomerProfile {
 }
 
 export interface CustomerProfileResponse {
-  status: "success";
+  status: boolean;
+  message: string;
   data: CustomerProfile;
 }

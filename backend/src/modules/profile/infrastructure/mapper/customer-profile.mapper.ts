@@ -1,5 +1,5 @@
 import { Prisma } from "../../../../../generated/prisma/client";
-import { CustomerProfileDto } from "../../application/dto/customer-profile.dto";
+import { CustomerProfileDto } from "../../application/dto/customer-profile.dto.js";
 
 export const customerProfileSelect = {
   name: true,
@@ -9,7 +9,7 @@ export const customerProfileSelect = {
   profile_picture_key: true,
 } satisfies Prisma.usersSelect;
 
-export type CustomerProfileRecord = Prisma.usersGetPayload<{ select: typeof customerProfileSelect}>
+export type CustomerProfileRecord = Prisma.usersGetPayload<{ select: typeof customerProfileSelect }>;
 
 export class CustomerProfileMapper {
   static toDto(user: CustomerProfileRecord): CustomerProfileDto {

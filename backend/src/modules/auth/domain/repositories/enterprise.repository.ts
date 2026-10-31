@@ -1,4 +1,4 @@
-import { BaseRepository } from "../../../../shared/domian/base.repository";
+import { IBaseRepository } from "../../../../shared/domian/base.repository";
 import { Enterprise } from "../entities/enterprise.entity";
 import type { User, UserStatus } from "../entities/user.entity";
 
@@ -9,24 +9,24 @@ export type CreateEnterpriseData = {
   passwordHash: string;
   phone: string;
   role: User["role"];
-  emailVerified : boolean
-}
+  emailVerified: boolean;
+};
 
 export type CreatedEnterpriseResult = {
   enterprise: {
     id: string;
     name: string;
-  }
+  };
   data: {
     id: string;
     name: string;
     email: string;
     status: UserStatus;
-    role : string
-  }
-}
+    role: string;
+  };
+};
 
-export interface EnterpriseRepository extends BaseRepository<Enterprise> {
+export interface IEnterpriseRepository extends IBaseRepository<Enterprise> {
   findUserByEmail(email: string): Promise<boolean>;
 
   create(data: CreateEnterpriseData): Promise<CreatedEnterpriseResult>;

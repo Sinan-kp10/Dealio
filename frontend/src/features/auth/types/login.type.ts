@@ -11,7 +11,7 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-    success: "success"
+    status: boolean;
     message: string
     data: {
         user: AuthUser;
@@ -19,6 +19,6 @@ export interface LoginResponse {
 }
 
 export interface LogoutResponse {
-    success: boolean;
+    status: boolean;
     message: string;
 }

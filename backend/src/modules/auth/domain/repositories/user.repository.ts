@@ -1,4 +1,4 @@
-import { BaseRepository } from "../../../../shared/domian/base.repository";
+import { IBaseRepository } from "../../../../shared/domian/base.repository";
 import type { SafeUser, User } from "../entities/user.entity";
 
 export type CreateUserData = {
@@ -11,7 +11,7 @@ export type CreateUserData = {
   emailVerified: boolean;
 };
 
-export interface UserRepository extends BaseRepository<SafeUser> {
+export interface IUserRepository extends IBaseRepository<SafeUser> {
   findById(id: string): Promise<SafeUser | null>;
   findByEmail(email: string): Promise<User | null>;
   create(data: CreateUserData): Promise<SafeUser>;

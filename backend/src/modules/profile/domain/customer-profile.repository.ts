@@ -1,7 +1,7 @@
-import { BaseRepository } from "../../../shared/domian/base.repository";
-import { CustomerProfileDto, UpdatedCustomerProfileFieldsDto } from "../application/dto/customer-profile.dto";
+import { IBaseRepository } from "../../../shared/domian/base.repository.js";
+import { CustomerProfileDto, UpdatedCustomerProfileFieldsDto } from "../application/dto/customer-profile.dto.js";
 
-export interface CustomerProfileRepository extends BaseRepository<CustomerProfileDto>{
-    findCustomerProfile(userId : string) : Promise<CustomerProfileDto | null>
-    editCustomerProfile(userId : string , data: UpdatedCustomerProfileFieldsDto) : Promise<UpdatedCustomerProfileFieldsDto>
+export interface CustomerProfileRepository extends IBaseRepository<CustomerProfileDto> {
+    findCustomerProfile(userId: string): Promise<CustomerProfileDto | null>;
+    editCustomerProfile(userId: string, data: UpdatedCustomerProfileFieldsDto): Promise<UpdatedCustomerProfileFieldsDto>;
 }

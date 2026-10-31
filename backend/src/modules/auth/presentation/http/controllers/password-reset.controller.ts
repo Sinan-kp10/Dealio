@@ -1,45 +1,42 @@
 import type { Request, Response, NextFunction } from "express";
-import { ForgotPasswordUseCase } from "../../../application/use-cases/forgot-password.use-case";
-import { EmailDto } from "../../../application/dto/email.dto"; 
-import { VerifyPasswordResetOtpUseCase } from "../../../application/use-cases/verify-password-reset-otp.use-case";
-import { ResetPasswordUseCase } from "../../../application/use-cases/reset-password.use-case";
-import { VerifyOtpDto } from "../../../application/dto/verify-otp.dto";
-import { ResetPasswordDto } from "../../../application/dto/reset-password.dto";
+import type { IUseCase } from "../../../../../shared/application/base.usecase";
+import type { EmailDto } from "../../../application/dto/email.dto"; 
+import type { VerifyOtpDto } from "../../../application/dto/verify-otp.dto";
+import type { ResetPasswordDto } from "../../../application/dto/reset-password.dto";
+import type { IApiResponse } from "../../../../../shared/application/api-response";
+import { HttpStatusCode } from "../../../../../shared/presentation/enums/http-status-code.enum.js";
 
 export class PasswordResetController {
 
     constructor(
-        private readonly forgotPasswordUseCase: ForgotPasswordUseCase,
-        private readonly verifyPasswordResetOtpUseCase: VerifyPasswordResetOtpUseCase,
-        private readonly resetPasswordUseCase: ResetPasswordUseCase,
+        private readonly forgotPasswordUseCase: IUseCase<EmailDto, void>,
+        private readonly verifyPasswordResetOtpUseCase: IUseCase<VerifyOtpDto, { resetToken: string }>,
+        private readonly resetPasswordUseCase: IUseCase<ResetPasswordDto, void>,
     ){}
 
-    forgotPassword = async(req : Request, res : Response, next : NextFunction): Promise<void> => {
-
+    forgotPassword = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
         try {
+            const data = req.body as EmailDto;
 
-            const data = req.body as EmailDto
-
-            await this.forgotPasswordUseCase.execute(data)
+            await this.forgotPasswordUseCase.execute(data);
             
-            res.status(200).json({
-                success: "success",
-                message: "A password reset code has been sent"
-            })
-            
+            res.status(HttpStatusCode.OK).json({
+                status: true,
+                message: "A password reset code has been sent",
+            });
         } catch (error) {
             next(error);
         }
+    };
 
-    }
-
-    verifyPasswordResetOtp = async (req: Request,res: Response,next: NextFunction): Promise<void> => {
+    verifyPasswordResetOtp = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
         try {
+            const data = req.body as VerifyOtpDto;
 
-            const result = await this.verifyPasswordResetOtpUseCase.execute(req.body as VerifyOtpDto)
+            const result = await this.verifyPasswordResetOtpUseCase.execute(data);
 
-            res.status(200).json({
-                status: "success",
+            res.status(HttpStatusCode.OK).json({
+                status: true,
                 message: "OTP verified successfully",
                 data: {
                     resetToken: result.resetToken,
@@ -48,22 +45,20 @@ export class PasswordResetController {
         } catch (error) {
             next(error);
         }
-    }
+    };
 
-    resetPassword = async ( req: Request, res: Response, next: NextFunction): Promise<void> => {
+    resetPassword = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
         try {
-            const {resetToken, newPassword} = req.body as ResetPasswordDto
+            const data = req.body as ResetPasswordDto;
 
-            await this.resetPasswordUseCase.execute({ resetToken, newPassword});
+            await this.resetPasswordUseCase.execute(data);
 
-            res.status(200).json({
-                status: "success",
+            res.status(HttpStatusCode.OK).json({
+                status: true,
                 message: "Password reset successful",
-            })
-
+            });
         } catch (error) {
             next(error);
         }
     };
-
 }
