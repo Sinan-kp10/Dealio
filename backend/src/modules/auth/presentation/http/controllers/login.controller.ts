@@ -1,13 +1,13 @@
 import type { Request, Response, NextFunction } from "express";
-import { LoginUseCase } from "../../../application/use-cases/login.use-case"; 
-import { LoginDto } from "../../../application/dto/login.dto"; 
+import type { IUseCase } from "../../../../../shared/application/base.usecase"; 
+import type { LoginDto, LoginResponseDto } from "../../../application/dto/login.dto"; 
 import { RefreshTokenService } from "../../../../../infrastructure/security/refresh-token.service.js";
 import { env } from "../../../../../config/env.js";
 
 export class LoginController {
 
     constructor(
-        private readonly loginUseCase: LoginUseCase,
+        private readonly loginUseCase: IUseCase<LoginDto, LoginResponseDto>,
         private readonly refreshTokenService: RefreshTokenService
     ) {}
 

@@ -1,13 +1,12 @@
-
-
 import type { IUserRepository,} from "../../domain/repositories/user.repository";
 import type {RegisterCustomerDto,} from "../dto/register-customer.dto";
 import { AppError } from "../../../../shared/errors/app-error";
 import { PasswordService } from "../../../../infrastructure/security/password.service";
 import { OtpService } from "../../../../infrastructure/security/otp.service";
 import { EmailService } from "../../../../infrastructure/email/email.service";
+import type { IUseCase } from "../../../../shared/application/base.usecase";
 
-export class RegisterCustomerUseCase {
+export class RegisterCustomerUseCase implements IUseCase<RegisterCustomerDto, void> {
 
     constructor( 
         private readonly userRepository: IUserRepository,

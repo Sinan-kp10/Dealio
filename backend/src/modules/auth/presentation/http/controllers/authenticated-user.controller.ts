@@ -1,9 +1,10 @@
 import type { Request, Response, NextFunction } from "express";
-import { GetAuthenticatedUserUseCase } from "../../../application/use-cases/get-authenticated-user.use-case";
+import type { IUseCase } from "../../../../../shared/application/base.usecase";
+import type { AuthUserDto } from "../../../application/dto/user.dto";
 
 export class AuthenticatedUserController {
     constructor(
-        private readonly getAuthenticatedUserUseCase: GetAuthenticatedUserUseCase,
+        private readonly getAuthenticatedUserUseCase: IUseCase<string, AuthUserDto>,
     ) {}
 
     getAuthenticatedUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {

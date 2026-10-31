@@ -3,8 +3,9 @@ import { JwtTokenService } from "../../../../infrastructure/security/jwt-token.s
 import { ResetPasswordDto } from "../dto/reset-password.dto";
 import { AppError } from "../../../../shared/errors/app-error";
 import { PasswordService } from "../../../../infrastructure/security/password.service";
+import type { IUseCase } from "../../../../shared/application/base.usecase";
 
-export class ResetPasswordUseCase {
+export class ResetPasswordUseCase implements IUseCase<ResetPasswordDto, void> {
 
     constructor(
         private readonly userRepository : IUserRepository,

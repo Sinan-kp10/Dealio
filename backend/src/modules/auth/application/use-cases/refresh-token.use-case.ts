@@ -3,6 +3,7 @@ import { JwtTokenService } from "../../../../infrastructure/security/jwt-token.s
 import { RefreshTokenService } from "../../../../infrastructure/security/refresh-token.service";
 import { AppError } from "../../../../shared/errors/app-error";
 import { AuthUserDto } from "../dto/user.dto";
+import type { IUseCase } from "../../../../shared/application/base.usecase";
 
 export interface RefreshTokenResponseDto {
     accessToken: string;
@@ -10,7 +11,7 @@ export interface RefreshTokenResponseDto {
     user: AuthUserDto;
 }
 
-export class RefreshTokenUseCase {
+export class RefreshTokenUseCase implements IUseCase<string | undefined, RefreshTokenResponseDto> {
     constructor(
         private readonly userRepository: IUserRepository,
         private readonly jwtTokenService: JwtTokenService,

@@ -1,20 +1,20 @@
-import { IEnterpriseRepository } from "../../domain/repositories/enterprise.repository";
+import { IEnterpriseRepository, type CreatedEnterpriseResult } from "../../domain/repositories/enterprise.repository";
 import { OtpService } from "../../../../infrastructure/security/otp.service";
 import { AppError } from "../../../../shared/errors/app-error";
 import { EnterpriseRegistrationData } from "../dto/register-enterprise.dto";
+import { VerifyOtpDto } from "../dto/verify-otp.dto";
+import type { IUseCase } from "../../../../shared/application/base.usecase";
 
-
-export class VerifyEnterpriseOtpuseCase {
+export class VerifyEnterpriseOtpuseCase implements IUseCase<VerifyOtpDto, CreatedEnterpriseResult> {
     constructor(
         private readonly enterpriseRepository : IEnterpriseRepository,
         private readonly otpService : OtpService
     ){}
 
-    execute = async(email : string, otp : string) => {
+    execute = async (dto: VerifyOtpDto): Promise<CreatedEnterpriseResult> => {
+        const normalizedEmail = dto.email.trim().toLowerCase();
 
-        const normalizedEmail = email.trim().toLowerCase()
-
-        const result = await this.otpService.verify(normalizedEmail, otp)
+        const result = await this.otpService.verify(normalizedEmail, dto.otp);
 
         if (result === "invalid") {
             throw new AppError("Invalid OTP. Please try again.", 400);
@@ -44,7 +44,5 @@ export class VerifyEnterpriseOtpuseCase {
             role: "ENTERPRISE_MANAGER",
             emailVerified: true,
         });
-
-
-    }
+    };
 }

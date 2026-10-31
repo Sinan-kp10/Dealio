@@ -3,17 +3,19 @@ import { OtpService } from "../../../../infrastructure/security/otp.service";
 import { AppError } from "../../../../shared/errors/app-error";
 import { CustomerRegistrationData } from "../dto/register-customer.dto";
 import { AuthUserDto } from "../dto/user.dto";
+import { VerifyOtpDto } from "../dto/verify-otp.dto";
+import type { IUseCase } from "../../../../shared/application/base.usecase";
 
-export class VerifyCustomerOtpuseCase {
+export class VerifyCustomerOtpuseCase implements IUseCase<VerifyOtpDto, AuthUserDto> {
     constructor(
         private readonly userRepository : IUserRepository,
         private readonly otpService : OtpService
     ){}
 
-    execute = async (email: string, otp : string) : Promise<AuthUserDto> => {
-        const normalizedEmail = email.trim().toLowerCase();
+    execute = async (dto: VerifyOtpDto): Promise<AuthUserDto> => {
+        const normalizedEmail = dto.email.trim().toLowerCase();
 
-        const result = await this.otpService.verify(normalizedEmail,otp)
+        const result = await this.otpService.verify(normalizedEmail, dto.otp);
 
         if (result === "invalid") {
             throw new AppError("Invalid OTP. Please try again", 400);

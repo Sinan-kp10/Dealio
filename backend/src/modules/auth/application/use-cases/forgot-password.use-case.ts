@@ -4,7 +4,9 @@ import { OtpService } from "../../../../infrastructure/security/otp.service";
 import { AppError } from "../../../../shared/errors/app-error";
 import { EmailService } from "../../../../infrastructure/email/email.service";
 
-export class ForgotPasswordUseCase {
+import type { IUseCase } from "../../../../shared/application/base.usecase";
+
+export class ForgotPasswordUseCase implements IUseCase<EmailDto, void> {
     constructor(
         private readonly userRepository: IUserRepository,
         private readonly otpService: OtpService,

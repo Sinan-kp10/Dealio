@@ -1,9 +1,10 @@
 import type { Request, Response, NextFunction } from "express";
-import { RefreshTokenUseCase } from "../../../application/use-cases/refresh-token.use-case";
+import type { IUseCase } from "../../../../../shared/application/base.usecase";
+import type { RefreshTokenResponseDto } from "../../../application/use-cases/refresh-token.use-case";
 import { env } from "../../../../../config/env.js";
 
 export class RefreshTokenController {
-    constructor(private readonly refreshTokenUseCase: RefreshTokenUseCase) {}
+    constructor(private readonly refreshTokenUseCase: IUseCase<string | undefined, RefreshTokenResponseDto>) {}
 
     refresh = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {

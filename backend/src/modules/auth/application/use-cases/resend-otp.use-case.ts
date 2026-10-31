@@ -2,8 +2,9 @@ import { OtpService } from "../../../../infrastructure/security/otp.service";
 import { AppError } from "../../../../shared/errors/app-error";
 import { ResendOtpInput } from "../dto/verify-otp.dto";
 import { EmailService } from "../../../../infrastructure/email/email.service";
+import type { IUseCase } from "../../../../shared/application/base.usecase";
 
-export class ResendOtpUseCase {
+export class ResendOtpUseCase implements IUseCase<ResendOtpInput, void> {
     constructor(
         private readonly otpService: OtpService,
         private readonly emailService: EmailService,
