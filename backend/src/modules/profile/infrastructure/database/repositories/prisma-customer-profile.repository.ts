@@ -29,7 +29,7 @@ export class PrismaCustomerProfileRepository implements CustomerProfileRepositor
         return user ? CustomerProfileMapper.toDto(user) : null;
     };
 
-    editCustomerProfile = async (userId: string, data: UpdatedCustomerProfileFieldsDto): Promise<UpdatedCustomerProfileFieldsDto> => {
+    updateCustomerProfile = async (userId: string, data: UpdatedCustomerProfileFieldsDto): Promise<UpdatedCustomerProfileFieldsDto> => {
         await prisma.users.update({
             where: { id: userId },
             data,

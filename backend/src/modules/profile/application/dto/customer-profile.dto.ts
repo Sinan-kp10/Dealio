@@ -6,7 +6,7 @@ export interface CustomerProfileDto {
   profilePictureKey: string | null;
 }
 
-export interface CustomerEditProfileDto {
+export interface CustomerUpdateProfileDto {
   userId: string;
   name?: string | null;
   phone?: string | null;

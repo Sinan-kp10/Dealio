@@ -3,5 +3,5 @@ import { CustomerProfileDto, UpdatedCustomerProfileFieldsDto } from "../applicat
 
 export interface CustomerProfileRepository extends IBaseRepository<CustomerProfileDto> {
     findCustomerProfile(userId: string): Promise<CustomerProfileDto | null>;
-    editCustomerProfile(userId: string, data: UpdatedCustomerProfileFieldsDto): Promise<UpdatedCustomerProfileFieldsDto>;
+    updateCustomerProfile(userId: string, data: UpdatedCustomerProfileFieldsDto): Promise<UpdatedCustomerProfileFieldsDto>;
 }

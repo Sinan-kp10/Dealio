@@ -1,13 +1,13 @@
 import type { Request, Response, NextFunction } from "express";
 import type { IUseCase } from "../../../../shared/application/base.usecase.js";
-import type { CustomerEditProfileDto, CustomerProfileDto, UpdatedCustomerProfileFieldsDto } from "../../application/dto/customer-profile.dto.js";
+import type {CustomerProfileDto, CustomerUpdateProfileDto, UpdatedCustomerProfileFieldsDto } from "../../application/dto/customer-profile.dto.js";
 import type { IApiResponse } from "../../../../shared/application/api-response.js";
 import { HttpStatusCode } from "../../../../shared/presentation/enums/http-status-code.enum.js";
 
 export class CustomerProfileController {
     constructor(
         private readonly getCustomerProfileUseCase: IUseCase<string, CustomerProfileDto>,
-        private readonly editCustomerProfileUseCase: IUseCase<CustomerEditProfileDto, UpdatedCustomerProfileFieldsDto>
+        private readonly editCustomerProfileUseCase: IUseCase<CustomerUpdateProfileDto, UpdatedCustomerProfileFieldsDto>
     ) {}
 
     getProfile = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
@@ -26,7 +26,7 @@ export class CustomerProfileController {
         }
     };
 
-    editProfile = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    updateProfile = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
         try {
             const userId = req.auth?.userId;
             const { name, phone } = req.body;

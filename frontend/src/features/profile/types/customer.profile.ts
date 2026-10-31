@@ -11,3 +11,19 @@ export interface CustomerProfileResponse {
   message: string;
   data: CustomerProfile;
 }
+
+export interface UpdateCustomerProfile {
+  name?: string;
+  phone?: string;
+}
+
+export type UpdataCustomerProfile = UpdateCustomerProfile;
+
+export interface UpdateCustomerProfileResponse {
+  status: boolean;
+  message: string;
+  data: {
+    name?: string;
+    phone?: string | null;
+  };
+}

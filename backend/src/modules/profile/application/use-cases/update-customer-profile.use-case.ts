@@ -1,14 +1,14 @@
 import { AppError } from "../../../../shared/errors/app-error.js";
 import type { IUseCase } from "../../../../shared/application/base.usecase.js";
 import type { CustomerProfileRepository } from "../../domain/customer-profile.repository.js";
-import type { CustomerEditProfileDto, UpdatedCustomerProfileFieldsDto } from "../dto/customer-profile.dto.js";
+import type { CustomerUpdateProfileDto, UpdatedCustomerProfileFieldsDto } from "../dto/customer-profile.dto.js";
 
-export class EditCustomerProfileUseCase implements IUseCase<CustomerEditProfileDto, UpdatedCustomerProfileFieldsDto> {
+export class UpdateCustomerProfileUseCase implements IUseCase<CustomerUpdateProfileDto, UpdatedCustomerProfileFieldsDto> {
     constructor(
         private readonly customerProfileRepository: CustomerProfileRepository
     ) {}
 
-    execute = async (dto: CustomerEditProfileDto): Promise<UpdatedCustomerProfileFieldsDto> => {
+    execute = async (dto: CustomerUpdateProfileDto): Promise<UpdatedCustomerProfileFieldsDto> => {
         const { userId } = dto;
         const user = await this.customerProfileRepository.findById(userId);
 
@@ -26,6 +26,6 @@ export class EditCustomerProfileUseCase implements IUseCase<CustomerEditProfileD
             dataToUpdate.phone = dto.phone ? dto.phone.trim() : null;
         }
 
-        return await this.customerProfileRepository.editCustomerProfile(userId, dataToUpdate);
+        return await this.customerProfileRepository.updateCustomerProfile(userId, dataToUpdate);
     };
 }
