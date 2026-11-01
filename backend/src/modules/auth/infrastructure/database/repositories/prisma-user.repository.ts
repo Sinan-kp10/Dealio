@@ -44,5 +44,14 @@ export class PrismaUserRepository implements IUserRepository {
                 password_hash: passwordHash,
             },
         });
-    };
+    }
+
+    changeEmail= async (id: string, newEmail: string): Promise<void> => {
+        await prisma.users.update({
+            where : {id},
+            data : {
+                email : newEmail
+            }
+        })
+    }
 }

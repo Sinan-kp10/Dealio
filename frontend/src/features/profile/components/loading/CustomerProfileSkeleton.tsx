@@ -48,25 +48,36 @@ export function CustomerProfileSkeleton() {
 
           <div className="space-y-1.5">
             <div className="h-4 w-24 bg-slate-200 rounded-md" />
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
-              <div className="flex-1 h-11 bg-slate-200/70 rounded-xl" />
-              <div className="h-10 sm:h-11 w-full sm:w-28 bg-slate-200 rounded-xl shrink-0" />
-            </div>
+            <div className="h-11 w-full bg-slate-200/70 rounded-xl" />
             <div className="h-3 w-64 max-w-full bg-slate-200/60 rounded-md mt-1.5" />
           </div>
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 sm:p-7 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="space-y-1.5">
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 sm:p-7 space-y-6">
+        <div className="space-y-1.5 pb-5 border-b border-slate-100">
           <div className="h-5 sm:h-6 w-36 sm:w-44 bg-slate-200 rounded-lg" />
-          <div className="h-3.5 sm:h-4 w-60 sm:w-80 bg-slate-200 rounded-md" />
+          <div className="h-3.5 sm:h-4 w-64 sm:w-96 bg-slate-200 rounded-md" />
         </div>
-        <div className="h-10 w-36 bg-slate-200 rounded-xl shrink-0" />
+
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+          <div className="space-y-1.5">
+            <div className="h-4 w-24 bg-slate-200 rounded-md" />
+            <div className="h-3.5 w-44 sm:w-52 bg-slate-200/70 rounded-md" />
+          </div>
+          <div className="h-10 w-full sm:w-44 bg-slate-200 rounded-xl shrink-0" />
+        </div>
+
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+          <div className="space-y-1.5">
+            <div className="h-4 w-20 bg-slate-200 rounded-md" />
+            <div className="h-3.5 w-56 sm:w-72 bg-slate-200/70 rounded-md" />
+          </div>
+          <div className="h-10 w-full sm:w-44 bg-slate-200 rounded-xl shrink-0" />
+        </div>
       </div>
     </div>
   );
 }
 
 export default CustomerProfileSkeleton;
-
