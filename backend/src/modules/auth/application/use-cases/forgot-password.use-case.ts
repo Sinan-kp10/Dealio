@@ -3,7 +3,6 @@ import { IUserRepository } from "../../domain/repositories/user.repository";
 import { OtpService } from "../../infrastructure/security/otp.service";
 import { AppError } from "../../../../shared/errors/app-error";
 import { EmailService } from "../../../../infrastructure/email/email.service";
-
 import type { IUseCase } from "../../../../shared/application/base.usecase";
 
 export class ForgotPasswordUseCase implements IUseCase<EmailDto, void> {

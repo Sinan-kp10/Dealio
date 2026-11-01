@@ -1,3 +1,4 @@
+import { ChangePasswordUseCase } from "../../application/use-cases/change-password.use-case";
 import { ForgotPasswordUseCase } from "../../application/use-cases/forgot-password.use-case";
 import { GetAuthenticatedUserUseCase } from "../../application/use-cases/get-authenticated-user.use-case";
 import { LoginUseCase } from "../../application/use-cases/login.use-case";
@@ -37,7 +38,8 @@ export const otpController = new OtpController(verifyCustomerOtpUseCase, verifyE
 const forgotPasswordUseCase = new ForgotPasswordUseCase(userRepository, otpService, emailService);
 const verifyPasswordResetOtpUseCase = new VerifyPasswordResetOtpUseCase(userRepository, otpService, jwtTokenService);
 const resetPasswordUseCase = new ResetPasswordUseCase(userRepository, passwordService, jwtTokenService);
-export const passwordResetController = new PasswordResetController(forgotPasswordUseCase, verifyPasswordResetOtpUseCase, resetPasswordUseCase);
+const changePasswordUseCase = new ChangePasswordUseCase(userRepository, passwordService)
+export const passwordResetController = new PasswordResetController(forgotPasswordUseCase, verifyPasswordResetOtpUseCase, resetPasswordUseCase, changePasswordUseCase);
 
 // Login & Refresh Token
 const loginUseCase = new LoginUseCase(userRepository, passwordService, jwtTokenService, refreshTokenService);
