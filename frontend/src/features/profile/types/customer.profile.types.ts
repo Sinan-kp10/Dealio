@@ -27,3 +27,14 @@ export interface UpdateCustomerProfileResponse {
     phone?: string | null;
   };
 }
+
+export interface ChangeCustomerPassword {
+  currentPassword : string;
+  newPassword : string;
+  confirmPassword : string
+}
+
+export interface ChangeCustomerPasswordResponse {
+  status : boolean,
+  message : string
+}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { CustomerProfile, UpdateCustomerProfile } from "../types/customer.profile";
+import type { CustomerProfile, UpdateCustomerProfile } from "../types/customer.profile.types";
 import { getCustomerProfile, updateCustomerProfile } from "../services/profile.service";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -9,11 +9,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { updateCustomerProfileSchema } from "../schemas/update-customer-profile.schema";
 import useAuthStore from "../../auth/stores/auth.store";
 import CustomerProfileSkeleton from "../components/CustomerProfileSkeleton";
+import ChangePasswordModal from "../components/ChangePasswordModal";
 
 function CustomerProfilePage() {
   const [profile, setProfile] = useState<CustomerProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [updateMode, setUpdateMode] = useState(false);
+  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
 
   const setUser = useAuthStore((state) => state.setUser);
   const currentUser = useAuthStore((state) => state.user);
@@ -394,6 +396,7 @@ function CustomerProfilePage() {
           </div>
           <button
             type="button"
+            onClick={() => setIsChangePasswordModalOpen(true)}
             className="inline-flex items-center justify-center gap-2 w-full sm:w-44 px-4 py-2 sm:py-2.5 border border-slate-200/90 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-2xs whitespace-nowrap shrink-0 cursor-pointer"
           >
             <Lock size={16} className="text-slate-600" />
@@ -401,6 +404,11 @@ function CustomerProfilePage() {
           </button>
         </div>
       </div>
+
+      <ChangePasswordModal
+        isOpen={isChangePasswordModalOpen}
+        onClose={() => setIsChangePasswordModalOpen(false)}
+      />
     </div>
   );
 }
