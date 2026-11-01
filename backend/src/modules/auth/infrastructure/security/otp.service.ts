@@ -5,6 +5,7 @@ import { AppError } from "../../../../shared/errors/app-error";
 export class OtpService {
 
     private readonly OTP_EXPIRY_SECONDS = 3 * 60
+    private readonly DATA_EXPIRY_SECONDS = 15 * 60
 
     private generateOtp = (): string => {
         return randomInt(100000, 1000000).toString();
@@ -21,7 +22,7 @@ export class OtpService {
 
         await redis.set(`pending-registration:${email}`,
             JSON.stringify(registrationData),
-            { EX: 15 * 60 },
+            { EX: this.DATA_EXPIRY_SECONDS },
         );
 
         return otp
@@ -123,5 +124,63 @@ export class OtpService {
     deletePasswordResetOtp = async (email: string): Promise<void> => {
         const key = `password-reset-otp:${email.trim().toLowerCase()}`;
         await redis.del(key);
+    };
+
+    generateEmailChangeOtp = async (userId: string, newEmail: string): Promise<string> => {
+        const otp = this.generateOtp();
+        const otpKey = `change-email-otp:${userId}`;
+        const pendingKey = `change-email-pending:${userId}`;
+
+        await redis.set(otpKey, otp, {
+            EX: this.OTP_EXPIRY_SECONDS,
+        });
+
+        await redis.set(pendingKey, newEmail.trim().toLowerCase(), {
+            EX: this.DATA_EXPIRY_SECONDS
+        });
+
+        return otp;
+    };
+
+    verifyEmailChangeOtp = async (userId: string, otp: string): Promise<"valid" | "invalid" | "expired"> => {
+        const otpKey = `change-email-otp:${userId}`;
+        const storedOtp = await redis.get(otpKey);
+
+        if (!storedOtp) {
+            return "expired";
+        }
+
+        if (storedOtp !== otp) {
+            return "invalid";
+        }
+
+        return "valid";
+    };
+
+    getPendingEmailChange = async (userId: string): Promise<string | null> => {
+        const pendingKey = `change-email-pending:${userId}`;
+        return await redis.get(pendingKey);
+    };
+
+    resendEmailChangeOtp = async (userId: string): Promise<{ otp: string; newEmail: string }> => {
+        const pendingKey = `change-email-pending:${userId}`;
+        const pendingEmail = await redis.get(pendingKey);
+
+        if (!pendingEmail) {
+            throw new AppError("Email change session has expired. Please request a new one", 400);
+        }
+
+        const otp = this.generateOtp();
+        const otpKey = `change-email-otp:${userId}`;
+
+        await redis.set(otpKey, otp, {
+            EX: this.OTP_EXPIRY_SECONDS,
+        });
+
+        return { otp, newEmail: pendingEmail };
+    };
+
+    deleteEmailChangeOtp = async (userId: string): Promise<void> => {
+        await redis.del([`change-email-otp:${userId}`, `change-email-pending:${userId}`]);
     };
 }

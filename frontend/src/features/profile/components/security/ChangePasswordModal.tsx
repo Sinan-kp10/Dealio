@@ -17,25 +17,27 @@ export interface ChangePasswordModalProps {
 export function ChangePasswordModal({ isOpen, onClose }: ChangePasswordModalProps) {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const {register, handleSubmit, reset, formState : {errors, isSubmitting}} = useForm<ChangeCustomerPassword>({resolver : zodResolver(changePasswordSchema)})
+  const {register,handleSubmit,reset,formState: { errors, isSubmitting }} = useForm<ChangeCustomerPassword>({resolver: zodResolver(changePasswordSchema)})
 
   const handleClose = useCallback(() => {
+
     if (isSubmitting) return;
     reset();
     setShowCurrentPassword(false);
     setShowNewPassword(false);
     setShowConfirmPassword(false);
-    onClose();
-  }, [isSubmitting, reset, onClose]);
+    onClose()
+
+  },[isSubmitting, reset, onClose]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && !isSubmitting) {
         handleClose();
       }
-    };
+    }
 
     if (isOpen) {
       window.addEventListener("keydown", handleKeyDown);
@@ -43,15 +45,18 @@ export function ChangePasswordModal({ isOpen, onClose }: ChangePasswordModalProp
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-    };
+    }
   }, [isOpen, isSubmitting, handleClose]);
 
   const onSubmit = async (data: ChangeCustomerPassword) => {
     try {
+
       await changePassword(data);
       toast.success("Password updated successfully");
-      handleClose();
+      handleClose()
+
     } catch (error) {
+      
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data?.message ?? "Unable to change password");
       } else {
@@ -94,7 +99,7 @@ export function ChangePasswordModal({ isOpen, onClose }: ChangePasswordModalProp
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-5 pt-5">
+        <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-5 pt-5">
           <div>
             <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
               Current Password
@@ -218,3 +223,4 @@ export function ChangePasswordModal({ isOpen, onClose }: ChangePasswordModalProp
 }
 
 export default ChangePasswordModal;
+

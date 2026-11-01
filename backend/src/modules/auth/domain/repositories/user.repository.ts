@@ -16,4 +16,5 @@ export interface IUserRepository extends IBaseRepository<SafeUser> {
   findByEmail(email: string): Promise<User | null>;
   create(data: CreateUserData): Promise<SafeUser>;
   changePassword(id: string, passwordHash: string): Promise<void>;
+  changeEmail(id : string, newEmail : string) : Promise<void>
 }
