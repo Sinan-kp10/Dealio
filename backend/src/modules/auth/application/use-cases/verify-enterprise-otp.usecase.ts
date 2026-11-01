@@ -36,7 +36,7 @@ export class VerifyEnterpriseOtpuseCase implements IUseCase<VerifyOtpDto, Create
         }
 
         return this.enterpriseRepository.create({
-            companyName: registrationData.companyName.trim(),
+            enterpriseName: registrationData.enterpriseName.trim(),
             contactPersonName: registrationData.contactPersonName.trim(),
             email : normalizedEmail,
             passwordHash : registrationData.passwordHash,

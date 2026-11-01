@@ -27,7 +27,7 @@ export class PrismaEnterpriseRepository implements IEnterpriseRepository {
         return prisma.$transaction(async (tx) => {
             const enterprise = await tx.enterprises.create({
                 data: {
-                    enterprise_name: data.companyName,
+                    enterprise_name: data.enterpriseName,
                 },
                 select: {
                     id: true,

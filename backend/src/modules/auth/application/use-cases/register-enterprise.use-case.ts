@@ -28,7 +28,7 @@ export class RegisterEnterpriseUseCase implements IUseCase<RegisterEnterpriseDto
         const passwordHash = await this.passwordService.hash(data.password)
 
         const registrationData = {
-            companyName: data.companyName.trim(),
+            enterpriseName: data.enterpriseName.trim(),
             contactPersonName : data.contactPersonName,
             email : data.email,
             phone : data.phone,
