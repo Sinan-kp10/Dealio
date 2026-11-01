@@ -8,8 +8,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateCustomerProfileSchema } from "../schemas/update-customer-profile.schema";
 import useAuthStore from "../../auth/stores/auth.store";
-import CustomerProfileSkeleton from "../components/CustomerProfileSkeleton";
-import ChangePasswordModal from "../components/ChangePasswordModal";
+import CustomerProfileSkeleton from "../components/loading/CustomerProfileSkeleton";
+import ChangePasswordModal from "../components/models/ChangePasswordModal";
 
 function CustomerProfilePage() {
   const [profile, setProfile] = useState<CustomerProfile | null>(null);
