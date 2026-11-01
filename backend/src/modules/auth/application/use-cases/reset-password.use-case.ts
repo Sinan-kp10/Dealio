@@ -1,8 +1,8 @@
 import { IUserRepository } from "../../domain/repositories/user.repository";
-import { JwtTokenService } from "../../../../infrastructure/security/jwt-token.service";
+import { JwtTokenService } from "../../infrastructure/security/jwt-token.service";
 import { ResetPasswordDto } from "../dto/reset-password.dto";
-import { AppError } from "../../../../shared/errors/app-error";
-import { PasswordService } from "../../../../infrastructure/security/password.service";
+import { BadRequestError } from "../../../../shared/errors/app-error";
+import { PasswordService } from "../../infrastructure/security/password.service";
 import type { IUseCase } from "../../../../shared/application/base.usecase";
 
 export class ResetPasswordUseCase implements IUseCase<ResetPasswordDto, void> {
@@ -20,13 +20,13 @@ export class ResetPasswordUseCase implements IUseCase<ResetPasswordDto, void> {
         const user = await this.userRepository.findByEmail(email)
 
         if (!user) {
-            throw new AppError("Invalid or expired reset token.", 400);
+            throw new BadRequestError("Invalid or expired reset token.");
         }
 
         const passwordHash = await this.passwordService.hash(dto.newPassword)
         
 
-        await this.userRepository.updatePassword(user.id, passwordHash)
+        await this.userRepository.changePassword(user.id, passwordHash)
 
     }
     

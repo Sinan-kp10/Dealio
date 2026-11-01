@@ -1,14 +1,19 @@
+import { ChangePasswordUseCase } from "../../application/use-cases/change-password.use-case";
 import { ForgotPasswordUseCase } from "../../application/use-cases/forgot-password.use-case";
 import { GetAuthenticatedUserUseCase } from "../../application/use-cases/get-authenticated-user.use-case";
 import { LoginUseCase } from "../../application/use-cases/login.use-case";
 import { RefreshTokenUseCase } from "../../application/use-cases/refresh-token.use-case";
 import { RegisterCustomerUseCase } from "../../application/use-cases/register-customer.use-case";
 import { RegisterEnterpriseUseCase } from "../../application/use-cases/register-enterprise.use-case";
+import { RequestEmailChangeUseCase } from "../../application/use-cases/request-email-change.use-case";
+import { ResendEmailChangeOtpUseCase } from "../../application/use-cases/resend-email-change-otp.use-case";
 import { ResendOtpUseCase } from "../../application/use-cases/resend-otp.use-case";
 import { ResetPasswordUseCase } from "../../application/use-cases/reset-password.use-case";
 import { VerifyCustomerOtpuseCase } from "../../application/use-cases/verify-customer-otp.use-case";
+import { VerifyEmailChangeUseCase } from "../../application/use-cases/verify-email-change.use-case";
 import { VerifyEnterpriseOtpuseCase } from "../../application/use-cases/verify-enterprise-otp.usecase";
 import { VerifyPasswordResetOtpUseCase } from "../../application/use-cases/verify-password-reset-otp.use-case";
+import { AccountController } from "../../presentation/http/controllers/account.controller";
 import { AuthenticatedUserController } from "../../presentation/http/controllers/authenticated-user.controller";
 import { LoginController } from "../../presentation/http/controllers/login.controller";
 import { OtpController } from "../../presentation/http/controllers/otp.controller";
@@ -37,7 +42,8 @@ export const otpController = new OtpController(verifyCustomerOtpUseCase, verifyE
 const forgotPasswordUseCase = new ForgotPasswordUseCase(userRepository, otpService, emailService);
 const verifyPasswordResetOtpUseCase = new VerifyPasswordResetOtpUseCase(userRepository, otpService, jwtTokenService);
 const resetPasswordUseCase = new ResetPasswordUseCase(userRepository, passwordService, jwtTokenService);
-export const passwordResetController = new PasswordResetController(forgotPasswordUseCase, verifyPasswordResetOtpUseCase, resetPasswordUseCase);
+const changePasswordUseCase = new ChangePasswordUseCase(userRepository, passwordService);
+export const passwordResetController = new PasswordResetController(forgotPasswordUseCase, verifyPasswordResetOtpUseCase, resetPasswordUseCase, changePasswordUseCase);
 
 // Login & Refresh Token
 const loginUseCase = new LoginUseCase(userRepository, passwordService, jwtTokenService, refreshTokenService);
@@ -49,3 +55,9 @@ export const refreshTokenController = new RefreshTokenController(refreshTokenUse
 // Authenticated User (/me)
 const getAuthenticatedUserUseCase = new GetAuthenticatedUserUseCase(userRepository);
 export const authenticatedUserController = new AuthenticatedUserController(getAuthenticatedUserUseCase);
+
+// Account Security (Email Change)
+const requestEmailChangeUseCase = new RequestEmailChangeUseCase(userRepository, otpService, emailService);
+const verifyEmailChangeUseCase = new VerifyEmailChangeUseCase(userRepository, otpService, jwtTokenService);
+const resendEmailChangeOtpUseCase = new ResendEmailChangeOtpUseCase(userRepository, otpService, emailService);
+export const accountController = new AccountController(requestEmailChangeUseCase, verifyEmailChangeUseCase, resendEmailChangeOtpUseCase);

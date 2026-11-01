@@ -25,7 +25,7 @@ export function EnterpriseSignupPage() {
         try {
 
             await registerEnterprise({
-                companyName : data.companyName,
+                enterpriseName : data.enterpriseName,
                 contactPersonName : data.contactPersonName,
                 email : data.email,
                 phone : data.phone,
@@ -98,31 +98,31 @@ export function EnterpriseSignupPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-x-6 sm:gap-y-4.5">
                             <div className="flex flex-col">
                                 <label
-                                    htmlFor="companyName"
+                                    htmlFor="enterpriseName"
                                     className="text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 block"
                                 >
-                                    Company Name
+                                    Enterprise Name
                                 </label>
                                 <div className="relative flex items-center w-full">
                                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center justify-center" aria-hidden="true">
                                         <Building2 size={18} />
                                     </span>
                                     <input
-                                        id="companyName"
+                                        id="enterpriseName"
                                         type="text"
                                         autoComplete="organization"
-                                        placeholder="Enter your company name"
+                                        placeholder="Enter your enterprise name"
                                         className={`w-full h-12 pl-11 pr-4 text-[0.9375rem] text-[#0f1d2f] bg-white border-[1.5px] rounded-xl box-border font-inherit transition-all duration-200 placeholder:text-slate-400 hover:border-slate-300 focus:outline-none ${
-                                            errors.companyName
+                                            errors.enterpriseName
                                                 ? "border-red-500 focus:border-red-500 focus:ring-[3px] focus:ring-red-500/12"
                                                 : "border-slate-200 focus:border-[#355982] focus:ring-[3px] focus:ring-[#355982]/12"
                                         }`}
-                                        {...register("companyName")}
+                                        {...register("enterpriseName")}
                                     />
                                 </div>
-                                {errors.companyName && (
+                                {errors.enterpriseName && (
                                     <p className="text-red-500 text-[0.8125rem] mt-1.5 mb-0 leading-[1.35] font-medium">
-                                        {errors.companyName.message}
+                                        {errors.enterpriseName.message}
                                     </p>
                                 )}
                             </div>

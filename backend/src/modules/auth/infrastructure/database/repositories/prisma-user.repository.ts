@@ -37,12 +37,21 @@ export class PrismaUserRepository implements IUserRepository {
         return CustomerMapper.toSafeCustomer(user);
     };
 
-    updatePassword = async (id: string, passwordHash: string): Promise<void> => {
+    changePassword = async (id: string, passwordHash: string): Promise<void> => {
         await prisma.users.update({
             where: { id },
             data: {
                 password_hash: passwordHash,
             },
         });
-    };
+    }
+
+    changeEmail= async (id: string, newEmail: string): Promise<void> => {
+        await prisma.users.update({
+            where : {id},
+            data : {
+                email : newEmail
+            }
+        })
+    }
 }

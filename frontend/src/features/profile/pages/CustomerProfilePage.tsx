@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { CustomerProfile, UpdateCustomerProfile } from "../types/customer.profile";
+import type { CustomerProfile, UpdateCustomerProfile } from "../types/customer.profile.types";
 import { getCustomerProfile, updateCustomerProfile } from "../services/profile.service";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -8,16 +8,18 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateCustomerProfileSchema } from "../schemas/update-customer-profile.schema";
 import useAuthStore from "../../auth/stores/auth.store";
-import CustomerProfileSkeleton from "../components/CustomerProfileSkeleton";
+import CustomerProfileSkeleton from "../components/loading/CustomerProfileSkeleton";
+import ChangePasswordModal from "../components/security/ChangePasswordModal";
+import ChangeEmailModal from "../components/security/ChangeEmailModal";
 
 function CustomerProfilePage() {
   const [profile, setProfile] = useState<CustomerProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [updateMode, setUpdateMode] = useState(false);
-
-  const setUser = useAuthStore((state) => state.setUser);
-  const currentUser = useAuthStore((state) => state.user);
-
+  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
+  const [isChangeEmailModalOpen, setIsChangeEmailModalOpen] = useState(false);
+  const setUser = useAuthStore((state) => state.setUser)
+  const currentUser = useAuthStore((state) => state.user)
   const {register,handleSubmit,reset,formState: { errors, isSubmitting }} = useForm<UpdateCustomerProfile>({resolver: zodResolver(updateCustomerProfileSchema)})
 
   useEffect(() => {
@@ -241,7 +243,7 @@ function CustomerProfilePage() {
           )}
         </div>
 
-        <form id="customer-profile-form" onSubmit={handleSubmit(onSubmit)}>
+        <form id="customer-profile-form" noValidate onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 pt-6">
             <div>
               <label
@@ -343,18 +345,9 @@ function CustomerProfilePage() {
               <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">
                 Email Address
               </label>
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
-                <div className="flex-1 flex items-center justify-between px-3.5 py-2.5 bg-slate-50/70 border border-slate-200/90 rounded-xl text-sm text-slate-800 shadow-2xs min-w-0">
-                  <span className="truncate">{profile.email}</span>
-                  <Lock size={15} className="text-slate-400 shrink-0 ml-2" />
-                </div>
-                <button
-                  type="button"
-                  className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 border border-slate-200/90 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-2xs whitespace-nowrap shrink-0 cursor-pointer"
-                >
-                  <Mail size={15} className="text-slate-600" />
-                  <span>Change Email</span>
-                </button>
+              <div className="flex items-center justify-between px-3.5 py-2.5 bg-slate-50/70 border border-slate-200/90 rounded-xl text-sm text-slate-800 shadow-2xs">
+                <span className="truncate">{profile.email}</span>
+                <Lock size={15} className="text-slate-400 shrink-0 ml-2" />
               </div>
               <p className="text-[11px] sm:text-xs text-slate-400 mt-1.5 leading-relaxed">
                 Email updates require verification to maintain quotation and contract security.
@@ -364,23 +357,70 @@ function CustomerProfilePage() {
         </form>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 sm:p-7 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 sm:p-7 space-y-6">
+        <div className="pb-5 border-b border-slate-100">
           <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
-            Password &amp; Security
+            Account Security
           </h3>
           <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            Manage your account password and security credentials to keep your account safe.
+            Manage your email address, password, and security credentials to keep your account safe.
           </p>
         </div>
-        <button
-          type="button"
-          className="inline-flex items-center justify-center gap-2 px-4 py-2 sm:py-2.5 border border-slate-200/90 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-2xs whitespace-nowrap shrink-0 self-start sm:self-auto cursor-pointer"
-        >
-          <Lock size={15} className="text-slate-600" />
-          <span>Change Password</span>
-        </button>
+
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+          <div>
+            <p className="text-xs sm:text-sm font-semibold text-slate-900">
+              Email Address
+            </p>
+            <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+              {profile.email}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsChangeEmailModalOpen(true)}
+            className="inline-flex items-center justify-center gap-2 w-full sm:w-44 px-4 py-2 sm:py-2.5 border border-slate-200/90 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-2xs whitespace-nowrap shrink-0 cursor-pointer"
+          >
+            <Mail size={16} className="text-slate-600" />
+            <span>Change Email</span>
+          </button>
+        </div>
+
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+          <div>
+            <p className="text-xs sm:text-sm font-semibold text-slate-900">
+              Password
+            </p>
+            <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+              Set a unique password to protect your account credentials.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsChangePasswordModalOpen(true)}
+            className="inline-flex items-center justify-center gap-2 w-full sm:w-44 px-4 py-2 sm:py-2.5 border border-slate-200/90 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-2xs whitespace-nowrap shrink-0 cursor-pointer"
+          >
+            <Lock size={16} className="text-slate-600" />
+            <span>Change Password</span>
+          </button>
+        </div>
       </div>
+
+      <ChangeEmailModal
+        isOpen={isChangeEmailModalOpen}
+        onClose={() => setIsChangeEmailModalOpen(false)}
+        onSuccess={(newEmail) => {
+          setProfile((prev) => (prev ? { ...prev, email: newEmail } : null));
+          if (currentUser) {
+            setUser({ ...currentUser, email: newEmail });
+          }
+        }}
+      />
+
+      <ChangePasswordModal
+        isOpen={isChangePasswordModalOpen}
+        onClose={() => setIsChangePasswordModalOpen(false)}
+      />
     </div>
   );
 }

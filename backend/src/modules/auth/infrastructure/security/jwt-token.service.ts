@@ -1,7 +1,7 @@
 import jwt, { type SignOptions, TokenExpiredError } from "jsonwebtoken";
-import { AppError } from "../../shared/errors/app-error";
+import { AppError } from "../../../../shared/errors/app-error";
 import crypto from "node:crypto";
-import { env } from "../../config/env.js";
+import { env } from "../../../../config/env.js";
 
 export interface JwtPayload {
     userId: string;

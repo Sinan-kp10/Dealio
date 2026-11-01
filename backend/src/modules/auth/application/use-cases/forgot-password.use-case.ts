@@ -1,9 +1,8 @@
 import { EmailDto } from "../dto/email.dto";
 import { IUserRepository } from "../../domain/repositories/user.repository";
-import { OtpService } from "../../../../infrastructure/security/otp.service";
-import { AppError } from "../../../../shared/errors/app-error";
+import { OtpService } from "../../infrastructure/security/otp.service";
+import { NotFoundError, BadGatewayError } from "../../../../shared/errors/app-error";
 import { EmailService } from "../../../../infrastructure/email/email.service";
-
 import type { IUseCase } from "../../../../shared/application/base.usecase";
 
 export class ForgotPasswordUseCase implements IUseCase<EmailDto, void> {
@@ -19,7 +18,7 @@ export class ForgotPasswordUseCase implements IUseCase<EmailDto, void> {
         const user = await this.userRepository.findByEmail(email);
 
         if (!user) {
-            throw new AppError("Email not registered", 404);
+            throw new NotFoundError("Email not registered");
             
         }
 
@@ -30,7 +29,7 @@ export class ForgotPasswordUseCase implements IUseCase<EmailDto, void> {
             
         } catch{
             await this.otpService.delete(email);
-            throw new AppError("Failed to send verification email", 502);
+            throw new BadGatewayError("Failed to send verification email");
         }
     }
 }

@@ -3,7 +3,7 @@ import { Enterprise } from "../entities/enterprise.entity";
 import type { User, UserStatus } from "../entities/user.entity";
 
 export type CreateEnterpriseData = {
-  companyName: string;
+  enterpriseName: string;
   contactPersonName: string;
   email: string;
   passwordHash: string;

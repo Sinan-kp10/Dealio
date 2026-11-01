@@ -1,4 +1,4 @@
-import { AppError } from "../../../../shared/errors/app-error.js";
+import { NotFoundError } from "../../../../shared/errors/app-error.js";
 import type { IUseCase } from "../../../../shared/application/base.usecase.js";
 import type { CustomerProfileRepository } from "../../domain/customer-profile.repository.js";
 import type { CustomerUpdateProfileDto, UpdatedCustomerProfileFieldsDto } from "../dto/customer-profile.dto.js";
@@ -13,7 +13,7 @@ export class UpdateCustomerProfileUseCase implements IUseCase<CustomerUpdateProf
         const user = await this.customerProfileRepository.findById(userId);
 
         if (!user) {
-            throw new AppError("Account not found.", 404);
+            throw new NotFoundError("Account not found.");
         }
 
         const dataToUpdate: UpdatedCustomerProfileFieldsDto = {};

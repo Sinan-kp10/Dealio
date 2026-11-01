@@ -141,7 +141,7 @@ export function EnterpriseManagerNavbar({ onToggleSidebar, isSidebarOpen,}: Ente
                     type="button"
                     onClick={() => {
                       setIsProfileOpen(false);
-                      navigate("/enterprise/company-profile");
+                      navigate("/enterprise/profile");
                     }}
                     className="w-full flex items-center gap-3 px-5 py-3 text-[13.5px] font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50/80 transition-colors text-left cursor-pointer"
                   >
