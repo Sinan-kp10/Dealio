@@ -4,7 +4,7 @@ import type { CustomerListFiltersDto, PaginatedCustomerDto } from "../../applica
 import type { EnterpriseListFiltersDto, PaginatedEnterprisesDto } from "../../application/dto/enterprise-list-item.dto";
 import type { SuspendAccountDto, ReactivateAccountDto } from "../../application/dto/suspend-account.dto";
 import type { IApiResponse } from "../../../../shared/application/api-response";
-import { HttpStatusCode } from "../../../../shared/presentation/enums/http-status-code.enum.js";
+import { HttpStatusCode } from "../../../../shared/enums/http-status-code.enum.js";
 
 export class UserManagementController {
     constructor(

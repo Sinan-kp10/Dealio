@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction, ErrorRequestHandler } from "express";
 import { AppError } from "../../shared/errors/app-error.js"; 
-import { HttpStatusCode } from "../../shared/presentation/enums/http-status-code.enum.js";
+import { HttpStatusCode } from "../../shared/enums/http-status-code.enum.js";
 
 export const errorHandler: ErrorRequestHandler = (error: unknown, _req: Request, res: Response, _next: NextFunction): void => {
 

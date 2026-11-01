@@ -1,5 +1,5 @@
 import { IUseCase } from "../../../../shared/application/base.usecase";
-import { AppError } from "../../../../shared/errors/app-error";
+import { NotFoundError, BadRequestError } from "../../../../shared/errors/app-error";
 import { IUserRepository } from "../../domain/repositories/user.repository";
 import { PasswordService } from "../../infrastructure/security/password.service";
 import { ChangePasswordDto } from "../dto/change-password.dto";
@@ -18,13 +18,13 @@ export class ChangePasswordUseCase implements IUseCase<ChangePasswordDto, void> 
         const user = await this.userRepository.findByEmail(email)
 
         if(!user){
-            throw new AppError("User not found", 404)
+            throw new NotFoundError("User not found")
         }
 
         const isValidPassword = await this.passwordService.verify(dto.currentPassword, user.password_hash)
 
         if(!isValidPassword){
-            throw new AppError("Current password is incorrect", 400)
+            throw new BadRequestError("Current password is incorrect")
         }
 
         const passwordHash = await this.passwordService.hash(dto.newPassword)

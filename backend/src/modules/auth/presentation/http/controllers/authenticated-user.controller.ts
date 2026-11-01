@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import type { IUseCase } from "../../../../../shared/application/base.usecase";
 import type { AuthUserDto } from "../../../application/dto/user.dto";
 import type { IApiResponse } from "../../../../../shared/application/api-response";
-import { HttpStatusCode } from "../../../../../shared/presentation/enums/http-status-code.enum.js";
+import { HttpStatusCode } from "../../../../../shared/enums/http-status-code.enum.js";
 
 export class AuthenticatedUserController {
     constructor(

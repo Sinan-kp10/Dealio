@@ -4,7 +4,7 @@ import type { EmailDto } from "../../../application/dto/email.dto";
 import type { VerifyOtpDto } from "../../../application/dto/verify-otp.dto";
 import type { ResetPasswordDto } from "../../../application/dto/reset-password.dto";
 import type { IApiResponse } from "../../../../../shared/application/api-response";
-import { HttpStatusCode } from "../../../../../shared/presentation/enums/http-status-code.enum.js";
+import { HttpStatusCode } from "../../../../../shared/enums/http-status-code.enum.js";
 import { ChangePasswordDto } from "../../../application/dto/change-password.dto";
 
 export class PasswordResetController {

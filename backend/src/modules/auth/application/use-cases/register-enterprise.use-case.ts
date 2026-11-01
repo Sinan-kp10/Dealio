@@ -1,7 +1,7 @@
 import { PasswordService } from "../../infrastructure/security/password.service";
 import { RegisterEnterpriseDto } from "../dto/register-enterprise.dto";
 import { IEnterpriseRepository } from "../../domain/repositories/enterprise.repository";
-import { AppError } from "../../../../shared/errors/app-error";
+import { ConflictError, BadGatewayError } from "../../../../shared/errors/app-error";
 import { OtpService } from "../../infrastructure/security/otp.service";
 import { EmailService } from "../../../../infrastructure/email/email.service";
 
@@ -22,7 +22,7 @@ export class RegisterEnterpriseUseCase implements IUseCase<RegisterEnterpriseDto
         const emailExist = await this.enterpriseRepository.findUserByEmail(email)
 
         if (emailExist){
-            throw new AppError("Email is already registered", 409);
+            throw new ConflictError("Email is already registered");
         }
 
         const passwordHash = await this.passwordService.hash(data.password)
@@ -45,7 +45,7 @@ export class RegisterEnterpriseUseCase implements IUseCase<RegisterEnterpriseDto
 
             await this.otpService.delete(email);
 
-            throw new AppError("Failed to send verification email", 502);
+            throw new BadGatewayError("Failed to send verification email");
         }
 
     }
