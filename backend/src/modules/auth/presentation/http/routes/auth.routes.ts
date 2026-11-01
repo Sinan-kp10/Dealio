@@ -8,6 +8,7 @@ import { loginSchema } from "../validators/login.schema";
 import { emailSchema } from "../validators/email.schema";
 import { resetPasswordSchema } from "../validators/reset-password.schema";
 import { resendOtpSchema } from "../validators/resend-otp.schema";
+import { changePasswordSchema } from "../validators/change-password.schema";
 import { authMiddleware } from "../../../../../app/middlewares/auth.middleware";
 
 const authRouter = Router();
@@ -22,6 +23,7 @@ authRouter.post("/refresh", refreshTokenController.refresh);
 authRouter.post("/forgot-password", validateRequest(emailSchema), passwordResetController.forgotPassword);
 authRouter.post("/verify-password-reset-otp", validateRequest(verifyOtpSchema), passwordResetController.verifyPasswordResetOtp);
 authRouter.post("/reset-password", validateRequest(resetPasswordSchema), passwordResetController.resetPassword);
+authRouter.post("/change-password", authMiddleware, validateRequest(changePasswordSchema), passwordResetController.changePassword);
 authRouter.post("/logout", authMiddleware, loginController.logout);
 authRouter.get("/me", authMiddleware, authenticatedUserController.getAuthenticatedUser);
 

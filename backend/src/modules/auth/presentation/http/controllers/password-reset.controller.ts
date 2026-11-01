@@ -4,7 +4,8 @@ import type { EmailDto } from "../../../application/dto/email.dto";
 import type { VerifyOtpDto } from "../../../application/dto/verify-otp.dto";
 import type { ResetPasswordDto } from "../../../application/dto/reset-password.dto";
 import type { IApiResponse } from "../../../../../shared/application/api-response";
-import { HttpStatusCode } from "../../../../../shared/presentation/enums/http-status-code.enum.js";
+import { HttpStatusCode } from "../../../../../shared/enums/http-status-code.enum.js";
+import { ChangePasswordDto } from "../../../application/dto/change-password.dto";
 
 export class PasswordResetController {
 
@@ -12,6 +13,7 @@ export class PasswordResetController {
         private readonly forgotPasswordUseCase: IUseCase<EmailDto, void>,
         private readonly verifyPasswordResetOtpUseCase: IUseCase<VerifyOtpDto, { resetToken: string }>,
         private readonly resetPasswordUseCase: IUseCase<ResetPasswordDto, void>,
+        private readonly changePasswordUseCase : IUseCase<ChangePasswordDto, void>
     ){}
 
     forgotPassword = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
@@ -61,4 +63,25 @@ export class PasswordResetController {
             next(error);
         }
     };
+
+    changePassword = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+
+        try {
+
+            const email = req.auth?.email
+            const {currentPassword, newPassword} = req.body
+
+            await this.changePasswordUseCase.execute({
+                email : email! , currentPassword : currentPassword, newPassword : newPassword 
+            })
+
+            res.status(HttpStatusCode.OK).json({
+                status : true,
+                message : "Password updated successfully"
+            })
+            
+        } catch (error) {
+            next(error)
+        }
+    }
 }

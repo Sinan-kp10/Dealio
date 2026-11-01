@@ -203,7 +203,7 @@ export function EnterpriseManagerSidebar({ isOpen, onClose }: EnterpriseManagerS
                         </NavLink>
 
                         <NavLink
-                            to="/enterprise/company-profile"
+                            to="/enterprise/profile"
                             onClick={onClose}
                             className={({ isActive }) =>
                                 `group flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
@@ -223,7 +223,7 @@ export function EnterpriseManagerSidebar({ isOpen, onClose }: EnterpriseManagerS
                                         : "text-slate-400 group-hover:text-slate-600"
                                     }`}
                                 />
-                                <span>Company Profile</span>
+                                <span>Enterprise Profile</span>
                                 </>
                             )}
                         </NavLink>

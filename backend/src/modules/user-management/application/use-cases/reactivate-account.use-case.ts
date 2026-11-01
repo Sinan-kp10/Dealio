@@ -1,4 +1,4 @@
-import { AppError } from "../../../../shared/errors/app-error";
+import { NotFoundError, ForbiddenError, ConflictError } from "../../../../shared/errors/app-error";
 import { IUserManagementRepository } from "../../domain/repositories/user-management.repository";
 import { ReactivateAccountDto } from "../dto/suspend-account.dto";
 
@@ -15,15 +15,15 @@ export class ReactivateAccountUseCase implements IUseCase<ReactivateAccountDto, 
         const user = await this.userManagementRepository.findById(accountId);
 
         if (!user) {
-            throw new AppError("Account not found.", 404);
+            throw new NotFoundError("Account not found.");
         }
 
         if (user.role === "ADMIN") {
-            throw new AppError("Admin accounts cannot be reactivated.",403)
+            throw new ForbiddenError("Admin accounts cannot be reactivated.")
         }
 
         if (user.status === "ACTIVE") {
-            throw new AppError("Account is already active.", 409);
+            throw new ConflictError("Account is already active.");
         }
 
         await this.userManagementRepository.reactivateAccount(accountId);

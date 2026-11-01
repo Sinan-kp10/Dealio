@@ -4,7 +4,7 @@ import type { VerifyOtpDto, ResendOtpInput } from "../../../application/dto/veri
 import type { AuthUserDto } from "../../../application/dto/user.dto";
 import type { CreatedEnterpriseResult } from "../../../domain/repositories/enterprise.repository";
 import type { IApiResponse } from "../../../../../shared/application/api-response";
-import { HttpStatusCode } from "../../../../../shared/presentation/enums/http-status-code.enum.js";
+import { HttpStatusCode } from "../../../../../shared/enums/http-status-code.enum.js";
 
 export class OtpController {
     constructor(

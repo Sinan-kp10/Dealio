@@ -1,5 +1,5 @@
-import { OtpService } from "../../../../infrastructure/security/otp.service";
-import { AppError } from "../../../../shared/errors/app-error";
+import { OtpService } from "../../infrastructure/security/otp.service";
+import { BadGatewayError } from "../../../../shared/errors/app-error";
 import { ResendOtpInput } from "../dto/verify-otp.dto";
 import { EmailService } from "../../../../infrastructure/email/email.service";
 import type { IUseCase } from "../../../../shared/application/base.usecase";
@@ -28,7 +28,7 @@ export class ResendOtpUseCase implements IUseCase<ResendOtpInput, void> {
                 await this.otpService.deletePasswordResetOtp(normalizedEmail);
             }
 
-            throw new AppError("Failed to send verification email", 502);
+            throw new BadGatewayError("Failed to send verification email");
         }
     }
 }

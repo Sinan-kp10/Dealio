@@ -1,4 +1,4 @@
-import { AppError } from "../../../../shared/errors/app-error";
+import { UnauthorizedError, ForbiddenError } from "../../../../shared/errors/app-error";
 import type { IUserRepository } from "../../domain/repositories/user.repository";
 import type { AuthUserDto } from "../dto/user.dto";
 import type { IUseCase } from "../../../../shared/application/base.usecase";
@@ -12,11 +12,11 @@ export class GetAuthenticatedUserUseCase implements IUseCase<string, AuthUserDto
         const user = await this.userRepository.findById(userId);
 
         if (!user) {
-            throw new AppError("User not found", 401, "UNAUTHENTICATED");
+            throw new UnauthorizedError("User not found", "UNAUTHENTICATED");
         }
 
         if (user.status === "SUSPENDED") {
-            throw new AppError("Your account has been suspended by the administration.", 403, "ACCOUNT_SUSPENDED");
+            throw new ForbiddenError("Your account has been suspended by the administration.", "ACCOUNT_SUSPENDED");
         }
 
         return {

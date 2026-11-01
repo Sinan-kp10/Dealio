@@ -1,6 +1,6 @@
 import { IUserRepository } from "../../domain/repositories/user.repository";
-import { OtpService } from "../../../../infrastructure/security/otp.service";
-import { AppError } from "../../../../shared/errors/app-error";
+import { OtpService } from "../../infrastructure/security/otp.service";
+import { BadRequestError, ConflictError } from "../../../../shared/errors/app-error";
 import { CustomerRegistrationData } from "../dto/register-customer.dto";
 import { AuthUserDto } from "../dto/user.dto";
 import { VerifyOtpDto } from "../dto/verify-otp.dto";
@@ -18,23 +18,23 @@ export class VerifyCustomerOtpuseCase implements IUseCase<VerifyOtpDto, AuthUser
         const result = await this.otpService.verify(normalizedEmail, dto.otp);
 
         if (result === "invalid") {
-            throw new AppError("Invalid OTP. Please try again", 400);
+            throw new BadRequestError("Invalid OTP. Please try again");
         }
 
         if(result === "expired"){
-            throw new AppError("OTP has expired. Please request a new one", 400)
+            throw new BadRequestError("OTP has expired. Please request a new one")
         }
 
         const registrationData = await this.otpService.getRegistrationData<CustomerRegistrationData>(normalizedEmail)
         if (!registrationData) {
-            throw new AppError("Registration data has expired. Please sign up again.",400)
+            throw new BadRequestError("Registration data has expired. Please sign up again.")
         }
 
         const existingUser = await this.userRepository.findByEmail(normalizedEmail);
 
         if (existingUser) {
             await this.otpService.delete(normalizedEmail);
-            throw new AppError("Email is already registered", 409);
+            throw new ConflictError("Email is already registered");
         }
 
         const user = await this.userRepository.create({
