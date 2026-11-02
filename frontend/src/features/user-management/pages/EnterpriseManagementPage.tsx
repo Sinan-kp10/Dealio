@@ -1,6 +1,6 @@
 import { Search, ChevronDown } from "lucide-react";
 import Pagination from "../../../components/common/pagination/Pagination";
-import TableSkeleton from "../../../components/common/loading/TableSkeleton";
+import Table from "../../../components/common/table/Table";
 import { useEffect, useState } from "react";
 import type { Enterprise, EnterpriseStatus } from "../types/enterprise-management.types";
 import axios from "axios";
@@ -10,7 +10,7 @@ import ConfirmationModal from "../../../components/common/confirmationModel/Conf
 import { getEnterprise, reactivateEnterpriseAccount, suspendEnterpriseAccount } from "../service/user-management.service";
 import useDebounce from "../../../hook/useDebounce";
 
-const PAGE_LIMIT = 5
+const PAGE_LIMIT = 5;
 
 export function EnterpriseManagementPage() {
     const [enterprise, setEnterprise] = useState<Enterprise[]>([]);
@@ -23,7 +23,7 @@ export function EnterpriseManagementPage() {
     const [loading, setLoading] = useState(true);
     const [selectedEnterprise, setSelectedEnterprise] = useState<Enterprise | null>(null);
     const [actionLoading, setActionLoading] = useState(false);
-    const debouncedSearch = useDebounce(search, 500)
+    const debouncedSearch = useDebounce(search, 500);
 
     useEffect(() => {
         let cancelled = false;
@@ -204,113 +204,95 @@ export function EnterpriseManagementPage() {
                 </div>
             </div>
 
-            <div className="w-full bg-white rounded-xl shadow-[0_2px_8px_rgba(15,30,60,0.04),0_0_1px_rgba(15,30,60,0.08)] border border-slate-200/80 overflow-hidden">
-                <div className="w-full overflow-x-auto">
-                    <table className="w-full text-left border-collapse min-w-[840px]">
-                        <thead>
-                            <tr className="bg-[#2d5178] text-white">
-                                <th className="py-3.5 px-6 text-[11px] font-bold tracking-wider uppercase">Enterprise</th>
-                                <th className="py-3.5 px-6 text-[11px] font-bold tracking-wider uppercase">Category</th>
-                                <th className="py-3.5 px-6 text-[11px] font-bold tracking-wider uppercase">Phone Number</th>
-                                <th className="py-3.5 px-6 text-[11px] font-bold tracking-wider uppercase text-center">Status</th>
-                                <th className="py-3.5 px-6 text-[11px] font-bold tracking-wider uppercase text-center">Actions</th>
-                            </tr>
-                        </thead>
+            <Table
+                headers={[
+                    "Enterprise",
+                    "Category",
+                    "Phone Number",
+                    { label: "Status", align: "center" },
+                    { label: "Actions", align: "center" },
+                ]}
+                loading={loading}
+                loadingRows={PAGE_LIMIT}
+                isEmpty={enterprise.length === 0}
+                emptyTitle="No enterprises found"
+                pagination={
+                    totalPages > 0 && (
+                        <Pagination
+                            currentPage={page}
+                            totalPages={totalPages}
+                            onPageChange={setPage}
+                        />
+                    )
+                }
+            >
+                {enterprise.map((item) => (
+                    <tr key={item.id} className="hover:bg-slate-50/60 transition-colors">
+                        <td className="py-4 px-6 align-middle">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-full bg-[#eef4fa] border border-[#d2e2f0] text-[#244673] flex items-center justify-center shrink-0 shadow-2xs">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                        <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z" />
+                                    </svg>
+                                </div>
 
-                        <tbody className="divide-y divide-slate-100">
-                            {loading ? (
-                                <TableSkeleton rows={PAGE_LIMIT} columns={5} />
-                            ) : enterprise.length === 0 ? (
-                                <tr>
-                                    <td colSpan={5} className="py-12 text-center">
-                                        <p className="text-sm font-medium text-slate-600 m-0">
-                                            No enterprises found
-                                        </p>
-                                        <p className="text-xs text-slate-400 mt-1 m-0">
-                                            Try changing your search, status, or category filter.
-                                        </p>
-                                    </td>
-                                </tr>
+                                <div className="flex flex-col">
+                                    <span className="font-bold text-[#0F1D2F] text-[13.5px] whitespace-nowrap">
+                                        {item.enterpriseName}
+                                    </span>
+                                    <span className="text-xs text-slate-500 whitespace-nowrap mt-0.5">
+                                        {item.email}
+                                    </span>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td className="py-4 px-6 text-sm text-slate-700 font-medium whitespace-nowrap align-middle">
+                            {item.category ?? "-"}
+                        </td>
+
+                        <td className="py-4 px-6 text-sm text-slate-700 font-medium whitespace-nowrap align-middle">
+                            {item.phone ?? "-"}
+                        </td>
+
+                        <td className="py-4 px-6 text-center align-middle whitespace-nowrap">
+                            {item.status === "ACTIVE" ? (
+                                <span className="inline-block px-3 py-1 text-xs font-semibold rounded-md bg-[#eaf8f1] text-[#22a06b]">
+                                    Active
+                                </span>
                             ) : (
-                                enterprise.map((item) => (
-                                    <tr key={item.id} className="hover:bg-slate-50/60 transition-colors">
-                                        <td className="py-4 px-6 align-middle">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-full bg-[#eef4fa] border border-[#d2e2f0] text-[#244673] flex items-center justify-center shrink-0 shadow-2xs">
-                                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                                                        <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z" />
-                                                    </svg>
-                                                </div>
-
-                                                <div className="flex flex-col">
-                                                    <span className="font-bold text-[#0F1D2F] text-[13.5px] whitespace-nowrap">
-                                                        {item.enterpriseName}
-                                                    </span>
-                                                    <span className="text-xs text-slate-500 whitespace-nowrap mt-0.5">
-                                                        {item.email}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </td>
-
-                                        <td className="py-4 px-6 text-sm text-slate-700 font-medium whitespace-nowrap align-middle">
-                                            {item.category ?? "-"}
-                                        </td>
-
-                                        <td className="py-4 px-6 text-sm text-slate-700 font-medium whitespace-nowrap align-middle">
-                                            {item.phone ?? "-"}
-                                        </td>
-
-                                        <td className="py-4 px-6 text-center align-middle whitespace-nowrap">
-                                            {item.status === "ACTIVE" ? (
-                                                <span className="inline-block px-3 py-1 text-xs font-semibold rounded-md bg-[#eaf8f1] text-[#22a06b]">
-                                                    Active
-                                                </span>
-                                            ) : (
-                                                <span className="inline-block px-3 py-1 text-xs font-semibold rounded-md bg-[#fef1f2] text-[#e04f5f]">
-                                                    Suspended
-                                                </span>
-                                            )}
-                                        </td>
-
-                                        <td className="py-4 px-6 text-center align-middle whitespace-nowrap">
-                                            <div className="flex items-center justify-center gap-2">
-                                                <button
-                                                    type="button"
-                                                    className="px-3.5 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer min-w-[62px]"
-                                                >
-                                                    View
-                                                </button>
-
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setSelectedEnterprise(item)}
-                                                    disabled={actionLoading}
-                                                    className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg border transition-all cursor-pointer shadow-2xs min-w-[78px] disabled:opacity-50 disabled:cursor-not-allowed ${
-                                                        item.status === "ACTIVE"
-                                                            ? "bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300"
-                                                            : "bg-white border-red-200 text-[#e04f5f] hover:bg-red-50/50 hover:border-red-300"
-                                                    }`}
-                                                >
-                                                    {item.status === "ACTIVE" ? "Suspend" : "Reactivate"}
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))
+                                <span className="inline-block px-3 py-1 text-xs font-semibold rounded-md bg-[#fef1f2] text-[#e04f5f]">
+                                    Suspended
+                                </span>
                             )}
-                        </tbody>
-                    </table>
-                </div>
+                        </td>
 
-                {totalPages > 0 && (
-                    <Pagination
-                        currentPage={page}
-                        totalPages={totalPages}
-                        onPageChange={setPage}
-                    />
-                )}
-            </div>
+                        <td className="py-4 px-6 text-center align-middle whitespace-nowrap">
+                            <div className="flex items-center justify-center gap-2">
+                                <button
+                                    type="button"
+                                    className="px-3.5 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer min-w-[62px]"
+                                >
+                                    View
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={() => setSelectedEnterprise(item)}
+                                    disabled={actionLoading}
+                                    className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg border transition-all cursor-pointer shadow-2xs min-w-[78px] disabled:opacity-50 disabled:cursor-not-allowed ${
+                                        item.status === "ACTIVE"
+                                            ? "bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300"
+                                            : "bg-white border-red-200 text-[#e04f5f] hover:bg-red-50/50 hover:border-red-300"
+                                    }`}
+                                >
+                                    {item.status === "ACTIVE" ? "Suspend" : "Reactivate"}
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                ))}
+            </Table>
 
             {selectedEnterprise && selectedEnterprise.status === "ACTIVE" && (
                 <ReasonModal

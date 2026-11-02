@@ -1,10 +1,9 @@
-
 export type EnterpriseStatus = "PENDING" | "APPROVED" | "REJECTED" | "SUSPENDED";
 
 export interface Enterprise {
   id: string;
   enterprise_name: string;
-  subcategory_id: string | null;
+  category_id?: string | null;
   status: EnterpriseStatus;
   description: string | null;
   rejection_reason: string | null;
@@ -12,4 +11,5 @@ export interface Enterprise {
   reviewed_at: Date | null;
   created_at: Date;
   updated_at: Date;
+  subcategories?: { subcategory_id: string }[];
 }

@@ -1,9 +1,9 @@
 import { prisma } from "../../../../../infrastructure/database/prisma/prisma-client.js";
 import { CustomerProfileDto, UpdatedCustomerProfileFieldsDto } from "../../../application/dto/customer-profile.dto.js";
-import { CustomerProfileRepository } from "../../../domain/customer-profile.repository.js";
+import { ICustomerProfileRepository } from "../../../domain/repositories/customer-profile.repository.js";
 import { CustomerProfileMapper, customerProfileSelect } from "../../mapper/customer-profile.mapper.js";
 
-export class PrismaCustomerProfileRepository implements CustomerProfileRepository {
+export class PrismaCustomerProfileRepository implements ICustomerProfileRepository {
 
     findById = async (id: string): Promise<CustomerProfileDto | null> => {
         const user = await prisma.users.findUnique({

@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -7,7 +6,6 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
-
 
 enum user_role {
   ADMIN
@@ -36,7 +34,7 @@ model users {
   enterprise_id       String?     @db.Uuid
   phone               String?     @db.VarChar(255)
   profile_picture_key String?     @db.VarChar(255)
-  email_verified   Boolean @default(false)
+  email_verified      Boolean     @default(false)
   status              user_status @default(ACTIVE)
   created_at          DateTime    @default(now()) @db.Timestamptz
   updated_at          DateTime    @updatedAt @db.Timestamptz
@@ -52,7 +50,7 @@ model users {
 model enterprises {
   id               String            @id @default(uuid()) @db.Uuid
   enterprise_name  String            @db.VarChar(255)
-  subcategory_id   String?           @db.Uuid
+  category_id      String?           @db.Uuid
   description      String?           @db.Text
   status           enterprise_status @default(PENDING)
   rejection_reason String?           @db.Text
@@ -61,11 +59,12 @@ model enterprises {
   created_at       DateTime          @default(now()) @db.Timestamptz
   updated_at       DateTime          @updatedAt @db.Timestamptz
 
-  users        users[] @relation("enterprise_members")
-  reviewer     users?  @relation("enterprise_reviewer", fields: [reviewed_by], references: [id])
-  kyc          enterprise_kyc?
-  bank_account enterprise_bank_accounts?
-  subcategory  subcategories? @relation(fields: [subcategory_id], references: [id])
+  users            users[]                    @relation("enterprise_members")
+  reviewer         users?                     @relation("enterprise_reviewer", fields: [reviewed_by], references: [id])
+  kyc              enterprise_kyc?
+  bank_account     enterprise_bank_accounts?
+  category         categories?                @relation(fields: [category_id], references: [id])
+  subcategories    enterprise_subcategories[]
 
   @@map("enterprises")
 }
@@ -146,6 +145,7 @@ enum category_status {
   ACTIVE
   INACTIVE
 }
+
 enum subcategory_status {
   ACTIVE
   INACTIVE
@@ -159,21 +159,36 @@ model categories {
   updated_at    DateTime        @updatedAt @db.Timestamptz
 
   subcategories subcategories[]
+  enterprises   enterprises[]
 
   @@map("categories")
 }
 
 model subcategories {
-  id            String             @id @default(uuid()) @db.Uuid
-  category_id   String             @db.Uuid
-  name          String             @db.VarChar(255)
-  status        subcategory_status @default(ACTIVE)
-  created_at    DateTime           @default(now()) @db.Timestamptz
-  updated_at    DateTime           @updatedAt @db.Timestamptz
+  id          String                     @id @default(uuid()) @db.Uuid
+  category_id String                     @db.Uuid
+  name        String                     @db.VarChar(255)
+  status      subcategory_status         @default(ACTIVE)
+  created_at  DateTime                   @default(now()) @db.Timestamptz
+  updated_at  DateTime                   @updatedAt @db.Timestamptz
 
-  category      categories   @relation(fields: [category_id], references: [id])
-  enterprises   enterprises[]
+  category    categories                 @relation(fields: [category_id], references: [id])
+  enterprises enterprise_subcategories[]
 
   @@unique([category_id, name])
   @@map("subcategories")
+}
+
+model enterprise_subcategories {
+  id             String        @id @default(uuid()) @db.Uuid
+  enterprise_id  String        @db.Uuid
+  subcategory_id String        @db.Uuid
+  created_at     DateTime      @default(now()) @db.Timestamptz
+
+  enterprise     enterprises   @relation(fields: [enterprise_id], references: [id], onDelete: Cascade)
+  subcategory    subcategories @relation(fields: [subcategory_id], references: [id], onDelete: Cascade)
+
+  @@unique([enterprise_id, subcategory_id])
+  @@index([subcategory_id])
+  @@map("enterprise_subcategories")
 }

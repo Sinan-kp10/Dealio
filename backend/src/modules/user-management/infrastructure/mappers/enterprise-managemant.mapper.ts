@@ -6,21 +6,16 @@ export const enterpriseListSelect = {
     enterprise_name: true,
     status: true,
     created_at: true,
-    subcategory: {
+    category: {
         select: {
             name: true,
-            category: {
-                select: {
-                    name: true,
-                },
-            },
         },
     },
     users: {
         where: {
             role: "ENTERPRISE_MANAGER",
         },
-            select: {
+        select: {
             id: true,
             name: true,
             email: true,
@@ -32,18 +27,19 @@ export const enterpriseListSelect = {
     },
 } satisfies Prisma.enterprisesSelect;
 
-export type EnterpriseListRecord = Prisma.enterprisesGetPayload<{select: typeof enterpriseListSelect}>;
+export type EnterpriseListRecord = Prisma.enterprisesGetPayload<{ select: typeof enterpriseListSelect }>;
 
 export class EnterpriseManagementMapper {
     static toDto(enterprise: EnterpriseListRecord): EnterpriseListItemDto {
         const manager = enterprise.users[0];
+        const categoryName = enterprise.category?.name ?? null;
 
         return {
             id: manager?.id ?? enterprise.id,
             enterpriseName: enterprise.enterprise_name,
             email: manager?.email ?? "",
             phone: manager?.phone ?? null,
-            category: enterprise.subcategory?.category?.name ?? enterprise.subcategory?.name ?? null,
+            category: categoryName,
             status: manager?.status ?? "ACTIVE",
             createdAt: enterprise.created_at,
             suspendedAt: manager?.suspended_at ?? null,

@@ -15,7 +15,10 @@ import ForbiddenPage from "../../pages/ForbiddenPage";
 import AccountSuspendedPage from "../../pages/AccountSuspendedPage";
 import OtpVerificationPage from "../../features/auth/pages/OtpVerificationPage";
 import VerifyPasswordResetOtpPage from "../../features/auth/pages/VerifyPasswordResetOtpPage";
-import CustomerProfilePage from "../../features/profile/pages/CustomerProfilePage";
+const CustomerSettingsPage = lazy(()=> import("../../features/settings/pages/CustomerSttingsPage"))
+const EnterpriseSettingsPage = lazy(()=> import("../../features/settings/pages/EnterpriseSettingsPage"))
+const EnterpriseProfilePage = lazy(()=> import("../../features/profile/pages/EnterpriseProfilePage"))
+const CustomerProfilePage = lazy(()=> import("../../features/profile/pages/CustomerProfilePage"))
 const CustomerLayout = lazy(() => import("../../components/layouts/customer/CustomerLayout"))
 const AdminLayout = lazy(()=> import("../../components/layouts/admin/AdminLayout"))
 const EnterpriseManagerLayout = lazy(()=> import("../../components/layouts/enterpriseManager/EnterpriseManagerLayout"))
@@ -31,13 +34,6 @@ export function AppRouter() {
       <Suspense fallback={<FullPageSpinner />}>
         <Routes>
 
-          <Route element={<ProtectedRoute allowedRoles={["CUSTOMER"]} />}>
-            <Route element={<CustomerLayout />}>
-              <Route path="/customer" element={<QuotationsPage />} />
-              <Route path="/customer/profile" element={<CustomerProfilePage />} />
-            </Route>
-          </Route>
-
           <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
             <Route element={<AdminLayout />}>
               <Route path="/admin" element={<AdminDashboardPage />} />
@@ -46,9 +42,20 @@ export function AppRouter() {
             </Route>
           </Route>
 
+          <Route element={<ProtectedRoute allowedRoles={["CUSTOMER"]} />}>
+            <Route element={<CustomerLayout />}>
+              <Route path="/customer" element={<QuotationsPage />} />
+              <Route path="/customer/profile" element={<CustomerProfilePage />} />
+              <Route path="/customer/settings" element={<CustomerSettingsPage />} />
+
+            </Route>
+          </Route>
+
           <Route element={<ProtectedRoute allowedRoles={["ENTERPRISE_MANAGER"]} />}>
             <Route element={<EnterpriseManagerLayout />}>
               <Route path="/enterprise" element={<EnterpriseDashboardPage />} />
+              <Route path="/enterprise/profile" element={<EnterpriseProfilePage />} />
+              <Route path="/enterprise/settings" element={<EnterpriseSettingsPage />} />
             </Route>
           </Route>
 
