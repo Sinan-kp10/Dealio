@@ -15,6 +15,7 @@ import ForbiddenPage from "../../pages/ForbiddenPage";
 import AccountSuspendedPage from "../../pages/AccountSuspendedPage";
 import OtpVerificationPage from "../../features/auth/pages/OtpVerificationPage";
 import VerifyPasswordResetOtpPage from "../../features/auth/pages/VerifyPasswordResetOtpPage";
+const EnterpriseProfilePage = lazy(()=> import("../../features/profile/pages/EnterpriseProfilePage"))
 const CustomerProfilePage = lazy(()=> import("../../features/profile/pages/CustomerProfilePage"))
 const CustomerLayout = lazy(() => import("../../components/layouts/customer/CustomerLayout"))
 const AdminLayout = lazy(()=> import("../../components/layouts/admin/AdminLayout"))
@@ -49,6 +50,8 @@ export function AppRouter() {
           <Route element={<ProtectedRoute allowedRoles={["ENTERPRISE_MANAGER"]} />}>
             <Route element={<EnterpriseManagerLayout />}>
               <Route path="/enterprise" element={<EnterpriseDashboardPage />} />
+              <Route path="/enterprise/profile" element={<EnterpriseProfilePage />} />
+
             </Route>
           </Route>
 

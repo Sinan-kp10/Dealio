@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateCustomerProfileSchema } from "../schemas/update-customer-profile.schema";
 import useAuthStore from "../../auth/stores/auth.store";
-import CustomerProfileSkeleton from "../components/loading/CustomerProfileSkeleton";
+import ProfileSkeleton from "../components/loading/ProfileSkeleton";
 import ChangePasswordModal from "../components/models/ChangePasswordModal";
 import ChangeEmailModal from "../components/models/ChangeEmailModal";
 
@@ -121,7 +121,7 @@ function CustomerProfilePage() {
     });
 
   if (loading) {
-    return <CustomerProfileSkeleton />;
+    return <ProfileSkeleton />;
   }
 
   if (!profile) {
@@ -330,19 +330,6 @@ function CustomerProfilePage() {
 
             <div>
               <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">
-                Account Created
-              </label>
-              <div className="flex items-center justify-between px-3.5 py-2.5 bg-slate-50/70 border border-slate-200/90 rounded-xl text-sm text-slate-800 shadow-2xs">
-                <span className="truncate">{formatDate(profile.createdAt)}</span>
-                <Calendar size={16} className="text-slate-400 shrink-0 ml-2" />
-              </div>
-              <p className="text-[11px] sm:text-xs text-slate-400 mt-1.5 leading-relaxed">
-                Account registration date is verified and permanently linked to your profile.
-              </p>
-            </div>
-
-            <div>
-              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">
                 Email Address
               </label>
               <div className="flex items-center justify-between px-3.5 py-2.5 bg-slate-50/70 border border-slate-200/90 rounded-xl text-sm text-slate-800 shadow-2xs">
@@ -351,6 +338,19 @@ function CustomerProfilePage() {
               </div>
               <p className="text-[11px] sm:text-xs text-slate-400 mt-1.5 leading-relaxed">
                 Email updates require verification to maintain quotation and contract security.
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">
+                Account Created
+              </label>
+              <div className="flex items-center justify-between px-3.5 py-2.5 bg-slate-50/70 border border-slate-200/90 rounded-xl text-sm text-slate-800 shadow-2xs">
+                <span className="truncate">{formatDate(profile.createdAt)}</span>
+                <Calendar size={16} className="text-slate-400 shrink-0 ml-2" />
+              </div>
+              <p className="text-[11px] sm:text-xs text-slate-400 mt-1.5 leading-relaxed">
+                Account registration date is verified and permanently linked to your profile.
               </p>
             </div>
           </div>
