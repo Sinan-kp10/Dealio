@@ -4,8 +4,8 @@ import { Mail } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { requestEmailChangeSchema, type RequestEmailChangeFormData } from "../../schemas/request-email-change.schema";
-import { requestEmailChange } from "../../services/profile.service";
 import ButtonSpinner from "../../../../components/common/loading/ButtonSpinner";
+import { requestEmailChange } from "../../services/common-profile.service";
 
 interface RequestEmailStepProps {
   onSuccess: (newEmail: string) => void;

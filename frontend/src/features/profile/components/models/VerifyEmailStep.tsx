@@ -4,9 +4,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { verifyEmailChangeSchema, type VerifyEmailChangeFormData } from "../../schemas/verify-email-change.schema";
-import { verifyEmailChange, resendEmailChangeOtp } from "../../services/profile.service";
 import OtpInput from "../../../auth/components/OTPinput";
 import ButtonSpinner from "../../../../components/common/loading/ButtonSpinner";
+import { resendEmailChangeOtp, verifyEmailChange } from "../../services/common-profile.service";
 
 interface VerifyEmailStepProps {
   newEmail: string;
@@ -18,32 +18,30 @@ export function VerifyEmailStep({ newEmail, onSuccess, onCancel }: VerifyEmailSt
   const [countdown, setCountdown] = useState(60);
   const [isResending, setIsResending] = useState(false);
 
-  const {
-    handleSubmit,
-    setValue,
-    formState: { errors, isSubmitting },
-  } = useForm<VerifyEmailChangeFormData>({
-    resolver: zodResolver(verifyEmailChangeSchema),
-    defaultValues: {
-      otp: "",
-    },
-  });
+  const {handleSubmit, setValue, formState: { errors, isSubmitting }} = useForm<VerifyEmailChangeFormData>({resolver: zodResolver(verifyEmailChangeSchema)});
 
   useEffect(() => {
-    if (countdown <= 0) return;
+
+    if (countdown <= 0) return
+
     const timer = setInterval(() => {
       setCountdown((prev) => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
-    return () => clearInterval(timer);
+    }, 1000)
+
+    return () => clearInterval(timer)
+
   }, [countdown]);
 
   const onSubmit = async (data: VerifyEmailChangeFormData) => {
     try {
+
       const response = await verifyEmailChange({ otp: data.otp });
       const updatedEmail = response.data?.email || newEmail;
       toast.success("Email changed successfully");
-      onSuccess(updatedEmail);
+      onSuccess(updatedEmail)
+
     } catch (error) {
+
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data?.message ?? "Invalid verification code");
       } else {
@@ -53,13 +51,18 @@ export function VerifyEmailStep({ newEmail, onSuccess, onCancel }: VerifyEmailSt
   };
 
   const handleResend = async () => {
-    if (countdown > 0 || isResending) return;
+
+    if (countdown > 0 || isResending) return
     setIsResending(true);
+
     try {
+
       const response = await resendEmailChangeOtp();
       toast.success(response.message || "Verification code resent");
-      setCountdown(60);
+      setCountdown(60)
+
     } catch (error) {
+
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data?.message ?? "Failed to resend verification code");
       } else {
@@ -68,7 +71,7 @@ export function VerifyEmailStep({ newEmail, onSuccess, onCancel }: VerifyEmailSt
     } finally {
       setIsResending(false);
     }
-  };
+  }
 
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-5 pt-5">

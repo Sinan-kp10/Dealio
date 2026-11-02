@@ -15,7 +15,7 @@ import ForbiddenPage from "../../pages/ForbiddenPage";
 import AccountSuspendedPage from "../../pages/AccountSuspendedPage";
 import OtpVerificationPage from "../../features/auth/pages/OtpVerificationPage";
 import VerifyPasswordResetOtpPage from "../../features/auth/pages/VerifyPasswordResetOtpPage";
-import CustomerProfilePage from "../../features/profile/pages/CustomerProfilePage";
+const CustomerProfilePage = lazy(()=> import("../../features/profile/pages/CustomerProfilePage"))
 const CustomerLayout = lazy(() => import("../../components/layouts/customer/CustomerLayout"))
 const AdminLayout = lazy(()=> import("../../components/layouts/admin/AdminLayout"))
 const EnterpriseManagerLayout = lazy(()=> import("../../components/layouts/enterpriseManager/EnterpriseManagerLayout"))

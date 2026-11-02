@@ -1,13 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
 import { X, Eye, EyeOff } from "lucide-react";
 import { useForm } from "react-hook-form";
-import type { ChangeCustomerPassword } from "../../types/customer.profile.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { changePasswordSchema } from "../../schemas/change-password.schema";
-import { changePassword } from "../../services/profile.service";
 import axios from "axios";
 import { toast } from "react-toastify";
 import ButtonSpinner from "../../../../components/common/loading/ButtonSpinner";
+import type { ChangePassword } from "../../types/common-profile.types";
+import { changePassword } from "../../services/common-profile.service";
 
 export interface ChangePasswordModalProps {
   isOpen: boolean;
@@ -19,7 +19,7 @@ export function ChangePasswordModal({ isOpen, onClose }: ChangePasswordModalProp
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const {register,handleSubmit,reset,formState: { errors, isSubmitting }} = useForm<ChangeCustomerPassword>({resolver: zodResolver(changePasswordSchema)})
+  const {register,handleSubmit,reset,formState: { errors, isSubmitting }} = useForm<ChangePassword>({resolver: zodResolver(changePasswordSchema)})
 
   const handleClose = useCallback(() => {
 
@@ -48,7 +48,7 @@ export function ChangePasswordModal({ isOpen, onClose }: ChangePasswordModalProp
     }
   }, [isOpen, isSubmitting, handleClose]);
 
-  const onSubmit = async (data: ChangeCustomerPassword) => {
+  const onSubmit = async (data: ChangePassword) => {
     try {
 
       await changePassword(data);

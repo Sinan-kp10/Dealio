@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { X } from "lucide-react";
-import VerifyEmailStep from "../security/VerifyEmailStep";
-import RequestEmailStep from "../security/RequestEmailStep";
+import RequestEmailStep from "./RequestEmailStep";
+import VerifyEmailStep from "./VerifyEmailStep";
 
 export interface ChangeEmailModalProps {
   isOpen: boolean;
@@ -73,7 +73,7 @@ export function ChangeEmailModal({ isOpen, onClose, onSuccess }: ChangeEmailModa
 
         {step === "REQUEST" ? (
           <RequestEmailStep
-            onSuccess={(email : string) => {
+            onSuccess={(email) => {
               setTargetEmail(email);
               setStep("VERIFY");
             }}
@@ -82,7 +82,7 @@ export function ChangeEmailModal({ isOpen, onClose, onSuccess }: ChangeEmailModa
         ) : (
           <VerifyEmailStep
             newEmail={targetEmail}
-            onSuccess={(email : string) => {
+            onSuccess={(email) => {
               onSuccess(email);
               handleClose();
             }}
@@ -95,3 +95,4 @@ export function ChangeEmailModal({ isOpen, onClose, onSuccess }: ChangeEmailModa
 }
 
 export default ChangeEmailModal;
+

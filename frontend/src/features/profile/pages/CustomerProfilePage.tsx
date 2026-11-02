@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { CustomerProfile, UpdateCustomerProfile } from "../types/customer.profile.types";
-import { getCustomerProfile, updateCustomerProfile } from "../services/profile.service";
+import { getCustomerProfile, updateCustomerProfile } from "../services/customer-profile.service";
 import axios from "axios";
 import { toast } from "react-toastify";
 import {Camera, Trash2, SquarePen, User,Phone,Calendar,Lock,Mail,BadgeCheck,X,Check,Loader2} from "lucide-react";
@@ -9,8 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { updateCustomerProfileSchema } from "../schemas/update-customer-profile.schema";
 import useAuthStore from "../../auth/stores/auth.store";
 import CustomerProfileSkeleton from "../components/loading/CustomerProfileSkeleton";
-import ChangePasswordModal from "../components/security/ChangePasswordModal";
-import ChangeEmailModal from "../components/security/ChangeEmailModal";
+import ChangePasswordModal from "../components/models/ChangePasswordModal";
+import ChangeEmailModal from "../components/models/ChangeEmailModal";
 
 function CustomerProfilePage() {
   const [profile, setProfile] = useState<CustomerProfile | null>(null);
