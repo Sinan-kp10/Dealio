@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Bell, Menu, X, LogOut, UserRound,} from "lucide-react";
+import { Bell, Menu, X, LogOut, UserRound, Settings,} from "lucide-react";
 import { toast } from "react-toastify";
 import { logout } from "../../../features/auth/services/auth.service";
 import useAuthStore from "../../../features/auth/stores/auth.store";
@@ -123,13 +123,21 @@ export function CustomerNavbar({ onToggleSidebar, isSidebarOpen }: CustomerNavba
 
                     <div className="py-1.5">
 
-                    <button type="button"onClick={() => { setIsProfileOpen(false); navigate("/customer/profile")}}
-                        className="w-full flex items-center gap-3 px-5 py-3 text-[13.5px] font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50/80 transition-colors text-left cursor-pointer"
-                    >
-                        <UserRound size={18} className="text-slate-400" />
-                        <span>My Profile</span>
-                    </button>
-
+                        <button type="button"onClick={() => { setIsProfileOpen(false); navigate("/customer/profile")}}
+                            className="w-full flex items-center gap-3 px-5 py-3 text-[13.5px] font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50/80 transition-colors text-left cursor-pointer"
+                        >
+                            <UserRound size={18} className="text-slate-400" />
+                            <span>My Profile</span>
+                        </button>
+                    
+                        <button
+                            type="button"
+                            onClick={() => {setIsProfileOpen(false);navigate("/customer/settings")}}
+                            className="w-full flex items-center gap-3 px-5 py-3 text-[13.5px] font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50/80 transition-colors text-left cursor-pointer"
+                        >
+                            <Settings size={18} className="text-slate-400" />
+                            <span>Settings</span>
+                        </button>
 
                     </div>
 

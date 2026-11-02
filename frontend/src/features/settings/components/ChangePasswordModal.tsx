@@ -2,12 +2,12 @@ import { useState, useEffect, useCallback } from "react";
 import { X, Eye, EyeOff } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { changePasswordSchema } from "../../schemas/change-password.schema";
+import { changePasswordSchema } from "../schema/change-password.schema";
 import axios from "axios";
 import { toast } from "react-toastify";
-import ButtonSpinner from "../../../../components/common/loading/ButtonSpinner";
-import type { ChangePassword } from "../../types/common-profile.types";
-import { changePassword } from "../../services/common-profile.service";
+import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
+import type { ChangePassword } from "../types/users-account-settings.types";
+import { changePassword } from "../services/users-account-settings.service";
 
 export interface ChangePasswordModalProps {
   isOpen: boolean;

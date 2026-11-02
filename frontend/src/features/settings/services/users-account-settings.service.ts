@@ -1,5 +1,5 @@
 import axiosInstance from "../../../app/lib/axios";
-import type { ChangePassword, ChangePasswordResponse, RequestEmailChangePayload, RequestEmailChangeResponse, ResendEmailChangeOtpResponse, VerifyEmailChangePayload, VerifyEmailChangeResponse } from "../types/common-profile.types";
+import type { ChangePassword, ChangePasswordResponse, RequestEmailChangePayload, RequestEmailChangeResponse, ResendEmailChangeOtpResponse, VerifyEmailChangePayload, VerifyEmailChangeResponse } from "../types/users-account-settings.types";
 
 export const changePassword = async (payload: ChangePassword): Promise<ChangePasswordResponse> => {
   const response = await axiosInstance.post<ChangePasswordResponse>("/auth/change-password", payload);

@@ -3,10 +3,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { verifyEmailChangeSchema, type VerifyEmailChangeFormData } from "../../schemas/verify-email-change.schema";
-import OtpInput from "../../../auth/components/OTPinput";
-import ButtonSpinner from "../../../../components/common/loading/ButtonSpinner";
-import { resendEmailChangeOtp, verifyEmailChange } from "../../services/common-profile.service";
+import { verifyEmailChangeSchema, type VerifyEmailChangeFormData } from "../schema/verify-email-change.schema";
+import OtpInput from "../../auth/components/OTPinput";
+import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
+import { resendEmailChangeOtp, verifyEmailChange } from "../services/users-account-settings.service";
 
 interface VerifyEmailStepProps {
   newEmail: string;
