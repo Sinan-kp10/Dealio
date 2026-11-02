@@ -1,14 +1,14 @@
 import { NotFoundError } from "../../../../shared/errors/app-error.js";
 import type { IUseCase } from "../../../../shared/application/base.usecase.js";
 import type { CustomerProfileRepository } from "../../domain/customer-profile.repository.js";
-import type { CustomerUpdateProfileDto, UpdatedCustomerProfileFieldsDto } from "../dto/customer-profile.dto.js";
+import type { UpdateCustomerProfileDto, UpdatedCustomerProfileFieldsDto } from "../dto/customer-profile.dto.js";
 
-export class UpdateCustomerProfileUseCase implements IUseCase<CustomerUpdateProfileDto, UpdatedCustomerProfileFieldsDto> {
+export class UpdateCustomerProfileUseCase implements IUseCase<UpdateCustomerProfileDto, UpdatedCustomerProfileFieldsDto> {
     constructor(
         private readonly customerProfileRepository: CustomerProfileRepository
     ) {}
 
-    execute = async (dto: CustomerUpdateProfileDto): Promise<UpdatedCustomerProfileFieldsDto> => {
+    execute = async (dto: UpdateCustomerProfileDto): Promise<UpdatedCustomerProfileFieldsDto> => {
         const { userId } = dto;
         const user = await this.customerProfileRepository.findById(userId);
 
