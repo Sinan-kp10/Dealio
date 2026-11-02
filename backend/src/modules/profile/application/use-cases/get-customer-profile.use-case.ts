@@ -1,11 +1,11 @@
 import { NotFoundError } from "../../../../shared/errors/app-error.js";
 import type { IUseCase } from "../../../../shared/application/base.usecase.js";
-import type { CustomerProfileRepository } from "../../domain/customer-profile.repository.js";
 import type { CustomerProfileDto } from "../dto/customer-profile.dto.js";
+import { ICustomerProfileRepository } from "../../domain/repositories/customer-profile.repository.js";
 
 export class GetCustomerProfileUseCase implements IUseCase<string, CustomerProfileDto> {
     constructor(
-        private readonly customerProfileRepository: CustomerProfileRepository
+        private readonly customerProfileRepository: ICustomerProfileRepository
     ) {}
 
     execute = async (userId: string): Promise<CustomerProfileDto> => {

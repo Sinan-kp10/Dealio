@@ -89,15 +89,11 @@ export class PrismaUserManagementRepository implements IUserManagementRepository
 
             ...(category
                 ? {
-                    subcategory: {
+                    category: {
                         is: {
-                            category: {
-                                is: {
-                                    name: {
-                                        equals: category,
-                                        mode: "insensitive" as const,
-                                    },
-                                },
+                            name: {
+                                equals: category,
+                                mode: "insensitive" as const,
                             },
                         },
                     },
