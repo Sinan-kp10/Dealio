@@ -1,7 +1,8 @@
-import { prisma } from "../../../../../infrastructure/database/prisma/prisma-client.js";
-import { CustomerProfileDto, UpdatedCustomerProfileFieldsDto } from "../../../application/dto/customer-profile.dto.js";
-import { ICustomerProfileRepository } from "../../../domain/repositories/customer-profile.repository.js";
-import { CustomerProfileMapper, customerProfileSelect } from "../../mapper/customer-profile.mapper.js";
+import { prisma } from "../../../../infrastructure/database/prisma/prisma-client";
+import { CustomerProfileDto, UpdatedCustomerProfileFieldsDto } from "../../application/dto/customer-profile.dto";
+import { ICustomerProfileRepository } from "../../domain/repositories/customer-profile.repository";
+import { CustomerProfileMapper, customerProfileSelect } from "../mapper/customer-profile.mapper";
+
 
 export class PrismaCustomerProfileRepository implements ICustomerProfileRepository {
 

@@ -1,7 +1,8 @@
-import { SafeUser, User } from "../../../domain/entities/user.entity";
-import { prisma } from "../../../../../infrastructure/database/prisma/prisma-client";
-import { CreateUserData, IUserRepository } from "../../../domain/repositories/user.repository";
-import { customerSelect, CustomerMapper } from "../../mappers/customer.mappers";
+import { prisma } from "../../../../infrastructure/database/prisma/prisma-client";
+import { SafeUser, User } from "../../domain/entities/user.entity";
+import { CreateUserData, IUserRepository } from "../../domain/repositories/user.repository";
+import { CustomerMapper, customerSelect } from "../mappers/customer.mappers";
+
 
 export class PrismaUserRepository implements IUserRepository {
 

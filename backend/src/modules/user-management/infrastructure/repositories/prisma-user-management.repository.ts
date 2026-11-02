@@ -1,9 +1,10 @@
-import { prisma } from "../../../../../infrastructure/database/prisma/prisma-client"
-import { CustomerListFiltersDto, CustomerListItemDto, PaginatedCustomerDto,} from "../../../application/dto/customer-list-item.dto"
-import { EnterpriseListFiltersDto, PaginatedEnterprisesDto } from "../../../application/dto/enterprise-list-item.dto"
-import { IUserManagementRepository } from "../../../domain/repositories/user-management.repository"
-import { customerListSelect, CustomerManagementMapper } from "../../mappers/customer-management.mapper"
-import { enterpriseListSelect, EnterpriseManagementMapper } from "../../mappers/enterprise-managemant.mapper"
+import { prisma } from "../../../../infrastructure/database/prisma/prisma-client";
+import { CustomerListFiltersDto, CustomerListItemDto, PaginatedCustomerDto } from "../../application/dto/customer-list-item.dto";
+import { EnterpriseListFiltersDto, PaginatedEnterprisesDto } from "../../application/dto/enterprise-list-item.dto";
+import { IUserManagementRepository } from "../../domain/repositories/user-management.repository";
+import { customerListSelect, CustomerManagementMapper } from "../mappers/customer-management.mapper";
+import { enterpriseListSelect, EnterpriseManagementMapper } from "../mappers/enterprise-managemant.mapper";
+
 
 export class PrismaUserManagementRepository implements IUserManagementRepository {
 
