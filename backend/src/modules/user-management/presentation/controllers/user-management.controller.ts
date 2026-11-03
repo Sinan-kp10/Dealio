@@ -14,7 +14,7 @@ export class UserManagementController {
         private readonly reactivateAccountUseCase: IUseCase<ReactivateAccountDto, void>,
     ){}
 
-    getUsers = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    getCustomers = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
         try {
             const result = await this.getCustomerUseCase.execute({
                 search: req.query.search as string | undefined,
