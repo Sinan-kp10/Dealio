@@ -1,20 +1,22 @@
+export type CategoryStatus = "ACTIVE" | "INACTIVE";
+
 export interface SubcategoryDto {
     id: string;
     categoryId: string;
     name: string;
-    status: "ACTIVE" | "INACTIVE";
+    status: CategoryStatus
 }
 
 export interface CategoryListItemDto {
     id: string;
     name: string;
-    status: "ACTIVE" | "INACTIVE";
+    status: CategoryStatus
     subcategories: SubcategoryDto[];
 }
 
 export interface CategoryListFiltersDto {
     search?: string;
-    status?: "ACTIVE" | "INACTIVE";
+    status?: CategoryStatus
     page: number;
     limit: number;
 }

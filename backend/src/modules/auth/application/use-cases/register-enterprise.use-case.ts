@@ -15,9 +15,9 @@ export class RegisterEnterpriseUseCase implements IUseCase<RegisterEnterpriseDto
         private readonly emailService : EmailService
     ){}
 
-    execute = async (data : RegisterEnterpriseDto) => {
+    execute = async (input : RegisterEnterpriseDto) => {
 
-        const email = data.email.trim().toLowerCase();
+        const email = input.email.trim().toLowerCase();
 
         const emailExist = await this.enterpriseRepository.findUserByEmail(email)
 
@@ -25,13 +25,13 @@ export class RegisterEnterpriseUseCase implements IUseCase<RegisterEnterpriseDto
             throw new ConflictError("Email is already registered");
         }
 
-        const passwordHash = await this.passwordService.hash(data.password)
+        const passwordHash = await this.passwordService.hash(input.password)
 
         const registrationData = {
-            enterpriseName: data.enterpriseName.trim(),
-            contactPersonName : data.contactPersonName,
-            email : data.email,
-            phone : data.phone,
+            enterpriseName: input.enterpriseName.trim(),
+            contactPersonName : input.contactPersonName,
+            email : input.email,
+            phone : input.phone,
             passwordHash,
         }
 

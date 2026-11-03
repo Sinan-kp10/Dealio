@@ -13,9 +13,9 @@ export class ResetPasswordUseCase implements IUseCase<ResetPasswordDto, void> {
         private readonly jwtTokenService : JwtTokenService
     ){}
 
-    execute = async (dto : ResetPasswordDto) : Promise<void> => {
+    execute = async (input : ResetPasswordDto) : Promise<void> => {
 
-        const {email} = this.jwtTokenService.verifyPasswordResetToken(dto.resetToken)
+        const {email} = this.jwtTokenService.verifyPasswordResetToken(input.resetToken)
 
         const user = await this.userRepository.findByEmail(email)
 
@@ -23,7 +23,7 @@ export class ResetPasswordUseCase implements IUseCase<ResetPasswordDto, void> {
             throw new BadRequestError("Invalid or expired reset token.");
         }
 
-        const passwordHash = await this.passwordService.hash(dto.newPassword)
+        const passwordHash = await this.passwordService.hash(input.newPassword)
         
 
         await this.userRepository.changePassword(user.id, passwordHash)

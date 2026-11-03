@@ -3,10 +3,12 @@ import { IUseCase } from "../../../../shared/application/base.usecase";
 import { CategoryListFiltersDto, PaginatedCategoryDto } from "../../application/dto/category.dto";
 import { IApiResponse } from "../../../../shared/application/api-response";
 import { HttpStatusCode } from "../../../../shared/enums/http-status-code.enum";
+import { CategoryDto, CreateCategoryDto } from "../../application/dto/create-category.dto";
 
 export class CategoryController {
     constructor(
-        private readonly getCategoryUseCase : IUseCase<CategoryListFiltersDto,PaginatedCategoryDto>
+        private readonly getCategoryUseCase : IUseCase<CategoryListFiltersDto,PaginatedCategoryDto>,
+        private readonly createCategoryUseCase : IUseCase<CreateCategoryDto, CategoryDto>
     ){}
 
     getCategories = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
@@ -26,6 +28,28 @@ export class CategoryController {
                 data: categories,
             });
             
+
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    createCategory = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+
+        try {
+            
+            const {categoryName , status } = req.body as CreateCategoryDto
+
+            const category = await this.createCategoryUseCase.execute({
+                categoryName,
+                status
+            })
+
+            res.status(HttpStatusCode.CREATED).json({
+                status: true,
+                message: "Categories created successfully",
+                data: category,
+            })
 
         } catch (error) {
             next(error)

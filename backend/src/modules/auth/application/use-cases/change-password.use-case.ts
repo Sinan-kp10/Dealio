@@ -11,9 +11,9 @@ export class ChangePasswordUseCase implements IUseCase<ChangePasswordDto, void> 
         private readonly passwordService : PasswordService
     ){}
 
-    execute = async (dto : ChangePasswordDto): Promise<void> => {
+    execute = async (input : ChangePasswordDto): Promise<void> => {
         
-        const email = dto.email.trim().toLowerCase()
+        const email = input.email.trim().toLowerCase()
 
         const user = await this.userRepository.findByEmail(email)
 
@@ -21,13 +21,13 @@ export class ChangePasswordUseCase implements IUseCase<ChangePasswordDto, void> 
             throw new NotFoundError("User not found")
         }
 
-        const isValidPassword = await this.passwordService.verify(dto.currentPassword, user.password_hash)
+        const isValidPassword = await this.passwordService.verify(input.currentPassword, user.password_hash)
 
         if(!isValidPassword){
             throw new BadRequestError("Current password is incorrect")
         }
 
-        const passwordHash = await this.passwordService.hash(dto.newPassword)
+        const passwordHash = await this.passwordService.hash(input.newPassword)
 
         await this.userRepository.changePassword(user.id, passwordHash)
 

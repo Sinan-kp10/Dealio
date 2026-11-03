@@ -5,8 +5,8 @@ import { CategoryListFiltersDto, PaginatedCategoryDto } from "../dto/category.dt
 export class GetCategoryUseCase implements IUseCase<CategoryListFiltersDto, PaginatedCategoryDto> {
     constructor(private readonly categoryRepository : ICategoryRepository){}
 
-    execute = async(dto: CategoryListFiltersDto): Promise<PaginatedCategoryDto> => {
+    execute = async(input : CategoryListFiltersDto): Promise<PaginatedCategoryDto> => {
         
-        return await this.categoryRepository.findCategories(dto)
+        return await this.categoryRepository.findCategories(input)
     }
 }

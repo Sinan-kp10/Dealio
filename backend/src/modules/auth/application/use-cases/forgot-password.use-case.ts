@@ -12,9 +12,9 @@ export class ForgotPasswordUseCase implements IUseCase<EmailDto, void> {
         private readonly emailService: EmailService,
     ) {}
 
-    execute = async (dto: EmailDto): Promise<void> => {
+    execute = async (input : EmailDto): Promise<void> => {
 
-        const email = dto.email.trim().toLowerCase();
+        const email = input.email.trim().toLowerCase();
         const user = await this.userRepository.findByEmail(email);
 
         if (!user) {

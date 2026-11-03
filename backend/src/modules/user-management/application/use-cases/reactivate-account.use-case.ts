@@ -9,8 +9,8 @@ export class ReactivateAccountUseCase implements IUseCase<ReactivateAccountDto, 
         private readonly userManagementRepository: IUserManagementRepository,
     ){}
 
-    execute = async (dto: ReactivateAccountDto): Promise<void> => {
-        const { accountId } = dto;
+    execute = async (input : ReactivateAccountDto): Promise<void> => {
+        const { accountId } = input;
 
         const user = await this.userManagementRepository.findById(accountId);
 

@@ -14,8 +14,8 @@ export class LoginUseCase implements IUseCase<LoginDto, LoginResponseDto> {
         private readonly refreshTokenService: RefreshTokenService
     ) {}
 
-    execute = async (dto: LoginDto): Promise<LoginResponseDto> => {
-        const normalizedEmail = dto.email.trim().toLowerCase();
+    execute = async (input : LoginDto): Promise<LoginResponseDto> => {
+        const normalizedEmail = input.email.trim().toLowerCase();
 
         const user = await this.userRepository.findByEmail(normalizedEmail);
 
@@ -23,7 +23,7 @@ export class LoginUseCase implements IUseCase<LoginDto, LoginResponseDto> {
             throw new UnauthorizedError("Invalid email or password.");
         }
 
-        const isPasswordValid = await this.passwordService.verify(dto.password, user.password_hash);
+        const isPasswordValid = await this.passwordService.verify(input.password, user.password_hash);
 
         if (!isPasswordValid) {
             throw new UnauthorizedError("Invalid email or password.");

@@ -12,14 +12,14 @@ export class RequestEmailChangeUseCase implements IUseCase<RequestEmailChangeDto
         private readonly emailService: EmailService
     ) {}
 
-    execute = async (dto: RequestEmailChangeDto): Promise<void> => {
-        const user = await this.userRepository.findById(dto.userId);
+    execute = async (input : RequestEmailChangeDto): Promise<void> => {
+        const user = await this.userRepository.findById(input.userId);
 
         if (!user) {
             throw new NotFoundError("User not found");
         }
 
-        const normalizedEmail = dto.newEmail.trim().toLowerCase();
+        const normalizedEmail = input.newEmail.trim().toLowerCase();
 
         if (user.email === normalizedEmail) {
             throw new ConflictError("New email must be different from current email");
@@ -31,12 +31,12 @@ export class RequestEmailChangeUseCase implements IUseCase<RequestEmailChangeDto
             throw new ConflictError("Email is already registered");
         }
 
-        const otp = await this.otpService.generateEmailChangeOtp(dto.userId, normalizedEmail);
+        const otp = await this.otpService.generateEmailChangeOtp(input.userId, normalizedEmail);
 
         try {
             await this.emailService.sendOtp(normalizedEmail, otp);
         } catch {
-            await this.otpService.deleteEmailChangeOtp(dto.userId);
+            await this.otpService.deleteEmailChangeOtp(input.userId);
             throw new BadGatewayError("Failed to send verification email");
         }
     };

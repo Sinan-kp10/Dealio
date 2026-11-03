@@ -1,5 +1,6 @@
 import { prisma } from "../../../../infrastructure/database/prisma/prisma-client";
-import { CategoryListFiltersDto, CategoryListItemDto, PaginatedCategoryDto } from "../../application/dto/category.dto";
+import { CategoryListFiltersDto, CategoryListItemDto, CategoryStatus, PaginatedCategoryDto } from "../../application/dto/category.dto";
+import { CategoryDto } from "../../application/dto/create-category.dto";
 import { ICategoryRepository } from "../../domain/repositories/category.repository";
 import { categorySelect, CategoryMapper } from "../mappers/category.mapper";
 
@@ -12,7 +13,7 @@ export class PrismaCategoryRepository implements ICategoryRepository {
         });
 
         return category ? CategoryMapper.toDto(category) : null;
-    };
+    }
 
     findCategories = async (filters: CategoryListFiltersDto): Promise<PaginatedCategoryDto> => {
         const DEFAULT_LIMIT = 5;
@@ -51,5 +52,36 @@ export class PrismaCategoryRepository implements ICategoryRepository {
             total,
             totalPages: Math.ceil(total / pageSize),
         };
-    };
+    }
+
+    findByName = async (name: string): Promise<CategoryDto | null> => {
+        const category = await prisma.categories.findUnique({
+            where: {
+                name: name,
+            },
+        })
+
+        return category
+    }
+
+    createCategory = async (name : string, status : CategoryStatus): Promise<CategoryDto> => {
+        
+        const category = await prisma.categories.create({
+            data : {
+                name : name,
+                status : status
+            },
+            select : {
+                id : true,
+                name : true,
+                status : true
+            }
+        })
+
+        return {
+            id: category.id,
+            name: category.name,
+            status: category.status,
+        };
+    }
 }

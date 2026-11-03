@@ -10,10 +10,10 @@ export class SuspendAccountUseCase implements IUseCase<SuspendAccountDto, void> 
         private readonly userManagementRepository: IUserManagementRepository,
     ){}
 
-    execute = async( dto : SuspendAccountDto) : Promise<void> => {
+    execute = async( input : SuspendAccountDto) : Promise<void> => {
 
-        const {accountId} = dto
-        const reason = dto.reason.trim()
+        const {accountId} = input
+        const reason = input.reason.trim()
 
         if (!reason){
             throw new BadRequestError("Suspension reason is required.");

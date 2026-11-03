@@ -11,10 +11,10 @@ export class VerifyEnterpriseOtpuseCase implements IUseCase<VerifyOtpDto, Create
         private readonly otpService : OtpService
     ){}
 
-    execute = async (dto: VerifyOtpDto): Promise<CreatedEnterpriseResult> => {
-        const normalizedEmail = dto.email.trim().toLowerCase();
+    execute = async (input : VerifyOtpDto): Promise<CreatedEnterpriseResult> => {
+        const normalizedEmail = input.email.trim().toLowerCase();
 
-        const result = await this.otpService.verify(normalizedEmail, dto.otp);
+        const result = await this.otpService.verify(normalizedEmail, input.otp);
 
         if (result === "invalid") {
             throw new BadRequestError("Invalid OTP. Please try again.");
