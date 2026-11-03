@@ -47,7 +47,7 @@ export class CategoryController {
 
             res.status(HttpStatusCode.CREATED).json({
                 status: true,
-                message: "Categories created successfully",
+                message: "Category created successfully",
                 data: category,
             })
 

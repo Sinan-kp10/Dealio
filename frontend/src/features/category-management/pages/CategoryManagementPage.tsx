@@ -6,6 +6,7 @@ import { getCategories } from "../sevices/category-management.service"
 import { handleApiError } from "../../../utils/errorHandler"
 import Table from "../../../components/common/table/Table"
 import Pagination from "../../../components/common/pagination/Pagination"
+import CategoryFormModal from "../components/CategoryFormModal"
 
 const DEFUAL_LIMIT = 5
 
@@ -18,6 +19,10 @@ function CategoryManagementPage(){
     const [search, setSearch] = useState("");
     const debouncedSearch = useDebounce(search, 500);
     const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({})
+
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [selectedParentCategory, setSelectedParentCategory] = useState<string | undefined>(undefined)
+    const [refreshCount, setRefreshCount] = useState(0)
 
     const toggleCategory = (categoryId: string) => {
         setExpandedCategories((prev) => ({
@@ -60,7 +65,7 @@ function CategoryManagementPage(){
         void fetchCategories()
 
         return ()=> { cancelled = true}
-    },[page,status, debouncedSearch])
+    },[page, status, debouncedSearch, refreshCount])
 
     const handleSearchChange = (value : string) => {
         setSearch(value)
@@ -70,6 +75,12 @@ function CategoryManagementPage(){
     const handleStatusChange = (value: "ALL" | CategoryStatus) => {
         setStatus(value);
         setPage(1);
+    }
+
+    const handleModalSuccess = () => {
+        setIsModalOpen(false)
+        setSelectedParentCategory(undefined)
+        setRefreshCount((prev) => prev + 1)
     }
 
     return (
@@ -86,6 +97,10 @@ function CategoryManagementPage(){
 
                 <button
                     type="button"
+                    onClick={() => {
+                        setSelectedParentCategory(undefined)
+                        setIsModalOpen(true)
+                    }}
                     className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#244673] hover:bg-[#1b3557] text-white text-sm font-semibold rounded-lg shadow-2xs transition-colors cursor-pointer shrink-0 self-start sm:self-auto"
                 >
                     <Plus size={16} strokeWidth={2.5} />
@@ -93,7 +108,7 @@ function CategoryManagementPage(){
                 </button>
             </div>
 
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-3">
                 <div className="relative flex-1 sm:flex-initial">
                     <Search size={16} className="text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                     <input
@@ -106,7 +121,7 @@ function CategoryManagementPage(){
                     />
                 </div>
 
-                <div className="relative self-start sm:self-auto">
+                <div className="relative">
                     <select
                         value={status}
                         onChange={(event) => handleStatusChange(event.target.value as "ALL" | CategoryStatus)}
@@ -188,7 +203,7 @@ function CategoryManagementPage(){
                                             Active
                                         </span>
                                     ) : (
-                                        <span className="inline-block px-3 py-1 text-xs font-semibold rounded-md bg-slate-100 text-slate-500">
+                                        <span className="inline-block px-3 py-1 text-xs font-semibold rounded-md bg-[#fef1f2] text-[#e04f5f]">
                                             Inactive
                                         </span>
                                     )}
@@ -205,6 +220,10 @@ function CategoryManagementPage(){
 
                                         <button
                                             type="button"
+                                            onClick={() => {
+                                                setSelectedParentCategory(item.name)
+                                                setIsModalOpen(true)
+                                            }}
                                             className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-dashed border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-400 transition-colors shadow-2xs cursor-pointer"
                                         >
                                             + Add Sub
@@ -215,7 +234,7 @@ function CategoryManagementPage(){
                                             className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg border transition-colors shadow-2xs cursor-pointer min-w-[80px] ${
                                                 item.status === "ACTIVE"
                                                     ? "bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300"
-                                                    : "bg-white border-emerald-200 text-[#22a06b] hover:bg-[#eaf8f1]/50 hover:border-emerald-300"
+                                                    : "bg-white border-red-200 text-[#e04f5f] hover:bg-red-50/50 hover:border-red-300"
                                             }`}
                                         >
                                             {item.status === "ACTIVE" ? "Deactivate" : "Activate"}
@@ -243,7 +262,7 @@ function CategoryManagementPage(){
                                                             Active
                                                         </span>
                                                     ) : (
-                                                        <span className="inline-block px-3 py-1 text-xs font-semibold rounded-md bg-slate-100 text-slate-500">
+                                                        <span className="inline-block px-3 py-1 text-xs font-semibold rounded-md bg-[#fef1f2] text-[#e04f5f]">
                                                             Inactive
                                                         </span>
                                                     )}
@@ -263,7 +282,7 @@ function CategoryManagementPage(){
                                                             className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg border transition-colors shadow-2xs cursor-pointer min-w-[80px] ${
                                                                 sub.status === "ACTIVE"
                                                                     ? "bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300"
-                                                                    : "bg-white border-emerald-200 text-[#22a06b] hover:bg-[#eaf8f1]/50 hover:border-emerald-300"
+                                                                    : "bg-white border-red-200 text-[#e04f5f] hover:bg-red-50/50 hover:border-red-300"
                                                             }`}
                                                         >
                                                             {sub.status === "ACTIVE" ? "Deactivate" : "Activate"}
@@ -285,6 +304,16 @@ function CategoryManagementPage(){
                     )
                 })}
             </Table>
+
+            <CategoryFormModal
+                isOpen={isModalOpen}
+                parentCategory={selectedParentCategory}
+                onCancel={() => {
+                    setIsModalOpen(false)
+                    setSelectedParentCategory(undefined)
+                }}
+                onSuccess={handleModalSuccess}
+            />
         </div>
     )
 }
