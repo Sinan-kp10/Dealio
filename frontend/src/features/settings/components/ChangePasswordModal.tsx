@@ -3,7 +3,7 @@ import { X, Eye, EyeOff } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { changePasswordSchema } from "../schema/change-password.schema";
-import axios from "axios";
+import { handleApiError } from "../../../utils/errorHandler";
 import { toast } from "react-toastify";
 import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
 import type { ChangePassword } from "../types/users-account-settings.types";
@@ -57,11 +57,7 @@ export function ChangePasswordModal({ isOpen, onClose }: ChangePasswordModalProp
 
     } catch (error) {
       
-      if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message ?? "Unable to change password");
-      } else {
-        toast.error("Something went wrong. Please try again");
-      }
+      handleApiError(error, "Unable to change password");
     }
   };
 

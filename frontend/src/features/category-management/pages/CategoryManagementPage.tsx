@@ -3,8 +3,7 @@ import { Search, ChevronDown, ChevronRight, Plus } from "lucide-react"
 import type { Category, CategoryStatus } from "../types/category.types"
 import useDebounce from "../../../hook/useDebounce"
 import { getCategories } from "../sevices/category-management.service"
-import axios from "axios"
-import { toast } from "react-toastify"
+import { handleApiError } from "../../../utils/errorHandler"
 import Table from "../../../components/common/table/Table"
 import Pagination from "../../../components/common/pagination/Pagination"
 
@@ -49,11 +48,7 @@ function CategoryManagementPage(){
             } catch (error) {
                 if(cancelled) return
 
-                if (axios.isAxiosError(error)) {
-                    toast.error(error.response?.data?.message ?? "Unable to load categories");
-                } else {
-                    toast.error("Something went wrong. Please try again");
-                }
+                handleApiError(error, "Unable to load categories");
                 
             }finally{
 

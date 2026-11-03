@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from "axios";
+import { handleApiError } from "../../../utils/errorHandler";
 import type { VerifyOtpRequest } from "../types/otp.types";
 import { resendEmailOtp, verifyCustomerOtp, verifyEnterpriseOtp } from "../services/auth.service";
 import OtpVerificationForm from "../components/OtpVerificationForm";
@@ -43,11 +43,7 @@ function OtpVerificationPage() {
 
         } catch (error) {
 
-            if (axios.isAxiosError(error)) {
-                toast.error(error.response?.data?.message ?? "OTP verification failed")
-            } else {
-                toast.error("Something went wrong. Please try again");
-            }
+            handleApiError(error, "OTP verification failed");
         }
     };
 
@@ -56,11 +52,7 @@ function OtpVerificationPage() {
             const response = await resendEmailOtp({ email, purpose: "REGISTRATION" });
             toast.success(response.message);
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                toast.error(error.response?.data?.message ?? "Failed to resend OTP. Please try again.");
-            } else {
-                toast.error("Something went wrong. Please try again.");
-            }
+            handleApiError(error, "Failed to resend OTP. Please try again.");
         }
     }
 

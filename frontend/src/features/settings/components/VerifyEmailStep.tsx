@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import { handleApiError } from "../../../utils/errorHandler";
 import { toast } from "react-toastify";
 import { verifyEmailChangeSchema, type VerifyEmailChangeFormData } from "../schema/verify-email-change.schema";
 import OtpInput from "../../auth/components/OTPinput";
@@ -42,11 +42,7 @@ export function VerifyEmailStep({ newEmail, onSuccess, onCancel }: VerifyEmailSt
 
     } catch (error) {
 
-      if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message ?? "Invalid verification code");
-      } else {
-        toast.error("Something went wrong. Please try again");
-      }
+      handleApiError(error, "Invalid verification code");
     }
   };
 
@@ -63,11 +59,7 @@ export function VerifyEmailStep({ newEmail, onSuccess, onCancel }: VerifyEmailSt
 
     } catch (error) {
 
-      if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message ?? "Failed to resend verification code");
-      } else {
-        toast.error("Something went wrong. Please try again");
-      }
+      handleApiError(error, "Failed to resend verification code");
     } finally {
       setIsResending(false);
     }
