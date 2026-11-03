@@ -5,7 +5,7 @@ import { ForgottenPasswordSchema } from "../schemas/forgottenPassword.schema";
 import { Link, useNavigate } from "react-router-dom";
 import { Mail, ArrowRight } from "lucide-react";
 import { forgotPassword } from "../services/auth.service";
-import axios from "axios";
+import { handleApiError } from "../../../utils/errorHandler";
 import { toast } from "react-toastify";
 import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
 
@@ -25,11 +25,7 @@ function ForgottenPasswordPage() {
       });
       
     } catch (error) {
-      if(axios.isAxiosError(error)){
-        toast.error(error.response?.data?.message ?? "Unable to process your password reset request")
-      }else{
-        toast.error("Something went wrong. Please try again.");
-      }
+      handleApiError(error, "Unable to process your password reset request");
     }
   };
 

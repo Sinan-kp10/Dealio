@@ -7,7 +7,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Lock, ShieldCheck, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { toast } from "react-toastify";
 import { resetPassword } from "../services/auth.service";
-import axios from "axios";
+import { handleApiError } from "../../../utils/errorHandler";
 import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
 
 function ResetPasswordPage() {
@@ -45,13 +45,7 @@ function ResetPasswordPage() {
       navigate("/login", { replace: true })
 
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-
-        toast.error(error.response?.data?.message ?? "Unable to reset your password")
-      } else {
-
-        toast.error("Something went wrong. Please try again");
-      }
+      handleApiError(error, "Unable to reset your password");
     }
   };
 

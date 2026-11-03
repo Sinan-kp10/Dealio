@@ -16,9 +16,9 @@ export class RegisterCustomerUseCase implements IUseCase<RegisterCustomerDto, vo
 
     ) {}
 
-    execute = async (data: RegisterCustomerDto): Promise<void> => {
+    execute = async (input : RegisterCustomerDto): Promise<void> => {
 
-        const email = data.email.trim().toLowerCase();
+        const email = input.email.trim().toLowerCase();
 
         const existingUser = await this.userRepository.findByEmail(email)
 
@@ -26,10 +26,10 @@ export class RegisterCustomerUseCase implements IUseCase<RegisterCustomerDto, vo
             throw new ConflictError("Email is already registered")
         }
 
-        const passwordHash = await this.passwordService.hash(data.password)
+        const passwordHash = await this.passwordService.hash(input.password)
 
         const registrationData = {
-            name: data.name.trim(),
+            name: input.name.trim(),
             email,
             passwordHash,
         };

@@ -3,7 +3,7 @@ import Pagination from "../../../components/common/pagination/Pagination";
 import Table from "../../../components/common/table/Table";
 import { useEffect, useState } from "react";
 import type { Customer, CustomerStatus } from "../types/user-management.types";
-import axios from "axios";
+import { handleApiError } from "../../../utils/errorHandler";
 import { toast } from "react-toastify";
 import ReasonModal from "../../../components/common/ReasonModal/ReasonModel";
 import ConfirmationModal from "../../../components/common/confirmationModel/ConfirmationModal";
@@ -45,11 +45,7 @@ function CustomerManagementPage() {
 
                 if (cancelled) return;
 
-                if (axios.isAxiosError(error)) {
-                    toast.error(error.response?.data?.message ?? "Unable to load customers");
-                } else {
-                    toast.error("Something went wrong. Please try again.");
-                }
+                handleApiError(error, "Unable to load customers");
 
             } finally {
 
@@ -93,11 +89,7 @@ function CustomerManagementPage() {
             );
             setSelectedCustomer(null);
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                toast.error(error.response?.data?.message ?? "Unable to suspend customer");
-            } else {
-                toast.error("Something went wrong. Please try again.");
-            }
+            handleApiError(error, "Unable to suspend customer");
         } finally {
             setActionLoading(false);
         }
@@ -118,11 +110,7 @@ function CustomerManagementPage() {
             );
             setSelectedCustomer(null);
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                toast.error(error.response?.data?.message ?? "Unable to reactivate customer");
-            } else {
-                toast.error("Something went wrong. Please try again.");
-            }
+            handleApiError(error, "Unable to reactivate customer");
         } finally {
             setActionLoading(false);
         }

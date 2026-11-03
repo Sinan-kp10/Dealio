@@ -8,7 +8,7 @@ import { enterpriseSignupSchema } from "../schemas/enterpriseSignup.schema";
 import type { EnterpriseSignupFormData } from "../types/enterpriseSignup.types";
 import { registerEnterprise } from "../services/auth.service";
 import { toast } from "react-toastify";
-import axios from "axios";
+import { handleApiError } from "../../../utils/errorHandler";
 import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
 
 export function EnterpriseSignupPage() {
@@ -42,11 +42,7 @@ export function EnterpriseSignupPage() {
             });
             
         } catch (error) {
-            if(axios.isAxiosError(error)){
-                toast.error(error.response?.data?.message ?? "Registration failed. Please try again")
-            }else{
-                toast.error("Something went wrong. Please try again.");
-            }
+            handleApiError(error, "Registration failed. Please try again");
         }finally{
             setLoading(false)
         }

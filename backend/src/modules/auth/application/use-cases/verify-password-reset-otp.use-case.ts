@@ -13,16 +13,16 @@ export class VerifyPasswordResetOtpUseCase implements IUseCase<VerifyOtpDto, { r
         private readonly jwtTokenService : JwtTokenService
     ){}
 
-    execute = async (dto : VerifyOtpDto) : Promise<{resetToken : string}> => {
+    execute = async (input : VerifyOtpDto) : Promise<{resetToken : string}> => {
 
-        const email = dto.email.trim().toLowerCase()
+        const email = input.email.trim().toLowerCase()
         const user = await this.userRespository.findByEmail(email)
 
         if (!user) {
             throw new BadRequestError("Invalid or expired OTP");
         }
 
-        const result = await this.otpService.verifyPasswordResetOtp(email, dto.otp)
+        const result = await this.otpService.verifyPasswordResetOtp(email, input.otp)
 
         if (result === "invalid") {
             throw new BadRequestError("Invalid OTP. Please try again");

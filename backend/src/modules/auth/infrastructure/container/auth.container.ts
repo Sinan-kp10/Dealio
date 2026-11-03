@@ -20,8 +20,8 @@ import { OtpController } from "../../presentation/http/controllers/otp.controlle
 import { PasswordResetController } from "../../presentation/http/controllers/password-reset.controller";
 import { RefreshTokenController } from "../../presentation/http/controllers/refresh-token.controller";
 import { RegistrationController } from "../../presentation/http/controllers/registration.controller";
-import { PrismaEnterpriseRepository } from "../database/repositories/prisma-enterprise.repository";
-import { PrismaUserRepository } from "../database/repositories/prisma-user.repository";
+import { PrismaEnterpriseRepository } from "../repositories/prisma-enterprise.repository";
+import { PrismaUserRepository } from "../repositories/prisma-user.repository";
 import { emailService, jwtTokenService, otpService, passwordService, refreshTokenService } from "./infrastructure.container";
 
 

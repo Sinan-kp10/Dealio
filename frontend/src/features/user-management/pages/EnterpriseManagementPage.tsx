@@ -3,7 +3,7 @@ import Pagination from "../../../components/common/pagination/Pagination";
 import Table from "../../../components/common/table/Table";
 import { useEffect, useState } from "react";
 import type { Enterprise, EnterpriseStatus } from "../types/enterprise-management.types";
-import axios from "axios";
+import { handleApiError } from "../../../utils/errorHandler";
 import { toast } from "react-toastify";
 import ReasonModal from "../../../components/common/ReasonModal/ReasonModel";
 import ConfirmationModal from "../../../components/common/confirmationModel/ConfirmationModal";
@@ -55,11 +55,7 @@ export function EnterpriseManagementPage() {
 
                 if (cancelled) return;
 
-                if (axios.isAxiosError(error)) {
-                    toast.error(error.response?.data?.message ?? "Unable to load enterprises");
-                } else {
-                    toast.error("Something went wrong. Please try again.");
-                }
+                handleApiError(error, "Unable to load enterprises");
 
             } finally {
 
@@ -106,11 +102,7 @@ export function EnterpriseManagementPage() {
             );
             setSelectedEnterprise(null);
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                toast.error(error.response?.data?.message ?? "Unable to suspend enterprise");
-            } else {
-                toast.error("Something went wrong. Please try again.");
-            }
+            handleApiError(error, "Unable to suspend enterprise");
         } finally {
             setActionLoading(false);
         }
@@ -131,11 +123,7 @@ export function EnterpriseManagementPage() {
             );
             setSelectedEnterprise(null);
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                toast.error(error.response?.data?.message ?? "Unable to reactivate enterprise");
-            } else {
-                toast.error("Something went wrong. Please try again.");
-            }
+            handleApiError(error, "Unable to reactivate enterprise");
         } finally {
             setActionLoading(false);
         }

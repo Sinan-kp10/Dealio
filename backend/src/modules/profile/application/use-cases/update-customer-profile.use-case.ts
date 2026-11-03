@@ -8,8 +8,8 @@ export class UpdateCustomerProfileUseCase implements IUseCase<UpdateCustomerProf
         private readonly customerProfileRepository: ICustomerProfileRepository
     ) {}
 
-    execute = async (dto: UpdateCustomerProfileDto): Promise<UpdatedCustomerProfileFieldsDto> => {
-        const { userId } = dto;
+    execute = async (input : UpdateCustomerProfileDto): Promise<UpdatedCustomerProfileFieldsDto> => {
+        const { userId } = input;
         const user = await this.customerProfileRepository.findById(userId);
 
         if (!user) {
@@ -18,12 +18,12 @@ export class UpdateCustomerProfileUseCase implements IUseCase<UpdateCustomerProf
 
         const dataToUpdate: UpdatedCustomerProfileFieldsDto = {};
 
-        if (dto.name !== undefined && dto.name !== null) {
-            dataToUpdate.name = dto.name.trim();
+        if (input.name !== undefined && input.name !== null) {
+            dataToUpdate.name = input.name.trim();
         }
 
-        if (dto.phone !== undefined) {
-            dataToUpdate.phone = dto.phone ? dto.phone.trim() : null;
+        if (input.phone !== undefined) {
+            dataToUpdate.phone = input.phone ? input.phone.trim() : null;
         }
 
         return await this.customerProfileRepository.updateCustomerProfile(userId, dataToUpdate);

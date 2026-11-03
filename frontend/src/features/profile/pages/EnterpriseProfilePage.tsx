@@ -1,55 +1,51 @@
 import { useEffect, useState } from "react";
 import type { EnterpriseProfile } from "../types/enterprise-profile.types";
-import axios from "axios";
-import { toast } from "react-toastify";
+import { handleApiError } from "../../../utils/errorHandler";
 import { getEnterpriseProfile } from "../services/enterprise-profile.service";
 import EnterpriseProfileSkeleton from "../components/EnterpriseProfileSkeleton";
 import {Camera,Trash2,SquarePen,Lock,Calendar,BadgeCheck,Briefcase,ShieldCheck,Landmark,ChevronDown} from "lucide-react";
 
-function EnterpriseProfilePage(){
-    const [profile, setProfile] = useState<EnterpriseProfile | null>(null)
-    const [loading, setLoading] = useState(true)
+function EnterpriseProfilePage() {
+  const [profile, setProfile] = useState<EnterpriseProfile | null>(null);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(()=> {
-        let cancelled = false
+  useEffect(() => {
+    let cancelled = false;
 
-        const fetchEnterpriseProfile = async()=> {
-            setLoading(true)
-            try {
+    const fetchEnterpriseProfile = async () => {
+      setLoading(true);
+      try {
+        const response = await getEnterpriseProfile();
 
-                const response = await getEnterpriseProfile()
-
-                if(!cancelled){
-                    setProfile(response)
-                }
-
-                
-            } catch (error) {
-                if (cancelled) return;
-
-                if (axios.isAxiosError(error)) {
-                    toast.error(error.response?.data?.message ?? "Unable to load profile");
-                } else {
-                    toast.error("Something went wrong. Please try again.");
-                }
-            }finally{
-                if (!cancelled) {
-                    setLoading(false);
-                }
-            }
+        if (!cancelled) {
+          setProfile(response);
         }
+      } catch (error) {
+        if (cancelled) return;
 
-        void fetchEnterpriseProfile()
+        handleApiError(error, "Unable to load profile");
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    };
 
-        return () => {cancelled = true}
-    }, [])
+    void fetchEnterpriseProfile();
 
-    const formatDate = (date?: Date | string) =>
-        date ? new Date(date).toLocaleDateString("en-IN", {
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const formatDate = (date?: Date | string) =>
+    date
+      ? new Date(date).toLocaleDateString("en-IN", {
           day: "2-digit",
           month: "short",
           year: "numeric",
-        }) : ""
+        })
+      : "";
 
   if (loading) {
     return <EnterpriseProfileSkeleton />;
@@ -87,10 +83,15 @@ function EnterpriseProfilePage(){
                 {profile?.enterpriseName || "ABC Technologies"}
               </h2>
               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#eaf8f1] text-[#22a06b] border border-[#22a06b]/20 shadow-2xs">
-                <BadgeCheck size={14} strokeWidth={2.2} className="shrink-0 text-[#22a06b]" />
+                <BadgeCheck
+                  size={14}
+                  strokeWidth={2.2}
+                  className="shrink-0 text-[#22a06b]"
+                />
                 <span>
                   {profile?.status
-                    ? profile.status.charAt(0).toUpperCase() + profile.status.slice(1).toLowerCase()
+                    ? profile.status.charAt(0).toUpperCase() +
+                      profile.status.slice(1).toLowerCase()
                     : "Approved"}
                 </span>
               </span>
@@ -193,11 +194,14 @@ function EnterpriseProfilePage(){
                 BUSINESS EMAIL
               </label>
               <div className="flex items-center justify-between px-4 py-2.5 bg-[#f6f8fb] border border-slate-200/90 rounded-xl text-sm font-medium text-slate-800 shadow-2xs">
-                <span className="truncate">{profile?.email || "company@example.com"}</span>
+                <span className="truncate">
+                  {profile?.email || "company@example.com"}
+                </span>
                 <Lock size={15} className="text-slate-400 shrink-0 ml-2" />
               </div>
               <p className="text-[11px] sm:text-xs text-slate-400 mt-1.5 leading-relaxed">
-                Email updates require verification to maintain quotation and contract security.
+                Email updates require verification to maintain quotation and
+                contract security.
               </p>
             </div>
 
@@ -206,11 +210,14 @@ function EnterpriseProfilePage(){
                 ACCOUNT CREATED
               </label>
               <div className="flex items-center justify-between px-4 py-2.5 bg-[#f6f8fb] border border-slate-200/90 rounded-xl text-sm font-medium text-slate-800 shadow-2xs">
-                <span className="truncate">{formatDate(profile?.createdAt) || "02 Nov 2026"}</span>
+                <span className="truncate">
+                  {formatDate(profile?.createdAt) || "02 Nov 2026"}
+                </span>
                 <Calendar size={16} className="text-slate-400 shrink-0 ml-2" />
               </div>
               <p className="text-[11px] sm:text-xs text-slate-400 mt-1.5 leading-relaxed">
-                Account registration date is verified and permanently linked to your profile.
+                Account registration date is verified and permanently linked to
+                your profile.
               </p>
             </div>
           </div>
@@ -280,7 +287,6 @@ function EnterpriseProfilePage(){
           </div>
         </div>
       </div>
-
     </div>
   );
 }

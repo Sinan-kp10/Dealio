@@ -10,11 +10,11 @@ export class ResendOtpUseCase implements IUseCase<ResendOtpInput, void> {
         private readonly emailService: EmailService,
     ) {}
 
-    execute = async(dto : ResendOtpInput) : Promise<void> => {
+    execute = async(input : ResendOtpInput) : Promise<void> => {
 
-        const normalizedEmail = dto.email.trim().toLowerCase()
+        const normalizedEmail = input.email.trim().toLowerCase()
 
-        const otp = dto.purpose === "PASSWORD_RESET" ? await this.otpService.resendPasswordResetOtp(normalizedEmail) 
+        const otp = input.purpose === "PASSWORD_RESET" ? await this.otpService.resendPasswordResetOtp(normalizedEmail) 
             : await this.otpService.resend(normalizedEmail);
 
         try {
@@ -22,7 +22,7 @@ export class ResendOtpUseCase implements IUseCase<ResendOtpInput, void> {
             
         } catch{
 
-            if (dto.purpose === "REGISTRATION") {
+            if (input.purpose === "REGISTRATION") {
                 await this.otpService.delete(normalizedEmail);
             } else {
                 await this.otpService.deletePasswordResetOtp(normalizedEmail);

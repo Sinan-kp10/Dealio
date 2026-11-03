@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { CustomerProfile, UpdateCustomerProfile } from "../types/customer.profile.types";
 import { getCustomerProfile, updateCustomerProfile } from "../services/customer-profile.service";
-import axios from "axios";
+import { handleApiError } from "../../../utils/errorHandler";
 import { toast } from "react-toastify";
 import {Camera, Trash2, SquarePen, User,Phone,Calendar,Lock,BadgeCheck,X,Check,Loader2} from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -34,11 +34,7 @@ function CustomerProfilePage() {
       } catch (error) {
         if (cancelled) return;
 
-        if (axios.isAxiosError(error)) {
-          toast.error(error.response?.data?.message ?? "Unable to load profile");
-        } else {
-          toast.error("Something went wrong. Please try again.");
-        }
+        handleApiError(error, "Unable to load profile");
       } finally {
         if (!cancelled) {
           setLoading(false);
@@ -99,13 +95,7 @@ function CustomerProfilePage() {
       toast.success("Profile updated successfully");
       setUpdateMode(false);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        toast.error(
-          error.response?.data?.message ?? "Unable to update profile. Please try again"
-        );
-      } else {
-        toast.error("Something went wrong. Please try again.");
-      }
+      handleApiError(error, "Unable to update profile. Please try again");
     }
   };
 

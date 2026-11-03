@@ -27,6 +27,7 @@ const AdminDashboardPage = lazy(()=> import("../../features/dashboard/pages/Admi
 const EnterpriseDashboardPage = lazy(()=> import("../../features/dashboard/pages/EnterpriseDashboardPage"))
 const CustomerManagementPage = lazy(()=> import("../../features/user-management/pages/CustomerManagementPage"))
 const EnterpriseManagementPage = lazy(()=> import("../../features/user-management/pages/EnterpriseManagementPage"))
+const CategoryManagementPage = lazy(()=> import("../../features/category-management/pages/CategoryManagementPage"))
 
 export function AppRouter() {
   return (
@@ -39,6 +40,7 @@ export function AppRouter() {
               <Route path="/admin" element={<AdminDashboardPage />} />
               <Route path="/admin/customers" element={<CustomerManagementPage />} />
               <Route path="/admin/enterprises" element={<EnterpriseManagementPage />} />
+              <Route path="/admin/categories" element={<CategoryManagementPage />} />
             </Route>
           </Route>
 

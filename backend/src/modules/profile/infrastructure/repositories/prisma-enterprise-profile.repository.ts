@@ -1,7 +1,8 @@
-import { prisma } from "../../../../../infrastructure/database/prisma/prisma-client.js";
-import { EnterpriseProfileDto } from "../../../application/dto/enterprise-profile.dto.js";
-import { IEnterpriseProfileRepository } from "../../../domain/repositories/enterprise-profile.repository.js";
-import { EnterpriseProfileMapper, enterpriseProfileSelect } from "../../mapper/enterprise-profile.mapper.js";
+import { prisma } from "../../../../infrastructure/database/prisma/prisma-client";
+import { EnterpriseProfileDto } from "../../application/dto/enterprise-profile.dto";
+import { IEnterpriseProfileRepository } from "../../domain/repositories/enterprise-profile.repository";
+import { EnterpriseProfileMapper, enterpriseProfileSelect } from "../mapper/enterprise-profile.mapper";
+
 
 export class PrismaEnterpriseProfileRepository implements IEnterpriseProfileRepository {
 

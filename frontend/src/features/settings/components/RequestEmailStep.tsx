@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Mail } from "lucide-react";
-import axios from "axios";
+import { handleApiError } from "../../../utils/errorHandler";
 import { toast } from "react-toastify";
 import { requestEmailChangeSchema, type RequestEmailChangeFormData } from "../schema/request-email-change.schema";
 import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
@@ -24,11 +24,7 @@ export function RequestEmailStep({ onSuccess, onCancel }: RequestEmailStepProps)
 
     } catch (error) {
 
-      if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message ?? "Unable to send verification code");
-      } else {
-        toast.error("Something went wrong. Please try again");
-      }
+      handleApiError(error, "Unable to send verification code");
     }
   }
 

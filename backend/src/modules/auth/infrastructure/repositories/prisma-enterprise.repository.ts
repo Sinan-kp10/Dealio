@@ -1,7 +1,7 @@
-import { CreatedEnterpriseResult, CreateEnterpriseData, IEnterpriseRepository } from "../../../domain/repositories/enterprise.repository";
-import { prisma } from "../../../../../infrastructure/database/prisma/prisma-client";
-import { Enterprise } from "../../../domain/entities/enterprise.entity";
-import { enterpriseSelect, EnterpriseMapper } from "../../mappers/enterprise.mapper";
+import { CreatedEnterpriseResult, CreateEnterpriseData, IEnterpriseRepository } from "../../domain/repositories/enterprise.repository";
+import { prisma } from "../../../../infrastructure/database/prisma/prisma-client";
+import { Enterprise } from "../../domain/entities/enterprise.entity";
+import { enterpriseSelect, EnterpriseMapper } from "../mappers/enterprise.mapper";
 
 export class PrismaEnterpriseRepository implements IEnterpriseRepository {
 

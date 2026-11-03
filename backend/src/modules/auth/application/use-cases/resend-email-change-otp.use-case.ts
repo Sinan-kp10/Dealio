@@ -12,14 +12,14 @@ export class ResendEmailChangeOtpUseCase implements IUseCase<ResendEmailChangeOt
         private readonly emailService: EmailService
     ) {}
 
-    execute = async (dto: ResendEmailChangeOtpDto): Promise<void> => {
-        const user = await this.userRepository.findById(dto.userId);
+    execute = async (input : ResendEmailChangeOtpDto): Promise<void> => {
+        const user = await this.userRepository.findById(input.userId);
 
         if (!user) {
             throw new NotFoundError("User not found");
         }
 
-        const { otp, newEmail } = await this.otpService.resendEmailChangeOtp(dto.userId);
+        const { otp, newEmail } = await this.otpService.resendEmailChangeOtp(input.userId);
 
         try {
             await this.emailService.sendOtp(newEmail, otp);

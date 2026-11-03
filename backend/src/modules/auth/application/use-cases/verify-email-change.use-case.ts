@@ -12,20 +12,20 @@ export class VerifyEmailChangeUseCase implements IUseCase<VerifyEmailChangeDto, 
         private readonly jwtService: JwtTokenService
     ) {}
 
-    execute = async (dto: VerifyEmailChangeDto): Promise<VerifyEmailChangeResult> => {
-        const user = await this.userRepository.findById(dto.userId);
+    execute = async (input : VerifyEmailChangeDto): Promise<VerifyEmailChangeResult> => {
+        const user = await this.userRepository.findById(input.userId);
 
         if (!user) {
             throw new NotFoundError("User not found");
         }
 
-        const pendingEmail = await this.otpService.getPendingEmailChange(dto.userId);
+        const pendingEmail = await this.otpService.getPendingEmailChange(input.userId);
 
         if (!pendingEmail) {
             throw new BadRequestError("Email change request has expired. Please request a new verification code");
         }
 
-        const otpStatus = await this.otpService.verifyEmailChangeOtp(dto.userId, dto.otp);
+        const otpStatus = await this.otpService.verifyEmailChangeOtp(input.userId, input.otp);
 
         if (otpStatus === "expired") {
             throw new BadRequestError("OTP has expired. Please request a new one");
@@ -41,8 +41,8 @@ export class VerifyEmailChangeUseCase implements IUseCase<VerifyEmailChangeDto, 
             throw new ConflictError("Email is already registered");
         }
 
-        await this.userRepository.changeEmail(dto.userId, pendingEmail);
-        await this.otpService.deleteEmailChangeOtp(dto.userId);
+        await this.userRepository.changeEmail(input.userId, pendingEmail);
+        await this.otpService.deleteEmailChangeOtp(input.userId);
 
         const tokenPayload = {
             userId: user.id,
