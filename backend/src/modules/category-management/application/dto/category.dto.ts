@@ -1,7 +1,6 @@
-
 export interface SubcategoryDto {
     id: string;
-    category_id: string;
+    categoryId: string;
     name: string;
     status: "ACTIVE" | "INACTIVE";
 }

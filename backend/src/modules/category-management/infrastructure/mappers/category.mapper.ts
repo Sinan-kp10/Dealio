@@ -24,7 +24,7 @@ export class CategoryMapper {
   static toSubcategoryDto(subcategory: CategoryRecord["subcategories"][number]): SubcategoryDto {
     return {
       id: subcategory.id,
-      category_id: subcategory.category_id,
+      categoryId: subcategory.category_id,
       name: subcategory.name,
       status: subcategory.status,
     };

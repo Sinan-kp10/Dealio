@@ -8,6 +8,5 @@ export class GetCategoryUseCase implements IUseCase<CategoryListFiltersDto, Pagi
     execute = async(dto: CategoryListFiltersDto): Promise<PaginatedCategoryDto> => {
         
         return await this.categoryRepository.findCategories(dto)
-        
     }
 }
