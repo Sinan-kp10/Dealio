@@ -1,6 +1,6 @@
 import { prisma } from "../../../../infrastructure/database/prisma/prisma-client";
-import { CategoryListFiltersDto, CategoryListItemDto, CategoryStatus, PaginatedCategoryDto } from "../../application/dto/category.dto";
-import { CategoryDto } from "../../application/dto/create-category.dto";
+import { CategoryListFiltersDto, CategoryListItemDto, CategoryStatus, PaginatedCategoryDto } from "../../application/dto/category-list.dto";
+import { CategoryDto, UpdatedCategoryFieldsDto } from "../../application/dto/category.dto";
 import { ICategoryRepository } from "../../domain/repositories/category.repository";
 import { categorySelect, CategoryMapper } from "../mappers/category.mapper";
 
@@ -76,6 +76,28 @@ export class PrismaCategoryRepository implements ICategoryRepository {
                 name : true,
                 status : true
             }
+        })
+
+        return {
+            id: category.id,
+            name: category.name,
+            status: category.status,
+        };
+    }
+
+    updateCategory = async (id : string, data : UpdatedCategoryFieldsDto): Promise<CategoryDto> => {
+        const category = await prisma.categories.update({
+            where : {id},
+            data : {
+                name : data.categoryName,
+                status : data.status
+            },
+            select : {
+                id : true,
+                name : true,
+                status : true
+            }
+
         })
 
         return {

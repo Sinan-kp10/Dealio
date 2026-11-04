@@ -1,7 +1,7 @@
 import { IUseCase } from "../../../../shared/application/base.usecase";
 import { ConflictError } from "../../../../shared/errors/app-error";
 import { ICategoryRepository } from "../../domain/repositories/category.repository";
-import { CategoryDto, CreateCategoryDto } from "../dto/create-category.dto";
+import { CategoryDto, CreateCategoryDto } from "../dto/category.dto";
 
 export class CreateCategoryUseCase implements IUseCase<CreateCategoryDto, CategoryDto> {
 

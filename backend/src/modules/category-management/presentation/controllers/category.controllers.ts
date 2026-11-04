@@ -1,14 +1,15 @@
 import type { Request, Response, NextFunction } from "express";
 import { IUseCase } from "../../../../shared/application/base.usecase";
-import { CategoryListFiltersDto, PaginatedCategoryDto } from "../../application/dto/category.dto";
+import { CategoryListFiltersDto, PaginatedCategoryDto } from "../../application/dto/category-list.dto";
 import { IApiResponse } from "../../../../shared/application/api-response";
 import { HttpStatusCode } from "../../../../shared/enums/http-status-code.enum";
-import { CategoryDto, CreateCategoryDto } from "../../application/dto/create-category.dto";
+import { CategoryDto, CreateCategoryDto, UpdateCategoryDto, UpdatedCategoryFieldsDto } from "../../application/dto/category.dto";
 
 export class CategoryController {
     constructor(
         private readonly getCategoryUseCase : IUseCase<CategoryListFiltersDto,PaginatedCategoryDto>,
-        private readonly createCategoryUseCase : IUseCase<CreateCategoryDto, CategoryDto>
+        private readonly createCategoryUseCase : IUseCase<CreateCategoryDto, CategoryDto>,
+        private readonly updateCategoryUseCase : IUseCase<UpdateCategoryDto, CategoryDto>
     ){}
 
     getCategories = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
@@ -53,6 +54,27 @@ export class CategoryController {
 
         } catch (error) {
             next(error)
+        }
+    }
+
+    updateCategory = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+        try {
+            const id = req.params.id as string;
+            const data = req.body as UpdatedCategoryFieldsDto;
+
+            const category = await this.updateCategoryUseCase.execute({
+                id,
+                ...data,
+            });
+
+            res.status(HttpStatusCode.OK).json({
+                status: true,
+                message: "Category updated successfully",
+                data: category,
+            });
+
+        } catch (error) {
+            next(error);
         }
     }
 }

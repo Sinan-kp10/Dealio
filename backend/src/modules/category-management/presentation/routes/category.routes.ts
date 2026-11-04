@@ -5,13 +5,14 @@ import { validateRequest } from "../../../../app/middlewares/validate-request.mi
 import { getCategoriesSchema } from "../validators/get-category.schema";
 import { categoryController } from "../../infrastructure/container/category.caontainer";
 import { createCategorySchema } from "../validators/create-category.schema";
+import { updateCategorySchema } from "../validators/updateCategory.schema";
 
 const router = Router();
 
 router.use(authMiddleware);
-router.use(requireRole("ADMIN"))
-router.get("/categories", validateRequest(getCategoriesSchema, "query"), categoryController.getCategories)
-router.post("/categories", validateRequest(createCategorySchema,), categoryController.createCategory)
+router.use(requireRole("ADMIN"));
+router.get("/categories", validateRequest(getCategoriesSchema, "query"), categoryController.getCategories);
+router.post("/categories", validateRequest(createCategorySchema), categoryController.createCategory);
+router.patch("/categories/:id", validateRequest(updateCategorySchema), categoryController.updateCategory);
 
-
-export default router
+export default router;

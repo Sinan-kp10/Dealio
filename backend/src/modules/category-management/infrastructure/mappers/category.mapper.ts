@@ -1,5 +1,5 @@
 import { Prisma } from "../../../../../generated/prisma/client";
-import type { CategoryListItemDto, SubcategoryDto } from "../../application/dto/category.dto";
+import type { CategoryListItemDto, SubcategoryDto } from "../../application/dto/category-list.dto";
 
 export const categorySelect = {
   id: true,
