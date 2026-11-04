@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Mail } from "lucide-react";
-import { handleApiError } from "../../../utils/errorHandler";
+import { handleFormError } from "../../../utils/errorHandler";
 import { toast } from "react-toastify";
 import { requestEmailChangeSchema, type RequestEmailChangeFormData } from "../schema/request-email-change.schema";
 import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
@@ -13,7 +13,7 @@ interface RequestEmailStepProps {
 }
 
 export function RequestEmailStep({ onSuccess, onCancel }: RequestEmailStepProps) {
-  const {register,handleSubmit,formState: { errors, isSubmitting },} = useForm<RequestEmailChangeFormData>({resolver: zodResolver(requestEmailChangeSchema)})
+  const {register,handleSubmit,setError,formState: { errors, isSubmitting },} = useForm<RequestEmailChangeFormData>({resolver: zodResolver(requestEmailChangeSchema)})
 
   const onSubmit = async (data: RequestEmailChangeFormData) => {
     try {
@@ -24,7 +24,7 @@ export function RequestEmailStep({ onSuccess, onCancel }: RequestEmailStepProps)
 
     } catch (error) {
 
-      handleApiError(error, "Unable to send verification code");
+      handleFormError(error, setError, "Unable to send verification code");
     }
   }
 

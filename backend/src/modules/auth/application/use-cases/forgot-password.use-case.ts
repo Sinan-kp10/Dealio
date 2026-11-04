@@ -18,7 +18,7 @@ export class ForgotPasswordUseCase implements IUseCase<EmailDto, void> {
         const user = await this.userRepository.findByEmail(email);
 
         if (!user) {
-            throw new NotFoundError("Email not registered");
+            throw new NotFoundError("Email not registered", "email");
             
         }
 

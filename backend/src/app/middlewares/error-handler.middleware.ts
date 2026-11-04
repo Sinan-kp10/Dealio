@@ -8,6 +8,8 @@ export const errorHandler: ErrorRequestHandler = (error: unknown, _req: Request,
         res.status(error.statusCode).json({
             status: false,
             message: error.message,
+            ...(error.field && { field: error.field }),
+            ...(error.errors && { errors: error.errors }),
             ...(error.errorCode && { errorCode: error.errorCode }),
         });
         return;

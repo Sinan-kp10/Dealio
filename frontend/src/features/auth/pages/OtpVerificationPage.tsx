@@ -30,21 +30,14 @@ function OtpVerificationPage() {
     const onSubmit = async (otp: string) => {
         const payload: VerifyOtpRequest = {email,otp};
 
-        try {
-            if (role === "CUSTOMER") {
-                await verifyCustomerOtp(payload);
-            } else {
-                await verifyEnterpriseOtp(payload);
-            }
-
-            toast.success("Email verified successfully!")
-
-            navigate("/login", { replace: true })
-
-        } catch (error) {
-
-            handleApiError(error, "OTP verification failed");
+        if (role === "CUSTOMER") {
+            await verifyCustomerOtp(payload);
+        } else {
+            await verifyEnterpriseOtp(payload);
         }
+
+        toast.success("Email verified successfully!")
+        navigate("/login", { replace: true })
     };
 
     const handleResendOtp = async () => {

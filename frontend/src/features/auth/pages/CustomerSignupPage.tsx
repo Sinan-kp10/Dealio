@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { User, Mail, Lock, ShieldCheck, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { registerCustomer } from "../services/auth.service";
 import { toast } from "react-toastify";
-import { handleApiError } from "../../../utils/errorHandler";
+import { handleFormError } from "../../../utils/errorHandler";
 import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
 
 export function CustomerSignupPage() {
@@ -15,7 +15,7 @@ export function CustomerSignupPage() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const navigate = useNavigate()
 
-    const { register, handleSubmit, formState: {errors, isSubmitting}} = useForm<CustomerSignupFormData>({ resolver: zodResolver(customerSignupSchema)});
+    const { register, handleSubmit, setError, formState: {errors, isSubmitting}} = useForm<CustomerSignupFormData>({ resolver: zodResolver(customerSignupSchema)});
 
     const onSubmit = async (data: CustomerSignupFormData) => {
 
@@ -36,7 +36,7 @@ export function CustomerSignupPage() {
             });
             
         } catch (error) {
-            handleApiError(error, "Registration failed. Please try again");
+            handleFormError(error, setError, "Registration failed. Please try again");
         }
 
     };

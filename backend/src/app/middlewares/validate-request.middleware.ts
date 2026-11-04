@@ -1,6 +1,6 @@
 import type { Request, NextFunction, RequestHandler } from "express";
 import { z } from "zod";
-import { AppError } from "../../shared/errors/app-error"; 
+import { ValidationError } from "../../shared/errors/app-error"; 
 
 export const validateRequest = ( schema: z.ZodType,source: "body" | "query" | "params" = "body",): RequestHandler => {
     return (req : Request, _res , next : NextFunction): void => {
@@ -14,7 +14,7 @@ export const validateRequest = ( schema: z.ZodType,source: "body" | "query" | "p
                 message: issue.message,
             }));
 
-            next(new AppError(JSON.stringify(errors), 400));
+            next(new ValidationError(errors));
             return;
         }
 

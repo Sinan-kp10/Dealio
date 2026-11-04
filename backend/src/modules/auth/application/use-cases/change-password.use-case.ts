@@ -24,7 +24,7 @@ export class ChangePasswordUseCase implements IUseCase<ChangePasswordDto, void> 
         const isValidPassword = await this.passwordService.verify(input.currentPassword, user.password_hash)
 
         if(!isValidPassword){
-            throw new BadRequestError("Current password is incorrect")
+            throw new BadRequestError("Current password is incorrect", "currentPassword")
         }
 
         const passwordHash = await this.passwordService.hash(input.newPassword)

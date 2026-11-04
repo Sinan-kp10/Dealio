@@ -28,23 +28,15 @@ function VerifyPasswordResetOtpPage(){
 
 
     const onSubmit = async(otp : string) => {
+        const response = await verifyPasswordResetOtp({ email , otp})
+        toast.success(response.message)
 
-        try {
-
-            const response = await verifyPasswordResetOtp({ email , otp})
-            toast.success(response.message)
-
-            navigate("/reset-password", {
-                replace: true,
-                state: {
-                    resetToken: response.data.resetToken,
-                },
-            })
-
-        } catch (error) {
-
-             handleApiError(error, "OTP verification failed");
-        }
+        navigate("/reset-password", {
+            replace: true,
+            state: {
+                resetToken: response.data.resetToken,
+            },
+        })
     }
 
     const handleResendOtp = async () => {

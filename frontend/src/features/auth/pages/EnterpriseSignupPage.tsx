@@ -8,7 +8,7 @@ import { enterpriseSignupSchema } from "../schemas/enterpriseSignup.schema";
 import type { EnterpriseSignupFormData } from "../types/enterpriseSignup.types";
 import { registerEnterprise } from "../services/auth.service";
 import { toast } from "react-toastify";
-import { handleApiError } from "../../../utils/errorHandler";
+import { handleFormError } from "../../../utils/errorHandler";
 import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
 
 export function EnterpriseSignupPage() {
@@ -17,7 +17,7 @@ export function EnterpriseSignupPage() {
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
 
-    const {register, handleSubmit, formState: {errors, isSubmitting}} = useForm<EnterpriseSignupFormData>({ resolver: zodResolver(enterpriseSignupSchema)});
+    const {register, handleSubmit, setError, formState: {errors, isSubmitting}} = useForm<EnterpriseSignupFormData>({ resolver: zodResolver(enterpriseSignupSchema)});
 
     const onSubmit = async (data: EnterpriseSignupFormData) => {
         setLoading(true)
@@ -42,7 +42,7 @@ export function EnterpriseSignupPage() {
             });
             
         } catch (error) {
-            handleApiError(error, "Registration failed. Please try again");
+            handleFormError(error, setError, "Registration failed. Please try again");
         }finally{
             setLoading(false)
         }

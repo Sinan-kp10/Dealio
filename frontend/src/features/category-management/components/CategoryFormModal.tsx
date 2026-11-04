@@ -5,7 +5,7 @@ import { X, ChevronDown } from "lucide-react";
 import { toast } from "react-toastify";
 import type { CreateCategoryInput } from "../types/create-category.types";
 import { createCategorySchema } from "../schemas/create-category.schema";
-import { handleApiError } from "../../../utils/errorHandler";
+import { handleFormError } from "../../../utils/errorHandler";
 import { createCategory } from "../sevices/category-management.service";
 import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
 
@@ -16,24 +16,8 @@ export interface CategoryFormModalProps {
     onCancel: () => void;
 }
 
-function CategoryFormModal({
-    isOpen,
-    parentCategory,
-    onCancel,
-    onSuccess,
-}: CategoryFormModalProps) {
-    const {
-        register,
-        handleSubmit,
-        reset,
-        formState: { errors, isSubmitting },
-    } = useForm<CreateCategoryInput>({
-        resolver: zodResolver(createCategorySchema),
-        defaultValues: {
-            categoryName: "",
-            status: "ACTIVE",
-        },
-    });
+function CategoryFormModal({isOpen,parentCategory,onCancel,onSuccess,}: CategoryFormModalProps) {
+    const { register, handleSubmit, reset,setError,formState: { errors, isSubmitting },} = useForm<CreateCategoryInput>({resolver: zodResolver(createCategorySchema)})
 
     useEffect(() => {
         if (isOpen) {
@@ -61,7 +45,7 @@ function CategoryFormModal({
             reset();
             onSuccess();
         } catch (error) {
-            handleApiError(error, "Failed to create category");
+            handleFormError(error, setError, "Failed to create category");
         }
     };
 

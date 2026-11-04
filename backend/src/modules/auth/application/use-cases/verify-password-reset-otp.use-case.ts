@@ -19,17 +19,17 @@ export class VerifyPasswordResetOtpUseCase implements IUseCase<VerifyOtpDto, { r
         const user = await this.userRespository.findByEmail(email)
 
         if (!user) {
-            throw new BadRequestError("Invalid or expired OTP");
+            throw new BadRequestError("Invalid or expired OTP", "otp");
         }
 
         const result = await this.otpService.verifyPasswordResetOtp(email, input.otp)
 
         if (result === "invalid") {
-            throw new BadRequestError("Invalid OTP. Please try again");
+            throw new BadRequestError("Invalid OTP. Please try again", "otp");
         }
 
         if(result === "expired"){
-            throw new BadRequestError("OTP has expired. Please request a new one")
+            throw new BadRequestError("OTP has expired. Please request a new one", "otp")
         }
 
         const resetToken = this.jwtTokenService.generatePasswordResetToken(email)

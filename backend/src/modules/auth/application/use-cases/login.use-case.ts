@@ -20,13 +20,13 @@ export class LoginUseCase implements IUseCase<LoginDto, LoginResponseDto> {
         const user = await this.userRepository.findByEmail(normalizedEmail);
 
         if (!user) {
-            throw new UnauthorizedError("Invalid email or password.");
+            throw new UnauthorizedError("Invalid email or password.", "INVALID_CREDENTIALS", "password");
         }
 
         const isPasswordValid = await this.passwordService.verify(input.password, user.password_hash);
 
         if (!isPasswordValid) {
-            throw new UnauthorizedError("Invalid email or password.");
+            throw new UnauthorizedError("Invalid email or password.", "INVALID_CREDENTIALS", "password");
         }
 
         if (user.status === "SUSPENDED") {
