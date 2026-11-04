@@ -22,6 +22,7 @@ function CategoryManagementPage(){
 
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [selectedParentCategory, setSelectedParentCategory] = useState<string | undefined>(undefined)
+    const [selectedCategoryToEdit, setSelectedCategoryToEdit] = useState<Category | null>(null)
     const [refreshCount, setRefreshCount] = useState(0)
 
     const toggleCategory = (categoryId: string) => {
@@ -80,6 +81,7 @@ function CategoryManagementPage(){
     const handleModalSuccess = () => {
         setIsModalOpen(false)
         setSelectedParentCategory(undefined)
+        setSelectedCategoryToEdit(null)
         setRefreshCount((prev) => prev + 1)
     }
 
@@ -99,6 +101,7 @@ function CategoryManagementPage(){
                     type="button"
                     onClick={() => {
                         setSelectedParentCategory(undefined)
+                        setSelectedCategoryToEdit(null)
                         setIsModalOpen(true)
                     }}
                     className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#244673] hover:bg-[#1b3557] text-white text-sm font-semibold rounded-lg shadow-2xs transition-colors cursor-pointer shrink-0 self-start sm:self-auto"
@@ -213,6 +216,11 @@ function CategoryManagementPage(){
                                     <div className="flex items-center justify-center gap-2">
                                         <button
                                             type="button"
+                                            onClick={() => {
+                                                setSelectedParentCategory(undefined)
+                                                setSelectedCategoryToEdit(item)
+                                                setIsModalOpen(true)
+                                            }}
                                             className="px-3.5 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer min-w-[56px]"
                                         >
                                             Edit
@@ -222,22 +230,12 @@ function CategoryManagementPage(){
                                             type="button"
                                             onClick={() => {
                                                 setSelectedParentCategory(item.name)
+                                                setSelectedCategoryToEdit(null)
                                                 setIsModalOpen(true)
                                             }}
                                             className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-dashed border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-400 transition-colors shadow-2xs cursor-pointer"
                                         >
                                             + Add Sub
-                                        </button>
-
-                                        <button
-                                            type="button"
-                                            className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg border transition-colors shadow-2xs cursor-pointer min-w-[80px] ${
-                                                item.status === "ACTIVE"
-                                                    ? "bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300"
-                                                    : "bg-white border-red-200 text-[#e04f5f] hover:bg-red-50/50 hover:border-red-300"
-                                            }`}
-                                        >
-                                            {item.status === "ACTIVE" ? "Deactivate" : "Activate"}
                                         </button>
                                     </div>
                                 </td>
@@ -276,17 +274,6 @@ function CategoryManagementPage(){
                                                         >
                                                             Edit
                                                         </button>
-
-                                                        <button
-                                                            type="button"
-                                                            className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg border transition-colors shadow-2xs cursor-pointer min-w-[80px] ${
-                                                                sub.status === "ACTIVE"
-                                                                    ? "bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300"
-                                                                    : "bg-white border-red-200 text-[#e04f5f] hover:bg-red-50/50 hover:border-red-300"
-                                                            }`}
-                                                        >
-                                                            {sub.status === "ACTIVE" ? "Deactivate" : "Activate"}
-                                                        </button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -308,9 +295,11 @@ function CategoryManagementPage(){
             <CategoryFormModal
                 isOpen={isModalOpen}
                 parentCategory={selectedParentCategory}
+                categoryToEdit={selectedCategoryToEdit}
                 onCancel={() => {
                     setIsModalOpen(false)
                     setSelectedParentCategory(undefined)
+                    setSelectedCategoryToEdit(null)
                 }}
                 onSuccess={handleModalSuccess}
             />
