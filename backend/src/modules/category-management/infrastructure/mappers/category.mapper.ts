@@ -1,19 +1,14 @@
 import { Prisma } from "../../../../../generated/prisma/client";
-import type { CategoryListItemDto, SubcategoryDto } from "../../application/dto/category-list.dto";
+import type { CategoryListItemDto } from "../../application/dto/category-list.dto";
 
 export const categorySelect = {
   id: true,
   name: true,
   status: true,
-  subcategories: {
+  updated_at: true,
+  _count: {
     select: {
-      id: true,
-      category_id: true,
-      name: true,
-      status: true,
-    },
-    orderBy: {
-      created_at: "asc",
+      subcategories: true,
     },
   },
 } satisfies Prisma.categoriesSelect;
@@ -21,22 +16,13 @@ export const categorySelect = {
 export type CategoryRecord = Prisma.categoriesGetPayload<{ select: typeof categorySelect }>;
 
 export class CategoryMapper {
-  static toSubcategoryDto(subcategory: CategoryRecord["subcategories"][number]): SubcategoryDto {
-    return {
-      id: subcategory.id,
-      categoryId: subcategory.category_id,
-      name: subcategory.name,
-      status: subcategory.status,
-    };
-  }
-
   static toDto(category: CategoryRecord): CategoryListItemDto {
     return {
       id: category.id,
       name: category.name,
       status: category.status,
-      subcategories: category.subcategories?.map(CategoryMapper.toSubcategoryDto) ?? [],
+      subcategoriesCount: category._count?.subcategories ?? 0,
+      updatedAt: category.updated_at,
     };
   }
 }
-
