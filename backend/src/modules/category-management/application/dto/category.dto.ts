@@ -1,30 +1,23 @@
-export type CategoryStatus = "ACTIVE" | "INACTIVE";
+import { CategoryStatus } from "./category-list.dto";
 
-export interface SubcategoryDto {
+export interface CreateCategoryDto {
+    categoryName : string
+    status : CategoryStatus
+}
+
+export interface CategoryDto {
     id: string;
-    categoryId: string;
     name: string;
     status: CategoryStatus
 }
 
-export interface CategoryListItemDto {
+export interface UpdateCategoryDto {
     id: string;
-    name: string;
-    status: CategoryStatus
-    subcategories: SubcategoryDto[];
-}
-
-export interface CategoryListFiltersDto {
-    search?: string;
+    categoryName?: string;
     status?: CategoryStatus
-    page: number;
-    limit: number;
 }
 
-export interface PaginatedCategoryDto {
-    items: CategoryListItemDto[];
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
+export interface UpdatedCategoryFieldsDto {
+    categoryName?: string;
+    status?: CategoryStatus
 }

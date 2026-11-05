@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { EnterpriseProfile } from "../types/enterprise-profile.types";
 import { handleApiError } from "../../../utils/errorHandler";
+import { formatDate } from "../../../utils/dateFormatter";
 import { getEnterpriseProfile } from "../services/enterprise-profile.service";
 import EnterpriseProfileSkeleton from "../components/EnterpriseProfileSkeleton";
 import {Camera,Trash2,SquarePen,Lock,Calendar,BadgeCheck,Briefcase,ShieldCheck,Landmark,ChevronDown} from "lucide-react";
@@ -37,15 +38,6 @@ function EnterpriseProfilePage() {
       cancelled = true;
     };
   }, []);
-
-  const formatDate = (date?: Date | string) =>
-    date
-      ? new Date(date).toLocaleDateString("en-IN", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        })
-      : "";
 
   if (loading) {
     return <EnterpriseProfileSkeleton />;

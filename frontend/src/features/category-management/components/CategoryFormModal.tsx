@@ -3,65 +3,59 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { X, ChevronDown } from "lucide-react";
 import { toast } from "react-toastify";
+import type { Category } from "../types/category.types";
 import type { CreateCategoryInput } from "../types/create-category.types";
 import { createCategorySchema } from "../schemas/create-category.schema";
-import { handleApiError } from "../../../utils/errorHandler";
-import { createCategory } from "../sevices/category-management.service";
+import { handleFormError } from "../../../utils/errorHandler";
+import { createCategory, updateCategory } from "../sevices/category-management.service";
 import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
 
 export interface CategoryFormModalProps {
     isOpen: boolean;
-    parentCategory?: string;
+    categoryToEdit?: Category | null;
     onSuccess: () => void;
     onCancel: () => void;
 }
 
-function CategoryFormModal({
-    isOpen,
-    parentCategory,
-    onCancel,
-    onSuccess,
-}: CategoryFormModalProps) {
-    const {
-        register,
-        handleSubmit,
-        reset,
-        formState: { errors, isSubmitting },
-    } = useForm<CreateCategoryInput>({
-        resolver: zodResolver(createCategorySchema),
-        defaultValues: {
-            categoryName: "",
-            status: "ACTIVE",
-        },
-    });
+function CategoryFormModal({ isOpen, categoryToEdit, onCancel, onSuccess,}: CategoryFormModalProps) {
+    const { register, handleSubmit, reset, setError, formState: { errors, isSubmitting }} = useForm<CreateCategoryInput>({ resolver: zodResolver(createCategorySchema)})
 
     useEffect(() => {
         if (isOpen) {
             reset({
-                categoryName: "",
-                status: "ACTIVE",
+                categoryName: categoryToEdit?.name ?? "",
+                status: categoryToEdit?.status ?? "ACTIVE",
             });
         }
-    }, [isOpen, reset]);
+    }, [isOpen, categoryToEdit, reset]);
 
     if (!isOpen) return null;
 
     const onSubmit = async (data: CreateCategoryInput) => {
         try {
-            await createCategory({
-                categoryName: data.categoryName.trim(),
-                status: data.status,
-            });
+            if (categoryToEdit) {
+                await updateCategory(categoryToEdit.id, {
+                    categoryName: data.categoryName.trim(),
+                    status: data.status,
+                });
 
-            toast.success(
-                parentCategory
-                    ? `Subcategory '${data.categoryName.trim()}' created successfully`
-                    : `Category '${data.categoryName.trim()}' created successfully`
-            );
+                toast.success(`Category '${data.categoryName.trim()}' updated successfully`);
+            } else {
+                await createCategory({
+                    categoryName: data.categoryName.trim(),
+                    status: data.status,
+                });
+
+                toast.success(`Category '${data.categoryName.trim()}' created successfully`);
+            }
             reset();
             onSuccess();
         } catch (error) {
-            handleApiError(error, "Failed to create category");
+            handleFormError(
+                error,
+                setError,
+                categoryToEdit ? "Failed to update category" : "Failed to create category"
+            );
         }
     };
 
@@ -94,19 +88,12 @@ function CategoryFormModal({
                             id="category-modal-title"
                             className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight m-0"
                         >
-                            {parentCategory ? "Add Subcategory" : "Create Category"}
+                            {categoryToEdit ? "Edit Category" : "Create Category"}
                         </h2>
                         <p className="text-xs sm:text-sm text-slate-500 mt-1 m-0">
-                            {parentCategory ? (
-                                <>
-                                    Parent Category:{" "}
-                                    <span className="font-semibold text-slate-800">
-                                        {parentCategory}
-                                    </span>
-                                </>
-                            ) : (
-                                "Add a new category for products and quotation requests."
-                            )}
+                            {categoryToEdit
+                                ? "Update the category name and status."
+                                : "Add a new category for products and quotation requests."}
                         </p>
                     </div>
 
@@ -127,18 +114,14 @@ function CategoryFormModal({
                             htmlFor="categoryName"
                             className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5"
                         >
-                            {parentCategory ? "Subcategory Name" : "Category Name"}
+                            Category Name
                         </label>
                         <input
                             id="categoryName"
                             type="text"
                             autoFocus
                             disabled={isSubmitting}
-                            placeholder={
-                                parentCategory
-                                    ? "e.g. Smart TVs, Laptops"
-                                    : "e.g. Electronics, Home & Furniture"
-                            }
+                            placeholder="e.g. Electronics, Home & Furniture"
                             {...register("categoryName")}
                             className={`w-full h-11 px-3.5 bg-white border rounded-lg text-sm text-slate-800 placeholder:text-slate-400 transition-colors focus:outline-none focus:ring-2 disabled:bg-slate-50 disabled:cursor-not-allowed ${
                                 errors.categoryName
@@ -199,8 +182,8 @@ function CategoryFormModal({
                         >
                             {isSubmitting ? (
                                 <ButtonSpinner size="sm" />
-                            ) : parentCategory ? (
-                                "Add Subcategory"
+                            ) : categoryToEdit ? (
+                                "Update Category"
                             ) : (
                                 "Create Category"
                             )}

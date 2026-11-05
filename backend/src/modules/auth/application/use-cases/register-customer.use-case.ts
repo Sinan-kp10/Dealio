@@ -23,7 +23,7 @@ export class RegisterCustomerUseCase implements IUseCase<RegisterCustomerDto, vo
         const existingUser = await this.userRepository.findByEmail(email)
 
         if (existingUser) {
-            throw new ConflictError("Email is already registered")
+            throw new ConflictError("Email is already registered", "email")
         }
 
         const passwordHash = await this.passwordService.hash(input.password)

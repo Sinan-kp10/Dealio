@@ -22,7 +22,7 @@ export class RegisterEnterpriseUseCase implements IUseCase<RegisterEnterpriseDto
         const emailExist = await this.enterpriseRepository.findUserByEmail(email)
 
         if (emailExist){
-            throw new ConflictError("Email is already registered");
+            throw new ConflictError("Email is already registered", "email");
         }
 
         const passwordHash = await this.passwordService.hash(input.password)

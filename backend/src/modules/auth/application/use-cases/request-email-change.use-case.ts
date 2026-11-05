@@ -22,13 +22,13 @@ export class RequestEmailChangeUseCase implements IUseCase<RequestEmailChangeDto
         const normalizedEmail = input.newEmail.trim().toLowerCase();
 
         if (user.email === normalizedEmail) {
-            throw new ConflictError("New email must be different from current email");
+            throw new ConflictError("New email must be different from current email", "newEmail");
         }
 
         const emailExists = await this.userRepository.findByEmail(normalizedEmail);
 
         if (emailExists) {
-            throw new ConflictError("Email is already registered");
+            throw new ConflictError("Email is already registered", "newEmail");
         }
 
         const otp = await this.otpService.generateEmailChangeOtp(input.userId, normalizedEmail);

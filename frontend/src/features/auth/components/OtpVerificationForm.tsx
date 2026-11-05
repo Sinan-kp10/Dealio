@@ -7,11 +7,12 @@ import { otpSchema,} from "../schemas/otp.schema";
 import OtpInput from "./OTPinput";
 import type { OtpVerificationFormProps } from "../types/otp-verification-form.types";
 import type { OtpFormData } from "../types/otp.types";
+import { handleFormError } from "../../../utils/errorHandler";
 import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
 
 export function OtpVerificationForm({ email, title, countdownKey, onSubmit, onResend,}: OtpVerificationFormProps) {
 
-  const { register, handleSubmit, setValue, formState: { errors, isSubmitting },} = useForm<OtpFormData>({ resolver: zodResolver(otpSchema)})
+  const { register, handleSubmit, setValue, setError, formState: { errors, isSubmitting },} = useForm<OtpFormData>({ resolver: zodResolver(otpSchema)})
 
   const [countdown, setCountdown] = useState(() => {
     const storedExpiry = sessionStorage.getItem(countdownKey);
@@ -28,7 +29,11 @@ export function OtpVerificationForm({ email, title, countdownKey, onSubmit, onRe
   const [isResending, setIsResending] = useState(false);
 
   const handleFormSubmit = async (data: OtpFormData) => {
-    await onSubmit(data.otp);
+    try {
+      await onSubmit(data.otp);
+    } catch (error) {
+      handleFormError(error, setError, "OTP verification failed");
+    }
   };
 
   const handleResend = async () => {

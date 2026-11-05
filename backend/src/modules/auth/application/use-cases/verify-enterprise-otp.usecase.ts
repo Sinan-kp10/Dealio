@@ -17,11 +17,11 @@ export class VerifyEnterpriseOtpuseCase implements IUseCase<VerifyOtpDto, Create
         const result = await this.otpService.verify(normalizedEmail, input.otp);
 
         if (result === "invalid") {
-            throw new BadRequestError("Invalid OTP. Please try again.");
+            throw new BadRequestError("Invalid OTP. Please try again.", "otp");
         }
 
         if(result === "expired"){
-            throw new BadRequestError("OTP has expired. Please request a new one.")
+            throw new BadRequestError("OTP has expired. Please request a new one.", "otp")
         }
 
         const registrationData = await this.otpService.getRegistrationData<EnterpriseRegistrationData>(normalizedEmail)

@@ -5,12 +5,12 @@ import { ForgottenPasswordSchema } from "../schemas/forgottenPassword.schema";
 import { Link, useNavigate } from "react-router-dom";
 import { Mail, ArrowRight } from "lucide-react";
 import { forgotPassword } from "../services/auth.service";
-import { handleApiError } from "../../../utils/errorHandler";
+import { handleFormError } from "../../../utils/errorHandler";
 import { toast } from "react-toastify";
 import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
 
 function ForgottenPasswordPage() {
-  const { register, handleSubmit, formState: { errors, isSubmitting }} = useForm<ForgottenPasswordFormData>({ resolver: zodResolver(ForgottenPasswordSchema)})
+  const { register, handleSubmit, setError, formState: { errors, isSubmitting }} = useForm<ForgottenPasswordFormData>({ resolver: zodResolver(ForgottenPasswordSchema)})
   const navigate = useNavigate()
 
   const onSubmit = async(data: ForgottenPasswordFormData) => {
@@ -25,7 +25,7 @@ function ForgottenPasswordPage() {
       });
       
     } catch (error) {
-      handleApiError(error, "Unable to process your password reset request");
+      handleFormError(error, setError, "Unable to process your password reset request");
     }
   };
 

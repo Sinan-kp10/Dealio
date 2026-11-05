@@ -8,14 +8,14 @@ import { loginSchema } from "../schemas/login.schema";
 import type { LoginFromData } from "../types/login.type";
 import { login } from "../services/auth.service";
 import axios from "axios";
-import { handleApiError, getErrorMessage } from "../../../utils/errorHandler";
+import { handleFormError, getErrorMessage } from "../../../utils/errorHandler";
 import { toast } from "react-toastify";
 import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
 import useAuthStore from "../stores/auth.store";
 
 export function LoginPage() {
     const [showPassword, setShowPassword] = useState(false)
-    const { register, handleSubmit, formState: { errors, isSubmitting }} = useForm<LoginFromData>({resolver: zodResolver(loginSchema)})
+    const { register, handleSubmit, setError, formState: { errors, isSubmitting }} = useForm<LoginFromData>({resolver: zodResolver(loginSchema)})
 
     const navigate = useNavigate() 
     const setUser = useAuthStore((state) => state.setUser)
@@ -57,7 +57,7 @@ export function LoginPage() {
                 });
                 return;
             }
-            handleApiError(error, "Login failed. Please try again");
+            handleFormError(error, setError, "Login failed. Please try again");
             
         }
     };

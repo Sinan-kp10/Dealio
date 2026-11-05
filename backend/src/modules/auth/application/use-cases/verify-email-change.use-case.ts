@@ -28,11 +28,11 @@ export class VerifyEmailChangeUseCase implements IUseCase<VerifyEmailChangeDto, 
         const otpStatus = await this.otpService.verifyEmailChangeOtp(input.userId, input.otp);
 
         if (otpStatus === "expired") {
-            throw new BadRequestError("OTP has expired. Please request a new one");
+            throw new BadRequestError("OTP has expired. Please request a new one", "otp");
         }
 
         if (otpStatus === "invalid") {
-            throw new BadRequestError("Invalid OTP. Please try again");
+            throw new BadRequestError("Invalid OTP. Please try again", "otp");
         }
 
         const emailExists = await this.userRepository.findByEmail(pendingEmail);

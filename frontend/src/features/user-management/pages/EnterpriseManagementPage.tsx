@@ -1,6 +1,7 @@
 import { Search, ChevronDown } from "lucide-react";
 import Pagination from "../../../components/common/pagination/Pagination";
 import Table from "../../../components/common/table/Table";
+import TableSkeleton from "../components/TableSkeleton";
 import { useEffect, useState } from "react";
 import type { Enterprise, EnterpriseStatus } from "../types/enterprise-management.types";
 import { handleApiError } from "../../../utils/errorHandler";
@@ -202,6 +203,7 @@ export function EnterpriseManagementPage() {
                 ]}
                 loading={loading}
                 loadingRows={PAGE_LIMIT}
+                skeleton={<TableSkeleton rows={PAGE_LIMIT} columns={5} />}
                 isEmpty={enterprise.length === 0}
                 emptyTitle="No enterprises found"
                 pagination={

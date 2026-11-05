@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { handleApiError } from "../../../utils/errorHandler";
+import { handleApiError, handleFormError } from "../../../utils/errorHandler";
 import { toast } from "react-toastify";
 import { verifyEmailChangeSchema, type VerifyEmailChangeFormData } from "../schema/verify-email-change.schema";
 import OtpInput from "../../auth/components/OTPinput";
@@ -18,7 +18,7 @@ export function VerifyEmailStep({ newEmail, onSuccess, onCancel }: VerifyEmailSt
   const [countdown, setCountdown] = useState(60);
   const [isResending, setIsResending] = useState(false);
 
-  const {handleSubmit, setValue, formState: { errors, isSubmitting }} = useForm<VerifyEmailChangeFormData>({resolver: zodResolver(verifyEmailChangeSchema)});
+  const {handleSubmit, setValue, setError, formState: { errors, isSubmitting }} = useForm<VerifyEmailChangeFormData>({resolver: zodResolver(verifyEmailChangeSchema)});
 
   useEffect(() => {
 
@@ -42,7 +42,7 @@ export function VerifyEmailStep({ newEmail, onSuccess, onCancel }: VerifyEmailSt
 
     } catch (error) {
 
-      handleApiError(error, "Invalid verification code");
+      handleFormError(error, setError, "Invalid verification code");
     }
   };
 

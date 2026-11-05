@@ -3,7 +3,7 @@ import { X, Eye, EyeOff } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { changePasswordSchema } from "../schema/change-password.schema";
-import { handleApiError } from "../../../utils/errorHandler";
+import { handleFormError } from "../../../utils/errorHandler";
 import { toast } from "react-toastify";
 import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
 import type { ChangePassword } from "../types/users-account-settings.types";
@@ -19,11 +19,11 @@ export function ChangePasswordModal({ isOpen, onClose }: ChangePasswordModalProp
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const {register,handleSubmit,reset,formState: { errors, isSubmitting }} = useForm<ChangePassword>({resolver: zodResolver(changePasswordSchema)})
+  const {register,handleSubmit,reset,setError,formState: { errors, isSubmitting }} = useForm<ChangePassword>({resolver: zodResolver(changePasswordSchema)})
 
   const handleClose = useCallback(() => {
 
-    if (isSubmitting) return;
+  if (isSubmitting) return;
     reset();
     setShowCurrentPassword(false);
     setShowNewPassword(false);
@@ -57,7 +57,7 @@ export function ChangePasswordModal({ isOpen, onClose }: ChangePasswordModalProp
 
     } catch (error) {
       
-      handleApiError(error, "Unable to change password");
+      handleFormError(error, setError, "Unable to change password");
     }
   };
 

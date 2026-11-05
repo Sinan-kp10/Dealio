@@ -1,6 +1,6 @@
 import { IUseCase } from "../../../../shared/application/base.usecase";
 import { ICategoryRepository } from "../../domain/repositories/category.repository";
-import { CategoryListFiltersDto, PaginatedCategoryDto } from "../dto/category.dto";
+import { CategoryListFiltersDto, PaginatedCategoryDto } from "../dto/category-list.dto";
 
 export class GetCategoryUseCase implements IUseCase<CategoryListFiltersDto, PaginatedCategoryDto> {
     constructor(private readonly categoryRepository : ICategoryRepository){}
