@@ -1,9 +1,11 @@
 import { Search, ChevronDown } from "lucide-react";
 import Pagination from "../../../components/common/pagination/Pagination";
 import Table from "../../../components/common/table/Table";
+import TableSkeleton from "../components/TableSkeleton";
 import { useEffect, useState } from "react";
 import type { Customer, CustomerStatus } from "../types/user-management.types";
 import { handleApiError } from "../../../utils/errorHandler";
+import { formatDate } from "../../../utils/dateFormatter";
 import { toast } from "react-toastify";
 import ReasonModal from "../../../components/common/ReasonModal/ReasonModel";
 import ConfirmationModal from "../../../components/common/confirmationModel/ConfirmationModal";
@@ -28,32 +30,29 @@ function CustomerManagementPage() {
 
         const fetchCustomer = async () => {
             setLoading(true);
+
             try {
                 const response = await getCustomers({
                     search: debouncedSearch.trim() || undefined,
-                    status: status === "ALL" ? undefined : status,
-                    page,
                     limit: PAGE_LIMIT,
+                    page,
+                    status: status === "ALL" ? undefined : status,
                 });
 
                 if (cancelled) return;
 
                 setCustomer(response.data.items);
                 setTotalPages(response.data.totalPages);
-
             } catch (error) {
-
                 if (cancelled) return;
-
                 handleApiError(error, "Unable to load customers");
-
             } finally {
-
                 if (!cancelled) {
                     setLoading(false);
                 }
             }
         };
+
         void fetchCustomer();
 
         return () => {
@@ -70,13 +69,6 @@ function CustomerManagementPage() {
         setStatus(value);
         setPage(1);
     };
-
-    const formatDate = (date: string) =>
-        new Date(date).toLocaleDateString("en-IN", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-        });
 
     const handleSuspend = async (reason: string) => {
         if (!selectedCustomer) return;
@@ -169,6 +161,7 @@ function CustomerManagementPage() {
                 ]}
                 loading={loading}
                 loadingRows={PAGE_LIMIT}
+                skeleton={<TableSkeleton rows={PAGE_LIMIT} columns={6} />}
                 isEmpty={customer.length === 0}
                 emptyTitle="No customers found"
                 pagination={

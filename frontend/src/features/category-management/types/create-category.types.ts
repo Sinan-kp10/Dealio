@@ -8,11 +8,11 @@ export interface CreateCategoryInput {
 export interface CreateCategoryData {
     id: string;
     name: string;
-    status: CategoryStatus
+    status: CategoryStatus;
 }
 
 export interface CreateCategoryResponse {
-    success : string;
-    message : string;
-    data : CreateCategoryData
+    status: boolean;
+    message: string;
+    data: CreateCategoryData;
 }

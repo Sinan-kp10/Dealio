@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { CustomerProfile, UpdateCustomerProfile } from "../types/customer.profile.types";
 import { getCustomerProfile, updateCustomerProfile } from "../services/customer-profile.service";
 import { handleApiError } from "../../../utils/errorHandler";
+import { formatDate } from "../../../utils/dateFormatter";
 import { toast } from "react-toastify";
 import {Camera, Trash2, SquarePen, User,Phone,Calendar,Lock,BadgeCheck,X,Check,Loader2} from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -98,13 +99,6 @@ function CustomerProfilePage() {
       handleApiError(error, "Unable to update profile. Please try again");
     }
   };
-
-  const formatDate = (date: string) =>
-    new Date(date).toLocaleDateString("en-IN", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
 
   if (loading) {
     return <CustomerProfileSkeleton />;

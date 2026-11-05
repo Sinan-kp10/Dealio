@@ -10,6 +10,7 @@ export interface TableProps {
   isEmpty?: boolean;
   emptyTitle?: string;
   pagination?: React.ReactNode;
+  skeleton?: React.ReactNode;
 }
 
 export function Table({
@@ -20,6 +21,7 @@ export function Table({
   isEmpty = false,
   emptyTitle = "No records found",
   pagination,
+  skeleton,
 }: PropsWithChildren<TableProps>) {
   return (
     <div className="w-full bg-white rounded-xl shadow-[0_2px_8px_rgba(15,30,60,0.04),0_0_1px_rgba(15,30,60,0.08)] border border-slate-200/80 overflow-hidden">
@@ -46,7 +48,7 @@ export function Table({
 
           <tbody className="divide-y divide-slate-100">
             {loading ? (
-              <TableSkeleton rows={loadingRows} columns={headers.length} />
+              skeleton ?? <TableSkeleton rows={loadingRows} columns={headers.length} />
             ) : isEmpty ? (
               <tr>
                 <td colSpan={headers.length} className="py-12 text-center">

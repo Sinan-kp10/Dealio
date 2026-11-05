@@ -12,28 +12,13 @@ import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
 
 export interface CategoryFormModalProps {
     isOpen: boolean;
-    parentCategory?: string;
     categoryToEdit?: Category | null;
     onSuccess: () => void;
     onCancel: () => void;
 }
 
-function CategoryFormModal({
-    isOpen,
-    parentCategory,
-    categoryToEdit,
-    onCancel,
-    onSuccess,
-}: CategoryFormModalProps) {
-    const {
-        register,
-        handleSubmit,
-        reset,
-        setError,
-        formState: { errors, isSubmitting },
-    } = useForm<CreateCategoryInput>({
-        resolver: zodResolver(createCategorySchema),
-    });
+function CategoryFormModal({ isOpen, categoryToEdit, onCancel, onSuccess,}: CategoryFormModalProps) {
+    const { register, handleSubmit, reset, setError, formState: { errors, isSubmitting }} = useForm<CreateCategoryInput>({ resolver: zodResolver(createCategorySchema)})
 
     useEffect(() => {
         if (isOpen) {
@@ -61,11 +46,7 @@ function CategoryFormModal({
                     status: data.status,
                 });
 
-                toast.success(
-                    parentCategory
-                        ? `Subcategory '${data.categoryName.trim()}' created successfully`
-                        : `Category '${data.categoryName.trim()}' created successfully`
-                );
+                toast.success(`Category '${data.categoryName.trim()}' created successfully`);
             }
             reset();
             onSuccess();
@@ -107,25 +88,12 @@ function CategoryFormModal({
                             id="category-modal-title"
                             className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight m-0"
                         >
-                            {categoryToEdit
-                                ? "Edit Category"
-                                : parentCategory
-                                ? "Add Subcategory"
-                                : "Create Category"}
+                            {categoryToEdit ? "Edit Category" : "Create Category"}
                         </h2>
                         <p className="text-xs sm:text-sm text-slate-500 mt-1 m-0">
-                            {categoryToEdit ? (
-                                "Update the category name and status."
-                            ) : parentCategory ? (
-                                <>
-                                    Parent Category:{" "}
-                                    <span className="font-semibold text-slate-800">
-                                        {parentCategory}
-                                    </span>
-                                </>
-                            ) : (
-                                "Add a new category for products and quotation requests."
-                            )}
+                            {categoryToEdit
+                                ? "Update the category name and status."
+                                : "Add a new category for products and quotation requests."}
                         </p>
                     </div>
 
@@ -146,22 +114,14 @@ function CategoryFormModal({
                             htmlFor="categoryName"
                             className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5"
                         >
-                            {categoryToEdit
-                                ? "Category Name"
-                                : parentCategory
-                                ? "Subcategory Name"
-                                : "Category Name"}
+                            Category Name
                         </label>
                         <input
                             id="categoryName"
                             type="text"
                             autoFocus
                             disabled={isSubmitting}
-                            placeholder={
-                                parentCategory
-                                    ? "e.g. Smart TVs, Laptops"
-                                    : "e.g. Electronics, Home & Furniture"
-                            }
+                            placeholder="e.g. Electronics, Home & Furniture"
                             {...register("categoryName")}
                             className={`w-full h-11 px-3.5 bg-white border rounded-lg text-sm text-slate-800 placeholder:text-slate-400 transition-colors focus:outline-none focus:ring-2 disabled:bg-slate-50 disabled:cursor-not-allowed ${
                                 errors.categoryName
@@ -224,8 +184,6 @@ function CategoryFormModal({
                                 <ButtonSpinner size="sm" />
                             ) : categoryToEdit ? (
                                 "Update Category"
-                            ) : parentCategory ? (
-                                "Add Subcategory"
                             ) : (
                                 "Create Category"
                             )}
