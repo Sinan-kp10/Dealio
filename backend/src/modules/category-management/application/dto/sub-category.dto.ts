@@ -40,11 +40,13 @@ export interface PaginatedSubCategoryDto {
 
 export interface UpdateSubCategoryDto {
     id: string;
+    categoryId: string;
     subCategoryName?: string;
-    status?: SubCategoryStatus
+    status?: SubCategoryStatus;
 }
 
 export interface UpdatedSubCategoryFieldsDto {
+    categoryId: string;
     subCategoryName?: string;
-    status?: SubCategoryStatus
+    status?: SubCategoryStatus;
 }

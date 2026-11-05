@@ -8,6 +8,7 @@ import { createCategorySchema } from "../validators/create-category.schema";
 import { updateCategorySchema } from "../validators/updateCategory.schema";
 import { createSubCategorySchema } from "../validators/create-sub-category.schema";
 import { getSubCategoriesSchema } from "../validators/get-sub-category.schema";
+import { updateSubCategorySchema } from "../validators/update-sub-category.schema";
 
 const router = Router();
 
@@ -19,5 +20,6 @@ router.patch("/categories/:id", validateRequest(updateCategorySchema), categoryC
 
 router.get("/subcategories", validateRequest(getSubCategoriesSchema, "query"), subCategoryController.getSubCategories);
 router.post("/subcategories", validateRequest(createSubCategorySchema), subCategoryController.createSubCategory);
+router.patch("/subcategories/:id", validateRequest(updateSubCategorySchema), subCategoryController.updateSubCategory);
 
 export default router;

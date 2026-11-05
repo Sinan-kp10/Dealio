@@ -1,5 +1,5 @@
 import { prisma } from "../../../../infrastructure/database/prisma/prisma-client";
-import { PaginatedSubCategoryDto, SubCategoryDto, SubCategoryListFiltersDto, SubCategoryStatus } from "../../application/dto/sub-category.dto";
+import { PaginatedSubCategoryDto, SubCategoryDto, SubCategoryListFiltersDto, SubCategoryStatus, UpdatedSubCategoryFieldsDto } from "../../application/dto/sub-category.dto";
 import { ISubCategoryRepository } from "../../domain/repositories/sub-category.repository";
 import { SubCategoryMapper, subCategoryListSelect, subCategorySelect } from "../mappers/sub-category.mapper";
 
@@ -77,4 +77,18 @@ export class PrismaSubCategoryRepository implements ISubCategoryRepository {
             totalPages: Math.ceil(total / pageSize),
         };
     }
+
+    updateSubCategory = async (id: string, data: UpdatedSubCategoryFieldsDto): Promise<SubCategoryDto> => {
+        const subCategory = await prisma.subcategories.update({
+            where: { id },
+            data: {
+                category_id: data.categoryId,
+                name: data.subCategoryName,
+                status: data.status,
+            },
+            select: subCategorySelect,
+        });
+
+        return SubCategoryMapper.toDto(subCategory);
+    };
 }
