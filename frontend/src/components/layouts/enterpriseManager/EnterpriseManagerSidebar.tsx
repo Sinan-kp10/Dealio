@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LayoutDashboard, FileText, SquareCheckBig, MessageSquare, CreditCard, BriefcaseBusiness, LogOut, X } from "lucide-react";
+import { LayoutDashboard, FileText, SquareCheckBig, MessageSquare, CreditCard, LogOut, X } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { logout } from "../../../features/auth/services/auth.service";
@@ -198,32 +198,6 @@ export function EnterpriseManagerSidebar({ isOpen, onClose }: EnterpriseManagerS
                                     }`}
                                 />
                                 <span>Financial Overview</span>
-                                </>
-                            )}
-                        </NavLink>
-
-                        <NavLink
-                            to="/enterprise/company-profile"
-                            onClick={onClose}
-                            className={({ isActive }) =>
-                                `group flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
-                                isActive
-                                    ? "bg-[#edf4fb] text-[#204066] font-semibold shadow-xs"
-                                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
-                                }`
-                            }
-                            >
-                            {({ isActive }) => (
-                                <>
-                                <BriefcaseBusiness
-                                    size={18}
-                                    className={`shrink-0 transition-colors ${
-                                    isActive
-                                        ? "text-[#204066]"
-                                        : "text-slate-400 group-hover:text-slate-600"
-                                    }`}
-                                />
-                                <span>Company Profile</span>
                                 </>
                             )}
                         </NavLink>

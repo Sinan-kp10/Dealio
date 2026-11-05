@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { User, Mail, Lock, ShieldCheck, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { registerCustomer } from "../services/auth.service";
 import { toast } from "react-toastify";
-import axios from "axios";
+import { handleFormError } from "../../../utils/errorHandler";
 import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
 
 export function CustomerSignupPage() {
@@ -15,7 +15,7 @@ export function CustomerSignupPage() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const navigate = useNavigate()
 
-    const { register, handleSubmit, formState: {errors, isSubmitting}} = useForm<CustomerSignupFormData>({ resolver: zodResolver(customerSignupSchema)});
+    const { register, handleSubmit, setError, formState: {errors, isSubmitting}} = useForm<CustomerSignupFormData>({ resolver: zodResolver(customerSignupSchema)});
 
     const onSubmit = async (data: CustomerSignupFormData) => {
 
@@ -36,11 +36,7 @@ export function CustomerSignupPage() {
             });
             
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                toast.error(error.response?.data?.message ?? "Registration failed. Please try again")
-            }else {
-                toast.error("Something went wrong. Please try again.");
-            }
+            handleFormError(error, setError, "Registration failed. Please try again");
         }
 
     };

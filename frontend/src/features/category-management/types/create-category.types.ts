@@ -1,0 +1,18 @@
+import type { CategoryStatus } from "./category.types";
+
+export interface CreateCategoryInput {
+    categoryName: string;
+    status: CategoryStatus;
+}
+
+export interface CreateCategoryData {
+    id: string;
+    name: string;
+    status: CategoryStatus;
+}
+
+export interface CreateCategoryResponse {
+    status: boolean;
+    message: string;
+    data: CreateCategoryData;
+}

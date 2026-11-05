@@ -12,7 +12,7 @@ const router = Router();
 router.use(authMiddleware);
 router.use(requireRole("ADMIN"));
 
-router.get("/customers", validateRequest(getCustomerSchema, "query"), userManagementController.getUsers);
+router.get("/customers", validateRequest(getCustomerSchema, "query"), userManagementController.getCustomers);
 router.patch("/customers/:accountId/suspend", validateRequest(suspendAccountSchema), userManagementController.suspendAccount);
 router.patch("/customers/:accountId/reactivate", userManagementController.reactivateAccount);
 

@@ -2,7 +2,7 @@ import type { RegisterCustomerDto } from "../../../application/dto/register-cust
 import type { RegisterEnterpriseDto } from "../../../application/dto/register-enterprise.dto"; 
 import type { IUseCase } from "../../../../../shared/application/base.usecase";
 import type { IApiResponse } from "../../../../../shared/application/api-response";
-import { HttpStatusCode } from "../../../../../shared/presentation/enums/http-status-code.enum.js";
+import { HttpStatusCode } from "../../../../../shared/enums/http-status-code.enum.js";
 import type { Request, Response, NextFunction } from "express";
 
 export class RegistrationController {

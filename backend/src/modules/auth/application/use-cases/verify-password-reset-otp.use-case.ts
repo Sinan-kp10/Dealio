@@ -1,7 +1,7 @@
 import { IUserRepository } from "../../domain/repositories/user.repository";
-import { JwtTokenService } from "../../../../infrastructure/security/jwt-token.service";
-import { OtpService } from "../../../../infrastructure/security/otp.service";
-import { AppError } from "../../../../shared/errors/app-error";
+import { JwtTokenService } from "../../infrastructure/security/jwt-token.service";
+import { OtpService } from "../../infrastructure/security/otp.service";
+import { BadRequestError } from "../../../../shared/errors/app-error";
 import { VerifyOtpDto } from "../dto/verify-otp.dto";
 import type { IUseCase } from "../../../../shared/application/base.usecase";
 
@@ -13,23 +13,23 @@ export class VerifyPasswordResetOtpUseCase implements IUseCase<VerifyOtpDto, { r
         private readonly jwtTokenService : JwtTokenService
     ){}
 
-    execute = async (dto : VerifyOtpDto) : Promise<{resetToken : string}> => {
+    execute = async (input : VerifyOtpDto) : Promise<{resetToken : string}> => {
 
-        const email = dto.email.trim().toLowerCase()
+        const email = input.email.trim().toLowerCase()
         const user = await this.userRespository.findByEmail(email)
 
         if (!user) {
-            throw new AppError("Invalid or expired OTP", 400);
+            throw new BadRequestError("Invalid or expired OTP", "otp");
         }
 
-        const result = await this.otpService.verifyPasswordResetOtp(email, dto.otp)
+        const result = await this.otpService.verifyPasswordResetOtp(email, input.otp)
 
         if (result === "invalid") {
-            throw new AppError("Invalid OTP. Please try again", 400);
+            throw new BadRequestError("Invalid OTP. Please try again", "otp");
         }
 
         if(result === "expired"){
-            throw new AppError("OTP has expired. Please request a new one", 400)
+            throw new BadRequestError("OTP has expired. Please request a new one", "otp")
         }
 
         const resetToken = this.jwtTokenService.generatePasswordResetToken(email)

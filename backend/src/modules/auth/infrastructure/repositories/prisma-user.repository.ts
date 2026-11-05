@@ -1,0 +1,58 @@
+import { prisma } from "../../../../infrastructure/database/prisma/prisma-client";
+import { SafeUser, User } from "../../domain/entities/user.entity";
+import { CreateUserData, IUserRepository } from "../../domain/repositories/user.repository";
+import { CustomerMapper, customerSelect } from "../mappers/customer.mappers";
+
+
+export class PrismaUserRepository implements IUserRepository {
+
+    findById = async (id: string): Promise<SafeUser | null> => {
+        const user = await prisma.users.findUnique({
+            where: { id },
+            select: customerSelect,
+        });
+
+        return user ? CustomerMapper.toSafeCustomer(user) : null;
+    };
+
+    findByEmail = async (email: string): Promise<User | null> => {
+        return prisma.users.findUnique({
+            where: { email },
+        });
+    };
+
+    create = async (data: CreateUserData): Promise<SafeUser> => {
+        const user = await prisma.users.create({
+            data: {
+                name: data.name,
+                email: data.email,
+                password_hash: data.passwordHash,
+                role: data.role,
+                enterprise_id: data.enterprise_id ?? null,
+                phone: data.phone ?? null,
+                email_verified: data.emailVerified,
+            },
+            select: customerSelect,
+        });
+
+        return CustomerMapper.toSafeCustomer(user);
+    };
+
+    changePassword = async (id: string, passwordHash: string): Promise<void> => {
+        await prisma.users.update({
+            where: { id },
+            data: {
+                password_hash: passwordHash,
+            },
+        });
+    }
+
+    changeEmail= async (id: string, newEmail: string): Promise<void> => {
+        await prisma.users.update({
+            where : {id},
+            data : {
+                email : newEmail
+            }
+        })
+    }
+}

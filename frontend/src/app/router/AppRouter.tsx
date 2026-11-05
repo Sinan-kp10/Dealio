@@ -15,7 +15,10 @@ import ForbiddenPage from "../../pages/ForbiddenPage";
 import AccountSuspendedPage from "../../pages/AccountSuspendedPage";
 import OtpVerificationPage from "../../features/auth/pages/OtpVerificationPage";
 import VerifyPasswordResetOtpPage from "../../features/auth/pages/VerifyPasswordResetOtpPage";
-import CustomerProfilePage from "../../features/profile/pages/CustomerProfilePage";
+const CustomerSettingsPage = lazy(()=> import("../../features/settings/pages/CustomerSttingsPage"))
+const EnterpriseSettingsPage = lazy(()=> import("../../features/settings/pages/EnterpriseSettingsPage"))
+const EnterpriseProfilePage = lazy(()=> import("../../features/profile/pages/EnterpriseProfilePage"))
+const CustomerProfilePage = lazy(()=> import("../../features/profile/pages/CustomerProfilePage"))
 const CustomerLayout = lazy(() => import("../../components/layouts/customer/CustomerLayout"))
 const AdminLayout = lazy(()=> import("../../components/layouts/admin/AdminLayout"))
 const EnterpriseManagerLayout = lazy(()=> import("../../components/layouts/enterpriseManager/EnterpriseManagerLayout"))
@@ -24,6 +27,7 @@ const AdminDashboardPage = lazy(()=> import("../../features/dashboard/pages/Admi
 const EnterpriseDashboardPage = lazy(()=> import("../../features/dashboard/pages/EnterpriseDashboardPage"))
 const CustomerManagementPage = lazy(()=> import("../../features/user-management/pages/CustomerManagementPage"))
 const EnterpriseManagementPage = lazy(()=> import("../../features/user-management/pages/EnterpriseManagementPage"))
+const CategoryManagementPage = lazy(()=> import("../../features/category-management/pages/CategoryManagementPage"))
 
 export function AppRouter() {
   return (
@@ -31,24 +35,29 @@ export function AppRouter() {
       <Suspense fallback={<FullPageSpinner />}>
         <Routes>
 
-          <Route element={<ProtectedRoute allowedRoles={["CUSTOMER"]} />}>
-            <Route element={<CustomerLayout />}>
-              <Route path="/customer" element={<QuotationsPage />} />
-              <Route path="/customer/profile" element={<CustomerProfilePage />} />
-            </Route>
-          </Route>
-
           <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
             <Route element={<AdminLayout />}>
               <Route path="/admin" element={<AdminDashboardPage />} />
               <Route path="/admin/customers" element={<CustomerManagementPage />} />
               <Route path="/admin/enterprises" element={<EnterpriseManagementPage />} />
+              <Route path="/admin/categories" element={<CategoryManagementPage />} />
+            </Route>
+          </Route>
+
+          <Route element={<ProtectedRoute allowedRoles={["CUSTOMER"]} />}>
+            <Route element={<CustomerLayout />}>
+              <Route path="/customer" element={<QuotationsPage />} />
+              <Route path="/customer/profile" element={<CustomerProfilePage />} />
+              <Route path="/customer/settings" element={<CustomerSettingsPage />} />
+
             </Route>
           </Route>
 
           <Route element={<ProtectedRoute allowedRoles={["ENTERPRISE_MANAGER"]} />}>
             <Route element={<EnterpriseManagerLayout />}>
               <Route path="/enterprise" element={<EnterpriseDashboardPage />} />
+              <Route path="/enterprise/profile" element={<EnterpriseProfilePage />} />
+              <Route path="/enterprise/settings" element={<EnterpriseSettingsPage />} />
             </Route>
           </Route>
 

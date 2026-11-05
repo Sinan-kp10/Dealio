@@ -4,7 +4,7 @@ import type { Enterprise } from "../../domain/entities/enterprise.entity";
 export const enterpriseSelect = {
   id: true,
   enterprise_name: true,
-  subcategory_id: true,
+  category_id: true,
   status: true,
   description: true,
   rejection_reason: true,
@@ -12,6 +12,11 @@ export const enterpriseSelect = {
   reviewed_at: true,
   created_at: true,
   updated_at: true,
+  subcategories: {
+    select: {
+      subcategory_id: true,
+    },
+  },
 } satisfies Prisma.enterprisesSelect;
 
 export type EnterpriseRecord = Prisma.enterprisesGetPayload<{ select: typeof enterpriseSelect }>;
@@ -21,7 +26,7 @@ export class EnterpriseMapper {
     return {
       id: record.id,
       enterprise_name: record.enterprise_name,
-      subcategory_id: record.subcategory_id,
+      category_id: record.category_id,
       status: record.status,
       description: record.description,
       rejection_reason: record.rejection_reason,
@@ -29,7 +34,7 @@ export class EnterpriseMapper {
       reviewed_at: record.reviewed_at,
       created_at: record.created_at,
       updated_at: record.updated_at,
+      subcategories: record.subcategories,
     };
   }
 }
-

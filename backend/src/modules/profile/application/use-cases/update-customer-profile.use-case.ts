@@ -1,29 +1,29 @@
-import { AppError } from "../../../../shared/errors/app-error.js";
+import { NotFoundError } from "../../../../shared/errors/app-error.js";
 import type { IUseCase } from "../../../../shared/application/base.usecase.js";
-import type { CustomerProfileRepository } from "../../domain/customer-profile.repository.js";
-import type { CustomerUpdateProfileDto, UpdatedCustomerProfileFieldsDto } from "../dto/customer-profile.dto.js";
+import type { UpdateCustomerProfileDto, UpdatedCustomerProfileFieldsDto } from "../dto/customer-profile.dto.js";
+import { ICustomerProfileRepository } from "../../domain/repositories/customer-profile.repository.js";
 
-export class UpdateCustomerProfileUseCase implements IUseCase<CustomerUpdateProfileDto, UpdatedCustomerProfileFieldsDto> {
+export class UpdateCustomerProfileUseCase implements IUseCase<UpdateCustomerProfileDto, UpdatedCustomerProfileFieldsDto> {
     constructor(
-        private readonly customerProfileRepository: CustomerProfileRepository
+        private readonly customerProfileRepository: ICustomerProfileRepository
     ) {}
 
-    execute = async (dto: CustomerUpdateProfileDto): Promise<UpdatedCustomerProfileFieldsDto> => {
-        const { userId } = dto;
+    execute = async (input : UpdateCustomerProfileDto): Promise<UpdatedCustomerProfileFieldsDto> => {
+        const { userId } = input;
         const user = await this.customerProfileRepository.findById(userId);
 
         if (!user) {
-            throw new AppError("Account not found.", 404);
+            throw new NotFoundError("Account not found.");
         }
 
         const dataToUpdate: UpdatedCustomerProfileFieldsDto = {};
 
-        if (dto.name !== undefined && dto.name !== null) {
-            dataToUpdate.name = dto.name.trim();
+        if (input.name !== undefined && input.name !== null) {
+            dataToUpdate.name = input.name.trim();
         }
 
-        if (dto.phone !== undefined) {
-            dataToUpdate.phone = dto.phone ? dto.phone.trim() : null;
+        if (input.phone !== undefined) {
+            dataToUpdate.phone = input.phone ? input.phone.trim() : null;
         }
 
         return await this.customerProfileRepository.updateCustomerProfile(userId, dataToUpdate);

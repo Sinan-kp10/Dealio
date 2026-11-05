@@ -3,7 +3,7 @@ import { isPassswordResetOtpState } from "../utils/registration-verification-sta
 import { useEffect } from "react";
 import { resendEmailOtp, verifyPasswordResetOtp } from "../services/auth.service";
 import { toast } from "react-toastify";
-import axios from "axios";
+import { handleApiError } from "../../../utils/errorHandler";
 import OtpVerificationForm from "../components/OtpVerificationForm";
 import { OTP_COUNTDOWN_KEYS } from "../utils/otp-countdown-keys";
 
@@ -28,27 +28,15 @@ function VerifyPasswordResetOtpPage(){
 
 
     const onSubmit = async(otp : string) => {
+        const response = await verifyPasswordResetOtp({ email , otp})
+        toast.success(response.message)
 
-        try {
-
-            const response = await verifyPasswordResetOtp({ email , otp})
-            toast.success(response.message)
-
-            navigate("/reset-password", {
-                replace: true,
-                state: {
-                    resetToken: response.data.resetToken,
-                },
-            })
-
-        } catch (error) {
-
-             if (axios.isAxiosError(error)) {
-                toast.error(error.response?.data?.message ?? "OTP verification failed")
-            } else {
-                toast.error("Something went wrong. Please try again");
-            }
-        }
+        navigate("/reset-password", {
+            replace: true,
+            state: {
+                resetToken: response.data.resetToken,
+            },
+        })
     }
 
     const handleResendOtp = async () => {
@@ -59,11 +47,7 @@ function VerifyPasswordResetOtpPage(){
 
         } catch (error) {
 
-            if (axios.isAxiosError(error)) {
-                toast.error(error.response?.data?.message ?? "Failed to resend OTP");
-            } else {
-                toast.error("Something went wrong. Please try again");
-            }
+            handleApiError(error, "Failed to resend OTP");
         }
     }
 

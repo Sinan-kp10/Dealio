@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import type { CustomerProfile, UpdateCustomerProfile } from "../types/customer.profile";
-import { getCustomerProfile, updateCustomerProfile } from "../services/profile.service";
-import axios from "axios";
+import type { CustomerProfile, UpdateCustomerProfile } from "../types/customer.profile.types";
+import { getCustomerProfile, updateCustomerProfile } from "../services/customer-profile.service";
+import { handleApiError } from "../../../utils/errorHandler";
+import { formatDate } from "../../../utils/dateFormatter";
 import { toast } from "react-toastify";
-import {Camera, Trash2, SquarePen, User,Phone,Calendar,Lock,Mail,BadgeCheck,X,Check,Loader2} from "lucide-react";
+import {Camera, Trash2, SquarePen, User,Phone,Calendar,Lock,BadgeCheck,X,Check,Loader2} from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateCustomerProfileSchema } from "../schemas/update-customer-profile.schema";
@@ -14,10 +15,8 @@ function CustomerProfilePage() {
   const [profile, setProfile] = useState<CustomerProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [updateMode, setUpdateMode] = useState(false);
-
-  const setUser = useAuthStore((state) => state.setUser);
-  const currentUser = useAuthStore((state) => state.user);
-
+  const setUser = useAuthStore((state) => state.setUser)
+  const currentUser = useAuthStore((state) => state.user)
   const {register,handleSubmit,reset,formState: { errors, isSubmitting }} = useForm<UpdateCustomerProfile>({resolver: zodResolver(updateCustomerProfileSchema)})
 
   useEffect(() => {
@@ -36,11 +35,7 @@ function CustomerProfilePage() {
       } catch (error) {
         if (cancelled) return;
 
-        if (axios.isAxiosError(error)) {
-          toast.error(error.response?.data?.message ?? "Unable to load profile");
-        } else {
-          toast.error("Something went wrong. Please try again.");
-        }
+        handleApiError(error, "Unable to load profile");
       } finally {
         if (!cancelled) {
           setLoading(false);
@@ -101,22 +96,9 @@ function CustomerProfilePage() {
       toast.success("Profile updated successfully");
       setUpdateMode(false);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        toast.error(
-          error.response?.data?.message ?? "Unable to update profile. Please try again"
-        );
-      } else {
-        toast.error("Something went wrong. Please try again.");
-      }
+      handleApiError(error, "Unable to update profile. Please try again");
     }
   };
-
-  const formatDate = (date: string) =>
-    new Date(date).toLocaleDateString("en-IN", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
 
   if (loading) {
     return <CustomerProfileSkeleton />;
@@ -241,7 +223,7 @@ function CustomerProfilePage() {
           )}
         </div>
 
-        <form id="customer-profile-form" onSubmit={handleSubmit(onSubmit)}>
+        <form id="customer-profile-form" noValidate onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 pt-6">
             <div>
               <label
@@ -328,6 +310,19 @@ function CustomerProfilePage() {
 
             <div>
               <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">
+                Email Address
+              </label>
+              <div className="flex items-center justify-between px-3.5 py-2.5 bg-slate-50/70 border border-slate-200/90 rounded-xl text-sm text-slate-800 shadow-2xs">
+                <span className="truncate">{profile.email}</span>
+                <Lock size={15} className="text-slate-400 shrink-0 ml-2" />
+              </div>
+              <p className="text-[11px] sm:text-xs text-slate-400 mt-1.5 leading-relaxed">
+                Email updates require verification to maintain quotation and contract security.
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">
                 Account Created
               </label>
               <div className="flex items-center justify-between px-3.5 py-2.5 bg-slate-50/70 border border-slate-200/90 rounded-xl text-sm text-slate-800 shadow-2xs">
@@ -338,49 +333,10 @@ function CustomerProfilePage() {
                 Account registration date is verified and permanently linked to your profile.
               </p>
             </div>
-
-            <div>
-              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">
-                Email Address
-              </label>
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
-                <div className="flex-1 flex items-center justify-between px-3.5 py-2.5 bg-slate-50/70 border border-slate-200/90 rounded-xl text-sm text-slate-800 shadow-2xs min-w-0">
-                  <span className="truncate">{profile.email}</span>
-                  <Lock size={15} className="text-slate-400 shrink-0 ml-2" />
-                </div>
-                <button
-                  type="button"
-                  className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 border border-slate-200/90 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-2xs whitespace-nowrap shrink-0 cursor-pointer"
-                >
-                  <Mail size={15} className="text-slate-600" />
-                  <span>Change Email</span>
-                </button>
-              </div>
-              <p className="text-[11px] sm:text-xs text-slate-400 mt-1.5 leading-relaxed">
-                Email updates require verification to maintain quotation and contract security.
-              </p>
-            </div>
           </div>
         </form>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 sm:p-7 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
-            Password &amp; Security
-          </h3>
-          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            Manage your account password and security credentials to keep your account safe.
-          </p>
-        </div>
-        <button
-          type="button"
-          className="inline-flex items-center justify-center gap-2 px-4 py-2 sm:py-2.5 border border-slate-200/90 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-2xs whitespace-nowrap shrink-0 self-start sm:self-auto cursor-pointer"
-        >
-          <Lock size={15} className="text-slate-600" />
-          <span>Change Password</span>
-        </button>
-      </div>
     </div>
   );
 }

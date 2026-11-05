@@ -8,13 +8,14 @@ import { loginSchema } from "../schemas/login.schema";
 import type { LoginFromData } from "../types/login.type";
 import { login } from "../services/auth.service";
 import axios from "axios";
+import { handleFormError, getErrorMessage } from "../../../utils/errorHandler";
 import { toast } from "react-toastify";
 import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
 import useAuthStore from "../stores/auth.store";
 
 export function LoginPage() {
     const [showPassword, setShowPassword] = useState(false)
-    const { register, handleSubmit, formState: { errors, isSubmitting }} = useForm<LoginFromData>({resolver: zodResolver(loginSchema)})
+    const { register, handleSubmit, setError, formState: { errors, isSubmitting }} = useForm<LoginFromData>({resolver: zodResolver(loginSchema)})
 
     const navigate = useNavigate() 
     const setUser = useAuthStore((state) => state.setUser)
@@ -48,23 +49,15 @@ export function LoginPage() {
             }
             
         } catch (error) {
-            if(axios.isAxiosError(error)){
-                
-                const response = error.response;
-
-                if (response?.status === 403) {
-                    navigate("/account-suspended", {
-                        state: {
-                            reason: response.data?.message ?? "Your account has been suspended by the administration",
-                        },
-                    });
-                    return
-                }
-
-                toast.error( response?.data?.message ?? "Login failed. Please try again")
-            }else{
-                toast.error("Something went wrong. Please try again")
+            if (axios.isAxiosError(error) && error.response?.status === 403) {
+                navigate("/account-suspended", {
+                    state: {
+                        reason: getErrorMessage(error, "Your account has been suspended by the administration"),
+                    },
+                });
+                return;
             }
+            handleFormError(error, setError, "Login failed. Please try again");
             
         }
     };

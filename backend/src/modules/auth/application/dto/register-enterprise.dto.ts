@@ -1,6 +1,5 @@
-
 export interface RegisterEnterpriseDto {
-  companyName: string;
+  enterpriseName: string;
   contactPersonName: string;
   email: string;
   phone: string;
@@ -8,7 +7,7 @@ export interface RegisterEnterpriseDto {
 }
 
 export interface EnterpriseRegistrationData {
-  companyName: string;
+  enterpriseName: string;
   contactPersonName: string;
   email: string;
   phone: string;

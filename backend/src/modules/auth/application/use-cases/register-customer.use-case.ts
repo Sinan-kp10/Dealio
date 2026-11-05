@@ -1,8 +1,8 @@
 import type { IUserRepository,} from "../../domain/repositories/user.repository";
 import type {RegisterCustomerDto,} from "../dto/register-customer.dto";
-import { AppError } from "../../../../shared/errors/app-error";
-import { PasswordService } from "../../../../infrastructure/security/password.service";
-import { OtpService } from "../../../../infrastructure/security/otp.service";
+import { ConflictError, BadGatewayError } from "../../../../shared/errors/app-error";
+import { PasswordService } from "../../infrastructure/security/password.service";
+import { OtpService } from "../../infrastructure/security/otp.service";
 import { EmailService } from "../../../../infrastructure/email/email.service";
 import type { IUseCase } from "../../../../shared/application/base.usecase";
 
@@ -16,20 +16,20 @@ export class RegisterCustomerUseCase implements IUseCase<RegisterCustomerDto, vo
 
     ) {}
 
-    execute = async (data: RegisterCustomerDto): Promise<void> => {
+    execute = async (input : RegisterCustomerDto): Promise<void> => {
 
-        const email = data.email.trim().toLowerCase();
+        const email = input.email.trim().toLowerCase();
 
         const existingUser = await this.userRepository.findByEmail(email)
 
         if (existingUser) {
-            throw new AppError("Email is already registered", 409)
+            throw new ConflictError("Email is already registered", "email")
         }
 
-        const passwordHash = await this.passwordService.hash(data.password)
+        const passwordHash = await this.passwordService.hash(input.password)
 
         const registrationData = {
-            name: data.name.trim(),
+            name: input.name.trim(),
             email,
             passwordHash,
         };
@@ -42,7 +42,7 @@ export class RegisterCustomerUseCase implements IUseCase<RegisterCustomerDto, vo
         } catch{
             await this.otpService.delete(email);
 
-            throw new AppError("Failed to send verification email", 502);
+            throw new BadGatewayError("Failed to send verification email");
         }
 
     }

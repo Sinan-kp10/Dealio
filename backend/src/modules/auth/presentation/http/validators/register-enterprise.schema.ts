@@ -2,12 +2,12 @@ import { z } from "zod";
 
 export const registerEnterpriseSchema = z
   .object({
-    companyName: z
+    enterpriseName: z
       .string()
       .trim()
-      .min(2, "Company name must contain at least 2 characters")
-      .max(255, "Company name cannot exceed 255 characters")
-      .regex(/[a-zA-Z0-9]/, "Company name cannot contain only special characters"),
+      .min(2, "Enterprise name must contain at least 2 characters")
+      .max(255, "Enterprise name cannot exceed 255 characters")
+      .regex(/[a-zA-Z0-9]/, "Enterprise name cannot contain only special characters"),
 
     contactPersonName: z
       .string()

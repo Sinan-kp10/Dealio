@@ -1,5 +1,5 @@
-import { OtpService } from "../../../../infrastructure/security/otp.service";
-import { AppError } from "../../../../shared/errors/app-error";
+import { OtpService } from "../../infrastructure/security/otp.service";
+import { BadGatewayError } from "../../../../shared/errors/app-error";
 import { ResendOtpInput } from "../dto/verify-otp.dto";
 import { EmailService } from "../../../../infrastructure/email/email.service";
 import type { IUseCase } from "../../../../shared/application/base.usecase";
@@ -10,11 +10,11 @@ export class ResendOtpUseCase implements IUseCase<ResendOtpInput, void> {
         private readonly emailService: EmailService,
     ) {}
 
-    execute = async(dto : ResendOtpInput) : Promise<void> => {
+    execute = async(input : ResendOtpInput) : Promise<void> => {
 
-        const normalizedEmail = dto.email.trim().toLowerCase()
+        const normalizedEmail = input.email.trim().toLowerCase()
 
-        const otp = dto.purpose === "PASSWORD_RESET" ? await this.otpService.resendPasswordResetOtp(normalizedEmail) 
+        const otp = input.purpose === "PASSWORD_RESET" ? await this.otpService.resendPasswordResetOtp(normalizedEmail) 
             : await this.otpService.resend(normalizedEmail);
 
         try {
@@ -22,13 +22,13 @@ export class ResendOtpUseCase implements IUseCase<ResendOtpInput, void> {
             
         } catch{
 
-            if (dto.purpose === "REGISTRATION") {
+            if (input.purpose === "REGISTRATION") {
                 await this.otpService.delete(normalizedEmail);
             } else {
                 await this.otpService.deletePasswordResetOtp(normalizedEmail);
             }
 
-            throw new AppError("Failed to send verification email", 502);
+            throw new BadGatewayError("Failed to send verification email");
         }
     }
 }

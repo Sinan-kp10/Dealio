@@ -1,6 +1,5 @@
-
 export interface EnterpriseSignupFormData {
-  companyName: string;
+  enterpriseName: string;
   contactPersonName: string;
   email: string;
   phone: string;
@@ -9,7 +8,7 @@ export interface EnterpriseSignupFormData {
 }
 
 export interface EnterpriseSignupRequest {
-  companyName: string;
+  enterpriseName: string;
   contactPersonName: string;
   email: string;
   phone: string;
@@ -20,5 +19,4 @@ export interface EnterpriseSignupRequest {
 export interface EnterpriseSignupResponse {
   status: boolean;
   message: string;
-
 }
