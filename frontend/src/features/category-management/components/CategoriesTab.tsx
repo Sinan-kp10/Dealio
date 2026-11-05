@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Search, ChevronDown, Plus } from "lucide-react";
+import { Search, Plus } from "lucide-react";
 import type { Category, CategoryStatus } from "../types/category.types";
 import useDebounce from "../../../hook/useDebounce";
 import { getCategories } from "../sevices/category-management.service";
@@ -8,6 +8,7 @@ import { formatDateTime } from "../../../utils/dateFormatter";
 import Table from "../../../components/common/table/Table";
 import Pagination from "../../../components/common/pagination/Pagination";
 import CategoryFormModal from "./CategoryFormModal";
+import Select from "../../../components/common/select/Select";
 
 const DEFAULT_LIMIT = 5;
 
@@ -26,7 +27,6 @@ function CategoriesTab({ onCategoryChanged, refreshTrigger = 0 }: CategoriesTabP
     const debouncedSearch = useDebounce(search, 500);
     const [selectedCategoryToEdit, setSelectedCategoryToEdit] = useState<Category | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [internalRefreshCount, setInternalRefreshCount] = useState(0);
 
     useEffect(() => {
         let cancelled = false;
@@ -59,7 +59,7 @@ function CategoriesTab({ onCategoryChanged, refreshTrigger = 0 }: CategoriesTabP
         return () => {
             cancelled = true;
         };
-    }, [page, status, debouncedSearch, internalRefreshCount, refreshTrigger]);
+    }, [page, status, debouncedSearch, refreshTrigger]);
 
     const handleSearchChange = (value: string) => {
         setSearch(value);
@@ -83,7 +83,6 @@ function CategoriesTab({ onCategoryChanged, refreshTrigger = 0 }: CategoriesTabP
 
     const handleModalSuccess = () => {
         handleCloseModal();
-        setInternalRefreshCount((prev) => prev + 1);
         onCategoryChanged?.();
     };
 
@@ -111,22 +110,16 @@ function CategoriesTab({ onCategoryChanged, refreshTrigger = 0 }: CategoriesTabP
                         />
                     </div>
 
-                    <div className="relative">
-                        <select
-                            value={status}
-                            onChange={(event) => handleStatusChange(event.target.value as "ALL" | CategoryStatus)}
-                            aria-label="Filter by status"
-                            className="h-10 pl-3.5 pr-8 bg-white border border-slate-200/90 rounded-lg text-sm text-slate-700 font-medium appearance-none focus:outline-none focus:ring-2 focus:ring-[#355982]/20 focus:border-[#355982] shadow-xs cursor-pointer"
-                        >
-                            <option value="ALL">Status: All</option>
-                            <option value="ACTIVE">Status: Active</option>
-                            <option value="INACTIVE">Status: Inactive</option>
-                        </select>
-                        <ChevronDown
-                            size={15}
-                            className="text-slate-500 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
-                        />
-                    </div>
+                    <Select
+                        value={status}
+                        onChange={(val) => handleStatusChange(val as "ALL" | CategoryStatus)}
+                        aria-label="Filter by status"
+                        options={[
+                            { label: "Status: All", value: "ALL" },
+                            { label: "Status: Active", value: "ACTIVE" },
+                            { label: "Status: Inactive", value: "INACTIVE" },
+                        ]}
+                    />
                 </div>
 
                 <button

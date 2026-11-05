@@ -1,5 +1,6 @@
-import { Search, ChevronDown } from "lucide-react";
+import { Search } from "lucide-react";
 import Pagination from "../../../components/common/pagination/Pagination";
+import Select from "../../../components/common/select/Select";
 import Table from "../../../components/common/table/Table";
 import TableSkeleton from "../components/TableSkeleton";
 import { useEffect, useState } from "react";
@@ -155,42 +156,29 @@ export function EnterpriseManagementPage() {
                     />
                 </div>
 
-                <div className="relative">
-                    <select
-                        value={status}
-                        onChange={(event) => handleStatusChange(event.target.value as "ALL" | EnterpriseStatus)}
-                        aria-label="Filter by status"
-                        className="h-10 pl-3.5 pr-8 bg-white border border-slate-200/90 rounded-lg text-sm text-slate-700 font-medium appearance-none focus:outline-none focus:ring-2 focus:ring-[#355982]/20 focus:border-[#355982] shadow-xs cursor-pointer"
-                    >
-                        <option value="ALL">Status: All</option>
-                        <option value="ACTIVE">Status: Active</option>
-                        <option value="SUSPENDED">Status: Suspended</option>
-                    </select>
-                    <ChevronDown
-                        size={15}
-                        className="text-slate-500 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
-                    />
-                </div>
+                <Select
+                    value={status}
+                    onChange={(val) => handleStatusChange(val as "ALL" | EnterpriseStatus)}
+                    aria-label="Filter by status"
+                    options={[
+                        { label: "Status: All", value: "ALL" },
+                        { label: "Status: Active", value: "ACTIVE" },
+                        { label: "Status: Suspended", value: "SUSPENDED" },
+                    ]}
+                />
 
-                <div className="relative">
-                    <select
-                        value={category}
-                        onChange={(event) => handleCategoryChange(event.target.value)}
-                        aria-label="Filter by category"
-                        className="h-10 pl-3.5 pr-8 bg-white border border-slate-200/90 rounded-lg text-sm text-slate-700 font-medium appearance-none focus:outline-none focus:ring-2 focus:ring-[#355982]/20 focus:border-[#355982] shadow-xs cursor-pointer"
-                    >
-                        <option value="ALL">Category: All</option>
-                        {categoryOptions.map((cat) => (
-                            <option key={cat} value={cat}>
-                                {cat}
-                            </option>
-                        ))}
-                    </select>
-                    <ChevronDown
-                        size={15}
-                        className="text-slate-500 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
-                    />
-                </div>
+                <Select
+                    value={category}
+                    onChange={handleCategoryChange}
+                    aria-label="Filter by category"
+                    options={[
+                        { label: "Category: All", value: "ALL" },
+                        ...categoryOptions.map((cat) => ({
+                            label: cat,
+                            value: cat,
+                        })),
+                    ]}
+                />
             </div>
 
             <Table
