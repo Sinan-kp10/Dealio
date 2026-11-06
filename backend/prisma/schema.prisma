@@ -33,6 +33,7 @@ model users {
   role                user_role
   enterprise_id       String?     @db.Uuid
   phone               String?     @db.VarChar(255)
+  phone_verified      Boolean     @default(false)
   profile_picture_key String?     @db.VarChar(255)
   email_verified      Boolean     @default(false)
   status              user_status @default(ACTIVE)

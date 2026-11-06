@@ -28,6 +28,6 @@ export type CreatedEnterpriseResult = {
 
 export interface IEnterpriseRepository extends IBaseRepository<Enterprise> {
   findUserByEmail(email: string): Promise<boolean>;
-
+  isPhoneVerified(phone: string): Promise<boolean>;
   create(data: CreateEnterpriseData): Promise<CreatedEnterpriseResult>;
 }

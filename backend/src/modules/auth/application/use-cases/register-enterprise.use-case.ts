@@ -25,6 +25,14 @@ export class RegisterEnterpriseUseCase implements IUseCase<RegisterEnterpriseDto
             throw new ConflictError("Email is already registered", "email");
         }
 
+        if (input.phone) {
+            const phone = input.phone.trim();
+            const phoneVerified = await this.enterpriseRepository.isPhoneVerified(phone);
+            if (phoneVerified) {
+                throw new ConflictError("Phone number is already registered and verified", "phone");
+            }
+        }
+
         const passwordHash = await this.passwordService.hash(input.password)
 
         const registrationData = {

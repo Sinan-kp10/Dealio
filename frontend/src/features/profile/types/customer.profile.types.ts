@@ -2,6 +2,7 @@ export interface CustomerProfile {
   name: string;
   email: string;
   phone: string | null;
+  phoneVerified: boolean;
   createdAt: string;
   profilePictureKey: string | null;
 }

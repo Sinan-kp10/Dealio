@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { CustomerProfile, UpdateCustomerProfile } from "../types/customer.profile.types";
 import { getCustomerProfile, updateCustomerProfile } from "../services/customer-profile.service";
-import { handleApiError } from "../../../utils/errorHandler";
+import { handleApiError, handleFormError } from "../../../utils/errorHandler";
 import { formatDate } from "../../../utils/dateFormatter";
 import { toast } from "react-toastify";
 import {Camera, Trash2, SquarePen, User,Phone,Calendar,Lock,BadgeCheck,X,Check,Loader2} from "lucide-react";
@@ -17,7 +17,7 @@ function CustomerProfilePage() {
   const [updateMode, setUpdateMode] = useState(false);
   const setUser = useAuthStore((state) => state.setUser)
   const currentUser = useAuthStore((state) => state.user)
-  const {register,handleSubmit,reset,formState: { errors, isSubmitting }} = useForm<UpdateCustomerProfile>({resolver: zodResolver(updateCustomerProfileSchema)})
+  const {register,handleSubmit,reset,setError,formState: { errors, isSubmitting }} = useForm<UpdateCustomerProfile>({resolver: zodResolver(updateCustomerProfileSchema)})
 
   useEffect(() => {
     let cancelled = false;
@@ -82,6 +82,7 @@ function CustomerProfilePage() {
               ...prev,
               name: updatedName,
               phone: updatedPhone,
+              phoneVerified: updatedPhone === prev.phone ? prev.phoneVerified : false,
             }
           : null
       )
@@ -96,7 +97,7 @@ function CustomerProfilePage() {
       toast.success("Profile updated successfully");
       setUpdateMode(false);
     } catch (error) {
-      handleApiError(error, "Unable to update profile. Please try again");
+      handleFormError(error, setError, "Unable to update profile. Please try again");
     }
   };
 
@@ -299,11 +300,25 @@ function CustomerProfilePage() {
                   )}
                 </div>
               ) : (
-                <div className="flex items-center gap-2.5 px-3.5 py-2.5 bg-slate-50/70 border border-slate-200/90 rounded-xl text-sm text-slate-800 shadow-2xs">
-                  <Phone size={16} className="text-slate-400 shrink-0" />
-                  <span className="truncate text-slate-700">
-                    {profile.phone || "Not provided"}
-                  </span>
+                <div className="flex items-center justify-between px-3.5 py-2.5 bg-slate-50/70 border border-slate-200/90 rounded-xl text-sm text-slate-800 shadow-2xs">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <Phone size={16} className="text-slate-400 shrink-0" />
+                    <span className="truncate text-slate-700">
+                      {profile.phone || "Not provided"}
+                    </span>
+                  </div>
+                  {profile.phone && (
+                    profile.phoneVerified ? (
+                      <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md shrink-0">
+                        <BadgeCheck size={13} />
+                        Verified
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center text-[11px] font-medium text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md shrink-0">
+                        Unverified
+                      </span>
+                    )
+                  )}
                 </div>
               )}
             </div>

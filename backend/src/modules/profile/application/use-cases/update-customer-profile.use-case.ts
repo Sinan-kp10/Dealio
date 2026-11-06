@@ -1,4 +1,4 @@
-import { NotFoundError } from "../../../../shared/errors/app-error.js";
+import { ConflictError, NotFoundError } from "../../../../shared/errors/app-error.js";
 import type { IUseCase } from "../../../../shared/application/base.usecase.js";
 import type { UpdateCustomerProfileDto, UpdatedCustomerProfileFieldsDto } from "../dto/customer-profile.dto.js";
 import { ICustomerProfileRepository } from "../../domain/repositories/customer-profile.repository.js";
@@ -23,7 +23,19 @@ export class UpdateCustomerProfileUseCase implements IUseCase<UpdateCustomerProf
         }
 
         if (input.phone !== undefined) {
-            dataToUpdate.phone = input.phone ? input.phone.trim() : null;
+            const trimmedPhone = input.phone ? input.phone.trim() : null;
+
+            if (trimmedPhone !== user.phone) {
+                if (trimmedPhone) {
+                    const isVerified = await this.customerProfileRepository.isPhoneVerified(trimmedPhone);
+                    if (isVerified) {
+                        throw new ConflictError("Phone number is already registered and verified", "phone");
+                    }
+                }
+
+                dataToUpdate.phone = trimmedPhone;
+                dataToUpdate.phone_verified = false;
+            }
         }
 
         return await this.customerProfileRepository.updateCustomerProfile(userId, dataToUpdate);
