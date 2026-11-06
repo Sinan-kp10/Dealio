@@ -1,60 +1,55 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Mail } from "lucide-react";
-import { handleFormError } from "../../../utils/errorHandler";
+import { Phone } from "lucide-react";
+import { handleFormError } from "../../../../utils/errorHandler";
 import { toast } from "react-toastify";
-import { requestEmailChangeSchema, type RequestEmailChangeFormData } from "../schema/request-email-change.schema";
-import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
-import { requestEmailChange } from "../services/users-account-settings.service";
+import { requestPhoneOtpSchema, type RequestPhoneOtpFormData } from "../../schema/request-phone-otp.schema";
+import ButtonSpinner from "../../../../components/common/loading/ButtonSpinner";
+import { requestPhoneOtp } from "../../services/users-account-settings.service";
 
-interface RequestEmailStepProps {
-  onSuccess: (newEmail: string) => void;
+interface RequestPhoneStepProps {
+  onSuccess: (phone: string) => void;
   onCancel: () => void;
 }
 
-export function RequestEmailStep({ onSuccess, onCancel }: RequestEmailStepProps) {
-  const {register,handleSubmit,setError,formState: { errors, isSubmitting },} = useForm<RequestEmailChangeFormData>({resolver: zodResolver(requestEmailChangeSchema)})
+export function RequestPhoneStep({ onSuccess, onCancel }: RequestPhoneStepProps) {
+  const { register, handleSubmit, setError, formState: { errors, isSubmitting }} = useForm<RequestPhoneOtpFormData>({resolver: zodResolver(requestPhoneOtpSchema)});
 
-  const onSubmit = async (data: RequestEmailChangeFormData) => {
+  const onSubmit = async (data: RequestPhoneOtpFormData) => {
     try {
-
-      await requestEmailChange({ newEmail: data.newEmail });
-      toast.success("OTP sent to your new email address");
-      onSuccess(data.newEmail.trim().toLowerCase())
-
+      await requestPhoneOtp({ phone: data.phone.trim() });
+      toast.success("OTP sent to your phone number");
+      onSuccess(data.phone.trim());
     } catch (error) {
-
       handleFormError(error, setError, "Unable to send verification code");
     }
-  }
+  };
 
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-5 pt-5">
       <div>
         <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
-          New Email Address
+          Phone Number
         </label>
         <div className="relative flex items-center w-full">
           <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center justify-center">
-            <Mail size={18} />
+            <Phone size={18} />
           </span>
           <input
-            type="email"
+            type="tel"
             autoFocus
             disabled={isSubmitting}
-            {...register("newEmail")}
-            placeholder="Enter your new email address"
+            maxLength={10}
+            {...register("phone")}
+            placeholder="Enter 10-digit phone number"
             className={`w-full h-11 pl-11 pr-4 text-[0.9375rem] text-[#0f1d2f] bg-white border rounded-xl transition-all placeholder:text-slate-400 focus:outline-none disabled:bg-slate-50 disabled:cursor-not-allowed ${
-              errors.newEmail
+              errors.phone
                 ? "border-red-500 focus:border-red-500 focus:ring-[3px] focus:ring-red-500/12"
                 : "border-slate-200/90 hover:border-slate-300 focus:border-[#355982] focus:ring-[3px] focus:ring-[#355982]/12"
             }`}
           />
         </div>
-        {errors.newEmail && (
-          <p className="text-red-500 text-[0.8125rem] mt-1.5 leading-[1.35] font-medium">
-            {errors.newEmail.message}
-          </p>
+        {errors.phone && (<p className="text-red-500 text-[0.8125rem] mt-1.5 leading-[1.35] font-medium">{errors.phone.message}</p>
         )}
       </div>
 
@@ -79,5 +74,5 @@ export function RequestEmailStep({ onSuccess, onCancel }: RequestEmailStepProps)
   );
 }
 
-export default RequestEmailStep;
+export default RequestPhoneStep;
 

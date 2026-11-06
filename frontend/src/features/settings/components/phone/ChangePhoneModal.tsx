@@ -1,21 +1,22 @@
 import { useState, useEffect, useCallback } from "react";
 import { X } from "lucide-react";
-import RequestEmailStep from "./RequestEmailStep";
-import VerifyEmailStep from "./VerifyEmailStep";
+import RequestPhoneStep from "./RequestPhoneStep";
+import VerifyPhoneStep from "./VerifyPhoneStep";
 
-export interface ChangeEmailModalProps {
+export interface ChangePhoneModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: (newEmail: string) => void;
+  onSuccess: (newPhone: string) => void;
+  currentPhone?: string | null;
 }
 
-export function ChangeEmailModal({ isOpen, onClose, onSuccess }: ChangeEmailModalProps) {
+export function ChangePhoneModal({ isOpen, onClose, onSuccess, currentPhone }: ChangePhoneModalProps) {
   const [step, setStep] = useState<"REQUEST" | "VERIFY">("REQUEST");
-  const [targetEmail, setTargetEmail] = useState("");
+  const [targetPhone, setTargetPhone] = useState("");
 
   const handleClose = useCallback(() => {
     setStep("REQUEST");
-    setTargetEmail("");
+    setTargetPhone("");
     onClose();
   }, [onClose]);
 
@@ -48,15 +49,19 @@ export function ChangeEmailModal({ isOpen, onClose, onSuccess }: ChangeEmailModa
         <div className="flex items-start justify-between gap-4 pb-4 border-b border-slate-100">
           <div>
             <h2 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
-              {step === "REQUEST" ? "Change Email Address" : "Verify New Email"}
+              {step === "REQUEST"
+                ? currentPhone
+                  ? "Change Phone Number"
+                  : "Add Phone Number"
+                : "Verify Phone Number"}
             </h2>
             {step === "REQUEST" ? (
               <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                Enter your new email address. We'll send a 6-digit verification code to confirm it.
+                Enter your 10-digit mobile number. We'll send a 6-digit verification code to confirm it.
               </p>
             ) : (
               <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                We sent a 6-digit code to <span className="font-semibold text-slate-800">{targetEmail}</span>
+                We sent a 6-digit code to <span className="font-semibold text-slate-800">{targetPhone}</span>
               </p>
             )}
           </div>
@@ -72,18 +77,18 @@ export function ChangeEmailModal({ isOpen, onClose, onSuccess }: ChangeEmailModa
         </div>
 
         {step === "REQUEST" ? (
-          <RequestEmailStep
-            onSuccess={(email) => {
-              setTargetEmail(email);
+          <RequestPhoneStep
+            onSuccess={(phone) => {
+              setTargetPhone(phone);
               setStep("VERIFY");
             }}
             onCancel={handleClose}
           />
         ) : (
-          <VerifyEmailStep
-            newEmail={targetEmail}
-            onSuccess={(email) => {
-              onSuccess(email);
+          <VerifyPhoneStep
+            phone={targetPhone}
+            onSuccess={(verifiedPhone) => {
+              onSuccess(verifiedPhone);
               handleClose();
             }}
             onCancel={handleClose}
@@ -94,5 +99,4 @@ export function ChangeEmailModal({ isOpen, onClose, onSuccess }: ChangeEmailModa
   );
 }
 
-export default ChangeEmailModal;
-
+export default ChangePhoneModal;

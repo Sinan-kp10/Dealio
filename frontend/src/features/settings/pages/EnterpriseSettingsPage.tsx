@@ -1,8 +1,9 @@
 import { useState } from "react";
-import useAuthStore from "../../auth/stores/auth.store";
-import { Mail, Lock } from "lucide-react";
-import ChangePasswordModal from "../components/ChangePasswordModal";
-import ChangeEmailModal from "../components/ChangeEmailModal";
+import useAuthStore from "../../../stores/auth.store";
+import { SquarePen, Lock } from "lucide-react";
+import ChangeEmailModal from "../components/email/ChangeEmailModal";
+import ChangePasswordModal from "../components/password/ChangePasswordModal";
+
 
 function EnterpriseSettingsPage() {
     const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
@@ -34,10 +35,10 @@ function EnterpriseSettingsPage() {
                     <button
                         type="button"
                         onClick={() => setIsChangeEmailModalOpen(true)}
-                        className="inline-flex items-center justify-center gap-2 w-full sm:w-44 px-4 py-2 sm:py-2.5 border border-slate-200/90 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-2xs whitespace-nowrap shrink-0 cursor-pointer"
+                        className="inline-flex items-center justify-center gap-1.5 w-full sm:w-24 px-3 py-2 border border-slate-200/90 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-2xs whitespace-nowrap shrink-0 cursor-pointer"
                     >
-                        <Mail size={16} className="text-slate-600" />
-                        <span>Change Email</span>
+                        <SquarePen size={15} className="text-slate-600 shrink-0" />
+                        <span>Edit</span>
                     </button>
                 </div>
 
@@ -53,10 +54,10 @@ function EnterpriseSettingsPage() {
                     <button
                         type="button"
                         onClick={() => setIsChangePasswordModalOpen(true)}
-                        className="inline-flex items-center justify-center gap-2 w-full sm:w-44 px-4 py-2 sm:py-2.5 border border-slate-200/90 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-2xs whitespace-nowrap shrink-0 cursor-pointer"
+                        className="inline-flex items-center justify-center gap-1.5 w-full sm:w-24 px-3 py-2 border border-slate-200/90 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-2xs whitespace-nowrap shrink-0 cursor-pointer"
                     >
-                        <Lock size={16} className="text-slate-600" />
-                        <span>Change Password</span>
+                        <Lock size={15} className="text-slate-600 shrink-0" />
+                        <span>Change</span>
                     </button>
                 </div>
         </div>
@@ -65,10 +66,9 @@ function EnterpriseSettingsPage() {
             isOpen={isChangeEmailModalOpen}
             onClose={() => setIsChangeEmailModalOpen(false)}
             onSuccess={(newEmail) => {
-            const user = useAuthStore.getState().user;
-            if (user) {
-                setUser({ ...user, email: newEmail });
-            }
+                if (currentUser) {
+                    setUser({ ...currentUser, email: newEmail });
+                }
             }}
         />
 

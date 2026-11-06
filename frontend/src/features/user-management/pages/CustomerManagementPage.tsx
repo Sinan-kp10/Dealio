@@ -1,4 +1,4 @@
-import { Search } from "lucide-react";
+import { Search} from "lucide-react";
 import Pagination from "../../../components/common/pagination/Pagination";
 import Table from "../../../components/common/table/Table";
 import TableSkeleton from "../components/TableSkeleton";
@@ -189,8 +189,16 @@ function CustomerManagementPage() {
                             {item.email}
                         </td>
 
-                        <td className="py-4 px-6 text-sm text-slate-700 font-medium whitespace-nowrap align-middle">
-                            {item.phone ?? "-"}
+                        <td className="py-4 px-6 text-sm whitespace-nowrap align-middle">
+                            {item.phone ? (
+                                <span className="text-slate-600">
+                                    {item.phone}
+                                </span>
+                            ) : (
+                                <span className="text-slate-400 italic">
+                                    Not provided
+                                </span>
+                            )}
                         </td>
 
                         <td className="py-4 px-6 text-sm text-slate-600 whitespace-nowrap align-middle">

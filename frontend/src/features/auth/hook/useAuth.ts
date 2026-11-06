@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import useAuthStore from "../stores/auth.store"
+import useAuthStore from "../../../stores/auth.store"
 import { getCurrentUser } from "../services/auth.service"
 
 function useAuth(){
