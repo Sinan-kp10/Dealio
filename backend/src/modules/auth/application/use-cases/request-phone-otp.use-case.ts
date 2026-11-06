@@ -1,5 +1,5 @@
 import { IUseCase } from "../../../../shared/application/base.usecase";
-import { BadGatewayError, BadRequestError, ConflictError, NotFoundError } from "../../../../shared/errors/app-error";
+import { BadGatewayError, ConflictError, NotFoundError } from "../../../../shared/errors/app-error";
 import { SmsService } from "../../../../infrastructure/sms/sms.service";
 import { IUserRepository } from "../../domain/repositories/user.repository";
 import { OtpService } from "../../infrastructure/security/otp.service";
@@ -19,11 +19,8 @@ export class RequestPhoneOtpUseCase implements IUseCase<RequestPhoneOtpDto, void
             throw new NotFoundError("User not found");
         }
 
-        const phoneToVerify = input.phone?.trim() || user.phone?.trim();
+        const phoneToVerify = input.phone.trim()
 
-        if (!phoneToVerify) {
-            throw new BadRequestError("Phone number is required", "phone");
-        }
 
         if (user.phone === phoneToVerify && user.phone_verified) {
             throw new ConflictError("Phone number is already verified", "phone");

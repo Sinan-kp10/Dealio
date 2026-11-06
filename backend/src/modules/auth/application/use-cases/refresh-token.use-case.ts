@@ -62,6 +62,8 @@ export class RefreshTokenUseCase implements IUseCase<string | undefined, Refresh
                 name: user.name,
                 email: user.email,
                 role: user.role,
+                phone: user.phone,
+                phoneVerified: user.phone_verified ?? false,
             },
         };
     };

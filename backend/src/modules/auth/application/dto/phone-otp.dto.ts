@@ -1,6 +1,6 @@
 export interface RequestPhoneOtpDto {
     userId: string;
-    phone?: string;
+    phone: string;
 }
 
 export interface VerifyPhoneOtpDto {
