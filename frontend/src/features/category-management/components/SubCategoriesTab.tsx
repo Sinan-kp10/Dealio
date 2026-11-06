@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Search, ChevronDown, Plus } from "lucide-react";
+import { Search, Plus } from "lucide-react";
 import type { SubCategoryListItem, SubCategoryStatus } from "../types/sub-category";
 import useDebounce from "../../../hook/useDebounce";
 import { getCategories, getSubCategories } from "../sevices/category-management.service";
@@ -8,6 +8,7 @@ import { formatDateTime } from "../../../utils/dateFormatter";
 import Table from "../../../components/common/table/Table";
 import Pagination from "../../../components/common/pagination/Pagination";
 import SubCategoryModal from "./SubCategoryFormModal";
+import Select from "../../../components/common/select/Select";
 
 const DEFAULT_LIMIT = 5;
 
@@ -124,42 +125,29 @@ function SubCategoriesTab({onSubCategoryAdded,categoriesRefreshTrigger = 0,}: Su
                         />
                     </div>
 
-                    <div className="relative">
-                        <select
-                            value={subStatus}
-                            onChange={(event) => handleStatusChange(event.target.value as "ALL" | SubCategoryStatus)}
-                            aria-label="Filter subcategories by status"
-                            className="h-10 pl-3.5 pr-8 bg-white border border-slate-200/90 rounded-lg text-sm text-slate-700 font-medium appearance-none focus:outline-none focus:ring-2 focus:ring-[#355982]/20 focus:border-[#355982] shadow-xs cursor-pointer"
-                        >
-                            <option value="ALL">Status: All</option>
-                            <option value="ACTIVE">Status: Active</option>
-                            <option value="INACTIVE">Status: Inactive</option>
-                        </select>
-                        <ChevronDown
-                            size={15}
-                            className="text-slate-500 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
-                        />
-                    </div>
+                    <Select
+                        value={subStatus}
+                        onChange={(val) => handleStatusChange(val as "ALL" | SubCategoryStatus)}
+                        aria-label="Filter subcategories by status"
+                        options={[
+                            { label: "Status: All", value: "ALL" },
+                            { label: "Status: Active", value: "ACTIVE" },
+                            { label: "Status: Inactive", value: "INACTIVE" },
+                        ]}
+                    />
 
-                    <div className="relative">
-                        <select
-                            value={subCategoryFilter}
-                            onChange={(event) => handleCategoryFilterChange(event.target.value)}
-                            aria-label="Filter by parent category"
-                            className="h-10 pl-3.5 pr-8 bg-white border border-slate-200/90 rounded-lg text-sm text-slate-700 font-medium appearance-none focus:outline-none focus:ring-2 focus:ring-[#355982]/20 focus:border-[#355982] shadow-xs cursor-pointer"
-                        >
-                            <option value="ALL">Category: All</option>
-                            {allCategories.map((c) => (
-                                <option key={c.id} value={c.id}>
-                                    {c.name}
-                                </option>
-                            ))}
-                        </select>
-                        <ChevronDown
-                            size={15}
-                            className="text-slate-500 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
-                        />
-                    </div>
+                    <Select
+                        value={subCategoryFilter}
+                        onChange={handleCategoryFilterChange}
+                        aria-label="Filter by parent category"
+                        options={[
+                            { label: "Category: All", value: "ALL" },
+                            ...allCategories.map((c) => ({
+                                label: c.name,
+                                value: c.id,
+                            })),
+                        ]}
+                    />
                 </div>
 
                 <button

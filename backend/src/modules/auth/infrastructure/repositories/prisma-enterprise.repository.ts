@@ -23,6 +23,18 @@ export class PrismaEnterpriseRepository implements IEnterpriseRepository {
         return user !== null;
     };
 
+    isPhoneVerified = async (phone: string): Promise<boolean> => {
+        const user = await prisma.users.findFirst({
+            where: {
+                phone,
+                phone_verified: true,
+            },
+            select: { id: true },
+        });
+
+        return user !== null;
+    };
+
     create = async (data: CreateEnterpriseData): Promise<CreatedEnterpriseResult> => {
         return prisma.$transaction(async (tx) => {
             const enterprise = await tx.enterprises.create({

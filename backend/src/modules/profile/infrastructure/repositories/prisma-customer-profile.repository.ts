@@ -39,4 +39,16 @@ export class PrismaCustomerProfileRepository implements ICustomerProfileReposito
         return data;
     };
 
+    isPhoneVerified = async (phone: string): Promise<boolean> => {
+        const user = await prisma.users.findFirst({
+            where: {
+                phone,
+                phone_verified: true,
+            },
+            select: { id: true },
+        });
+
+        return user !== null;
+    };
+
 }
