@@ -5,8 +5,9 @@ export const enterpriseProfileSelect = {
   id: true,
   name: true,
   email: true,
+  phone: true,
+  phone_verified: true,
   profile_picture_key: true,
-  created_at: true,
   enterprise: {
     select: {
       id: true,
@@ -56,8 +57,9 @@ export class EnterpriseProfileMapper {
       id: user.id,
       name: user.name,
       email: user.email,
+      phone: user.phone,
+      phoneVerified: user.phone_verified ?? false,
       profilePictureKey: user.profile_picture_key,
-      createdAt: user.created_at,
       enterpriseId: enterprise?.id ?? "",
       enterpriseName: enterprise?.enterprise_name ?? "",
       description: enterprise?.description ?? null,

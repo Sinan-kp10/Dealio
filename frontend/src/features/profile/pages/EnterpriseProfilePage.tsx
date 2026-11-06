@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type { EnterpriseProfile } from "../types/enterprise-profile.types";
 import { handleApiError } from "../../../utils/errorHandler";
-import { formatDate } from "../../../utils/dateFormatter";
 import { getEnterpriseProfile } from "../services/enterprise-profile.service";
 import EnterpriseProfileSkeleton from "../components/EnterpriseProfileSkeleton";
-import {Camera,Trash2,SquarePen,Lock,Calendar,BadgeCheck,Briefcase,ShieldCheck,Landmark,ChevronDown} from "lucide-react";
+import {Camera,Trash2,SquarePen,Phone,Mail,BadgeCheck,Briefcase,ShieldCheck,Landmark,ChevronDown} from "lucide-react";
 
 function EnterpriseProfilePage() {
+  const navigate = useNavigate();
   const [profile, setProfile] = useState<EnterpriseProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -186,10 +187,16 @@ function EnterpriseProfilePage() {
                 BUSINESS EMAIL
               </label>
               <div className="flex items-center justify-between px-4 py-2.5 bg-[#f6f8fb] border border-slate-200/90 rounded-xl text-sm font-medium text-slate-800 shadow-2xs">
-                <span className="truncate">
-                  {profile?.email || "company@example.com"}
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <Mail size={16} className="text-slate-400 shrink-0" />
+                  <span className="truncate text-slate-700">
+                    {profile?.email || "company@example.com"}
+                  </span>
+                </div>
+                <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md shrink-0">
+                  <BadgeCheck size={13} />
+                  Verified
                 </span>
-                <Lock size={15} className="text-slate-400 shrink-0 ml-2" />
               </div>
               <p className="text-[11px] sm:text-xs text-slate-400 mt-1.5 leading-relaxed">
                 Email updates require verification to maintain quotation and
@@ -199,17 +206,49 @@ function EnterpriseProfilePage() {
 
             <div>
               <label className="block text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
-                ACCOUNT CREATED
+                PHONE NUMBER
               </label>
               <div className="flex items-center justify-between px-4 py-2.5 bg-[#f6f8fb] border border-slate-200/90 rounded-xl text-sm font-medium text-slate-800 shadow-2xs">
-                <span className="truncate">
-                  {formatDate(profile?.createdAt) || "02 Nov 2026"}
-                </span>
-                <Calendar size={16} className="text-slate-400 shrink-0 ml-2" />
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <Phone size={16} className="text-slate-400 shrink-0" />
+                  <span className="truncate text-slate-700">
+                    {profile?.phone || "Not provided"}
+                  </span>
+                </div>
+                {profile?.phone ? (
+                  <div className="flex items-center gap-2 shrink-0">
+                    {profile?.phoneVerified ? (
+                      <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md shrink-0">
+                        <BadgeCheck size={13} />
+                        Verified
+                      </span>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <span className="inline-flex items-center text-[11px] font-medium text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md shrink-0">
+                          Unverified
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => navigate("/enterprise/settings")}
+                          className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-slate-900 bg-white border border-slate-200/90 rounded-lg transition-colors shadow-2xs cursor-pointer shrink-0"
+                        >
+                          <span>Verify</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => navigate("/enterprise/settings")}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-slate-900 bg-white border border-slate-200/90 rounded-lg transition-colors shadow-2xs cursor-pointer shrink-0"
+                  >
+                    <span>Add Phone</span>
+                  </button>
+                )}
               </div>
               <p className="text-[11px] sm:text-xs text-slate-400 mt-1.5 leading-relaxed">
-                Account registration date is verified and permanently linked to
-                your profile.
+                Phone verification ensures urgent quotation notifications reach your enterprise promptly.
               </p>
             </div>
           </div>

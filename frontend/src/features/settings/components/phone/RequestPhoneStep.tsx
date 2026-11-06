@@ -8,12 +8,18 @@ import ButtonSpinner from "../../../../components/common/loading/ButtonSpinner";
 import { requestPhoneOtp } from "../../services/users-account-settings.service";
 
 interface RequestPhoneStepProps {
+  currentPhone?: string | null;
   onSuccess: (phone: string) => void;
   onCancel: () => void;
 }
 
-export function RequestPhoneStep({ onSuccess, onCancel }: RequestPhoneStepProps) {
-  const { register, handleSubmit, setError, formState: { errors, isSubmitting }} = useForm<RequestPhoneOtpFormData>({resolver: zodResolver(requestPhoneOtpSchema)});
+export function RequestPhoneStep({ currentPhone, onSuccess, onCancel }: RequestPhoneStepProps) {
+  const { register, handleSubmit, setError, formState: { errors, isSubmitting }} = useForm<RequestPhoneOtpFormData>({
+    resolver: zodResolver(requestPhoneOtpSchema),
+    defaultValues: {
+      phone: currentPhone || "",
+    },
+  });
 
   const onSubmit = async (data: RequestPhoneOtpFormData) => {
     try {

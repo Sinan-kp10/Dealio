@@ -78,6 +78,7 @@ export function ChangePhoneModal({ isOpen, onClose, onSuccess, currentPhone }: C
 
         {step === "REQUEST" ? (
           <RequestPhoneStep
+            currentPhone={currentPhone}
             onSuccess={(phone) => {
               setTargetPhone(phone);
               setStep("VERIFY");
