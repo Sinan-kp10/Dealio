@@ -11,6 +11,7 @@ export interface SafeUser {
   suspension_reason: string | null;
   enterprise_id: string | null;
   phone: string | null;
+  phone_verified?: boolean;
   email_verified: boolean;
   created_at: Date;
   updated_at: Date;

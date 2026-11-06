@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { handleApiError, handleFormError } from "../../../utils/errorHandler";
 import { toast } from "react-toastify";
-import { verifyEmailChangeSchema, type VerifyEmailChangeFormData } from "../schema/verify-email-change.schema";
-import OtpInput from "../../auth/components/OTPinput";
-import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
-import { resendEmailChangeOtp, verifyEmailChange } from "../services/users-account-settings.service";
+import { verifyEmailChangeSchema, type VerifyEmailChangeFormData } from "../../schema/verify-email-change.schema";
+import { resendEmailChangeOtp, verifyEmailChange } from "../../services/users-account-settings.service";
+import { handleApiError, handleFormError } from "../../../../utils/errorHandler";
+import OtpInput from "../../../auth/components/OTPinput";
+import ButtonSpinner from "../../../../components/common/loading/ButtonSpinner";
 
 interface VerifyEmailStepProps {
   newEmail: string;

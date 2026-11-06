@@ -1,11 +1,12 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Mail } from "lucide-react";
-import { handleFormError } from "../../../utils/errorHandler";
 import { toast } from "react-toastify";
-import { requestEmailChangeSchema, type RequestEmailChangeFormData } from "../schema/request-email-change.schema";
-import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
-import { requestEmailChange } from "../services/users-account-settings.service";
+import { requestEmailChangeSchema, type RequestEmailChangeFormData } from "../../schema/request-email-change.schema";
+import { requestEmailChange } from "../../services/users-account-settings.service";
+import { handleFormError } from "../../../../utils/errorHandler";
+import ButtonSpinner from "../../../../components/common/loading/ButtonSpinner";
+
 
 interface RequestEmailStepProps {
   onSuccess: (newEmail: string) => void;

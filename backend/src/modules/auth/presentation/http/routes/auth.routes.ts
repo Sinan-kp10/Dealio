@@ -11,6 +11,8 @@ import { resendOtpSchema } from "../validators/resend-otp.schema";
 import { changePasswordSchema } from "../validators/change-password.schema";
 import { requestEmailChangeSchema } from "../validators/request-email-change.schema";
 import { verifyEmailChangeSchema } from "../validators/verify-email-change.schema";
+import { requestPhoneOtpSchema } from "../validators/request-phone-otp.schema";
+import { verifyPhoneOtpSchema } from "../validators/verify-phone-otp.schema";
 import { authMiddleware } from "../../../../../app/middlewares/auth.middleware";
 
 const authRouter = Router();
@@ -29,6 +31,9 @@ authRouter.post("/change-password", authMiddleware, validateRequest(changePasswo
 authRouter.post("/request-email-change", authMiddleware, validateRequest(requestEmailChangeSchema), accountController.requestEmailChange);
 authRouter.post("/verify-email-change", authMiddleware, validateRequest(verifyEmailChangeSchema), accountController.verifyEmailChange);
 authRouter.post("/resend-email-change-otp", authMiddleware, accountController.resendEmailChangeOtp);
+authRouter.post("/request-phone-otp", authMiddleware, validateRequest(requestPhoneOtpSchema), accountController.requestPhoneOtp);
+authRouter.post("/verify-phone-otp", authMiddleware, validateRequest(verifyPhoneOtpSchema), accountController.verifyPhoneOtp);
+authRouter.post("/resend-phone-otp", authMiddleware, accountController.resendPhoneOtp);
 authRouter.post("/logout", authMiddleware, loginController.logout);
 authRouter.get("/me", authMiddleware, authenticatedUserController.getAuthenticatedUser);
 

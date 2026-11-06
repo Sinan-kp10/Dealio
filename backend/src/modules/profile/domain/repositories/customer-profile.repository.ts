@@ -4,4 +4,5 @@ import { CustomerProfileDto, UpdatedCustomerProfileFieldsDto } from "../../appli
 export interface ICustomerProfileRepository extends IBaseRepository<CustomerProfileDto> {
     findCustomerProfile(userId: string): Promise<CustomerProfileDto | null>;
     updateCustomerProfile(userId: string, data: UpdatedCustomerProfileFieldsDto): Promise<UpdatedCustomerProfileFieldsDto>;
+    isPhoneVerified(phone: string): Promise<boolean>;
 }

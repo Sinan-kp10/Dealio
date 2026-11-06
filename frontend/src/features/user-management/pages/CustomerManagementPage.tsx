@@ -1,4 +1,4 @@
-import { Search, ChevronDown } from "lucide-react";
+import { Search} from "lucide-react";
 import Pagination from "../../../components/common/pagination/Pagination";
 import Table from "../../../components/common/table/Table";
 import TableSkeleton from "../components/TableSkeleton";
@@ -11,6 +11,7 @@ import ReasonModal from "../../../components/common/ReasonModal/ReasonModel";
 import ConfirmationModal from "../../../components/common/confirmationModel/ConfirmationModal";
 import { getCustomers, reactivateCustomerAccount, suspendCustomerAccount } from "../service/user-management.service";
 import useDebounce from "../../../hook/useDebounce";
+import Select from "../../../components/common/select/Select";
 
 const PAGE_LIMIT = 5;
 
@@ -132,22 +133,16 @@ function CustomerManagementPage() {
                     />
                 </div>
 
-                <div className="relative">
-                    <select 
-                        value={status}
-                        onChange={(event) => handleStatusChange(event.target.value as "ALL" | CustomerStatus)}
-                        aria-label="Filter by status"
-                        className="h-10 pl-3.5 pr-8 bg-white border border-slate-200/90 rounded-lg text-sm text-slate-700 font-medium appearance-none focus:outline-none focus:ring-2 focus:ring-[#355982]/20 focus:border-[#355982] shadow-xs cursor-pointer"
-                    >
-                        <option value="ALL">Status: All</option>
-                        <option value="ACTIVE">Status: Active</option>
-                        <option value="SUSPENDED">Status: Suspended</option>
-                    </select>
-                    <ChevronDown
-                        size={15}
-                        className="text-slate-500 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
-                    />
-                </div>
+                <Select
+                    value={status}
+                    onChange={(val) => handleStatusChange(val as "ALL" | CustomerStatus)}
+                    aria-label="Filter by status"
+                    options={[
+                        { label: "Status: All", value: "ALL" },
+                        { label: "Status: Active", value: "ACTIVE" },
+                        { label: "Status: Suspended", value: "SUSPENDED" },
+                    ]}
+                />
             </div>
 
             <Table
@@ -194,8 +189,16 @@ function CustomerManagementPage() {
                             {item.email}
                         </td>
 
-                        <td className="py-4 px-6 text-sm text-slate-700 font-medium whitespace-nowrap align-middle">
-                            {item.phone ?? "-"}
+                        <td className="py-4 px-6 text-sm whitespace-nowrap align-middle">
+                            {item.phone ? (
+                                <span className="text-slate-600">
+                                    {item.phone}
+                                </span>
+                            ) : (
+                                <span className="text-slate-400 italic">
+                                    Not provided
+                                </span>
+                            )}
                         </td>
 
                         <td className="py-4 px-6 text-sm text-slate-600 whitespace-nowrap align-middle">

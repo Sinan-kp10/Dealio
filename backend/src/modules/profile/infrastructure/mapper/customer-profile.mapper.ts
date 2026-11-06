@@ -5,6 +5,7 @@ export const customerProfileSelect = {
   name: true,
   email: true,
   phone: true,
+  phone_verified: true,
   created_at: true,
   profile_picture_key: true,
 } satisfies Prisma.usersSelect;
@@ -17,6 +18,7 @@ export class CustomerProfileMapper {
       name: user.name,
       email: user.email,
       phone: user.phone,
+      phoneVerified: user.phone_verified,
       createdAt: user.created_at,
       profilePictureKey: user.profile_picture_key,
     };

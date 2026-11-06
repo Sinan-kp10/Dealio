@@ -1,8 +1,10 @@
 export interface AuthUser {
   id: string;
-  name : string
+  name: string;
   email: string;
   role: "ADMIN" | "ENTERPRISE_MANAGER" | "CUSTOMER";
+  phone: string | null;
+  phoneVerified: boolean;
 }
 
 export interface AuthState {

@@ -35,6 +35,15 @@ export class VerifyEnterpriseOtpuseCase implements IUseCase<VerifyOtpDto, Create
             throw new ConflictError("Email is already registered");
         }
 
+        if (registrationData.phone) {
+            const phone = registrationData.phone.trim();
+            const phoneVerified = await this.enterpriseRepository.isPhoneVerified(phone);
+            if (phoneVerified) {
+                await this.otpService.delete(normalizedEmail);
+                throw new ConflictError("Phone number is already registered and verified", "phone");
+            }
+        }
+
         return this.enterpriseRepository.create({
             enterpriseName: registrationData.enterpriseName.trim(),
             contactPersonName: registrationData.contactPersonName.trim(),
