@@ -54,6 +54,8 @@ export class VerifyCustomerOtpuseCase implements IUseCase<VerifyOtpDto, AuthUser
             name: user.name,
             email: user.email,
             role: user.role,
+            phone: user.phone,
+            phoneVerified: user.phone_verified ?? false,
         };
     };
 }

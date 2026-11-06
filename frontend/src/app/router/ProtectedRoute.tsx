@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
-import useAuthStore from "../../features/auth/stores/auth.store";
+import useAuthStore from "../../stores/auth.store";
 import FullPageSpinner from "../../components/common/loading/FullPageSpinner";
 
 interface ProtectedRouteProps {

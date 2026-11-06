@@ -24,6 +24,8 @@ export class GetAuthenticatedUserUseCase implements IUseCase<string, AuthUserDto
             name: user.name,
             email: user.email,
             role: user.role,
+            phone: user.phone,
+            phoneVerified: user.phone_verified ?? false,
         };
     };
 }

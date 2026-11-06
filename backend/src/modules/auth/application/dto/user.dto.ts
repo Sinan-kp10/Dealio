@@ -5,5 +5,7 @@ export interface AuthUserDto {
   name: string;
   email: string;
   role: UserRole;
+  phone: string | null;
+  phoneVerified: boolean;
 }
 

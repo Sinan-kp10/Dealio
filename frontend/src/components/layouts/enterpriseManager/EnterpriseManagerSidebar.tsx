@@ -3,7 +3,7 @@ import { LayoutDashboard, FileText, SquareCheckBig, MessageSquare, CreditCard, L
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { logout } from "../../../features/auth/services/auth.service";
-import useAuthStore from "../../../features/auth/stores/auth.store";
+import useAuthStore from "../../../stores/auth.store";
 import ConfirmationModal from "../../common/confirmationModel/ConfirmationModal";
 
 interface EnterpriseManagerSidebarProps {

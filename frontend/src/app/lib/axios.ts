@@ -1,5 +1,5 @@
 import axios from "axios";
-import useAuthStore from "../../features/auth/stores/auth.store";
+import useAuthStore from "../../stores/auth.store";
 import { toast } from "react-toastify";
 
 const axiosInstance = axios.create({
