@@ -1,7 +1,8 @@
 import rateLimit from "express-rate-limit";
-import type { Request, Response } from "express";
+import type { Request, Response, NextFunction } from "express";
 import { HttpStatusCode } from "../../shared/enums/http-status-code.enum";
 import { createRedisRateLimitStore } from "../../infrastructure/database/redis/rate-limit-store";
+import { env } from "../../config/env";
 
 interface RateLimitOptions {
     windowMs: number;
@@ -11,6 +12,10 @@ interface RateLimitOptions {
 }
 
 const createRateLimiter = ({ windowMs, limit, prefix, skip }: RateLimitOptions) => {
+    if (!env.isProduction) {
+        return (_req: Request, _res: Response, next: NextFunction) => next();
+    }
+
     return rateLimit({
         windowMs,
         limit,
