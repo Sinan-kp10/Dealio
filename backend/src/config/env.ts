@@ -34,6 +34,12 @@ export const env = {
     refreshTokenMaxAgeMs: rawEnv.REFRESH_TOKEN_COOKIE_MAX_AGE_MS,
     refreshTokenTtlSeconds: rawEnv.REFRESH_TOKEN_TTL_SECONDS,
   },
+  aws: {
+    region: rawEnv.AWS_REGION,
+    accessKeyId: rawEnv.AWS_ACCESS_KEY_ID,
+    secretAccessKey: rawEnv.AWS_SECRET_ACCESS_KEY,
+    bucketName: rawEnv.AWS_S3_BUCKET_NAME,
+  },
 } as const;
 
 export type Env = typeof env;

@@ -46,6 +46,11 @@ export const envSchema = z.object({
     .int()
     .positive("REFRESH_TOKEN_TTL_SECONDS must be positive")
     .default(7 * 24 * 60 * 60),
+
+  AWS_REGION: z.string().min(1, "AWS_REGION is required"),
+  AWS_ACCESS_KEY_ID: z.string().min(1, "AWS_ACCESS_KEY_ID is required"),
+  AWS_SECRET_ACCESS_KEY: z.string().min(1, "AWS_SECRET_ACCESS_KEY is required"),
+  AWS_S3_BUCKET_NAME: z.string().min(1, "AWS_S3_BUCKET_NAME is required"),
 });
 
 export type RawEnv = z.infer<typeof envSchema>;
