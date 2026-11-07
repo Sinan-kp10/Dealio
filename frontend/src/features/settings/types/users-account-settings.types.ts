@@ -5,8 +5,8 @@ export interface ChangePassword {
 }
 
 export interface ChangePasswordResponse {
-  status : boolean,
-  message : string
+  success: boolean;
+  message: string;
 }
 
 export interface RequestEmailChangePayload {
@@ -14,7 +14,7 @@ export interface RequestEmailChangePayload {
 }
 
 export interface RequestEmailChangeResponse {
-  status: boolean;
+  success: boolean;
   message: string;
 }
 
@@ -23,7 +23,7 @@ export interface VerifyEmailChangePayload {
 }
 
 export interface VerifyEmailChangeResponse {
-  status: boolean;
+  success: boolean;
   message: string;
   data: {
     email: string;
@@ -31,7 +31,7 @@ export interface VerifyEmailChangeResponse {
 }
 
 export interface ResendEmailChangeOtpResponse {
-  status: boolean;
+  success: boolean;
   message: string;
 }
 
@@ -40,7 +40,7 @@ export interface RequestPhoneOtpPayload {
 }
 
 export interface RequestPhoneOtpResponse {
-  status: boolean;
+  success: boolean;
   message: string;
 }
 
@@ -49,7 +49,7 @@ export interface VerifyPhoneOtpPayload {
 }
 
 export interface VerifyPhoneOtpResponse {
-  status: boolean;
+  success: boolean;
   message: string;
   data: {
     phone: string;
@@ -57,6 +57,6 @@ export interface VerifyPhoneOtpResponse {
 }
 
 export interface ResendPhoneOtpResponse {
-  status: boolean;
+  success: boolean;
   message: string;
 }

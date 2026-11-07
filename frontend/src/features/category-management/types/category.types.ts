@@ -24,7 +24,7 @@ export interface PaginatedCategory {
 }
 
 export interface CategoryListResponse {
-  status: boolean;
+  success: boolean;
   message: string;
   data: PaginatedCategory;
 }

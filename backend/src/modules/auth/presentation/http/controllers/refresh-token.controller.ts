@@ -31,7 +31,7 @@ export class RefreshTokenController {
             });
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "Token refreshed successfully.",
                 data: {
                     user: result.user,

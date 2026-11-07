@@ -24,7 +24,7 @@ export class UserManagementController {
             });
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "Customers retrieved successfully",
                 data: result,
             });
@@ -45,7 +45,7 @@ export class UserManagementController {
             });
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "Enterprises retrieved successfully",
                 data: result,
             });
@@ -63,7 +63,7 @@ export class UserManagementController {
             });
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "Account suspended successfully",
             });
         } catch (error) {
@@ -78,7 +78,7 @@ export class UserManagementController {
             });
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "Account reactivated successfully",
             });
         } catch (error) {

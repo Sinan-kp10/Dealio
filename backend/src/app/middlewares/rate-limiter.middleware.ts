@@ -26,7 +26,7 @@ const createRateLimiter = ({ windowMs, limit, prefix, skip }: RateLimitOptions) 
 
         handler: (_req, res) => {
             res.status(HttpStatusCode.TOO_MANY_REQUESTS).json({
-                status: false,
+                success: false,
                 message: "Too many requests. Please try again later",
                 data: null
             });

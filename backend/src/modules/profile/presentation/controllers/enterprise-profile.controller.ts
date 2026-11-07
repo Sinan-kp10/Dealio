@@ -19,7 +19,7 @@ export class EnterpriseProfileController {
             const profile = await this.getEnterpriseProfileUseCase.execute(userId!)
             
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "Enterprise profile retrieved successfully",
                 data: profile,
             });

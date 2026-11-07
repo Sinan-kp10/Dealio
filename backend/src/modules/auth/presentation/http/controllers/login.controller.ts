@@ -36,7 +36,7 @@ export class LoginController {
             });
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "Login successful",
                 data: {
                     user: result.user,
@@ -70,7 +70,7 @@ export class LoginController {
             });
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "Logged out successfully.",
             });
         } catch (error) {
