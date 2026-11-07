@@ -8,7 +8,7 @@ export interface CustomerProfile {
 }
 
 export interface CustomerProfileResponse {
-  status: boolean;
+  success: boolean;
   message: string;
   data: CustomerProfile;
 }
@@ -21,7 +21,7 @@ export interface UpdateCustomerProfile {
 export type UpdataCustomerProfile = UpdateCustomerProfile;
 
 export interface UpdateCustomerProfileResponse {
-  status: boolean;
+  success: boolean;
   message: string;
   data: {
     name?: string;

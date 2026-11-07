@@ -24,7 +24,7 @@ export interface EnterpriseProfile {
 }
 
 export interface EnterpriseProfileResponse {
-  status: boolean;
+  success: boolean;
   message: string;
   data: EnterpriseProfile;
 }

@@ -17,7 +17,7 @@ export class CustomerProfileController {
             const profile = await this.getCustomerProfileUseCase.execute(userId!);
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "Customer profile retrieved successfully",
                 data: profile,
             });
@@ -38,7 +38,7 @@ export class CustomerProfileController {
             });
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "Profile updated successfully",
                 data: updatedFields,
             });

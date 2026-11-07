@@ -23,7 +23,7 @@ export class PasswordResetController {
             await this.forgotPasswordUseCase.execute(data);
             
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "A password reset code has been sent",
             });
         } catch (error) {
@@ -38,7 +38,7 @@ export class PasswordResetController {
             const result = await this.verifyPasswordResetOtpUseCase.execute(data);
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "OTP verified successfully",
                 data: {
                     resetToken: result.resetToken,
@@ -56,7 +56,7 @@ export class PasswordResetController {
             await this.resetPasswordUseCase.execute(data);
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "Password reset successful",
             });
         } catch (error) {
@@ -76,7 +76,7 @@ export class PasswordResetController {
             })
 
             res.status(HttpStatusCode.OK).json({
-                status : true,
+                success : true,
                 message : "Password updated successfully"
             })
             

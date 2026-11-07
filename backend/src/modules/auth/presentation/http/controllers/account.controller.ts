@@ -28,7 +28,7 @@ export class AccountController {
             await this.requestEmailChangeUseCase.execute({ userId, newEmail });
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "OTP sent to your new email address",
             });
         } catch (error) {
@@ -60,7 +60,7 @@ export class AccountController {
             });
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "Email changed successfully",
                 data: {
                     email: result.email,
@@ -78,7 +78,7 @@ export class AccountController {
             await this.resendEmailChangeOtpUseCase.execute({ userId });
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "Verification OTP has been resent to your new email address",
             });
         } catch (error) {
@@ -94,7 +94,7 @@ export class AccountController {
             await this.requestPhoneOtpUseCase.execute({ userId, phone });
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "OTP sent to your phone number",
             });
         } catch (error) {
@@ -110,7 +110,7 @@ export class AccountController {
             const result = await this.verifyPhoneOtpUseCase.execute({ userId, otp });
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "Phone number verified successfully",
                 data: result,
             });
@@ -126,7 +126,7 @@ export class AccountController {
             await this.resendPhoneOtpUseCase.execute({ userId });
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "OTP has been resent to your phone number",
             });
         } catch (error) {

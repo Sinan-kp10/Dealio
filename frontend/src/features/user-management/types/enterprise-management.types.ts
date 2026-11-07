@@ -28,7 +28,7 @@ export interface PaginatedEnterprises {
 }
 
 export interface EnterpriseListResponse {
-  status: boolean;
+  success: boolean;
   message: string;
   data: PaginatedEnterprises;
 }

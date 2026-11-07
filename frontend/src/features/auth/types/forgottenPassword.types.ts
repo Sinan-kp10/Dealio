@@ -7,6 +7,6 @@ export interface ForgottenPasswordRequest {
 }
 
 export interface ForgottenPasswordResponse {
-  status: boolean;
+  success: boolean;
   message: string
 }

@@ -24,7 +24,7 @@ export class CategoryController {
             })
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "Categories retrieved successfully",
                 data: categories,
             });
@@ -47,7 +47,7 @@ export class CategoryController {
             })
 
             res.status(HttpStatusCode.CREATED).json({
-                status: true,
+                success: true,
                 message: "Category created successfully",
                 data: category,
             })
@@ -68,7 +68,7 @@ export class CategoryController {
             });
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "Category updated successfully",
                 data: category,
             });
