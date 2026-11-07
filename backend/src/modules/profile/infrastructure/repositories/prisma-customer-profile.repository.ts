@@ -8,10 +8,7 @@ export class PrismaCustomerProfileRepository implements ICustomerProfileReposito
 
     findById = async (id: string): Promise<CustomerProfileDto | null> => {
         const user = await prisma.users.findUnique({
-            where: {
-                id: id,
-                role: "CUSTOMER",
-            },
+            where: {id: id},
             select: customerProfileSelect,
         });
 
@@ -22,7 +19,6 @@ export class PrismaCustomerProfileRepository implements ICustomerProfileReposito
         const user = await prisma.users.findFirst({
             where: {
                 id: userId,
-                role: "CUSTOMER",
             },
             select: customerProfileSelect,
         });

@@ -9,6 +9,7 @@ import { authRouter } from "../modules/auth/presentation/http/routes/auth.routes
 import userManagementRoutes from "../modules/user-management/presentation/routes/user-management.routes";
 import customerProfileRouter from "../modules/profile/presentation/routes/customer-profile.routes";
 import enterpriseProfileRouter from "../modules/profile/presentation/routes/enterprise-profile.routes"
+import profilePictureRouter from "../modules/profile/presentation/routes/profile-picture.routes";
 import categoryRoutes from "../modules/category-management/presentation/routes/category.routes"
 import cookieParser from "cookie-parser";
 const app = express();
@@ -35,6 +36,7 @@ app.use("/api/admin", userManagementRoutes)
 app.use("/api/admin", categoryRoutes)
 app.use("/api/customer", customerProfileRouter)
 app.use("/api/enterprise", enterpriseProfileRouter)
+app.use("/api/profile", profilePictureRouter)
 
 
 app.use(notFoundMiddleware)
