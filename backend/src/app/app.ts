@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import { httpLogger } from "../infrastructure/logging/http-logger"; 
 import { errorHandler } from "./middlewares/error-handler.middleware"; 
+import { globalRateLimiter } from "./middlewares/rate-limiter.middleware"; 
 import { notFoundMiddleware } from "./middlewares/not-found.middleware";
 import { authRouter } from "../modules/auth/presentation/http/routes/auth.routes"; 
 import userManagementRoutes from "../modules/user-management/presentation/routes/user-management.routes";
@@ -26,6 +27,8 @@ app.use(
 app.use(express.json())
 app.use(cookieParser());
 app.use(httpLogger)
+
+app.use("/api", globalRateLimiter);
 
 app.use("/api/auth", authRouter)
 app.use("/api/admin", userManagementRoutes)
