@@ -38,4 +38,15 @@ export class PrismaProfileRepository implements IProfileRepository {
             },
         });
     }
+
+    deleteProfilePictureKey = async (userId: string): Promise<void> => {
+        await prisma.users.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                profile_picture_key: null,
+            },
+        });
+    }
 }
