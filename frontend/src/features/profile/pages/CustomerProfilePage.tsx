@@ -10,8 +10,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateCustomerProfileSchema } from "../schemas/update-customer-profile.schema";
 import useAuthStore from "../../../stores/auth.store";
-import CustomerProfileSkeleton from "../components/CustomerProfileSkeleton";
-import ProfilePictureModal from "../components/ProfilePictureModal";
+import CustomerProfileSkeleton from "../components/loading/CustomerProfileSkeleton";
+import ProfilePictureModal from "../components/profile-picture/ProfilePictureModal";
 import { removeProfilePicture } from "../services/profile.service";
 
 function CustomerProfilePage() {

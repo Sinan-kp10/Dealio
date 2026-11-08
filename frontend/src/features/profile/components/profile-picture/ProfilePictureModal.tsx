@@ -3,10 +3,10 @@ import Cropper from "react-easy-crop";
 import type { Area, Point } from "react-easy-crop";
 import { X, Upload, AlertCircle, RefreshCw, ZoomIn, ZoomOut } from "lucide-react";
 import { toast } from "react-toastify";
-import { updateProfilePicture } from "../services/profile.service";
-import { handleApiError } from "../../../utils/errorHandler";
-import { getCroppedImg } from "../utils/cropImage";
-import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
+import { updateProfilePicture } from "../../services/profile.service";
+import { handleApiError } from "../../../../utils/errorHandler";
+import { getCroppedImg } from "../../utils/cropImage";
+import ButtonSpinner from "../../../../components/common/loading/ButtonSpinner";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"];
