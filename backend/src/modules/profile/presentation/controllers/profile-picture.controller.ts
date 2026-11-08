@@ -1,8 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import type { IUseCase } from "../../../../shared/application/base.usecase";
 import type { IApiResponse } from "../../../../shared/application/api-response";
-import type { UpdateProfilePictureDto, UpdatedProfilePictureDto } from "../../application/dto/update-profile-picture.dto";
-import type { RemoveProfilePictureDto } from "../../application/dto/remove-profile-picture.dto";
+import type { RemoveProfilePictureDto, UpdateProfilePictureDto, UpdatedProfilePictureDto } from "../../application/dto/profile-picture.dto";
 import { HttpStatusCode } from "../../../../shared/enums/http-status-code.enum";
 import { BadRequestError, UnauthorizedError } from "../../../../shared/errors/app-error";
 

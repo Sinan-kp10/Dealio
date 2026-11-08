@@ -10,3 +10,7 @@ export interface UpdateProfilePictureDto {
 export interface UpdatedProfilePictureDto {
   profilePictureUrl: string;
 }
+
+export interface RemoveProfilePictureDto {
+    userId: string;
+}

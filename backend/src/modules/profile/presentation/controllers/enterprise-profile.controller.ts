@@ -1,13 +1,15 @@
 import type { Request, Response, NextFunction } from "express";
 import { IApiResponse } from "../../../../shared/application/api-response";
 import { IUseCase } from "../../../../shared/application/base.usecase";
-import { EnterpriseProfileDto } from "../../application/dto/enterprise-profile.dto";
+import { EnterpriseProfileDto, UpdatedEnterpriseDetailsDto, UpdateEnterpriseDetailsDto } from "../../application/dto/enterprise-profile.dto";
 import { HttpStatusCode } from "../../../../shared/enums/http-status-code.enum";
 
 export class EnterpriseProfileController {
 
     constructor(
-        private readonly getEnterpriseProfileUseCase : IUseCase<string, EnterpriseProfileDto>
+        private readonly getEnterpriseProfileUseCase : IUseCase<string, EnterpriseProfileDto>,
+        private readonly updateEnterpriseDetailsUseCase : IUseCase<UpdateEnterpriseDetailsDto, UpdatedEnterpriseDetailsDto>
+
     ){}
 
 
@@ -22,6 +24,27 @@ export class EnterpriseProfileController {
                 success: true,
                 message: "Enterprise profile retrieved successfully",
                 data: profile,
+            });
+            
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    updateDetails = async(req: Request, res: Response<IApiResponse>, next: NextFunction)=> {
+        try {
+
+            const userId = req.auth?.userId
+
+            const updatedDetails = await this.updateEnterpriseDetailsUseCase.execute({
+                userId : userId!,
+                ...req.body
+            })
+
+            res.status(HttpStatusCode.OK).json({
+                success: true,
+                message: "Enterprise details updated successfully",
+                data: updatedDetails,
             });
             
         } catch (error) {
