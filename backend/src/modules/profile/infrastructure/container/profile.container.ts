@@ -9,12 +9,15 @@ import { PrismaEnterpriseProfileRepository } from "../repositories/prisma-enterp
 import { PrismaProfileRepository } from "../repositories/prisma-profile-picture.repository.js";
 import { S3StorageService } from "../../../../infrastructure/storage/s3/s3-storage.service.js";
 import { UpdateProfilePictureUseCase } from "../../application/use-cases/update-profile-picture.use-case.js";
-import { DeleteProfilePictureUseCase } from "../../application/use-cases/delete-profile-picture.use-case.js";
+import { RemoveProfilePictureUseCase } from "../../application/use-cases/remove-profile-picture.use-case.js";
 import { ProfilePictureController } from "../../presentation/controllers/profile-picture.controller.js";
+
+//shared storage
+const s3StorageService = new S3StorageService();
 
 //customer
 const customerProfileRepository = new PrismaCustomerProfileRepository();
-const getCustomerProfileUseCase = new GetCustomerProfileUseCase(customerProfileRepository);
+const getCustomerProfileUseCase = new GetCustomerProfileUseCase(customerProfileRepository, s3StorageService);
 const editCustomerProfileUseCase = new UpdateCustomerProfileUseCase(customerProfileRepository);
 export const customerProfileController = new CustomerProfileController(getCustomerProfileUseCase, editCustomerProfileUseCase);
 
@@ -25,7 +28,6 @@ export const enterpriseProfileController = new EnterpriseProfileController(getEn
 
 //profile picture
 const profileRepository = new PrismaProfileRepository();
-const s3StorageService = new S3StorageService();
 const updateProfilePictureUseCase = new UpdateProfilePictureUseCase(profileRepository, s3StorageService);
-const deleteProfilePictureUseCase = new DeleteProfilePictureUseCase(profileRepository, s3StorageService);
-export const profilePictureController = new ProfilePictureController(updateProfilePictureUseCase, deleteProfilePictureUseCase);
+const removeProfilePictureUseCase = new RemoveProfilePictureUseCase(profileRepository, s3StorageService);
+export const profilePictureController = new ProfilePictureController(updateProfilePictureUseCase, removeProfilePictureUseCase);
