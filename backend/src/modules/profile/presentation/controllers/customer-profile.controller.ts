@@ -29,12 +29,11 @@ export class CustomerProfileController {
     updateProfile = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
         try {
             const userId = req.auth?.userId;
-            const { name, phone } = req.body;
+            const { name } = req.body;
 
             const updatedFields = await this.editCustomerProfileUseCase.execute({
                 userId: userId!,
-                name: name,
-                phone: phone,
+                name,
             });
 
             res.status(HttpStatusCode.OK).json({

@@ -8,6 +8,6 @@ const router = Router();
 router.use(authMiddleware);
 
 router.put("/picture",validateProfilePicture,profilePictureController.updateProfilePicture)
-router.delete("/picture", profilePictureController.deleteProfilePicture)
+router.delete("/picture", profilePictureController.removeProfilePicture)
 
 export default router;

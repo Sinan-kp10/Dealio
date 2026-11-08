@@ -9,23 +9,26 @@ import { PrismaEnterpriseProfileRepository } from "../repositories/prisma-enterp
 import { PrismaProfileRepository } from "../repositories/prisma-profile-picture.repository.js";
 import { S3StorageService } from "../../../../infrastructure/storage/s3/s3-storage.service.js";
 import { UpdateProfilePictureUseCase } from "../../application/use-cases/update-profile-picture.use-case.js";
-import { DeleteProfilePictureUseCase } from "../../application/use-cases/delete-profile-picture.use-case.js";
+import { RemoveProfilePictureUseCase } from "../../application/use-cases/remove-profile-picture.use-case.js";
 import { ProfilePictureController } from "../../presentation/controllers/profile-picture.controller.js";
+import { UpdateEnterpriseDetailsUseCase } from "../../application/use-cases/update-enterprise-details.use-case.js";
+
+const s3StorageService = new S3StorageService();
 
 //customer
 const customerProfileRepository = new PrismaCustomerProfileRepository();
-const getCustomerProfileUseCase = new GetCustomerProfileUseCase(customerProfileRepository);
+const getCustomerProfileUseCase = new GetCustomerProfileUseCase(customerProfileRepository, s3StorageService);
 const editCustomerProfileUseCase = new UpdateCustomerProfileUseCase(customerProfileRepository);
 export const customerProfileController = new CustomerProfileController(getCustomerProfileUseCase, editCustomerProfileUseCase);
 
 //enterprise
 const enterpriseProfileRepository = new PrismaEnterpriseProfileRepository()
-const getEnterpriseProfileUseCase = new GetEnterpriseProfileUseCase(enterpriseProfileRepository)
-export const enterpriseProfileController = new EnterpriseProfileController(getEnterpriseProfileUseCase)
+const getEnterpriseProfileUseCase = new GetEnterpriseProfileUseCase(enterpriseProfileRepository, s3StorageService)
+const updateEnterpriseDetailsUseCase = new UpdateEnterpriseDetailsUseCase(enterpriseProfileRepository)
+export const enterpriseProfileController = new EnterpriseProfileController(getEnterpriseProfileUseCase, updateEnterpriseDetailsUseCase)
 
 //profile picture
 const profileRepository = new PrismaProfileRepository();
-const s3StorageService = new S3StorageService();
 const updateProfilePictureUseCase = new UpdateProfilePictureUseCase(profileRepository, s3StorageService);
-const deleteProfilePictureUseCase = new DeleteProfilePictureUseCase(profileRepository, s3StorageService);
-export const profilePictureController = new ProfilePictureController(updateProfilePictureUseCase, deleteProfilePictureUseCase);
+const removeProfilePictureUseCase = new RemoveProfilePictureUseCase(profileRepository, s3StorageService);
+export const profilePictureController = new ProfilePictureController(updateProfilePictureUseCase, removeProfilePictureUseCase);

@@ -39,7 +39,7 @@ export class PrismaProfileRepository implements IProfileRepository {
         });
     }
 
-    deleteProfilePictureKey = async (userId: string): Promise<void> => {
+    removeProfilePictureKey = async (userId: string): Promise<void> => {
         await prisma.users.update({
             where: {
                 id: userId,

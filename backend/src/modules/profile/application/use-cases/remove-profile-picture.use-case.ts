@@ -2,15 +2,15 @@ import { IUseCase } from "../../../../shared/application/base.usecase";
 import { IStorageService } from "../../../../shared/interfaces/IStorageService";
 import { IProfileRepository } from "../../domain/repositories/profile-repository";
 import { NotFoundError } from "../../../../shared/errors/app-error";
-import type { DeleteProfilePictureDto } from "../dto/delete-profile-picture.dto";
+import { RemoveProfilePictureDto } from "../dto/profile-picture.dto";
 
-export class DeleteProfilePictureUseCase implements IUseCase<DeleteProfilePictureDto, void> {
+export class RemoveProfilePictureUseCase implements IUseCase<RemoveProfilePictureDto, void> {
     constructor(
         private readonly profileRepository: IProfileRepository,
         private readonly storageService: IStorageService
     ) {}
 
-    execute = async (input: DeleteProfilePictureDto): Promise<void> => {
+    execute = async (input: RemoveProfilePictureDto): Promise<void> => {
         const existingKey = await this.profileRepository.findProfilePictureKey(input.userId);
 
         if (!existingKey) {
@@ -18,7 +18,7 @@ export class DeleteProfilePictureUseCase implements IUseCase<DeleteProfilePictur
         }
 
         await this.storageService.deleteFile(existingKey);
-        await this.profileRepository.deleteProfilePictureKey(input.userId);
+        await this.profileRepository.removeProfilePictureKey(input.userId);
     };
 }
 
