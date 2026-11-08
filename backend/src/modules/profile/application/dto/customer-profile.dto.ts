@@ -9,12 +9,9 @@ export interface CustomerProfileDto {
 
 export interface UpdateCustomerProfileDto {
   userId: string;
-  name?: string | null;
-  phone?: string | null;
+  name: string;
 }
 
 export interface UpdatedCustomerProfileFieldsDto {
-  name?: string;
-  phone?: string | null;
-  phone_verified?: boolean;
+  name: string;
 }
