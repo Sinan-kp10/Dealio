@@ -12,7 +12,6 @@ import { UpdateProfilePictureUseCase } from "../../application/use-cases/update-
 import { RemoveProfilePictureUseCase } from "../../application/use-cases/remove-profile-picture.use-case.js";
 import { ProfilePictureController } from "../../presentation/controllers/profile-picture.controller.js";
 
-//shared storage
 const s3StorageService = new S3StorageService();
 
 //customer
@@ -23,7 +22,7 @@ export const customerProfileController = new CustomerProfileController(getCustom
 
 //enterprise
 const enterpriseProfileRepository = new PrismaEnterpriseProfileRepository()
-const getEnterpriseProfileUseCase = new GetEnterpriseProfileUseCase(enterpriseProfileRepository)
+const getEnterpriseProfileUseCase = new GetEnterpriseProfileUseCase(enterpriseProfileRepository, s3StorageService)
 export const enterpriseProfileController = new EnterpriseProfileController(getEnterpriseProfileUseCase)
 
 //profile picture
