@@ -13,12 +13,12 @@ export interface SafeUser {
   phone: string | null;
   phone_verified?: boolean;
   email_verified: boolean;
+  profile_picture_key: string | null;
   created_at: Date;
   updated_at: Date;
 }
 
 export interface User extends SafeUser {
   password_hash: string;
-  profile_picture_key: string | null;
   suspended_at: Date | null;
 }

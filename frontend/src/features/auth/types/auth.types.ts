@@ -5,6 +5,7 @@ export interface AuthUser {
   role: "ADMIN" | "ENTERPRISE_MANAGER" | "CUSTOMER";
   phone: string | null;
   phoneVerified: boolean;
+  profilePictureUrl?: string | null;
 }
 
 export interface AuthState {

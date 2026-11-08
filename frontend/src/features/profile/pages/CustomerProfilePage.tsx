@@ -22,8 +22,6 @@ function CustomerProfilePage() {
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [isRemovingPhoto, setIsRemovingPhoto] = useState(false);
   const [imageLoadError, setImageLoadError] = useState(false);
-  const setUser = useAuthStore((state) => state.setUser)
-  const currentUser = useAuthStore((state) => state.user)
   const {register,handleSubmit,reset,setError,formState: { errors, isSubmitting }} = useForm<UpdateCustomerProfile>({resolver: zodResolver(updateCustomerProfileSchema)})
 
   useEffect(() => {
@@ -38,6 +36,13 @@ function CustomerProfilePage() {
           reset({
             name: response.name,
           });
+          const { user: authUser, setUser: setAuthUser } = useAuthStore.getState();
+          if (authUser && authUser.profilePictureUrl !== response.profilePictureKey) {
+            setAuthUser({
+              ...authUser,
+              profilePictureUrl: response.profilePictureKey,
+            });
+          }
         }
       } catch (error) {
         if (cancelled) return;
@@ -89,9 +94,10 @@ function CustomerProfilePage() {
           : null
       );
 
-      if (currentUser && data.name?.trim()) {
-        setUser({
-          ...currentUser,
+      const { user: authUser, setUser: setAuthUser } = useAuthStore.getState();
+      if (authUser && data.name?.trim()) {
+        setAuthUser({
+          ...authUser,
           name: updatedName,
         });
       }
@@ -111,6 +117,13 @@ function CustomerProfilePage() {
       toast.success(response.message || "Profile picture removed successfully");
       setProfile((prev) => (prev ? { ...prev, profilePictureKey: null } : null));
       setImageLoadError(false);
+      const { user: authUser, setUser: setAuthUser } = useAuthStore.getState();
+      if (authUser) {
+        setAuthUser({
+          ...authUser,
+          profilePictureUrl: null,
+        });
+      }
     } catch (error) {
       handleApiError(error, "Failed to remove profile picture");
     } finally {
@@ -370,6 +383,13 @@ function CustomerProfilePage() {
         onSuccess={(newPhotoUrl) => {
           setProfile((prev) => (prev ? { ...prev, profilePictureKey: newPhotoUrl } : null));
           setImageLoadError(false);
+          const { user: authUser, setUser: setAuthUser } = useAuthStore.getState();
+          if (authUser) {
+            setAuthUser({
+              ...authUser,
+              profilePictureUrl: newPhotoUrl,
+            });
+          }
         }}
       />
     </div>

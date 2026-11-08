@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import {Camera,Trash2,SquarePen,Phone,Mail,BadgeCheck,Briefcase,ShieldCheck,Landmark,ChevronDown,Loader2} from "lucide-react";
 import ProfilePictureModal from "../components/ProfilePictureModal";
 import { removeProfilePicture } from "../services/profile.service";
+import useAuthStore from "../../../stores/auth.store";
 
 function EnterpriseProfilePage() {
   const navigate = useNavigate();
@@ -28,6 +29,13 @@ function EnterpriseProfilePage() {
         if (!cancelled) {
           setProfile(response);
           setImageLoadError(false);
+          const { user: authUser, setUser: setAuthUser } = useAuthStore.getState();
+          if (authUser && authUser.profilePictureUrl !== response.profilePictureKey) {
+            setAuthUser({
+              ...authUser,
+              profilePictureUrl: response.profilePictureKey,
+            });
+          }
         }
       } catch (error) {
         if (cancelled) return;
@@ -55,6 +63,13 @@ function EnterpriseProfilePage() {
       toast.success(response.message || "Profile picture removed successfully");
       setProfile((prev) => (prev ? { ...prev, profilePictureKey: null } : null));
       setImageLoadError(false);
+      const { user: authUser, setUser: setAuthUser } = useAuthStore.getState();
+      if (authUser) {
+        setAuthUser({
+          ...authUser,
+          profilePictureUrl: null,
+        });
+      }
     } catch (error) {
       handleApiError(error, "Failed to remove profile picture");
     } finally {
@@ -356,6 +371,13 @@ function EnterpriseProfilePage() {
         onSuccess={(newPhotoUrl) => {
           setProfile((prev) => (prev ? { ...prev, profilePictureKey: newPhotoUrl } : null));
           setImageLoadError(false);
+          const { user: authUser, setUser: setAuthUser } = useAuthStore.getState();
+          if (authUser) {
+            setAuthUser({
+              ...authUser,
+              profilePictureUrl: newPhotoUrl,
+            });
+          }
         }}
       />
     </div>
