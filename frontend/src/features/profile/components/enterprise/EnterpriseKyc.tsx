@@ -3,15 +3,15 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Check, ChevronDown, Loader2, SquarePen, Upload, X } from "lucide-react";
 import { CreateEnterpriseKycSchema } from "../../schemas/enterpise-kyc.schema";
-import { BUSINESS_TYPE_LABELS, DOCUMENT_TYPE_LABELS, type CreateEnterpriseKycFormData, type KycRecord } from "../../types/enterprise-kyc.types";
+import { BUSINESS_TYPE_LABELS, DOCUMENT_TYPE_LABELS, type ActiveKycRecord, type BaseKycRecord, type CreateEnterpriseKycFormData, type KycRequestRecord } from "../../types/enterprise-kyc.types";
 import { addKycDetails, getKycDetails, updateKycDetails } from "../../services/enterprise-profile.service";
 import { handleApiError, handleFormError } from "../../../../utils/errorHandler";
 import KycDocumentModal from "./KycDocumentModal";
 import KycDocumentPreviewModal from "./KycDocumentPreviewModal";
 
 function EnterpriseKyc() {
-    const [kyc, setKyc] = useState<KycRecord | null>(null);
-    const [pendingKyc, setPendingtKyc] = useState<KycRecord | null>(null);
+    const [kyc, setKyc] = useState<ActiveKycRecord | null>(null);
+    const [pendingKyc, setPendingtKyc] = useState<KycRequestRecord | null>(null);
     const [updateMode, setUpdateMode] = useState(false);
     const [loading, setLoading] = useState(false);
     const [documentFile, setDocumentFile] = useState<File | null>(null);
@@ -32,7 +32,7 @@ function EnterpriseKyc() {
                 const pending = response.data.pendingRequest;
                 setKyc(active);
                 setPendingtKyc(pending);
-                const current = active || pending;
+                const current: BaseKycRecord | null = active || pending;
                 if (current) {
                     reset({
                         businessType: current.businessType,
@@ -59,11 +59,11 @@ function EnterpriseKyc() {
 
     const isPendingReview = pendingKyc?.status === "PENDING";
     const canEdit = !isPendingReview;
-    const displayKyc = kyc || pendingKyc;
+    const displayKyc: BaseKycRecord | null = kyc || pendingKyc;
 
     const handleEnterEditMode = () => {
         if (!canEdit) return;
-        const recordToEdit = kyc || pendingKyc;
+        const recordToEdit: BaseKycRecord | null = kyc || pendingKyc;
         if (recordToEdit) {
             reset({
                 businessType: recordToEdit.businessType,
