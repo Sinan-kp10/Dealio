@@ -1,8 +1,9 @@
-import { NotFoundError } from "../../../../shared/errors/app-error.js";
-import type { IUseCase } from "../../../../shared/application/base.usecase.js";
-import type { CustomerProfileDto } from "../dto/customer-profile.dto.js";
-import type { IStorageService } from "../../../../shared/interfaces/IStorageService.js";
-import { ICustomerProfileRepository } from "../../domain/repositories/customer-profile.repository.js";
+import { IUseCase } from "../../../../../shared/application/base.usecase";
+import { NotFoundError } from "../../../../../shared/errors/app-error";
+import { IStorageService } from "../../../../../shared/interfaces/IStorageService";
+import { ICustomerProfileRepository } from "../../../domain/repositories/customer-profile.repository";
+import { CustomerProfileDto } from "../../dto/customer-profile.dto";
+
 
 export class GetCustomerProfileUseCase implements IUseCase<string, CustomerProfileDto> {
     constructor(

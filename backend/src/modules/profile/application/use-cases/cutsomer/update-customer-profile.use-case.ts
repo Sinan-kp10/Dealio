@@ -1,7 +1,8 @@
-import { NotFoundError } from "../../../../shared/errors/app-error.js";
-import type { IUseCase } from "../../../../shared/application/base.usecase.js";
-import type { UpdateCustomerProfileDto, UpdatedCustomerProfileFieldsDto } from "../dto/customer-profile.dto.js";
-import { ICustomerProfileRepository } from "../../domain/repositories/customer-profile.repository.js";
+import { IUseCase } from "../../../../../shared/application/base.usecase";
+import { NotFoundError } from "../../../../../shared/errors/app-error";
+import { ICustomerProfileRepository } from "../../../domain/repositories/customer-profile.repository";
+import { UpdateCustomerProfileDto, UpdatedCustomerProfileFieldsDto } from "../../dto/customer-profile.dto";
+
 
 export class UpdateCustomerProfileUseCase implements IUseCase<UpdateCustomerProfileDto, UpdatedCustomerProfileFieldsDto> {
     constructor(

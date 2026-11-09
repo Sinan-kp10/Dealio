@@ -1,8 +1,9 @@
-import { IUseCase } from "../../../../shared/application/base.usecase";
-import { IStorageService } from "../../../../shared/interfaces/IStorageService";
-import { IProfileRepository } from "../../domain/repositories/profile-repository";
-import { NotFoundError } from "../../../../shared/errors/app-error";
-import { RemoveProfilePictureDto } from "../dto/profile-picture.dto";
+import { IUseCase } from "../../../../../shared/application/base.usecase";
+import { NotFoundError } from "../../../../../shared/errors/app-error";
+import { IStorageService } from "../../../../../shared/interfaces/IStorageService";
+import { IProfileRepository } from "../../../domain/repositories/profile-repository";
+import { RemoveProfilePictureDto } from "../../dto/profile-picture.dto";
+
 
 export class RemoveProfilePictureUseCase implements IUseCase<RemoveProfilePictureDto, void> {
     constructor(

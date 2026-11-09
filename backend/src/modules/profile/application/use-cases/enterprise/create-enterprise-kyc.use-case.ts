@@ -1,9 +1,10 @@
 import { randomUUID } from "node:crypto";
-import { IUseCase } from "../../../../shared/application/base.usecase";
-import { ConflictError, NotFoundError } from "../../../../shared/errors/app-error";
-import { IStorageService } from "../../../../shared/interfaces/IStorageService";
-import { IEnterpriseKycRepository } from "../../domain/repositories/enterprise-kyc.repository";
-import { CreateEnterpriseKycDto, KycRecordDto } from "../dto/enterprise-kyc.dto";
+import { IUseCase } from "../../../../../shared/application/base.usecase";
+import { CreateEnterpriseKycDto, KycRecordDto } from "../../dto/enterprise-kyc.dto";
+import { IEnterpriseKycRepository } from "../../../domain/repositories/enterprise-kyc.repository";
+import { IStorageService } from "../../../../../shared/interfaces/IStorageService";
+import { ConflictError, NotFoundError } from "../../../../../shared/errors/app-error";
+
 
 export class CreateEnterpriseKycUseCase implements IUseCase<CreateEnterpriseKycDto, KycRecordDto> {
     constructor(

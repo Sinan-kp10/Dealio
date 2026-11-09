@@ -1,6 +1,7 @@
-import { IUseCase } from "../../../../shared/application/base.usecase.js";
-import { IEnterpriseProfileRepository } from "../../domain/repositories/enterprise-profile.repository.js";
-import { CategoryOptionDto } from "../dto/enterprise-profile.dto.js";
+import { IUseCase } from "../../../../../shared/application/base.usecase";
+import { IEnterpriseProfileRepository } from "../../../domain/repositories/enterprise-profile.repository";
+import { CategoryOptionDto } from "../../dto/enterprise-profile.dto";
+
 
 export class GetActiveCategoriesUseCase implements IUseCase<void, CategoryOptionDto[]> {
     constructor(

@@ -1,23 +1,22 @@
-import { UpdateCustomerProfileUseCase } from "../../application/use-cases/update-customer-profile.use-case.js";
-import { GetCustomerProfileUseCase } from "../../application/use-cases/get-customer-profile.use-case.js";
 import { CustomerProfileController } from "../../presentation/controllers/customer-profile.controller.js";
-
-import { GetEnterpriseProfileUseCase } from "../../application/use-cases/get-enterprise-profile.use-case.js";
 import { EnterpriseProfileController } from "../../presentation/controllers/enterprise-profile.controller.js";
 import { PrismaCustomerProfileRepository } from "../repositories/prisma-customer-profile.repository.js";
 import { PrismaEnterpriseProfileRepository } from "../repositories/prisma-enterprise-profile.repository.js";
 import { PrismaProfileRepository } from "../repositories/prisma-profile-picture.repository.js";
 import { S3StorageService } from "../../../../infrastructure/storage/s3/s3-storage.service.js";
-import { UpdateProfilePictureUseCase } from "../../application/use-cases/update-profile-picture.use-case.js";
-import { RemoveProfilePictureUseCase } from "../../application/use-cases/remove-profile-picture.use-case.js";
+import { UpdateProfilePictureUseCase } from "../../application/use-cases/profile-picture/update-profile-picture.use-case.js";
 import { ProfilePictureController } from "../../presentation/controllers/profile-picture.controller.js";
-import { UpdateEnterpriseDetailsUseCase } from "../../application/use-cases/update-enterprise-company-information.use-case.js";
-import { GetActiveCategoriesUseCase } from "../../application/use-cases/get-active-categories.use-case.js";
 import { PrismaEnterpriseKycRepository } from "../repositories/prisma-enterprise-kyc.repository.js";
-import { CreateEnterpriseKycUseCase } from "../../application/use-cases/create-enterprise-kyc.use-case.js";
-import { UpdateEnterpriseKycUseCase } from "../../application/use-cases/update-enterprise-kyc.use-case.js";
-import { GetEnterpriseKycUseCase } from "../../application/use-cases/get-enterprise-kyc.use-case.js";
 import { EnterpriseKycController } from "../../presentation/controllers/enterprise-kyc.controller.js";
+import { GetCustomerProfileUseCase } from "../../application/use-cases/cutsomer/get-customer-profile.use-case.js";
+import { UpdateCustomerProfileUseCase } from "../../application/use-cases/cutsomer/update-customer-profile.use-case.js";
+import { GetEnterpriseProfileUseCase } from "../../application/use-cases/enterprise/get-enterprise-profile.use-case.js";
+import { UpdateEnterpriseDetailsUseCase } from "../../application/use-cases/enterprise/update-enterprise-details.use-case.js";
+import { GetActiveCategoriesUseCase } from "../../application/use-cases/enterprise/get-active-categories.use-case.js";
+import { RemoveProfilePictureUseCase } from "../../application/use-cases/profile-picture/remove-profile-picture.use-case.js";
+import { CreateEnterpriseKycUseCase } from "../../application/use-cases/enterprise/create-enterprise-kyc.use-case.js";
+import { UpdateEnterpriseKycUseCase } from "../../application/use-cases/enterprise/update-enterprise-kyc.use-case.js";
+import { GetEnterpriseKycUseCase } from "../../application/use-cases/enterprise/get-enterprise-kyc.use-case.js";
 
 const s3StorageService = new S3StorageService();
 

@@ -1,17 +1,21 @@
 import { randomUUID } from "node:crypto";
-import { IUseCase } from "../../../../shared/application/base.usecase";
-import { ConflictError, NotFoundError } from "../../../../shared/errors/app-error";
-import { IStorageService } from "../../../../shared/interfaces/IStorageService";
-import { IEnterpriseKycRepository } from "../../domain/repositories/enterprise-kyc.repository";
-import { KycRecordDto, UpdateEnterpriseKycDto } from "../dto/enterprise-kyc.dto";
+import { IUseCase } from "../../../../../shared/application/base.usecase";
+import { IEnterpriseKycRepository } from "../../../domain/repositories/enterprise-kyc.repository";
+import { IStorageService } from "../../../../../shared/interfaces/IStorageService";
+import { KycRecordDto, UpdateEnterpriseKycDto } from "../../dto/enterprise-kyc.dto";
+import { ConflictError, NotFoundError } from "../../../../../shared/errors/app-error";
+
 
 export class UpdateEnterpriseKycUseCase implements IUseCase<UpdateEnterpriseKycDto, KycRecordDto> {
+    
+
     constructor(
         private readonly enterpriseKycRepository: IEnterpriseKycRepository,
         private readonly storageService: IStorageService
     ) {}
 
     execute = async (input: UpdateEnterpriseKycDto): Promise<KycRecordDto> => {
+
         const { userId, businessType, fullLegalName, documentType, file } = input;
 
         const user = await this.enterpriseKycRepository.findById(userId);

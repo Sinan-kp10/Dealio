@@ -1,8 +1,9 @@
-import { IUseCase } from "../../../../shared/application/base.usecase";
-import { NotFoundError } from "../../../../shared/errors/app-error";
-import { IStorageService } from "../../../../shared/interfaces/IStorageService";
-import { IEnterpriseKycRepository } from "../../domain/repositories/enterprise-kyc.repository";
-import { EnterpriseKycDetailsDto } from "../dto/enterprise-kyc.dto";
+import { IUseCase } from "../../../../../shared/application/base.usecase";
+import { NotFoundError } from "../../../../../shared/errors/app-error";
+import { IStorageService } from "../../../../../shared/interfaces/IStorageService";
+import { IEnterpriseKycRepository } from "../../../domain/repositories/enterprise-kyc.repository";
+import { EnterpriseKycDetailsDto } from "../../dto/enterprise-kyc.dto";
+
 
 export class GetEnterpriseKycUseCase implements IUseCase<string, EnterpriseKycDetailsDto> {
     constructor(

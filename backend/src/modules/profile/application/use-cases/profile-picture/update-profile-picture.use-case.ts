@@ -1,8 +1,8 @@
 import { randomUUID } from "node:crypto";
-import { IUseCase } from "../../../../shared/application/base.usecase";
-import { IStorageService } from "../../../../shared/interfaces/IStorageService";
-import { IProfileRepository } from "../../domain/repositories/profile-repository";
-import { UpdatedProfilePictureDto, UpdateProfilePictureDto } from "../dto/profile-picture.dto";
+import { IUseCase } from "../../../../../shared/application/base.usecase";
+import { IStorageService } from "../../../../../shared/interfaces/IStorageService";
+import { IProfileRepository } from "../../../domain/repositories/profile-repository";
+import { UpdatedProfilePictureDto, UpdateProfilePictureDto } from "../../dto/profile-picture.dto";
 
 export class UpdateProfilePictureUseCase implements IUseCase<UpdateProfilePictureDto,UpdatedProfilePictureDto> {
     constructor(
