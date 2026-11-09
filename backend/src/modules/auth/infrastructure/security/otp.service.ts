@@ -1,8 +1,9 @@
 import { randomInt } from "node:crypto";
 import { redis } from "../../../../infrastructure/database/redis/redis-client";
 import { AppError } from "../../../../shared/errors/app-error";
+import type { IOtpService } from "../../../../shared/interfaces/IOtpService.js";
 
-export class OtpService {
+export class OtpService implements IOtpService {
 
     private readonly OTP_EXPIRY_SECONDS = 3 * 60
     private readonly DATA_EXPIRY_SECONDS = 15 * 60

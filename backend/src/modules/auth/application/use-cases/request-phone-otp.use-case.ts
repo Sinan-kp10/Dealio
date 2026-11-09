@@ -2,13 +2,13 @@ import { IUseCase } from "../../../../shared/application/base.usecase";
 import { BadGatewayError, ConflictError, NotFoundError } from "../../../../shared/errors/app-error";
 import { SmsService } from "../../../../infrastructure/sms/sms.service";
 import { IUserRepository } from "../../domain/repositories/user.repository";
-import { OtpService } from "../../infrastructure/security/otp.service";
+import type { IOtpService } from "../../../../shared/interfaces/IOtpService";
 import { RequestPhoneOtpDto } from "../dto/phone-otp.dto";
 
 export class RequestPhoneOtpUseCase implements IUseCase<RequestPhoneOtpDto, void> {
     constructor(
         private readonly userRepository: IUserRepository,
-        private readonly otpService: OtpService,
+        private readonly otpService: IOtpService,
         private readonly smsService: SmsService
     ) {}
 

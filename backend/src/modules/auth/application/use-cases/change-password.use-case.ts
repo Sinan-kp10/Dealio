@@ -1,14 +1,14 @@
 import { IUseCase } from "../../../../shared/application/base.usecase";
 import { NotFoundError, BadRequestError } from "../../../../shared/errors/app-error";
 import { IUserRepository } from "../../domain/repositories/user.repository";
-import { PasswordService } from "../../infrastructure/security/password.service";
+import type { IPasswordService } from "../../../../shared/interfaces/IPasswordService";
 import { ChangePasswordDto } from "../dto/change-password.dto";
 
 export class ChangePasswordUseCase implements IUseCase<ChangePasswordDto, void> {
 
     constructor(
         private readonly userRepository : IUserRepository,
-        private readonly passwordService : PasswordService
+        private readonly passwordService : IPasswordService
     ){}
 
     execute = async (input : ChangePasswordDto): Promise<void> => {
