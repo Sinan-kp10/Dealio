@@ -11,5 +11,6 @@ router.use(authMiddleware)
 router.use(requireRole("ENTERPRISE_MANAGER"))
 router.get("/profile", enterpriseProfileController.getProfile)
 router.patch("/profile", validateRequest(UpdateEnterpriseDetailsSchema), enterpriseProfileController.updateDetails)
+router.get("/categories", enterpriseProfileController.getCategories)
 
 export default router

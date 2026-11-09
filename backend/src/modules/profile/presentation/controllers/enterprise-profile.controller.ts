@@ -1,17 +1,16 @@
 import type { Request, Response, NextFunction } from "express";
 import { IApiResponse } from "../../../../shared/application/api-response";
 import { IUseCase } from "../../../../shared/application/base.usecase";
-import { EnterpriseProfileDto, UpdatedEnterpriseDetailsDto, UpdateEnterpriseDetailsDto } from "../../application/dto/enterprise-profile.dto";
+import { CategoryOptionDto, EnterpriseProfileDto, UpdateEnterpriseDetailsDto } from "../../application/dto/enterprise-profile.dto";
 import { HttpStatusCode } from "../../../../shared/enums/http-status-code.enum";
 
 export class EnterpriseProfileController {
 
     constructor(
         private readonly getEnterpriseProfileUseCase : IUseCase<string, EnterpriseProfileDto>,
-        private readonly updateEnterpriseDetailsUseCase : IUseCase<UpdateEnterpriseDetailsDto, UpdatedEnterpriseDetailsDto>
-
+        private readonly updateEnterpriseDetailsUseCase : IUseCase<UpdateEnterpriseDetailsDto, EnterpriseProfileDto>,
+        private readonly getActiveCategoriesUseCase : IUseCase<void, CategoryOptionDto[]>
     ){}
-
 
     getProfile = async(req: Request, res: Response<IApiResponse>, next: NextFunction)=> {
         try {
@@ -49,6 +48,20 @@ export class EnterpriseProfileController {
             
         } catch (error) {
             next(error)
+        }
+    }
+
+    getCategories = async(_req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+        try {
+            const categories = await this.getActiveCategoriesUseCase.execute();
+
+            res.status(HttpStatusCode.OK).json({
+                success: true,
+                message: "Categories retrieved successfully",
+                data: categories,
+            });
+        } catch (error) {
+            next(error);
         }
     }
 }

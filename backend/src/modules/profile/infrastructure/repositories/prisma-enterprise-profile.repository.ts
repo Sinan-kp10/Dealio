@@ -1,5 +1,5 @@
 import { prisma } from "../../../../infrastructure/database/prisma/prisma-client";
-import { EnterpriseProfileDto, UpdatedEnterpriseDetailsDto } from "../../application/dto/enterprise-profile.dto";
+import { CategoryOptionDto, EnterpriseProfileDto, UpdatedEnterpriseDetailsDto } from "../../application/dto/enterprise-profile.dto";
 import { IEnterpriseProfileRepository } from "../../domain/repositories/enterprise-profile.repository";
 import { EnterpriseProfileMapper, enterpriseProfileSelect } from "../mapper/enterprise-profile.mapper";
 
@@ -23,8 +23,8 @@ export class PrismaEnterpriseProfileRepository implements IEnterpriseProfileRepo
         return user ? EnterpriseProfileMapper.toDto(user) : null;
     };
 
-    updateEnterpriseDetails = async (userId: string,enterpriseId: string,data: UpdatedEnterpriseDetailsDto): Promise<UpdatedEnterpriseDetailsDto> => {
-        await prisma.$transaction(async (tx) => {
+    updateEnterpriseDetails = async (userId: string, enterpriseId: string, data: UpdatedEnterpriseDetailsDto): Promise<EnterpriseProfileDto> => {
+        return await prisma.$transaction(async (tx) => {
             if (data.contactPerson) {
                 await tx.users.update({
                     where: { id: userId },
@@ -57,8 +57,32 @@ export class PrismaEnterpriseProfileRepository implements IEnterpriseProfileRepo
                     }
                 }
             }
-        });
 
-        return data;
+            const updatedUser = await tx.users.findUniqueOrThrow({
+                where: { id: userId },
+                select: enterpriseProfileSelect,
+            });
+
+            return EnterpriseProfileMapper.toDto(updatedUser);
+        });
+    };
+
+    getActiveCategoriesWithSubcategories = async (): Promise<CategoryOptionDto[]> => {
+        return await prisma.categories.findMany({
+            where: { status: "ACTIVE" },
+            select: {
+                id: true,
+                name: true,
+                subcategories: {
+                    where: { status: "ACTIVE" },
+                    select: {
+                        id: true,
+                        name: true,
+                    },
+                    orderBy: { name: "asc" },
+                },
+            },
+            orderBy: { name: "asc" },
+        });
     };
 }
