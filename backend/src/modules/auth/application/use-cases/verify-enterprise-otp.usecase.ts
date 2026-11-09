@@ -1,5 +1,5 @@
 import { IEnterpriseRepository, type CreatedEnterpriseResult } from "../../domain/repositories/enterprise.repository";
-import { OtpService } from "../../infrastructure/security/otp.service";
+import type { IOtpService } from "../../../../shared/interfaces/IOtpService";
 import { BadRequestError, ConflictError } from "../../../../shared/errors/app-error";
 import { EnterpriseRegistrationData } from "../dto/register-enterprise.dto";
 import { VerifyOtpDto } from "../dto/verify-otp.dto";
@@ -8,7 +8,7 @@ import type { IUseCase } from "../../../../shared/application/base.usecase";
 export class VerifyEnterpriseOtpuseCase implements IUseCase<VerifyOtpDto, CreatedEnterpriseResult> {
     constructor(
         private readonly enterpriseRepository : IEnterpriseRepository,
-        private readonly otpService : OtpService
+        private readonly otpService : IOtpService
     ){}
 
     execute = async (input : VerifyOtpDto): Promise<CreatedEnterpriseResult> => {

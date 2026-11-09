@@ -1,15 +1,15 @@
 import { IUseCase } from "../../../../shared/application/base.usecase";
 import { BadRequestError, ConflictError, NotFoundError } from "../../../../shared/errors/app-error";
 import { IUserRepository } from "../../domain/repositories/user.repository";
-import { JwtTokenService } from "../../infrastructure/security/jwt-token.service";
-import { OtpService } from "../../infrastructure/security/otp.service";
+import type { IJwtTokenService } from "../../../../shared/interfaces/IJwtTokenService";
+import type { IOtpService } from "../../../../shared/interfaces/IOtpService";
 import { VerifyEmailChangeDto, VerifyEmailChangeResult } from "../dto/change-email.dto";
 
 export class VerifyEmailChangeUseCase implements IUseCase<VerifyEmailChangeDto, VerifyEmailChangeResult> {
     constructor(
         private readonly userRepository: IUserRepository,
-        private readonly otpService: OtpService,
-        private readonly jwtService: JwtTokenService
+        private readonly otpService: IOtpService,
+        private readonly jwtService: IJwtTokenService
     ) {}
 
     execute = async (input : VerifyEmailChangeDto): Promise<VerifyEmailChangeResult> => {

@@ -1,8 +1,9 @@
 import nodemailer, { type Transporter } from "nodemailer";
 import { AppError } from "../../shared/errors/app-error";
 import { env } from "../../config/env.js";
+import type { IEmailService } from "../../shared/interfaces/IEmailService.js";
 
-export class EmailService {
+export class EmailService implements IEmailService {
     private readonly transporter: Transporter;
 
     constructor() {

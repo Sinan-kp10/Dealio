@@ -1,6 +1,6 @@
 import { IUserRepository } from "../../domain/repositories/user.repository";
-import { JwtTokenService } from "../../infrastructure/security/jwt-token.service";
-import { OtpService } from "../../infrastructure/security/otp.service";
+import type { IJwtTokenService } from "../../../../shared/interfaces/IJwtTokenService";
+import type { IOtpService } from "../../../../shared/interfaces/IOtpService";
 import { BadRequestError } from "../../../../shared/errors/app-error";
 import { VerifyOtpDto } from "../dto/verify-otp.dto";
 import type { IUseCase } from "../../../../shared/application/base.usecase";
@@ -9,8 +9,8 @@ export class VerifyPasswordResetOtpUseCase implements IUseCase<VerifyOtpDto, { r
 
     constructor(
         private readonly userRespository : IUserRepository,
-        private readonly otpService : OtpService,
-        private readonly jwtTokenService : JwtTokenService
+        private readonly otpService : IOtpService,
+        private readonly jwtTokenService : IJwtTokenService
     ){}
 
     execute = async (input : VerifyOtpDto) : Promise<{resetToken : string}> => {
