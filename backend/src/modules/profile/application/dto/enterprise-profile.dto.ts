@@ -48,3 +48,8 @@ export interface CategoryOptionDto {
     name: string;
   }[];
 }
+
+export interface EnterpriseUserDto {
+  userId: string;
+  enterpriseId: string;
+}

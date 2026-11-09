@@ -29,19 +29,26 @@ export interface SaveEnterpriseKycRequestDto {
   documentStorageKey: string;
 }
 
-export interface KycRecordDto {
+export interface BaseKycDto {
   id: string;
   businessType: string;
   fullLegalName: string;
   documentType: string;
   documentStorageKey: string;
   documentUrl?: string | null;
-  status: string;
-  rejectionReason: string | null;
   verifiedAt: Date | null;
 }
 
+export type ActiveKycDto = BaseKycDto;
+
+export interface KycRequestDto extends BaseKycDto {
+  status: string;
+  rejectionReason: string | null;
+}
+
+export type KycRecordDto = KycRequestDto;
+
 export interface EnterpriseKycDetailsDto {
-  activeKyc: KycRecordDto | null;
-  pendingRequest: KycRecordDto | null;
+  activeKyc: ActiveKycDto | null;
+  pendingRequest: KycRequestDto | null;
 }

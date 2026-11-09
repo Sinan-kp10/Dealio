@@ -2,11 +2,11 @@ import { randomUUID } from "node:crypto";
 import { IUseCase } from "../../../../../shared/application/base.usecase";
 import { IEnterpriseKycRepository } from "../../../domain/repositories/enterprise-kyc.repository";
 import { IStorageService } from "../../../../../shared/interfaces/IStorageService";
-import { KycRecordDto, UpdateEnterpriseKycDto } from "../../dto/enterprise-kyc.dto";
+import { KycRequestDto, UpdateEnterpriseKycDto } from "../../dto/enterprise-kyc.dto";
 import { ConflictError, NotFoundError } from "../../../../../shared/errors/app-error";
 
 
-export class UpdateEnterpriseKycUseCase implements IUseCase<UpdateEnterpriseKycDto, KycRecordDto> {
+export class UpdateEnterpriseKycUseCase implements IUseCase<UpdateEnterpriseKycDto, KycRequestDto> {
     
 
     constructor(
@@ -14,7 +14,7 @@ export class UpdateEnterpriseKycUseCase implements IUseCase<UpdateEnterpriseKycD
         private readonly storageService: IStorageService
     ) {}
 
-    execute = async (input: UpdateEnterpriseKycDto): Promise<KycRecordDto> => {
+    execute = async (input: UpdateEnterpriseKycDto): Promise<KycRequestDto> => {
 
         const { userId, businessType, fullLegalName, documentType, file } = input;
 

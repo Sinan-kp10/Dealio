@@ -20,22 +20,29 @@ export const DOCUMENT_TYPE_LABELS: Record<DocumentType, string> = {
   DRIVING_LICENCE: "Driving Licence",
 };
 
-export type KycStatus = "PENDING" | "VERIFIED" | "REJECTED"
+export type KycStatus = "PENDING" | "VERIFIED" | "REJECTED";
 
-export interface KycRecord {
+export interface BaseKycRecord {
   id: string;
   businessType: BusinessType;
   fullLegalName: string;
   documentType: DocumentType;
-  documentUrl: string | null;
-  status: KycStatus;
-  rejectionReason: string | null;
+  documentUrl?: string | null;
   verifiedAt: string | null;
 }
 
+export type ActiveKycRecord = BaseKycRecord;
+
+export interface KycRequestRecord extends BaseKycRecord {
+  status: KycStatus;
+  rejectionReason: string | null;
+}
+
+export type KycRecord = KycRequestRecord;
+
 export interface EnterpriseKycDetails {
-  activeKyc: KycRecord | null;
-  pendingRequest: KycRecord | null;
+  activeKyc: ActiveKycRecord | null;
+  pendingRequest: KycRequestRecord | null;
 }
 export interface EnterpriseKycDetailsResponse {
   success: boolean;
@@ -46,7 +53,7 @@ export interface EnterpriseKycDetailsResponse {
 export interface SubmitKycResponse {
   success: boolean;
   message: string;
-  data: KycRecord;
+  data: KycRequestRecord;
 }
 
 export interface CreateEnterpriseKycFormData {
