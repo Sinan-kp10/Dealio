@@ -1,5 +1,5 @@
 import { prisma } from "../../../../infrastructure/database/prisma/prisma-client";
-import { CategoryOptionDto, EnterpriseProfileDto, UpdatedEnterpriseDetailsDto } from "../../application/dto/enterprise-profile.dto";
+import { CategoryOptionDto, EnterpriseProfileDto, UpdatedEnterpriseDetailsDto,} from "../../application/dto/enterprise-profile.dto";
 import { IEnterpriseProfileRepository } from "../../domain/repositories/enterprise-profile.repository";
 import { EnterpriseProfileMapper, enterpriseProfileSelect } from "../mapper/enterprise-profile.mapper";
 

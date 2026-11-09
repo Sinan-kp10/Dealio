@@ -63,6 +63,7 @@ model enterprises {
   users            users[]                    @relation("enterprise_members")
   reviewer         users?                     @relation("enterprise_reviewer", fields: [reviewed_by], references: [id])
   kyc              enterprise_kyc?
+  kyc_requests     enterprise_kyc_requests[]
   bank_account     enterprise_bank_accounts?
   category         categories?                @relation(fields: [category_id], references: [id])
   subcategories    enterprise_subcategories[]
@@ -109,7 +110,7 @@ model enterprise_kyc {
   id                   String       @id @default(uuid()) @db.Uuid
   enterprise_id        String       @unique @db.Uuid
   business_type        business_type
-  legal_entity_name    String       @db.VarChar(255)
+  full_legal_name      String       @db.VarChar(255)
   document_type        document_type
   document_storage_key String       @db.Text
   status               kyc_status   @default(PENDING)
@@ -121,6 +122,24 @@ model enterprise_kyc {
   enterprise enterprises @relation(fields: [enterprise_id], references: [id], onDelete: Cascade)
 
   @@map("enterprise_kyc")
+}
+
+model enterprise_kyc_requests {
+  id                   String        @id @default(uuid()) @db.Uuid
+  enterprise_id        String        @db.Uuid
+  business_type        business_type
+  full_legal_name      String        @db.VarChar(255)
+  document_type        document_type
+  document_storage_key String        @db.Text
+  status               kyc_status    @default(PENDING)
+  rejection_reason     String?       @db.Text
+  verified_at         DateTime?     @db.Timestamptz
+  created_at           DateTime      @default(now()) @db.Timestamptz
+  updated_at           DateTime      @updatedAt @db.Timestamptz
+
+  enterprise           enterprises   @relation(fields: [enterprise_id], references: [id], onDelete: Cascade)
+
+  @@map("enterprise_kyc_requests")
 }
 
 model enterprise_bank_accounts {

@@ -13,6 +13,11 @@ import { RemoveProfilePictureUseCase } from "../../application/use-cases/remove-
 import { ProfilePictureController } from "../../presentation/controllers/profile-picture.controller.js";
 import { UpdateEnterpriseDetailsUseCase } from "../../application/use-cases/update-enterprise-company-information.use-case.js";
 import { GetActiveCategoriesUseCase } from "../../application/use-cases/get-active-categories.use-case.js";
+import { PrismaEnterpriseKycRepository } from "../repositories/prisma-enterprise-kyc.repository.js";
+import { CreateEnterpriseKycUseCase } from "../../application/use-cases/create-enterprise-kyc.use-case.js";
+import { UpdateEnterpriseKycUseCase } from "../../application/use-cases/update-enterprise-kyc.use-case.js";
+import { GetEnterpriseKycUseCase } from "../../application/use-cases/get-enterprise-kyc.use-case.js";
+import { EnterpriseKycController } from "../../presentation/controllers/enterprise-kyc.controller.js";
 
 const s3StorageService = new S3StorageService();
 
@@ -34,3 +39,10 @@ const profileRepository = new PrismaProfileRepository();
 const updateProfilePictureUseCase = new UpdateProfilePictureUseCase(profileRepository, s3StorageService);
 const removeProfilePictureUseCase = new RemoveProfilePictureUseCase(profileRepository, s3StorageService);
 export const profilePictureController = new ProfilePictureController(updateProfilePictureUseCase, removeProfilePictureUseCase);
+
+//enterprise kyc
+const enterpriseKycRepository = new PrismaEnterpriseKycRepository();
+const createEnterpriseKycUseCase = new CreateEnterpriseKycUseCase(enterpriseKycRepository, s3StorageService);
+const updateEnterpriseKycUseCase = new UpdateEnterpriseKycUseCase(enterpriseKycRepository, s3StorageService);
+const getEnterpriseKycUseCase = new GetEnterpriseKycUseCase(enterpriseKycRepository, s3StorageService);
+export const enterpriseKycController = new EnterpriseKycController(getEnterpriseKycUseCase, createEnterpriseKycUseCase, updateEnterpriseKycUseCase);
