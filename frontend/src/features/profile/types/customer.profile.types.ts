@@ -17,8 +17,6 @@ export interface UpdateCustomerProfile {
   name: string;
 }
 
-export type UpdataCustomerProfile = UpdateCustomerProfile;
-
 export interface UpdateCustomerProfileResponse {
   success: boolean;
   message: string;

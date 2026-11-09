@@ -13,7 +13,7 @@ const upload = multer({
     },
 });
 
-const validateProfilePicture = (req: Request, res: Response, next: NextFunction): void => {
+const validateImage = (req: Request, res: Response, next: NextFunction): void => {
     upload.fields([
         { name: "profilePicture", maxCount: 1 },
         { name: "image", maxCount: 1 },
@@ -21,9 +21,9 @@ const validateProfilePicture = (req: Request, res: Response, next: NextFunction)
         if (err) {
             if (err instanceof multer.MulterError) {
                 if (err.code === "LIMIT_FILE_SIZE") {
-                    return next(new BadRequestError("Profile picture size must not exceed 5 MB", "profilePicture"));
+                    return next(new BadRequestError("Image size must not exceed 5 MB", "image"));
                 }
-                return next(new BadRequestError(err.message, "profilePicture"));
+                return next(new BadRequestError(err.message, "image"));
             }
             return next(err);
         }
@@ -33,30 +33,28 @@ const validateProfilePicture = (req: Request, res: Response, next: NextFunction)
             req.file = files["profilePicture"]?.[0] || files["image"]?.[0];
         }
 
-        if (!req.file) {
-            return next(new BadRequestError("Profile picture is required", "profilePicture"));
-        }
-
-        if (req.file.size > MAX_FILE_SIZE) {
-            return next(new BadRequestError("Profile picture size must not exceed 5 MB", "profilePicture"));
-        }
-
-        try {
-            const detectedType = await fileTypeFromBuffer(req.file.buffer);
-
-            if (
-                !detectedType ||
-                !ALLOWED_IMAGE_TYPES.includes(detectedType.mime) ||
-                detectedType.mime !== req.file.mimetype
-            ) {
-                return next(new BadRequestError("Only JPEG, PNG, or WebP images are allowed", "profilePicture"));
+        if (req.file) {
+            if (req.file.size > MAX_FILE_SIZE) {
+                return next(new BadRequestError("Image size must not exceed 5 MB", "image"));
             }
 
-            next();
-        } catch (error) {
-            next(error);
+            try {
+                const detectedType = await fileTypeFromBuffer(req.file.buffer);
+
+                if (
+                    !detectedType ||
+                    !ALLOWED_IMAGE_TYPES.includes(detectedType.mime) ||
+                    detectedType.mime !== req.file.mimetype
+                ) {
+                    return next(new BadRequestError("Only JPEG, PNG, or WebP images are allowed", "image"));
+                }
+            } catch (error) {
+                return next(error);
+            }
         }
+
+        next();
     });
 };
 
-export default validateProfilePicture  
+export default validateImage;  

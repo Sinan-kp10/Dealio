@@ -29,3 +29,25 @@ export interface EnterpriseProfileResponse {
   data: EnterpriseProfile;
 }
 
+export interface UpdateEnterpriseDetails {
+  enterpriseName?: string;
+  contactPerson?: string;
+  categoryId?: string;
+  description?: string | null;
+  subcategoryIds?: string[];
+}
+
+export interface CategoryOption {
+  id: string;
+  name: string;
+  subcategories: {
+    id: string;
+    name: string;
+  }[];
+}
+
+export interface CategoryOptionsResponse {
+  success: boolean;
+  message: string;
+  data: CategoryOption[];
+}

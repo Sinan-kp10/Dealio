@@ -31,6 +31,7 @@ export const UpdateEnterpriseDetailsSchema = z
 
     subcategoryIds: z
       .array(z.string().uuid("Invalid subcategory ID"))
+      .max(6, "You can select up to 6 subcategories")
       .optional(),
   })
   .refine(

@@ -6,16 +6,17 @@ import EnterpriseProfileSkeleton from "../components/loading/EnterpriseProfileSk
 import { toast } from "react-toastify";
 import {Camera,Trash2,BadgeCheck,Briefcase,ShieldCheck,Landmark,Loader2,Clock} from "lucide-react";
 import ProfilePictureModal from "../components/profile-picture/ProfilePictureModal";
-import CompanyInformation from "../components/enterprise/CompanyInformation";
 import { removeProfilePicture } from "../services/profile.service";
 import useAuthStore from "../../../stores/auth.store";
+import EnterpriseInformation from "../components/enterprise/EnterpriseInformation";
+import EnterpriseKyc from "../components/enterprise/EnterpriseKyc";
 
-type EnterpriseTab = "company" | "kyc" | "bank";
+type EnterpriseTab = "enterprise" | "kyc" | "bank";
 
 function EnterpriseProfilePage() {
   const [profile, setProfile] = useState<EnterpriseProfile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<EnterpriseTab>("company");
+  const [activeTab, setActiveTab] = useState<EnterpriseTab>("enterprise");
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [isRemovingPhoto, setIsRemovingPhoto] = useState(false);
   const [imageLoadError, setImageLoadError] = useState(false);
@@ -85,7 +86,6 @@ function EnterpriseProfilePage() {
 
   return (
     <div className="w-full space-y-6 pb-12">
-      {/* 1. Header / Top Card */}
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4 min-w-0">
           <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border border-[#d6e5f1] bg-[#eef4fa] flex items-center justify-center shrink-0 shadow-xs">
@@ -113,7 +113,7 @@ function EnterpriseProfilePage() {
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <h2 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight truncate">
-                {profile?.enterpriseName || "ABC Technologies"}
+                {profile?.enterpriseName}
               </h2>
               {profile?.status === "APPROVED" ? (
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#eaf8f1] text-[#22a06b] border border-[#22a06b]/20 shadow-2xs">
@@ -166,21 +166,19 @@ function EnterpriseProfilePage() {
         </div>
       </div>
 
-      {/* 2. Main Card */}
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 sm:p-7 space-y-7">
-        {/* Navigation Tabs Pill Bar */}
         <div className="bg-[#f0f4f9] p-1.5 rounded-2xl grid grid-cols-1 sm:grid-cols-3 gap-1.5 sm:gap-2 border border-slate-200/60">
           <button
             type="button"
-            onClick={() => setActiveTab("company")}
+            onClick={() => setActiveTab("enterprise")}
             className={`w-full flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
-              activeTab === "company"
+              activeTab === "enterprise"
                 ? "bg-white text-slate-900 shadow-xs border border-slate-200/60"
                 : "text-slate-600 hover:text-slate-900 border border-transparent"
             }`}
           >
-            <Briefcase size={16} className={activeTab === "company" ? "text-slate-700 shrink-0" : "text-slate-500 shrink-0"} />
-            <span className="truncate">Company Information</span>
+            <Briefcase size={16} className={activeTab === "enterprise" ? "text-slate-700 shrink-0" : "text-slate-500 shrink-0"} />
+            <span className="truncate">Enterprise Information</span>
           </button>
           <button
             type="button"
@@ -216,14 +214,15 @@ function EnterpriseProfilePage() {
           </button>
         </div>
 
-        {activeTab === "company" && (
-          <CompanyInformation profile={profile} />
+        {activeTab === "enterprise" && (
+          <EnterpriseInformation
+            profile={profile}
+            onProfileUpdated={(updated) => setProfile(updated)}
+          />
         )}
 
         {activeTab === "kyc" && (
-          <div className="py-12 text-center text-slate-500 text-sm">
-            KYC & Verification details will be available soon.
-          </div>
+          <EnterpriseKyc />
         )}
 
         {activeTab === "bank" && (

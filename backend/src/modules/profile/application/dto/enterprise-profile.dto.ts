@@ -39,3 +39,12 @@ export interface UpdatedEnterpriseDetailsDto {
   description?: string | null;
   subcategoryIds?: string[];
 }
+
+export interface CategoryOptionDto {
+  id: string;
+  name: string;
+  subcategories: {
+    id: string;
+    name: string;
+  }[];
+}
