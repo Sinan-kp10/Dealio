@@ -9,6 +9,7 @@ import ProfilePictureModal from "../components/profile-picture/ProfilePictureMod
 import { removeProfilePicture } from "../services/profile.service";
 import useAuthStore from "../../../stores/auth.store";
 import EnterpriseInformation from "../components/enterprise/EnterpriseInformation";
+import EnterpriseKyc from "../components/enterprise/EnterpriseKyc";
 
 type EnterpriseTab = "enterprise" | "kyc" | "bank";
 
@@ -221,9 +222,7 @@ function EnterpriseProfilePage() {
         )}
 
         {activeTab === "kyc" && (
-          <div className="py-12 text-center text-slate-500 text-sm">
-            KYC & Verification details will be available soon.
-          </div>
+          <EnterpriseKyc />
         )}
 
         {activeTab === "bank" && (

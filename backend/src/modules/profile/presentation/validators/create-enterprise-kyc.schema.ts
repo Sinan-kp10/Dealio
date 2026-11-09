@@ -16,5 +16,3 @@ export const CreateEnterpriseKycSchema = z.object({
   ),
 });
 
-export type CreateEnterpriseKycInput = z.infer<typeof CreateEnterpriseKycSchema>;
-

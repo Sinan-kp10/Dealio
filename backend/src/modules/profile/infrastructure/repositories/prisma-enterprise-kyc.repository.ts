@@ -29,8 +29,8 @@ export class PrismaEnterpriseKycRepository implements IEnterpriseKycRepository {
         ]);
 
         return {
-            activeKyc: activeKyc ? EnterpriseKycMapper.toDto(activeKyc) : null,
-            pendingRequest: latestRequest && latestRequest.status !== "VERIFIED" ? EnterpriseKycMapper.toDto(latestRequest) : null,
+            activeKyc: activeKyc ? EnterpriseKycMapper.toActiveKycDto(activeKyc) : null,
+            pendingRequest: latestRequest && latestRequest.status !== "VERIFIED" ? EnterpriseKycMapper.toRequestDto(latestRequest) : null,
         };
     };
 
@@ -46,6 +46,6 @@ export class PrismaEnterpriseKycRepository implements IEnterpriseKycRepository {
             },
         });
 
-        return EnterpriseKycMapper.toDto(kyc);
+        return EnterpriseKycMapper.toRequestDto(kyc);
     };
 }
