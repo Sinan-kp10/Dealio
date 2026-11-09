@@ -17,6 +17,11 @@ import { RemoveProfilePictureUseCase } from "../../application/use-cases/profile
 import { CreateEnterpriseKycUseCase } from "../../application/use-cases/enterprise/create-enterprise-kyc.use-case.js";
 import { UpdateEnterpriseKycUseCase } from "../../application/use-cases/enterprise/update-enterprise-kyc.use-case.js";
 import { GetEnterpriseKycUseCase } from "../../application/use-cases/enterprise/get-enterprise-kyc.use-case.js";
+import { CreateEnterpriseBankRecordUseCase } from "../../application/use-cases/enterprise/create-enterprise-bank-record.use-case.js";
+import { UpdateEnterpriseBankRecordUseCase } from "../../application/use-cases/enterprise/update-enterprise-bank-record.use-case.js";
+import { GetEnterpriseBankRecordUseCase } from "../../application/use-cases/enterprise/get-enterprise-bank-record.use-case.js";
+import { EnterpriseBankRecordController } from "../../presentation/controllers/enterprise-bank-record.controller.js";
+import { PrismaEnterpriseBankRecordRepository } from "../repositories/prisma-enterprise-bank-record.repository.js";
 
 const s3StorageService = new S3StorageService();
 
@@ -45,3 +50,10 @@ const createEnterpriseKycUseCase = new CreateEnterpriseKycUseCase(enterpriseKycR
 const updateEnterpriseKycUseCase = new UpdateEnterpriseKycUseCase(enterpriseKycRepository, s3StorageService);
 const getEnterpriseKycUseCase = new GetEnterpriseKycUseCase(enterpriseKycRepository, s3StorageService);
 export const enterpriseKycController = new EnterpriseKycController(getEnterpriseKycUseCase, createEnterpriseKycUseCase, updateEnterpriseKycUseCase);
+
+//enterprise bank record
+const enterpriseBankRecordRepository = new PrismaEnterpriseBankRecordRepository();
+const createEnterpriseBankRecordUseCase = new CreateEnterpriseBankRecordUseCase(enterpriseBankRecordRepository);
+const updateEnterpriseBankRecordUseCase = new UpdateEnterpriseBankRecordUseCase(enterpriseBankRecordRepository);
+const getEnterpriseBankRecordUseCase = new GetEnterpriseBankRecordUseCase(enterpriseBankRecordRepository);
+export const enterpriseBankRecordController = new EnterpriseBankRecordController(getEnterpriseBankRecordUseCase, createEnterpriseBankRecordUseCase, updateEnterpriseBankRecordUseCase);

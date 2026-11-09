@@ -2,13 +2,13 @@ import type { Request, Response, NextFunction } from "express";
 import type { IApiResponse } from "../../../../shared/application/api-response";
 import type { IUseCase } from "../../../../shared/application/base.usecase";
 import { HttpStatusCode } from "../../../../shared/enums/http-status-code.enum";
-import type { CreateEnterpriseKycDto, EnterpriseKycDetailsDto, KycRecordDto, UpdateEnterpriseKycDto } from "../../application/dto/enterprise-kyc.dto";
+import type { CreateEnterpriseKycDto, EnterpriseKycDetailsDto, KycRequestDto, UpdateEnterpriseKycDto } from "../../application/dto/enterprise-kyc.dto";
 
 export class EnterpriseKycController {
     constructor(
         private readonly getEnterpriseKycUseCase: IUseCase<string, EnterpriseKycDetailsDto>,
-        private readonly createEnterpriseKycUseCase: IUseCase<CreateEnterpriseKycDto, KycRecordDto>,
-        private readonly updateEnterpriseKycUseCase: IUseCase<UpdateEnterpriseKycDto, KycRecordDto>,
+        private readonly createEnterpriseKycUseCase: IUseCase<CreateEnterpriseKycDto, KycRequestDto>,
+        private readonly updateEnterpriseKycUseCase: IUseCase<UpdateEnterpriseKycDto, KycRequestDto>,
     ) {}
 
     getKyc = async (req: Request, res: Response<IApiResponse<EnterpriseKycDetailsDto>>, next: NextFunction): Promise<void> => {
@@ -27,7 +27,7 @@ export class EnterpriseKycController {
         }
     };
 
-    addKyc = async (req: Request, res: Response<IApiResponse<KycRecordDto>>, next: NextFunction): Promise<void> => {
+    addKyc = async (req: Request, res: Response<IApiResponse<KycRequestDto>>, next: NextFunction): Promise<void> => {
         try {
             const userId = req.auth?.userId;
             const file = req.file!;
@@ -54,7 +54,7 @@ export class EnterpriseKycController {
         }
     };
 
-    updateKyc = async (req: Request, res: Response<IApiResponse<KycRecordDto>>, next: NextFunction): Promise<void> => {
+    updateKyc = async (req: Request, res: Response<IApiResponse<KycRequestDto>>, next: NextFunction): Promise<void> => {
         try {
             const userId = req.auth?.userId;
             const file = req.file
