@@ -1,13 +1,13 @@
 import { IUseCase } from "../../../../shared/application/base.usecase";
 import { BadRequestError, ConflictError, NotFoundError } from "../../../../shared/errors/app-error";
 import { IUserRepository } from "../../domain/repositories/user.repository";
-import { OtpService } from "../../infrastructure/security/otp.service";
+import type { IOtpService } from "../../../../shared/interfaces/IOtpService";
 import { VerifyPhoneOtpDto, VerifyPhoneOtpResult } from "../dto/phone-otp.dto";
 
 export class VerifyPhoneOtpUseCase implements IUseCase<VerifyPhoneOtpDto, VerifyPhoneOtpResult> {
     constructor(
         private readonly userRepository: IUserRepository,
-        private readonly otpService: OtpService
+        private readonly otpService: IOtpService
     ) {}
 
     execute = async (input: VerifyPhoneOtpDto): Promise<VerifyPhoneOtpResult> => {

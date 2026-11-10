@@ -2,14 +2,11 @@ import jwt, { type SignOptions, TokenExpiredError } from "jsonwebtoken";
 import { AppError } from "../../../../shared/errors/app-error";
 import crypto from "node:crypto";
 import { env } from "../../../../config/env.js";
+import type { IJwtTokenService, JwtPayload } from "../../../../shared/interfaces/IJwtTokenService.js";
 
-export interface JwtPayload {
-    userId: string;
-    email: string;
-    role: string;
-}
+export type { JwtPayload };
 
-export class JwtTokenService {
+export class JwtTokenService implements IJwtTokenService {
     private readonly secret: string;
     private readonly accessExpiresIn: SignOptions["expiresIn"];
     private readonly refreshExpiresIn: SignOptions["expiresIn"];

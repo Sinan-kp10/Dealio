@@ -12,7 +12,7 @@ export interface UpdateCategoryData {
 }
 
 export interface UpdateCategoryResponse {
-    status: boolean;
+    success: boolean;
     message: string;
     data: UpdateCategoryData;
 }

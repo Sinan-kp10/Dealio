@@ -6,7 +6,7 @@ export const errorHandler: ErrorRequestHandler = (error: unknown, _req: Request,
 
     if (error instanceof AppError) {
         res.status(error.statusCode).json({
-            status: false,
+            success: false,
             message: error.message,
             ...(error.field && { field: error.field }),
             ...(error.errors && { errors: error.errors }),
@@ -16,7 +16,7 @@ export const errorHandler: ErrorRequestHandler = (error: unknown, _req: Request,
     }
 
     res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
-        status: false,
+        success: false,
         message: "Something went wrong.",
     });
 };

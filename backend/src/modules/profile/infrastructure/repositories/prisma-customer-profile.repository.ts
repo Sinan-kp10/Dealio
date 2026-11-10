@@ -8,10 +8,7 @@ export class PrismaCustomerProfileRepository implements ICustomerProfileReposito
 
     findById = async (id: string): Promise<CustomerProfileDto | null> => {
         const user = await prisma.users.findUnique({
-            where: {
-                id: id,
-                role: "CUSTOMER",
-            },
+            where: {id: id},
             select: customerProfileSelect,
         });
 
@@ -22,7 +19,6 @@ export class PrismaCustomerProfileRepository implements ICustomerProfileReposito
         const user = await prisma.users.findFirst({
             where: {
                 id: userId,
-                role: "CUSTOMER",
             },
             select: customerProfileSelect,
         });
@@ -33,22 +29,9 @@ export class PrismaCustomerProfileRepository implements ICustomerProfileReposito
     updateCustomerProfile = async (userId: string, data: UpdatedCustomerProfileFieldsDto): Promise<UpdatedCustomerProfileFieldsDto> => {
         await prisma.users.update({
             where: { id: userId },
-            data,
+            data: { name: data.name },
         });
 
         return data;
     };
-
-    isPhoneVerified = async (phone: string): Promise<boolean> => {
-        const user = await prisma.users.findFirst({
-            where: {
-                phone,
-                phone_verified: true,
-            },
-            select: { id: true },
-        });
-
-        return user !== null;
-    };
-
 }

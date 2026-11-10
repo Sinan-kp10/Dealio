@@ -86,10 +86,18 @@ export function CustomerNavbar({ onToggleSidebar, isSidebarOpen }: CustomerNavba
                     aria-label="User profile menu"
                     aria-expanded={isProfileOpen}
                 >
-                <div className="w-9 h-9 rounded-full bg-[#2f5581] flex items-center justify-center text-white shrink-0 shadow-xs">
-                    <svg width="18" height="18"viewBox="0 0 24 24"fill="currentColor"aria-hidden="true">
-                        <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z" />
-                    </svg>
+                <div className="w-9 h-9 rounded-full bg-[#2f5581] flex items-center justify-center text-white shrink-0 shadow-xs overflow-hidden">
+                    {user?.profilePictureUrl ? (
+                        <img
+                            src={user.profilePictureUrl}
+                            alt={user.name}
+                            className="w-full h-full object-cover"
+                        />
+                    ) : (
+                        <svg width="18" height="18"viewBox="0 0 24 24"fill="currentColor"aria-hidden="true">
+                            <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z" />
+                        </svg>
+                    )}
                 </div>
 
                 <div className="flex flex-col text-left leading-tight">
@@ -106,10 +114,18 @@ export function CustomerNavbar({ onToggleSidebar, isSidebarOpen }: CustomerNavba
                 {isProfileOpen && (
                 <div className="absolute right-0 mt-3 w-72 bg-white rounded-[20px] shadow-[0_12px_36px_-6px_rgba(15,23,42,0.12),0_4px_12px_rgba(15,23,42,0.06)] border border-slate-200/80 py-2.5 z-50 animate-in fade-in duration-150">
                     <div className="px-5 pt-3.5 pb-3 border-b border-slate-100 flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-[#2f5581] flex items-center justify-center text-white shrink-0 shadow-xs">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                          <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z" />
-                        </svg>
+                      <div className="w-10 h-10 rounded-full bg-[#2f5581] flex items-center justify-center text-white shrink-0 shadow-xs overflow-hidden">
+                        {user?.profilePictureUrl ? (
+                          <img
+                            src={user.profilePictureUrl}
+                            alt={user.name}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z" />
+                          </svg>
+                        )}
                       </div>
                       <div className="flex flex-col min-w-0">
                         <p className="text-[15px] font-bold text-[#0e2238] tracking-[-0.01em] truncate m-0">

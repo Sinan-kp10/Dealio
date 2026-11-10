@@ -17,6 +17,6 @@ export interface EnterpriseSignupRequest {
 }
 
 export interface EnterpriseSignupResponse {
-  status: boolean;
+  success: boolean;
   message: string;
 }

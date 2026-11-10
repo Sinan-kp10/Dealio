@@ -26,6 +26,7 @@ import { RegistrationController } from "../../presentation/http/controllers/regi
 import { PrismaEnterpriseRepository } from "../repositories/prisma-enterprise.repository";
 import { PrismaUserRepository } from "../repositories/prisma-user.repository";
 import { emailService, jwtTokenService, otpService, passwordService, refreshTokenService, smsService } from "./infrastructure.container";
+import { S3StorageService } from "../../../../infrastructure/storage/s3/s3-storage.service";
 
 
 // Registration
@@ -56,7 +57,8 @@ const refreshTokenUseCase = new RefreshTokenUseCase(userRepository, jwtTokenServ
 export const refreshTokenController = new RefreshTokenController(refreshTokenUseCase);
 
 // Authenticated User (/me)
-const getAuthenticatedUserUseCase = new GetAuthenticatedUserUseCase(userRepository);
+const s3StorageService = new S3StorageService();
+const getAuthenticatedUserUseCase = new GetAuthenticatedUserUseCase(userRepository, s3StorageService);
 export const authenticatedUserController = new AuthenticatedUserController(getAuthenticatedUserUseCase);
 
 // Account Security (Email & Phone Change / Verification)
@@ -66,11 +68,4 @@ const resendEmailChangeOtpUseCase = new ResendEmailChangeOtpUseCase(userReposito
 const requestPhoneOtpUseCase = new RequestPhoneOtpUseCase(userRepository, otpService, smsService);
 const verifyPhoneOtpUseCase = new VerifyPhoneOtpUseCase(userRepository, otpService);
 const resendPhoneOtpUseCase = new ResendPhoneOtpUseCase(userRepository, otpService, smsService);
-export const accountController = new AccountController(
-    requestEmailChangeUseCase,
-    verifyEmailChangeUseCase,
-    resendEmailChangeOtpUseCase,
-    requestPhoneOtpUseCase,
-    verifyPhoneOtpUseCase,
-    resendPhoneOtpUseCase
-);
+export const accountController = new AccountController(requestEmailChangeUseCase,verifyEmailChangeUseCase,resendEmailChangeOtpUseCase,requestPhoneOtpUseCase,verifyPhoneOtpUseCase,resendPhoneOtpUseCase)

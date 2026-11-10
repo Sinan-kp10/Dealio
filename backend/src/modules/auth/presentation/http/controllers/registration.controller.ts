@@ -18,7 +18,7 @@ export class RegistrationController {
             await this.registerCustomerUseCase.execute(data);
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "OTP sent successfully. Please verify your email",
             });
         } catch (error) {
@@ -33,7 +33,7 @@ export class RegistrationController {
             await this.registerEnterpriseUseCase.execute(data);
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "OTP sent successfully. Please verify your email",
             });
         } catch (error) {

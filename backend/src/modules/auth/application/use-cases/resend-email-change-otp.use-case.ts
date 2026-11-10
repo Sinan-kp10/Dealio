@@ -1,15 +1,15 @@
 import { IUseCase } from "../../../../shared/application/base.usecase";
 import { BadGatewayError, NotFoundError } from "../../../../shared/errors/app-error";
-import { EmailService } from "../../../../infrastructure/email/email.service";
+import type { IEmailService } from "../../../../shared/interfaces/IEmailService";
 import { IUserRepository } from "../../domain/repositories/user.repository";
-import { OtpService } from "../../infrastructure/security/otp.service";
+import type { IOtpService } from "../../../../shared/interfaces/IOtpService";
 import { ResendEmailChangeOtpDto } from "../dto/change-email.dto";
 
 export class ResendEmailChangeOtpUseCase implements IUseCase<ResendEmailChangeOtpDto, void> {
     constructor(
         private readonly userRepository: IUserRepository,
-        private readonly otpService: OtpService,
-        private readonly emailService: EmailService
+        private readonly otpService: IOtpService,
+        private readonly emailService: IEmailService
     ) {}
 
     execute = async (input : ResendEmailChangeOtpDto): Promise<void> => {

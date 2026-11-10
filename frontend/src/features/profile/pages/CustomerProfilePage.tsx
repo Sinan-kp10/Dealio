@@ -10,15 +10,18 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateCustomerProfileSchema } from "../schemas/update-customer-profile.schema";
 import useAuthStore from "../../../stores/auth.store";
-import CustomerProfileSkeleton from "../components/CustomerProfileSkeleton";
+import CustomerProfileSkeleton from "../components/loading/CustomerProfileSkeleton";
+import ProfilePictureModal from "../components/profile-picture/ProfilePictureModal";
+import { removeProfilePicture } from "../services/profile.service";
 
 function CustomerProfilePage() {
   const navigate = useNavigate();
   const [profile, setProfile] = useState<CustomerProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [updateMode, setUpdateMode] = useState(false);
-  const setUser = useAuthStore((state) => state.setUser)
-  const currentUser = useAuthStore((state) => state.user)
+  const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
+  const [isRemovingPhoto, setIsRemovingPhoto] = useState(false);
+  const [imageLoadError, setImageLoadError] = useState(false);
   const {register,handleSubmit,reset,setError,formState: { errors, isSubmitting }} = useForm<UpdateCustomerProfile>({resolver: zodResolver(updateCustomerProfileSchema)})
 
   useEffect(() => {
@@ -29,9 +32,17 @@ function CustomerProfilePage() {
         const response = await getCustomerProfile();
         if (!cancelled) {
           setProfile(response);
+          setImageLoadError(false);
           reset({
             name: response.name,
           });
+          const { user: authUser, setUser: setAuthUser } = useAuthStore.getState();
+          if (authUser && authUser.profilePictureUrl !== response.profilePictureKey) {
+            setAuthUser({
+              ...authUser,
+              profilePictureUrl: response.profilePictureKey,
+            });
+          }
         }
       } catch (error) {
         if (cancelled) return;
@@ -83,9 +94,10 @@ function CustomerProfilePage() {
           : null
       );
 
-      if (currentUser && data.name?.trim()) {
-        setUser({
-          ...currentUser,
+      const { user: authUser, setUser: setAuthUser } = useAuthStore.getState();
+      if (authUser && data.name?.trim()) {
+        setAuthUser({
+          ...authUser,
           name: updatedName,
         });
       }
@@ -94,6 +106,28 @@ function CustomerProfilePage() {
       setUpdateMode(false);
     } catch (error) {
       handleFormError(error, setError, "Unable to update profile. Please try again");
+    }
+  };
+
+  const handleRemovePhoto = async () => {
+    if (!profile?.profilePictureKey || isRemovingPhoto) return;
+    try {
+      setIsRemovingPhoto(true);
+      const response = await removeProfilePicture();
+      toast.success(response.message || "Profile picture removed successfully");
+      setProfile((prev) => (prev ? { ...prev, profilePictureKey: null } : null));
+      setImageLoadError(false);
+      const { user: authUser, setUser: setAuthUser } = useAuthStore.getState();
+      if (authUser) {
+        setAuthUser({
+          ...authUser,
+          profilePictureUrl: null,
+        });
+      }
+    } catch (error) {
+      handleApiError(error, "Failed to remove profile picture");
+    } finally {
+      setIsRemovingPhoto(false);
     }
   };
 
@@ -114,11 +148,12 @@ function CustomerProfilePage() {
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4 min-w-0">
           <div className="relative w-16 h-16 sm:w-18 sm:h-18 rounded-full overflow-hidden border border-[#d6e5f1] bg-[#eef4fa] flex items-center justify-center shrink-0 shadow-xs">
-            {profile.profilePictureKey ? (
+            {profile.profilePictureKey && !imageLoadError ? (
               <img
                 src={profile.profilePictureKey}
                 alt={profile.name}
                 className="w-full h-full object-cover"
+                onError={() => setImageLoadError(true)}
               />
             ) : (
               <div className="w-full h-full bg-[#eef4fa] flex items-center justify-center">
@@ -153,17 +188,24 @@ function CustomerProfilePage() {
         <div className="flex items-center gap-2.5 shrink-0">
           <button
             type="button"
+            onClick={() => setIsPhotoModalOpen(true)}
             className="inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2 border border-slate-200/90 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-2xs cursor-pointer"
           >
             <Camera size={16} className="text-slate-600" />
-            <span>Change Photo</span>
+            <span>{profile.profilePictureKey ? "Update Photo" : "Upload Photo"}</span>
           </button>
           <button
             type="button"
-            className="inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2 border border-rose-200/80 rounded-xl text-xs sm:text-sm font-semibold text-rose-600 hover:bg-rose-50 hover:border-rose-300 transition-colors shadow-2xs cursor-pointer"
+            disabled={!profile.profilePictureKey || isRemovingPhoto}
+            onClick={handleRemovePhoto}
+            className="inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2 border border-rose-200/80 rounded-xl text-xs sm:text-sm font-semibold text-rose-600 hover:bg-rose-50 hover:border-rose-300 transition-colors shadow-2xs cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            <Trash2 size={16} className="text-rose-600" />
-            <span>Remove</span>
+            {isRemovingPhoto ? (
+              <Loader2 size={16} className="animate-spin text-rose-600" />
+            ) : (
+              <Trash2 size={16} className="text-rose-600" />
+            )}
+            <span>{isRemovingPhoto ? "Removing..." : "Remove"}</span>
           </button>
         </div>
       </div>
@@ -334,6 +376,22 @@ function CustomerProfilePage() {
         </form>
       </div>
 
+      <ProfilePictureModal
+        isOpen={isPhotoModalOpen}
+        onClose={() => setIsPhotoModalOpen(false)}
+        currentPhotoUrl={profile.profilePictureKey}
+        onSuccess={(newPhotoUrl) => {
+          setProfile((prev) => (prev ? { ...prev, profilePictureKey: newPhotoUrl } : null));
+          setImageLoadError(false);
+          const { user: authUser, setUser: setAuthUser } = useAuthStore.getState();
+          if (authUser) {
+            setAuthUser({
+              ...authUser,
+              profilePictureUrl: newPhotoUrl,
+            });
+          }
+        }}
+      />
     </div>
   );
 }

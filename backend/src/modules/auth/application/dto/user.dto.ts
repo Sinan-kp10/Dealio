@@ -7,5 +7,6 @@ export interface AuthUserDto {
   role: UserRole;
   phone: string | null;
   phoneVerified: boolean;
+  profilePictureUrl?: string | null;
 }
 

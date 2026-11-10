@@ -1,5 +1,5 @@
 import { IUserRepository } from "../../domain/repositories/user.repository";
-import { JwtTokenService } from "../../infrastructure/security/jwt-token.service";
+import type { IJwtTokenService } from "../../../../shared/interfaces/IJwtTokenService";
 import { RefreshTokenService } from "../../infrastructure/security/refresh-token.service";
 import { UnauthorizedError, ForbiddenError } from "../../../../shared/errors/app-error";
 import { AuthUserDto } from "../dto/user.dto";
@@ -14,7 +14,7 @@ export interface RefreshTokenResponseDto {
 export class RefreshTokenUseCase implements IUseCase<string | undefined, RefreshTokenResponseDto> {
     constructor(
         private readonly userRepository: IUserRepository,
-        private readonly jwtTokenService: JwtTokenService,
+        private readonly jwtTokenService: IJwtTokenService,
         private readonly refreshTokenService: RefreshTokenService
     ) {}
 
