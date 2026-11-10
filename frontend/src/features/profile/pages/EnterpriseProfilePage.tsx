@@ -10,6 +10,7 @@ import { removeProfilePicture } from "../services/profile.service";
 import useAuthStore from "../../../stores/auth.store";
 import EnterpriseInformation from "../components/enterprise/EnterpriseInformation";
 import EnterpriseKyc from "../components/enterprise/EnterpriseKyc";
+import EnterpriseBankRecord from "../components/enterprise/EnterpriseBankRecord";
 
 type EnterpriseTab = "enterprise" | "kyc" | "bank";
 
@@ -226,9 +227,7 @@ function EnterpriseProfilePage() {
         )}
 
         {activeTab === "bank" && (
-          <div className="py-12 text-center text-slate-500 text-sm">
-            Bank & Settlement Details will be available soon.
-          </div>
+          <EnterpriseBankRecord />
         )}
       </div>
 

@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Check, ChevronDown, Loader2, SquarePen, Upload, X } from "lucide-react";
+import { Check, ChevronDown, Loader2, Plus, SquarePen, Upload, X } from "lucide-react";
 import { CreateEnterpriseKycSchema } from "../../schemas/enterpise-kyc.schema";
 import { BUSINESS_TYPE_LABELS, DOCUMENT_TYPE_LABELS, type ActiveKycRecord, type BaseKycRecord, type CreateEnterpriseKycFormData, type KycRequestRecord } from "../../types/enterprise-kyc.types";
 import { addKycDetails, getKycDetails, updateKycDetails } from "../../services/enterprise-profile.service";
@@ -20,70 +20,13 @@ function EnterpriseKyc() {
 
     const { register, handleSubmit, reset, setValue, setError, formState: { errors, isSubmitting },} = useForm<CreateEnterpriseKycFormData>({  resolver: zodResolver(CreateEnterpriseKycSchema)});
 
-    useEffect(() => {
-        let cancelled = false;
-        const fetchKycDetails = async () => {
-        try {
-            setLoading(true);
-
-            const response = await getKycDetails();
-            if (!cancelled) {
-                const active = response.data.activeKyc;
-                const pending = response.data.pendingRequest;
-                setKyc(active);
-                setPendingtKyc(pending);
-                const current: BaseKycRecord | null = active || pending;
-                if (current) {
-                    reset({
-                        businessType: current.businessType,
-                        fullLegalName: current.fullLegalName,
-                        documentType: current.documentType,
-                        image: current.documentUrl || undefined,
-                    });
-                }
-            }
-        } catch (error) {
-            handleApiError(error, "unable to load kyc details");
-        } finally {
-            if (!cancelled) {
-                setLoading(false);
-            }
-        }
-        };
-
-        void fetchKycDetails();
-        return () => {
-            cancelled = true;
-        };
-    }, [reset]);
-
-    const isPendingReview = pendingKyc?.status === "PENDING";
-    const canEdit = !isPendingReview;
-    const displayKyc: BaseKycRecord | null = kyc || pendingKyc;
-
-    const handleEnterEditMode = () => {
-        if (!canEdit) return;
-        const recordToEdit: BaseKycRecord | null = kyc || pendingKyc;
-        if (recordToEdit) {
+    const resetForm = useCallback((record: BaseKycRecord | null) => {
+        if (record) {
             reset({
-                businessType: recordToEdit.businessType,
-                fullLegalName: recordToEdit.fullLegalName,
-                documentType: recordToEdit.documentType,
-                image: recordToEdit.documentUrl || undefined,
-            });
-        }
-        setDocumentFile(null);
-        setUpdateMode(true);
-    };
-
-    const handleCancelEdit = () => {
-        const recordToEdit = kyc || pendingKyc;
-        if (recordToEdit) {
-            reset({
-                businessType: recordToEdit.businessType,
-                fullLegalName: recordToEdit.fullLegalName,
-                documentType: recordToEdit.documentType,
-                image: recordToEdit.documentUrl || undefined,
+                businessType: record.businessType,
+                fullLegalName: record.fullLegalName,
+                documentType: record.documentType,
+                image: record.documentUrl || undefined,
             });
         } else {
             reset({
@@ -93,6 +36,50 @@ function EnterpriseKyc() {
                 image: undefined,
             });
         }
+    }, [reset]);
+
+    useEffect(() => {
+        let cancelled = false;
+        const fetchKycDetails = async () => {
+            try {
+                setLoading(true);
+
+                const response = await getKycDetails();
+                if (!cancelled) {
+                    const active = response.data.activeKyc;
+                    const pending = response.data.pendingRequest;
+                    setKyc(active);
+                    setPendingtKyc(pending);
+                    resetForm(active || pending);
+                }
+            } catch (error) {
+                handleApiError(error, "unable to load kyc details");
+            } finally {
+                if (!cancelled) {
+                    setLoading(false);
+                }
+            }
+        };
+
+        void fetchKycDetails();
+        return () => {
+            cancelled = true;
+        };
+    }, [resetForm]);
+
+    const isPendingReview = pendingKyc?.status === "PENDING";
+    const canEdit = !isPendingReview;
+    const displayKyc: BaseKycRecord | null = kyc || pendingKyc;
+
+    const handleEnterEditMode = () => {
+        if (!canEdit) return;
+        resetForm(kyc || pendingKyc);
+        setDocumentFile(null);
+        setUpdateMode(true);
+    };
+
+    const handleCancelEdit = () => {
+        resetForm(kyc || pendingKyc);
         setDocumentFile(null);
         setUpdateMode(false);
     };
@@ -106,15 +93,11 @@ function EnterpriseKyc() {
                 ...(documentFile ? { image: documentFile } : {}),
             };
 
-            if (kyc) {
-                await updateKycDetails(payload);
-            } else {
-                await addKycDetails(payload);
-            }
+            const response = kyc
+                ? await updateKycDetails(payload)
+                : await addKycDetails(payload);
 
-            const response = await getKycDetails();
-            setKyc(response.data.activeKyc);
-            setPendingtKyc(response.data.pendingRequest);
+            setPendingtKyc(response.data);
             setDocumentFile(null);
             setUpdateMode(false);
         } catch (error) {
@@ -134,13 +117,13 @@ function EnterpriseKyc() {
         <div className="space-y-6">
             <div>
                 {pendingKyc?.rejectionReason && (<p className="text-xs sm:text-sm text-red-600 bg-red-50 p-3 rounded-xl border border-red-200">{pendingKyc.rejectionReason}</p>)}
-                {isPendingReview && (<p className="text-xs sm:text-sm text-amber-700 bg-amber-50 p-3 rounded-xl border border-amber-200 mt-2">Your KYC verification request is already under review. Please wait until admin responds</p>)}
+                {isPendingReview && (<p className="text-xs sm:text-sm text-amber-700 bg-amber-50 p-3 rounded-xl border border-amber-200 mt-2">Your KYC verification request is under review. Please wait until admin responds</p>)}
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div className="flex items-center justify-between gap-3 sm:gap-4 pb-2 flex-wrap sm:flex-nowrap">
                     <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
-                        KYC & Business Verification
+                        KYC Verification
                     </h3>
 
                     {!updateMode ? (
@@ -150,8 +133,17 @@ function EnterpriseKyc() {
                                 onClick={handleEnterEditMode}
                                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 sm:py-2 border border-slate-200/90 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-2xs cursor-pointer shrink-0"
                             >
-                                <SquarePen size={15} className="text-slate-600" />
-                                <span>Edit</span>
+                                {displayKyc ? (
+                                    <>
+                                        <SquarePen size={15} className="text-slate-600" />
+                                        <span>Edit</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Plus size={15} className="text-slate-600" />
+                                        <span>Add Kyc Details</span>
+                                    </>
+                                )}
                             </button>
                         )
                     ) : (
