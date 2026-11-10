@@ -8,7 +8,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateEnterpriseBankRecordSchema } from "../../schemas/enterprise-bank.record.schema";
 
-function EnterpriseBankRecord() {
+interface EnterpriseBankRecordProps {
+    onStatusChange?: (status: "PENDING" | "VERIFIED" | "REQUIRED") => void;
+}
+
+function EnterpriseBankRecord({ onStatusChange }: EnterpriseBankRecordProps = {}) {
     const [bankRecord, setBankRecord] = useState<ActiveBankRecord | null>(null);
     const [pendingBankRecord, setPendingBankRecord] = useState<BankRecordRequest | null>(null);
     const [updateMode, setUpdateMode] = useState(false);
@@ -50,9 +54,11 @@ function EnterpriseBankRecord() {
                     setBankRecord(active);
                     setPendingBankRecord(pending);
                     resetForm(active || pending);
+                    onStatusChange?.(pending ? "PENDING" : active ? "VERIFIED" : "REQUIRED");
                 }
             } catch (error) {
                 handleApiError(error, "unable to load bank record");
+                onStatusChange?.("REQUIRED");
             } finally {
                 if (!cancelled) {
                     setLoading(false);
@@ -64,7 +70,7 @@ function EnterpriseBankRecord() {
         return () => {
             cancelled = true;
         };
-    }, [resetForm]);
+    }, [resetForm, onStatusChange]);
 
     const isPendingReview = pendingBankRecord?.status === "PENDING";
     const canEdit = !isPendingReview;
@@ -86,6 +92,7 @@ function EnterpriseBankRecord() {
             const response = bankRecord ? await updateBankRecord(data) : await addBankRecord(data);
             setPendingBankRecord(response.data);
             setUpdateMode(false);
+            onStatusChange?.("PENDING");
         } catch (error) {
             handleFormError(error, setError, "unable to update bank record");
         }

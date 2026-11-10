@@ -9,7 +9,11 @@ import { handleApiError, handleFormError } from "../../../../utils/errorHandler"
 import KycDocumentModal from "./KycDocumentModal";
 import KycDocumentPreviewModal from "./KycDocumentPreviewModal";
 
-function EnterpriseKyc() {
+interface EnterpriseKycProps {
+    onStatusChange?: (status: "PENDING" | "VERIFIED" | "REQUIRED") => void;
+}
+
+function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
     const [kyc, setKyc] = useState<ActiveKycRecord | null>(null);
     const [pendingKyc, setPendingtKyc] = useState<KycRequestRecord | null>(null);
     const [updateMode, setUpdateMode] = useState(false);
@@ -51,9 +55,11 @@ function EnterpriseKyc() {
                     setKyc(active);
                     setPendingtKyc(pending);
                     resetForm(active || pending);
+                    onStatusChange?.(pending ? "PENDING" : active ? "VERIFIED" : "REQUIRED");
                 }
             } catch (error) {
                 handleApiError(error, "unable to load kyc details");
+                onStatusChange?.("REQUIRED");
             } finally {
                 if (!cancelled) {
                     setLoading(false);
@@ -65,7 +71,7 @@ function EnterpriseKyc() {
         return () => {
             cancelled = true;
         };
-    }, [resetForm]);
+    }, [resetForm, onStatusChange]);
 
     const isPendingReview = pendingKyc?.status === "PENDING";
     const canEdit = !isPendingReview;
@@ -100,6 +106,7 @@ function EnterpriseKyc() {
             setPendingtKyc(response.data);
             setDocumentFile(null);
             setUpdateMode(false);
+            onStatusChange?.("PENDING");
         } catch (error) {
             handleFormError(error, setError, "unable to update kyc details");
         }
