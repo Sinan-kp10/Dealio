@@ -1,7 +1,8 @@
 import { redis } from "../../../../infrastructure/database/redis/redis-client.js";
 import { env } from "../../../../config/env.js";
+import type { IRefreshTokenService } from "../../../../shared/interfaces/IRefreshTokenService.js";
 
-export class RefreshTokenService {
+export class RefreshTokenService implements IRefreshTokenService {
 
     private readonly TTL_SECONDS = env.auth.refreshTokenTtlSeconds;
 
