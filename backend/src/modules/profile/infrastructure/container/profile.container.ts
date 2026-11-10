@@ -22,6 +22,9 @@ import { UpdateEnterpriseBankRecordUseCase } from "../../application/use-cases/e
 import { GetEnterpriseBankRecordUseCase } from "../../application/use-cases/enterprise/get-enterprise-bank-record.use-case.js";
 import { EnterpriseBankRecordController } from "../../presentation/controllers/enterprise-bank-record.controller.js";
 import { PrismaEnterpriseBankRecordRepository } from "../repositories/prisma-enterprise-bank-record.repository.js";
+import { PrismaProfileVerificationRepository } from "../repositories/prisma-profile-verification.repository.js";
+import { ProfileVerificationUseCase } from "../../application/use-cases/admin/profile-verification.use-case.js";
+import { ProfileVerificationController } from "../../presentation/controllers/profile-verification.controller.js";
 
 const s3StorageService = new S3StorageService();
 
@@ -57,3 +60,9 @@ const createEnterpriseBankRecordUseCase = new CreateEnterpriseBankRecordUseCase(
 const updateEnterpriseBankRecordUseCase = new UpdateEnterpriseBankRecordUseCase(enterpriseBankRecordRepository);
 const getEnterpriseBankRecordUseCase = new GetEnterpriseBankRecordUseCase(enterpriseBankRecordRepository);
 export const enterpriseBankRecordController = new EnterpriseBankRecordController(getEnterpriseBankRecordUseCase, createEnterpriseBankRecordUseCase, updateEnterpriseBankRecordUseCase);
+
+//admin profile verification
+
+const profileVerificationRepository = new PrismaProfileVerificationRepository()
+const profileVerificationUseCase = new ProfileVerificationUseCase(profileVerificationRepository)
+export const profileVerificationController = new ProfileVerificationController(profileVerificationUseCase)
