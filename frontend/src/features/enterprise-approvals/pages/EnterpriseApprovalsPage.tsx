@@ -4,20 +4,20 @@ import { useNavigate } from "react-router-dom";
 import Pagination from "../../../components/common/pagination/Pagination";
 import Select from "../../../components/common/select/Select";
 import useDebounce from "../../../hook/useDebounce";
+import useCategoryStore from "../../../stores/category.store";
 import { handleApiError } from "../../../utils/errorHandler";
 import { getPendingEnterprises } from "../services/enterprise-approvals.service";
 import type { PendingEnterprise } from "../types/enterprise-approvals.types";
 import { EnterpriseApprovalCard } from "../components/EnterpriseApprovalCard";
 import { EnterpriseApprovalCardSkeleton } from "../components/EnterpriseApprovalCardSkeleton";
-import { getCategories } from "../../category-management/sevices/category-management.service";
 
 const PAGE_LIMIT = 12;
 const SKELETON_CARDS = [1, 2, 3, 4, 5, 6];
 
 export function EnterpriseApprovalsPage() {
     const navigate = useNavigate();
+    const categories = useCategoryStore((state) => state.categories);
     const [enterprises, setEnterprises] = useState<PendingEnterprise[]>([]);
-    const [categoryOptions, setCategoryOptions] = useState<string[]>([]);
     const [search, setSearch] = useState("");
     const [category, setCategory] = useState("ALL");
     const [page, setPage] = useState(1);
@@ -25,28 +25,6 @@ export function EnterpriseApprovalsPage() {
     const [totalItems, setTotalItems] = useState(0);
     const [loading, setLoading] = useState(true);
     const debouncedSearch = useDebounce(search, 500);
-
-    useEffect(() => {
-        let cancelled = false;
-
-        const loadCategories = async () => {
-            try {
-                const response = await getCategories({ page: 1, limit: 100 });
-                if (!cancelled && response.data?.items) {
-                    const names = response.data.items.map((c) => c.name);
-                    setCategoryOptions(names);
-                }
-            } catch(error) {
-                handleApiError(error, "Unable to load categories")
-                
-            }
-        };
-
-        void loadCategories();
-        return () => {
-            cancelled = true;
-        };
-    }, []);
 
     useEffect(() => {
         let cancelled = false;
@@ -140,9 +118,9 @@ export function EnterpriseApprovalsPage() {
                     aria-label="Filter by category"
                     options={[
                         { label: "Category: All", value: "ALL" },
-                        ...categoryOptions.map((cat) => ({
-                            label: cat,
-                            value: cat,
+                        ...categories.map((cat) => ({
+                            label: cat.name,
+                            value: cat.name,
                         })),
                     ]}
                 />

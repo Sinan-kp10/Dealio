@@ -2,24 +2,24 @@ import { useEffect, useState } from "react";
 import { Search, Plus } from "lucide-react";
 import type { SubCategoryListItem, SubCategoryStatus } from "../types/sub-category";
 import useDebounce from "../../../hook/useDebounce";
-import { getCategories, getSubCategories } from "../sevices/category-management.service";
+import { getSubCategories } from "../sevices/category-management.service";
 import { handleApiError } from "../../../utils/errorHandler";
 import { formatDateTime } from "../../../utils/dateFormatter";
 import Table from "../../../components/common/table/Table";
 import Pagination from "../../../components/common/pagination/Pagination";
 import SubCategoryModal from "./SubCategoryFormModal";
 import Select from "../../../components/common/select/Select";
+import useCategoryStore from "../../../stores/category.store";
 
 const DEFAULT_LIMIT = 5;
 
 export interface SubCategoriesTabProps {
     onSubCategoryAdded?: () => void;
-    categoriesRefreshTrigger?: number;
 }
 
-function SubCategoriesTab({onSubCategoryAdded,categoriesRefreshTrigger = 0,}: SubCategoriesTabProps) {
+function SubCategoriesTab({onSubCategoryAdded,}: SubCategoriesTabProps) {
+    const allCategories = useCategoryStore((state) => state.categories);
     const [subcategories, setSubcategories] = useState<SubCategoryListItem[]>([]);
-    const [allCategories, setAllCategories] = useState<{ id: string; name: string }[]>([]);
     const [subStatus, setSubStatus] = useState<"ALL" | SubCategoryStatus>("ALL");
     const [subCategoryFilter, setSubCategoryFilter] = useState<string>("ALL");
     const [subPage, setSubPage] = useState(1);
@@ -29,27 +29,6 @@ function SubCategoriesTab({onSubCategoryAdded,categoriesRefreshTrigger = 0,}: Su
     const debouncedSubSearch = useDebounce(subSearch, 500);
     const [refreshCount, setRefreshCount] = useState(0);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-
-    useEffect(() => {
-        let cancelled = false;
-        const fetchAllCategories = async () => {
-            try {
-                const response = await getCategories({ page: 1, limit: 100 });
-                if (!cancelled) {
-                    setAllCategories(response.data.items.map((c) => ({ id: c.id, name: c.name })));
-                }
-            } catch (error){
-                if (!cancelled) {
-                handleApiError(error, "Failed to load category options")
-            }
-            }
-        };
-        void fetchAllCategories();
-
-        return () => {
-            cancelled = true;
-        };
-    }, [refreshCount, categoriesRefreshTrigger]);
 
     useEffect(() => {
         let cancelled = false;

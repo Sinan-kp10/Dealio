@@ -9,6 +9,7 @@ import Table from "../../../components/common/table/Table";
 import Pagination from "../../../components/common/pagination/Pagination";
 import CategoryFormModal from "./CategoryFormModal";
 import Select from "../../../components/common/select/Select";
+import { refreshActiveCategories } from "../../../hook/useActiveCategories";
 
 const DEFAULT_LIMIT = 5;
 
@@ -86,6 +87,7 @@ function CategoriesTab({ onCategoryChanged, refreshTrigger = 0 }: CategoriesTabP
         handleCloseModal();
         setInternalRefreshCount((prev) => prev + 1);
         onCategoryChanged?.();
+        void refreshActiveCategories();
     };
 
     const handleEditCategory = (item: Category) => {

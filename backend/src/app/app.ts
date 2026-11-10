@@ -32,9 +32,10 @@ app.use(httpLogger)
 
 app.use("/api", globalRateLimiter);
 
-app.use("/api/auth", authRouter)
-app.use("/api/admin", userManagementRoutes)
-app.use("/api/admin", categoryRoutes)
+app.use("/api", categoryRoutes);
+app.use("/api/auth", authRouter);
+app.use("/api/admin", userManagementRoutes);
+app.use("/api/admin", categoryRoutes);
 app.use("/api/admin", profileVerificationRoutes)
 app.use("/api/customer", customerProfileRouter)
 app.use("/api/enterprise", enterpriseProfileRouter)

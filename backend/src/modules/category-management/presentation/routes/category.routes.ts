@@ -11,6 +11,9 @@ import { getSubCategoriesSchema } from "../validators/get-sub-category.schema";
 
 const router = Router();
 
+// Public active categories
+router.get("/categories/active", categoryController.getActiveCategories);
+
 router.use(authMiddleware);
 router.use(requireRole("ADMIN"));
 router.get("/categories", validateRequest(getCategoriesSchema, "query"), categoryController.getCategories);
