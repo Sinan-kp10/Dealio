@@ -1,6 +1,7 @@
 import axiosInstance from "../../../app/lib/axios";
 import type { CreateEnterpriseKycInput, EnterpriseKycDetailsResponse, SubmitKycResponse, UpdateEnterpriseKycInput } from "../types/enterprise-kyc.types";
 import type { CategoryOption, CategoryOptionsResponse, EnterpriseProfile, EnterpriseProfileResponse, UpdateEnterpriseDetails } from "../types/enterprise-profile.types";
+import type {CreateEnterpriseBankRecordFormData, EnterpriseBankRecordResponse,SubmitBankRecordResponse,UpdateEnterpriseBankRecordInput,} from "../types/enterprise-bank-record.types";
 
 export const getEnterpriseProfile = async (): Promise<EnterpriseProfile> => {
   const response = await axiosInstance.get<EnterpriseProfileResponse>("/enterprise/profile");
@@ -53,3 +54,18 @@ export const updateKycDetails = async (payload :  UpdateEnterpriseKycInput): Pro
   });
   return response.data;
 }
+
+export const getBankRecord = async (): Promise<EnterpriseBankRecordResponse> => {
+  const response = await axiosInstance.get<EnterpriseBankRecordResponse>("/enterprise/bank-record");
+  return response.data;
+};
+
+export const addBankRecord = async (payload: CreateEnterpriseBankRecordFormData): Promise<SubmitBankRecordResponse> => {
+  const response = await axiosInstance.post<SubmitBankRecordResponse>("/enterprise/bank-record", payload);
+  return response.data;
+};
+
+export const updateBankRecord = async (payload: UpdateEnterpriseBankRecordInput): Promise<SubmitBankRecordResponse> => {
+  const response = await axiosInstance.patch<SubmitBankRecordResponse>("/enterprise/bank-record", payload);
+  return response.data;
+};

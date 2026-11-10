@@ -4,12 +4,14 @@ import { handleApiError } from "../../../utils/errorHandler";
 import { getEnterpriseProfile } from "../services/enterprise-profile.service";
 import EnterpriseProfileSkeleton from "../components/loading/EnterpriseProfileSkeleton";
 import { toast } from "react-toastify";
-import {Camera,Trash2,BadgeCheck,Briefcase,ShieldCheck,Landmark,Loader2,Clock} from "lucide-react";
+import { Camera, Trash2, BadgeCheck, Briefcase, ShieldCheck, Landmark, Loader2, Clock } from "lucide-react";
 import ProfilePictureModal from "../components/profile-picture/ProfilePictureModal";
 import { removeProfilePicture } from "../services/profile.service";
 import useAuthStore from "../../../stores/auth.store";
 import EnterpriseInformation from "../components/enterprise/EnterpriseInformation";
 import EnterpriseKyc from "../components/enterprise/EnterpriseKyc";
+import EnterpriseBankRecord from "../components/enterprise/EnterpriseBankRecord";
+import TabStatusBadge, { type VerificationStatus } from "../components/enterprise/TabStatusBadge";
 
 type EnterpriseTab = "enterprise" | "kyc" | "bank";
 
@@ -17,6 +19,8 @@ function EnterpriseProfilePage() {
   const [profile, setProfile] = useState<EnterpriseProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<EnterpriseTab>("enterprise");
+  const [kycStatus, setKycStatus] = useState<VerificationStatus>("LOADING");
+  const [bankRecordStatus, setBankRecordStatus] = useState<VerificationStatus>("LOADING");
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [isRemovingPhoto, setIsRemovingPhoto] = useState(false);
   const [imageLoadError, setImageLoadError] = useState(false);
@@ -190,11 +194,8 @@ function EnterpriseProfilePage() {
             }`}
           >
             <ShieldCheck size={16} className={activeTab === "kyc" ? "text-slate-700 shrink-0" : "text-slate-500 shrink-0"} />
-            <span className="truncate">KYC & Verification</span>
-            <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-[#eaf8f1] text-[#22a06b] border border-[#22a06b]/20 shrink-0">
-              <BadgeCheck size={12} strokeWidth={2.5} />
-              <span>Verified</span>
-            </span>
+            <span className="truncate">KYC Verification</span>
+            <TabStatusBadge status={kycStatus} />
           </button>
           <button
             type="button"
@@ -207,29 +208,24 @@ function EnterpriseProfilePage() {
           >
             <Landmark size={16} className={activeTab === "bank" ? "text-slate-700 shrink-0" : "text-slate-500 shrink-0"} />
             <span className="truncate">Bank & Settlement Details</span>
-            <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-[#eaf8f1] text-[#22a06b] border border-[#22a06b]/20 shrink-0">
-              <BadgeCheck size={12} strokeWidth={2.5} />
-              <span>Verified</span>
-            </span>
+            <TabStatusBadge status={bankRecordStatus} />
           </button>
         </div>
 
-        {activeTab === "enterprise" && (
+        <div className={activeTab === "enterprise" ? "block" : "hidden"}>
           <EnterpriseInformation
             profile={profile}
             onProfileUpdated={(updated) => setProfile(updated)}
           />
-        )}
+        </div>
 
-        {activeTab === "kyc" && (
-          <EnterpriseKyc />
-        )}
+        <div className={activeTab === "kyc" ? "block" : "hidden"}>
+          <EnterpriseKyc onStatusChange={setKycStatus} />
+        </div>
 
-        {activeTab === "bank" && (
-          <div className="py-12 text-center text-slate-500 text-sm">
-            Bank & Settlement Details will be available soon.
-          </div>
-        )}
+        <div className={activeTab === "bank" ? "block" : "hidden"}>
+          <EnterpriseBankRecord onStatusChange={setBankRecordStatus} />
+        </div>
       </div>
 
       <ProfilePictureModal

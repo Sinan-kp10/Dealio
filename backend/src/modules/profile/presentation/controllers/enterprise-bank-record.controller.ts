@@ -33,8 +33,8 @@ export class EnterpriseBankRecordController {
 
             const bankRecord = await this.createEnterpriseBankRecordUseCase.execute({
                 userId: userId!,
-                AccountHolderName: req.body.AccountHolderName ?? req.body.accountHolderName,
-                BankAccountNumber: req.body.BankAccountNumber ?? req.body.bankAccountNumber ?? req.body.accountNumber,
+                AccountHolderName: req.body.accountHolderName ?? req.body.AccountHolderName,
+                BankAccountNumber: req.body.bankAccountNumber ?? req.body.BankAccountNumber,
                 ifscCode: req.body.ifscCode,
                 accountType: req.body.accountType,
                 upiId: req.body.upiId,
@@ -56,8 +56,8 @@ export class EnterpriseBankRecordController {
 
             const bankRecord = await this.updateEnterpriseBankRecordUseCase.execute({
                 userId: userId!,
-                AccountHolderName: req.body.AccountHolderName ?? req.body.accountHolderName,
-                BankAccountNumber: req.body.BankAccountNumber ?? req.body.bankAccountNumber ?? req.body.accountNumber,
+                AccountHolderName: req.body.accountHolderName ?? req.body.AccountHolderName,
+                BankAccountNumber: req.body.bankAccountNumber ?? req.body.BankAccountNumber,
                 ifscCode: req.body.ifscCode,
                 accountType: req.body.accountType,
                 upiId: req.body.upiId,
