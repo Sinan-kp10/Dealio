@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { SquarePen, Copy, Check, ChevronDown, Loader2, Plus, ShieldCheck, X } from "lucide-react";
+import { AlertCircle, Check, ChevronDown, Clock, Copy, Loader2, Plus, ShieldCheck, SquarePen, X } from "lucide-react";
 import type { ActiveBankRecord, BankRecordRequest, BaseBankRecord, CreateEnterpriseBankRecordFormData } from "../../types/enterprise-bank-record.types";
 import { BANK_ACCOUNT_TYPE_LABELS } from "../../types/enterprise-bank-record.types";
 import { handleApiError, handleFormError } from "../../../../utils/errorHandler";
@@ -7,6 +7,7 @@ import { addBankRecord, getBankRecord, updateBankRecord } from "../../services/e
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateEnterpriseBankRecordSchema } from "../../schemas/enterprise-bank.record.schema";
+import ConfirmationModal from "../../../../components/common/confirmationModel/ConfirmationModal";
 
 interface EnterpriseBankRecordProps {
     onStatusChange?: (status: "PENDING" | "VERIFIED" | "REQUIRED") => void;
@@ -18,6 +19,7 @@ function EnterpriseBankRecord({ onStatusChange }: EnterpriseBankRecordProps = {}
     const [updateMode, setUpdateMode] = useState(false);
     const [loading, setLoading] = useState(false);
     const [copiedField, setCopiedField] = useState<string | null>(null);
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
     const {register,handleSubmit,reset,setError,formState: { errors, isSubmitting }} = useForm<CreateEnterpriseBankRecordFormData>({resolver: zodResolver(CreateEnterpriseBankRecordSchema)})
 
@@ -92,9 +94,11 @@ function EnterpriseBankRecord({ onStatusChange }: EnterpriseBankRecordProps = {}
             const response = bankRecord ? await updateBankRecord(data) : await addBankRecord(data);
             setPendingBankRecord(response.data);
             setUpdateMode(false);
+            setIsConfirmModalOpen(false);
             onStatusChange?.("PENDING");
         } catch (error) {
             handleFormError(error, setError, "unable to update bank record");
+            setIsConfirmModalOpen(false);
         }
     };
 
@@ -117,18 +121,27 @@ function EnterpriseBankRecord({ onStatusChange }: EnterpriseBankRecordProps = {}
         <div className="space-y-6">
             <div>
                 {pendingBankRecord?.rejectionReason && (
-                    <p className="text-xs sm:text-sm text-red-600 bg-red-50 p-3 rounded-xl border border-red-200">
-                        {pendingBankRecord.rejectionReason}
-                    </p>
+                    <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs sm:text-sm text-red-700">
+                        <AlertCircle size={18} className="shrink-0 text-red-600 mt-0.5" />
+                        <p className="leading-relaxed">
+                            <span className="font-semibold text-red-800">Your bank details verification was rejected by admin. </span>
+                            <span>Reason: </span>
+                            <span className="font-medium text-red-900">"{pendingBankRecord.rejectionReason}". </span>
+                            <span>Please update the required information and submit again.</span>
+                        </p>
+                    </div>
                 )}
                 {isPendingReview && (
-                    <p className="text-xs sm:text-sm text-amber-700 bg-amber-50 p-3 rounded-xl border border-amber-200 mt-2">
-                        Your bank account verification request is under review. Please wait until admin responds
-                    </p>
+                    <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-xs sm:text-sm text-amber-800 mt-2">
+                        <Clock size={18} className="shrink-0 text-amber-600 mt-0.5" />
+                        <p className="leading-relaxed">
+                            Your bank account verification request is under review. Please wait until admin responds.
+                        </p>
+                    </div>
                 )}
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={handleSubmit(() => setIsConfirmModalOpen(true))} className="space-y-4">
                 <div className="flex items-center justify-between gap-3 sm:gap-4 pb-2 flex-wrap sm:flex-nowrap">
                     <div>
                         <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
@@ -388,6 +401,15 @@ function EnterpriseBankRecord({ onStatusChange }: EnterpriseBankRecordProps = {}
                     </div>
                 </div>
             </form>
+
+            <ConfirmationModal
+                isOpen={isConfirmModalOpen}
+                onClose={() => setIsConfirmModalOpen(false)}
+                onConfirm={handleSubmit(onSubmit)}
+                loading={isSubmitting}
+                title="Confirm Bank Details Submission"
+                message="Once submitted, your bank account verification request will be under review and you cannot edit these details until the administrator responds. Are you sure you want to proceed?"
+            />
         </div>
     );
 }
