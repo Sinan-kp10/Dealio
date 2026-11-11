@@ -1,3 +1,5 @@
+export type VerificationStatus = "PENDING" | "VERIFIED" | "REJECTED";
+
 export interface PendingEnterpriseListItemDto {
     id: string;
     enterpriseName: string;
@@ -50,7 +52,8 @@ export interface EnterpriseKycApprovalDto {
     documentType: string;
     documentKey: string;
     documentUrl?: string | null;
-    status: "PENDING" | "VERIFIED";
+    status: VerificationStatus;
+    rejectionReason: string | null;
     createdAt: Date;
 }
 
@@ -62,13 +65,14 @@ export interface EnterpriseBankAccountApprovalDto {
     ifscCode: string;
     accountType: string;
     upiId: string | null;
-    status: "PENDING" | "VERIFIED";
+    status: VerificationStatus;
+    rejectionReason: string | null;
     createdAt: Date;
 }
 
 export interface EnterpriseApprovalDetailsDto {
     companyInfo: EnterpriseCompanyInfoDto;
-    kyc: EnterpriseKycApprovalDto;
-    bankAccount: EnterpriseBankAccountApprovalDto;
+    kyc: EnterpriseKycApprovalDto | null;
+    bankAccount: EnterpriseBankAccountApprovalDto | null;
 }
 

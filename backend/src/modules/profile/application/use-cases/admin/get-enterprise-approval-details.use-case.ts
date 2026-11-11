@@ -21,7 +21,7 @@ export class GetEnterpriseApprovalDetailsUseCase implements IUseCase<string, Ent
             throw new NotFoundError("Enterprise approval details not found");
         }
 
-        if (details.kyc.documentKey) {
+        if (details.kyc?.documentKey) {
             try {
                 details.kyc.documentUrl = await this.storageService.getFileUrl(details.kyc.documentKey);
             } catch {

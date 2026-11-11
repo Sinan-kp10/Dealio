@@ -1,4 +1,4 @@
-export type EnterpriseStatus = "PENDING" | "APPROVED" | "REJECTED" | "SUSPENDED";
+export type EnterpriseStatus = "PENDING" | "VERIFIED";
 
 export interface Enterprise {
   id: string;

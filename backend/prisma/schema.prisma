@@ -20,9 +20,7 @@ enum user_status {
 
 enum enterprise_status {
   PENDING
-  APPROVED
-  REJECTED
-  SUSPENDED
+  VERIFIED
 }
 
 model users {
