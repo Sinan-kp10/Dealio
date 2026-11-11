@@ -134,7 +134,6 @@ function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
                             <span className="font-semibold text-red-800">Your KYC verification was rejected by admin. </span>
                             <span>Reason: </span>
                             <span className="font-medium text-red-900">"{pendingKyc.rejectionReason}". </span>
-                            <span>Please update the required information and submit again.</span>
                         </p>
                     </div>
                 )}

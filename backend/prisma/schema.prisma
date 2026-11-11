@@ -58,7 +58,7 @@ model enterprises {
   users                 users[]                              @relation("enterprise_members")
   kyc                   enterprise_kyc?
   kyc_requests          enterprise_kyc_requests[]
-  bank_account          enterprise_bank_accounts?
+  bank_accounts         enterprise_bank_accounts[]
   bank_account_requests enterprise_bank_accounts_requests[]
   category              categories?                          @relation(fields: [category_id], references: [id])
   subcategories         enterprise_subcategories[]
@@ -137,18 +137,20 @@ model enterprise_kyc_requests {
 
 model enterprise_bank_accounts {
   id                  String            @id @default(uuid()) @db.Uuid
-  enterprise_id       String            @unique @db.Uuid
+  enterprise_id       String            @db.Uuid
   account_holder_name String            @db.VarChar(255)
   account_number      String            @db.VarChar(255)
   ifsc_code           String            @db.VarChar(11)
   account_type        bank_account_type
   upi_id              String?           @db.VarChar(255)
+  is_primary          Boolean           @default(true)
   verified_at         DateTime?         @db.Timestamptz
   created_at          DateTime          @default(now()) @db.Timestamptz
   updated_at          DateTime          @updatedAt @db.Timestamptz
 
   enterprise enterprises @relation(fields: [enterprise_id], references: [id], onDelete: Cascade)
 
+  @@index([enterprise_id])
   @@map("enterprise_bank_accounts")
 }
 

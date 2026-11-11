@@ -23,7 +23,9 @@ export class PrismaEnterpriseBankRecordRepository implements IEnterprisBankRecor
 
     getBankRecord = async (enterpriseId: string): Promise<{ activeBankRecord: ActiveBankRecordDto | null; pendingRequest: BankRecordRequestDto | null; }> => {
         const [activeBankRecord, pendingBankRecord] = await Promise.all([
-            prisma.enterprise_bank_accounts.findUnique({ where : {enterprise_id : enterpriseId}}),
+            prisma.enterprise_bank_accounts.findFirst({
+                where: { enterprise_id: enterpriseId, is_primary: true },
+            }),
             prisma.enterprise_bank_accounts_requests.findFirst({
                 where : {enterprise_id : enterpriseId},
                 orderBy : {created_at : "desc"}

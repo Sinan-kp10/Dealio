@@ -100,7 +100,11 @@ export const enterpriseApprovalDetailsSelect = {
             created_at: true,
         },
     },
-    bank_account: {
+    bank_accounts: {
+        where: {
+            is_primary: true,
+        },
+        take: 1,
         select: {
             id: true,
             account_holder_name: true,
@@ -137,7 +141,7 @@ export class ProfileVerificationMapper {
         const kyc = latestKycRequest ?? record.kyc;
 
         const latestBankRequest = record.bank_account_requests[0];
-        const bank = latestBankRequest ?? record.bank_account;
+        const bank = latestBankRequest ?? record.bank_accounts[0];
 
         const kycDto = kyc
             ? {

@@ -121,7 +121,6 @@ function EnterpriseBankRecord({ onStatusChange }: EnterpriseBankRecordProps = {}
                             <span className="font-semibold text-red-800">Your bank details verification was rejected by admin. </span>
                             <span>Reason: </span>
                             <span className="font-medium text-red-900">"{pendingBankRecord.rejectionReason}". </span>
-                            <span>Please update the required information and submit again.</span>
                         </p>
                     </div>
                 )}
