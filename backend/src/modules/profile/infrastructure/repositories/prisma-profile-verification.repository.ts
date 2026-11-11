@@ -1,9 +1,10 @@
 import { Prisma } from "../../../../../generated/prisma/client";
 import { prisma } from "../../../../infrastructure/database/prisma/prisma-client.js";
 import { EnterpriseUserDto } from "../../application/dto/enterprise-profile.dto.js";
-import {PaginatedPendingEnterprisesDto,PendingEnterpriseFiltersDto,} from "../../application/dto/profile-verification.dto.js";
+import {EnterpriseApprovalDetailsDto,PaginatedPendingEnterprisesDto,PendingEnterpriseFiltersDto,} from "../../application/dto/profile-verification.dto.js";
 import { IProfileVerficationRepository } from "../../domain/repositories/profile-verification.repository.js";
 import {
+    enterpriseApprovalDetailsSelect,
     pendingEnterpriseSelect,
     ProfileVerificationMapper,
 } from "../mapper/profile-verification.mapper.js";
@@ -31,58 +32,85 @@ export class PrismaProfileVerificationRepository implements IProfileVerficationR
         const category = filters.category?.trim();
 
         const where: Prisma.enterprisesWhereInput = {
-            status: "PENDING",
-            kyc_requests: {
-                some: {},
-            },
-            bank_account_requests: {
-                some: {},
-            },
-            ...(category && category !== "ALL"
-                ? {
-                    category: {
-                        is: {
-                            name: {
-                                equals: category,
-                                mode: "insensitive",
-                            },
-                        },
-                    },
-                }
-                : {}),
-            ...(searchTerm
-                ? {
+            AND: [
+                {
                     OR: [
                         {
-                            enterprise_name: {
-                                contains: searchTerm,
-                                mode: "insensitive",
+                            status: "PENDING",
+                            kyc_requests: {
+                                some: { status: "PENDING" },
+                            },
+                            bank_account_requests: {
+                                some: { status: "PENDING" },
                             },
                         },
                         {
-                            users: {
-                                some: {
-                                    role: "ENTERPRISE_MANAGER",
-                                    OR: [
-                                        {
-                                            name: {
-                                                contains: searchTerm,
-                                                mode: "insensitive",
-                                            },
-                                        },
-                                        {
-                                            email: {
-                                                contains: searchTerm,
-                                                mode: "insensitive",
-                                            },
-                                        },
-                                    ],
+                            status: "APPROVED",
+                            OR: [
+                                {
+                                    kyc_requests: {
+                                        some: { status: "PENDING" },
+                                    },
+                                },
+                                {
+                                    bank_account_requests: {
+                                        some: { status: "PENDING" },
+                                    },
+                                },
+                            ],
+                        },
+                    ],
+                },
+                ...(category && category !== "ALL"
+                    ? [
+                        {
+                            category: {
+                                is: {
+                                    name: {
+                                        equals: category,
+                                        mode: "insensitive" as Prisma.QueryMode,
+                                    },
                                 },
                             },
                         },
-                    ],
-                }
-                : {}),
+                    ]
+                    : []),
+                ...(searchTerm
+                    ? [
+                        {
+                            OR: [
+                                {
+                                    enterprise_name: {
+                                        contains: searchTerm,
+                                        mode: "insensitive" as Prisma.QueryMode,
+                                    },
+                                },
+                                {
+                                    users: {
+                                        some: {
+                                            role: "ENTERPRISE_MANAGER" as const,
+                                            OR: [
+                                                {
+                                                    name: {
+                                                        contains: searchTerm,
+                                                        mode: "insensitive" as Prisma.QueryMode,
+                                                    },
+                                                },
+                                                {
+                                                    email: {
+                                                        contains: searchTerm,
+                                                        mode: "insensitive" as Prisma.QueryMode,
+                                                    },
+                                                },
+                                            ],
+                                        },
+                                    },
+                                },
+                            ],
+                        },
+                    ]
+                : []),
+            ],
         };
 
         const [enterprises, total] = await Promise.all([
@@ -103,5 +131,16 @@ export class PrismaProfileVerificationRepository implements IProfileVerficationR
             totalPages: Math.ceil(total / limit),
             total,
         };
+    };
+
+    getEnterpriseApprovalDetails = async (enterpriseId: string): Promise<EnterpriseApprovalDetailsDto | null> => {
+        const enterprise = await prisma.enterprises.findUnique({
+            where: { id: enterpriseId },
+            select: enterpriseApprovalDetailsSelect,
+        });
+
+        if (!enterprise) return null;
+
+        return ProfileVerificationMapper.toApprovalDetailsDto(enterprise);
     };
 }
