@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {SquarePen,Mail,BadgeCheck,Phone,ChevronDown,Check,X,Loader2,Building2,User,Info,} from "lucide-react";
+import {SquarePen,Mail,BadgeCheck,Phone,ChevronDown,Check,X,Loader2,Building2,User,Info,AlertTriangle,} from "lucide-react";
 import type {EnterpriseProfile,UpdateEnterpriseDetails,CategoryOption,} from "../../types/enterprise-profile.types";
 import { getEnterpriseCategories, updateEnterpriseDetails,} from "../../services/enterprise-profile.service";
 import { UpdateEnterpriseDetailsSchema } from "../../schemas/update-enterprise-details.schema";
@@ -113,8 +113,26 @@ export default function EnterpriseInformation({profile,onProfileUpdated,}: Enter
     }
   };
 
+  const isCategoryMissing = !profile?.category?.id || !profile?.subcategories || profile.subcategories.length === 0;
+
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-7">
+      {isCategoryMissing && (
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl bg-amber-50/80 border border-amber-200 text-amber-900 shadow-2xs">
+          <div className="flex items-start gap-3 min-w-0">
+            <AlertTriangle size={18} className="text-amber-600 shrink-0 mt-0.5" />
+            <div className="text-xs sm:text-sm leading-relaxed">
+              <p className="font-semibold text-amber-900 m-0">
+                Business Category & Subcategories Required
+              </p>
+              <p className="text-amber-800/90 text-xs mt-0.5 m-0">
+                Choose your business category and subcategories. Customers use these selections to find your enterprise and send relevant quotation requests.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="space-y-4">
         <div className="flex items-center justify-between gap-4 pb-2">
           <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
