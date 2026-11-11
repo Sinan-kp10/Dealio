@@ -208,7 +208,7 @@ function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
                     <div>
-                        <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
+                        <label className="block text-xs sm:text-[13px] font-medium text-slate-500 mb-1.5">
                             Business Type
                         </label>
                         {updateMode ? (
@@ -246,7 +246,7 @@ function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
                     </div>
 
                     <div>
-                        <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
+                        <label className="block text-xs sm:text-[13px] font-medium text-slate-500 mb-1.5">
                             Full Legal Name
                         </label>
                         {updateMode ? (
@@ -274,7 +274,7 @@ function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
                     </div>
 
                     <div>
-                        <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
+                        <label className="block text-xs sm:text-[13px] font-medium text-slate-500 mb-1.5">
                             Identification Document Type
                         </label>
                         {updateMode ? (
@@ -312,7 +312,7 @@ function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
                     </div>
 
                     <div>
-                        <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
+                        <label className="block text-xs sm:text-[13px] font-medium text-slate-500 mb-1.5">
                             Upload Verification Document
                         </label>
                         {updateMode ? (

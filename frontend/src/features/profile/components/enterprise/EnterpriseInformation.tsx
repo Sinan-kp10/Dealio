@@ -164,7 +164,7 @@ export default function EnterpriseInformation({profile,onProfileUpdated,}: Enter
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
           <div>
-            <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
+            <label className="block text-xs sm:text-[13px] font-medium text-slate-500 mb-1.5">
               Enterprise Name
             </label>
             {updateMode ? (
@@ -199,7 +199,7 @@ export default function EnterpriseInformation({profile,onProfileUpdated,}: Enter
           </div>
 
           <div>
-            <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
+            <label className="block text-xs sm:text-[13px] font-medium text-slate-500 mb-1.5">
               Contact Person
             </label>
             {updateMode ? (
@@ -234,7 +234,7 @@ export default function EnterpriseInformation({profile,onProfileUpdated,}: Enter
           </div>
 
           <div>
-            <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
+            <label className="block text-xs sm:text-[13px] font-medium text-slate-500 mb-1.5">
               Email Address
             </label>
             <div className="flex items-center justify-between px-4 py-2.5 bg-[#f6f8fb] border border-slate-200/90 rounded-xl text-sm font-medium text-slate-800 shadow-2xs opacity-90">
@@ -255,7 +255,7 @@ export default function EnterpriseInformation({profile,onProfileUpdated,}: Enter
           </div>
 
           <div>
-            <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
+            <label className="block text-xs sm:text-[13px] font-medium text-slate-500 mb-1.5">
               Phone Number
             </label>
             <div className="flex items-center justify-between px-4 py-2.5 bg-[#f6f8fb] border border-slate-200/90 rounded-xl text-sm font-medium text-slate-800 shadow-2xs opacity-90">
@@ -303,14 +303,13 @@ export default function EnterpriseInformation({profile,onProfileUpdated,}: Enter
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 pt-2 items-stretch">
-        {/* Left Column: Category on top, Subcategory below */}
         <div className="space-y-4">
           <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
             Business Category & Subcategories
           </h3>
 
           <div>
-            <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
+            <label className="block text-xs sm:text-[13px] font-medium text-slate-500 mb-1.5">
               Category
             </label>
             {updateMode ? (
@@ -351,7 +350,7 @@ export default function EnterpriseInformation({profile,onProfileUpdated,}: Enter
 
           {!updateMode ? (
             <div>
-              <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
+              <label className="block text-xs sm:text-[13px] font-medium text-slate-500 mb-1.5">
                 Subcategory{" "}
                 <span className="text-slate-400 font-normal normal-case">
                   (Multiple allowed)
@@ -377,7 +376,7 @@ export default function EnterpriseInformation({profile,onProfileUpdated,}: Enter
           ) : (
             <div className="space-y-2 pt-1">
               <div className="flex items-center justify-between gap-2">
-                <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
+                <label className="block text-xs sm:text-[13px] font-medium text-slate-500 mb-1.5">
                   Subcategories{" "}
                   <span className="text-slate-400 font-normal normal-case">
                     (Choose up to {MAX_SUBCATEGORIES})
@@ -446,7 +445,7 @@ export default function EnterpriseInformation({profile,onProfileUpdated,}: Enter
           </h3>
 
           <div className="flex-1 flex flex-col min-h-0">
-            <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
+            <label className="block text-xs sm:text-[13px] font-medium text-slate-500 mb-1.5">
               Describe your enterprise
             </label>
             {updateMode ? (

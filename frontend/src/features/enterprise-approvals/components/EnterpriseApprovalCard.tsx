@@ -1,12 +1,13 @@
+import { useNavigate } from "react-router-dom";
 import { ArrowRight, Clock } from "lucide-react";
 import type { PendingEnterprise } from "../types/enterprise-approvals.types";
 
 interface EnterpriseApprovalCardProps {
     enterprise: PendingEnterprise;
-    onViewDetails: (id: string) => void;
 }
 
-export function EnterpriseApprovalCard({ enterprise, onViewDetails }: EnterpriseApprovalCardProps) {
+export function EnterpriseApprovalCard({ enterprise }: EnterpriseApprovalCardProps) {
+    const navigate = useNavigate();
     return (
         <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-md transition-shadow p-5 flex flex-col justify-between">
             <div>
@@ -61,7 +62,7 @@ export function EnterpriseApprovalCard({ enterprise, onViewDetails }: Enterprise
 
             <button
                 type="button"
-                onClick={() => onViewDetails(enterprise.id)}
+                onClick={() => navigate(`/admin/enterprise-approvals/${enterprise.id}`)}
                 className="w-full mt-4 py-2.5 px-4 bg-[#204066] hover:bg-[#173252] text-white rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs active:scale-[0.99]"
             >
                 <span>View Details</span>

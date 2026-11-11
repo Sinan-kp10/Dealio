@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateEnterpriseBankRecordSchema } from "../../schemas/enterprise-bank.record.schema";
 import ConfirmationModal from "../../../../components/common/confirmationModel/ConfirmationModal";
+import useCopyToClipboard from "../../../../hook/useCopyToClipboard";
 
 interface EnterpriseBankRecordProps {
     onStatusChange?: (status: "PENDING" | "VERIFIED" | "REQUIRED") => void;
@@ -18,7 +19,7 @@ function EnterpriseBankRecord({ onStatusChange }: EnterpriseBankRecordProps = {}
     const [pendingBankRecord, setPendingBankRecord] = useState<BankRecordRequest | null>(null);
     const [updateMode, setUpdateMode] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [copiedField, setCopiedField] = useState<string | null>(null);
+    const { copiedField, copyToClipboard } = useCopyToClipboard();
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
     const {register,handleSubmit,reset,setError,formState: { errors, isSubmitting }} = useForm<CreateEnterpriseBankRecordFormData>({resolver: zodResolver(CreateEnterpriseBankRecordSchema)})
@@ -101,13 +102,6 @@ function EnterpriseBankRecord({ onStatusChange }: EnterpriseBankRecordProps = {}
             setIsConfirmModalOpen(false);
         }
     };
-
-    const handleCopy = (text: string, field: string) => {
-        if (!text) return;
-        void navigator.clipboard.writeText(text);
-        setCopiedField(field);
-        setTimeout(() => setCopiedField(null), 1500);
-    }
 
     if (loading) {
         return (
@@ -206,7 +200,7 @@ function EnterpriseBankRecord({ onStatusChange }: EnterpriseBankRecordProps = {}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 pt-2">
                     <div>
-                        <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
+                        <label className="block text-xs sm:text-[13px] font-medium text-slate-500 mb-1.5">
                             Account Holder Name
                         </label>
                         {updateMode ? (
@@ -234,7 +228,7 @@ function EnterpriseBankRecord({ onStatusChange }: EnterpriseBankRecordProps = {}
                     </div>
 
                     <div>
-                        <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
+                        <label className="block text-xs sm:text-[13px] font-medium text-slate-500 mb-1.5">
                             Bank Account Number
                         </label>
                         {updateMode ? (
@@ -260,7 +254,7 @@ function EnterpriseBankRecord({ onStatusChange }: EnterpriseBankRecordProps = {}
                                 {displayRecord?.BankAccountNumber && (
                                     <button
                                         type="button"
-                                        onClick={() => handleCopy(displayRecord.BankAccountNumber, "accountNumber")}
+                                        onClick={() => copyToClipboard(displayRecord.BankAccountNumber, "accountNumber")}
                                         className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 shadow-2xs transition-colors cursor-pointer shrink-0 ml-2"
                                     >
                                         {copiedField === "accountNumber" ? (
@@ -281,7 +275,7 @@ function EnterpriseBankRecord({ onStatusChange }: EnterpriseBankRecordProps = {}
                     </div>
 
                     <div>
-                        <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
+                        <label className="block text-xs sm:text-[13px] font-medium text-slate-500 mb-1.5">
                             IFSC Code
                         </label>
                         {updateMode ? (
@@ -302,14 +296,33 @@ function EnterpriseBankRecord({ onStatusChange }: EnterpriseBankRecordProps = {}
                                 )}
                             </div>
                         ) : (
-                            <div className="w-full h-11 px-4 bg-[#f0f4f9] border border-slate-200/80 rounded-xl text-sm font-bold text-slate-900 flex items-center shadow-2xs tracking-wide">
-                                {displayRecord?.ifscCode ? displayRecord.ifscCode.toUpperCase() : "Not provided"}
+                            <div className="w-full h-11 px-4 bg-[#f0f4f9] border border-slate-200/80 rounded-xl text-sm font-bold text-slate-900 flex items-center justify-between shadow-2xs tracking-wide">
+                                <span className="truncate">{displayRecord?.ifscCode ? displayRecord.ifscCode.toUpperCase() : "Not provided"}</span>
+                                {displayRecord?.ifscCode && (
+                                    <button
+                                        type="button"
+                                        onClick={() => copyToClipboard(displayRecord.ifscCode.toUpperCase(), "ifscCode")}
+                                        className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 shadow-2xs transition-colors cursor-pointer shrink-0 ml-2 font-normal tracking-normal"
+                                    >
+                                        {copiedField === "ifscCode" ? (
+                                            <>
+                                                <Check size={13} className="text-emerald-600" />
+                                                <span className="text-emerald-600 font-semibold">Copied!</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Copy size={13} className="text-slate-500" />
+                                                <span>Copy</span>
+                                            </>
+                                        )}
+                                    </button>
+                                )}
                             </div>
                         )}
                     </div>
 
                     <div>
-                        <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
+                        <label className="block text-xs sm:text-[13px] font-medium text-slate-500 mb-1.5">
                             Account Type
                         </label>
                         {updateMode ? (
@@ -347,7 +360,7 @@ function EnterpriseBankRecord({ onStatusChange }: EnterpriseBankRecordProps = {}
                     </div>
 
                     <div>
-                        <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
+                        <label className="block text-xs sm:text-[13px] font-medium text-slate-500 mb-1.5">
                             UPI ID {updateMode && <span className="text-xs text-slate-400 font-normal">(Optional)</span>}
                         </label>
                         {updateMode ? (
@@ -373,7 +386,7 @@ function EnterpriseBankRecord({ onStatusChange }: EnterpriseBankRecordProps = {}
                                 {displayRecord?.upiId && (
                                     <button
                                         type="button"
-                                        onClick={() => handleCopy(displayRecord.upiId!, "upiId")}
+                                        onClick={() => copyToClipboard(displayRecord.upiId!, "upiId")}
                                         className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 shadow-2xs transition-colors cursor-pointer shrink-0 ml-2"
                                     >
                                         {copiedField === "upiId" ? (

@@ -28,6 +28,7 @@ const EnterpriseDashboardPage = lazy(()=> import("../../features/dashboard/pages
 const CustomerManagementPage = lazy(()=> import("../../features/user-management/pages/CustomerManagementPage"))
 const EnterpriseManagementPage = lazy(()=> import("../../features/user-management/pages/EnterpriseManagementPage"))
 const EnterpriseApprovalsPage = lazy(() => import("../../features/enterprise-approvals/pages/EnterpriseApprovalsPage"))
+const EnterpriseApprovalDetailsPage = lazy(() => import("../../features/enterprise-approvals/pages/EnterpriseApprovalDetailsPage"))
 const CategoryManagementPage = lazy(()=> import("../../features/category-management/pages/CategoryManagementPage"))
 
 export function AppRouter() {
@@ -40,6 +41,7 @@ export function AppRouter() {
             <Route element={<AdminLayout />}>
               <Route path="/admin" element={<AdminDashboardPage />} />
               <Route path="/admin/enterprise-approvals" element={<EnterpriseApprovalsPage />} />
+              <Route path="/admin/enterprise-approvals/:enterpriseId" element={<EnterpriseApprovalDetailsPage />} />
               <Route path="/admin/customers" element={<CustomerManagementPage />} />
               <Route path="/admin/enterprises" element={<EnterpriseManagementPage />} />
               <Route path="/admin/categories" element={<CategoryManagementPage />} />

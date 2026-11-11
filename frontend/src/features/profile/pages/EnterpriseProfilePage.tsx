@@ -4,7 +4,7 @@ import { handleApiError } from "../../../utils/errorHandler";
 import { getEnterpriseProfile } from "../services/enterprise-profile.service";
 import EnterpriseProfileSkeleton from "../components/loading/EnterpriseProfileSkeleton";
 import { toast } from "react-toastify";
-import { Camera, Trash2, BadgeCheck, Briefcase, ShieldCheck, Landmark, Loader2, Clock } from "lucide-react";
+import { Camera, Trash2, BadgeCheck, Briefcase, IdCard, Landmark, Loader2, Clock } from "lucide-react";
 import ProfilePictureModal from "../components/profile-picture/ProfilePictureModal";
 import { removeProfilePicture } from "../services/profile.service";
 import useAuthStore from "../../../stores/auth.store";
@@ -193,7 +193,7 @@ function EnterpriseProfilePage() {
                 : "text-slate-600 hover:text-slate-900 border border-transparent"
             }`}
           >
-            <ShieldCheck size={16} className={activeTab === "kyc" ? "text-slate-700 shrink-0" : "text-slate-500 shrink-0"} />
+            <IdCard size={16} className={activeTab === "kyc" ? "text-slate-700 shrink-0" : "text-slate-500 shrink-0"} />
             <span className="truncate">KYC Verification</span>
             <TabStatusBadge status={kycStatus} />
           </button>

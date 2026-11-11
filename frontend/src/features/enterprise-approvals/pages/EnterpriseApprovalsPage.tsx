@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Search, RefreshCw } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import Pagination from "../../../components/common/pagination/Pagination";
 import Select from "../../../components/common/select/Select";
 import useDebounce from "../../../hook/useDebounce";
@@ -15,7 +14,6 @@ const PAGE_LIMIT = 12;
 const SKELETON_CARDS = [1, 2, 3, 4, 5, 6];
 
 export function EnterpriseApprovalsPage() {
-    const navigate = useNavigate();
     const categories = useCategoryStore((state) => state.categories);
     const [enterprises, setEnterprises] = useState<PendingEnterprise[]>([]);
     const [search, setSearch] = useState("");
@@ -71,10 +69,6 @@ export function EnterpriseApprovalsPage() {
     const handleCategoryChange = (value: string) => {
         setCategory(value);
         setPage(1);
-    };
-
-    const handleViewDetails = (id: string) => {
-        navigate(`/admin/enterprise-approvals/${id}`);
     };
 
     return (
@@ -138,7 +132,6 @@ export function EnterpriseApprovalsPage() {
                         <EnterpriseApprovalCard
                             key={item.id}
                             enterprise={item}
-                            onViewDetails={handleViewDetails}
                         />
                     ))}
                 </div>
