@@ -168,9 +168,32 @@ export class PrismaProfileVerificationRepository implements IProfileVerficationR
                 where: { id: kycRequest.id },
                 data: {
                     status: "VERIFIED",
+                    rejection_reason : null,
                     verified_at: verifiedAt,
                 },
             });
         })
     }
+
+    rejectEnterpriseKyc = async (enterpriseId: string, reason: string): Promise<void> => {
+        await prisma.$transaction(async (tx) => {
+            const kycRequest = await tx.enterprise_kyc_requests.findFirst({
+                where: { enterprise_id: enterpriseId, status: "PENDING" },
+                orderBy: { created_at: "desc" },
+            });
+
+            if (!kycRequest) {
+                throw new NotFoundError("No pending KYC verification request found for this enterprise");
+            }
+
+            await tx.enterprise_kyc_requests.update({
+                where: { id: kycRequest.id },
+                data: {
+                    status: "REJECTED",
+                    rejection_reason: reason,
+                    verified_at: null,
+                },
+            });
+        });
+    };
 }

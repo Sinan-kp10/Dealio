@@ -6,5 +6,6 @@ export interface IProfileVerficationRepository extends IBaseRepository<Enterpris
     pendingEnterprises(filters: PendingEnterpriseFiltersDto): Promise<PaginatedPendingEnterprisesDto>;
     getEnterpriseApprovalDetails(enterpriseId: string): Promise<EnterpriseApprovalDetailsDto | null>;
     VerfyEnterpriseKyc(enterpriseId : string,) : Promise<void>
+    rejectEnterpriseKyc(enterpriseId: string, reason: string): Promise<void>;
 }
 

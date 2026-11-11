@@ -76,3 +76,7 @@ export interface EnterpriseApprovalDetailsDto {
     bankAccount: EnterpriseBankAccountApprovalDto | null;
 }
 
+export interface RejectEnterpriseKycDto {
+    enterpriseId: string;
+    reason: string;
+}

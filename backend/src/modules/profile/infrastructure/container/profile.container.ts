@@ -27,6 +27,7 @@ import { GetEnterpriseApprovalUseCase } from "../../application/use-cases/admin/
 import { GetEnterpriseApprovalDetailsUseCase } from "../../application/use-cases/admin/get-enterprise-approval-details.use-case.js";
 import { ProfileVerificationController } from "../../presentation/controllers/profile-verification.controller.js";
 import { VerfyEnterpriseKycUseCase } from "../../application/use-cases/admin/verify-enterprise-kyc.use-case.js";
+import { RejectEnterpriseKycUseCase } from "../../application/use-cases/admin/reject-enterprise-kyc.use-case.js";
 
 const s3StorageService = new S3StorageService();
 
@@ -69,4 +70,5 @@ const profileVerificationRepository = new PrismaProfileVerificationRepository();
 const getEnterpriseApprovalUseCase = new GetEnterpriseApprovalUseCase(profileVerificationRepository);
 const getEnterpriseApprovalDetailsUseCase = new GetEnterpriseApprovalDetailsUseCase(profileVerificationRepository,s3StorageService);
 const verfyEnterpriseKycUseCase = new VerfyEnterpriseKycUseCase(profileVerificationRepository);
-export const profileVerificationController = new ProfileVerificationController(getEnterpriseApprovalUseCase,getEnterpriseApprovalDetailsUseCase,verfyEnterpriseKycUseCase);
+const rejectEnterpriseKycUseCase = new RejectEnterpriseKycUseCase(profileVerificationRepository);
+export const profileVerificationController = new ProfileVerificationController(getEnterpriseApprovalUseCase,getEnterpriseApprovalDetailsUseCase,verfyEnterpriseKycUseCase,rejectEnterpriseKycUseCase);
