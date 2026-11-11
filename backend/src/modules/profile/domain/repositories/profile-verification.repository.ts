@@ -7,6 +7,7 @@ export interface IProfileVerficationRepository extends IBaseRepository<Enterpris
     getEnterpriseApprovalDetails(enterpriseId: string): Promise<EnterpriseApprovalDetailsDto | null>;
     VerfyEnterpriseKyc(enterpriseId : string,) : Promise<void>
     rejectEnterpriseKyc(enterpriseId: string, reason: string): Promise<void>;
+    verifyEnterpriseBankRecord(enterpriseId: string): Promise<void>;
     rejectEnterpriseBankRecord(enterpriseId: string, reason: string): Promise<void>;
 }
 

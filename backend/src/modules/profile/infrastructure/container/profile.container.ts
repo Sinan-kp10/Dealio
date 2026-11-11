@@ -28,6 +28,7 @@ import { GetEnterpriseApprovalDetailsUseCase } from "../../application/use-cases
 import { ProfileVerificationController } from "../../presentation/controllers/profile-verification.controller.js";
 import { VerfyEnterpriseKycUseCase } from "../../application/use-cases/admin/verify-enterprise-kyc.use-case.js";
 import { RejectEnterpriseKycUseCase } from "../../application/use-cases/admin/reject-enterprise-kyc.use-case.js";
+import { VerifyEnterpriseBankRecordUseCase } from "../../application/use-cases/admin/verify-enterprise-bank-record.use-case.js";
 import { RejectEnterpriseBankRecordUseCase } from "../../application/use-cases/admin/reject-enterprise-bank-record.use-case.js";
 
 const s3StorageService = new S3StorageService();
@@ -72,5 +73,6 @@ const getEnterpriseApprovalUseCase = new GetEnterpriseApprovalUseCase(profileVer
 const getEnterpriseApprovalDetailsUseCase = new GetEnterpriseApprovalDetailsUseCase(profileVerificationRepository,s3StorageService);
 const verfyEnterpriseKycUseCase = new VerfyEnterpriseKycUseCase(profileVerificationRepository);
 const rejectEnterpriseKycUseCase = new RejectEnterpriseKycUseCase(profileVerificationRepository);
+const verifyEnterpriseBankRecordUseCase = new VerifyEnterpriseBankRecordUseCase(profileVerificationRepository);
 const rejectEnterpriseBankRecordUseCase = new RejectEnterpriseBankRecordUseCase(profileVerificationRepository);
-export const profileVerificationController = new ProfileVerificationController(getEnterpriseApprovalUseCase,getEnterpriseApprovalDetailsUseCase,verfyEnterpriseKycUseCase,rejectEnterpriseKycUseCase,rejectEnterpriseBankRecordUseCase);
+export const profileVerificationController = new ProfileVerificationController(getEnterpriseApprovalUseCase,getEnterpriseApprovalDetailsUseCase,verfyEnterpriseKycUseCase,rejectEnterpriseKycUseCase,verifyEnterpriseBankRecordUseCase,rejectEnterpriseBankRecordUseCase);

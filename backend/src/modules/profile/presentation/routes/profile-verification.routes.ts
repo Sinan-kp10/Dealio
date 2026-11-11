@@ -16,6 +16,7 @@ router.get("/pending",validateRequest(getPendingEnterprisesSchema, "query"),prof
 router.get("/:enterpriseId/approval-details",validateRequest(getEnterpriseIdSchema, "params"),profileVerificationController.getEnterpriseApprovalDetails);
 router.post("/:enterpriseId/kyc/verify", validateRequest(getEnterpriseIdSchema, "params"), profileVerificationController.verifyEnterpriseKyc)
 router.post("/:enterpriseId/kyc/reject", validateRequest(getEnterpriseIdSchema, "params"), validateRequest(rejectVerificationSchema, "body"), profileVerificationController.rejectEnterpriseKyc);
+router.post("/:enterpriseId/bank/verify", validateRequest(getEnterpriseIdSchema, "params"), profileVerificationController.verifyEnterpriseBankRecord);
 router.post("/:enterpriseId/bank/reject", validateRequest(getEnterpriseIdSchema, "params"), validateRequest(rejectVerificationSchema, "body"), profileVerificationController.rejectEnterpriseBankRecord);
 
 export default router;

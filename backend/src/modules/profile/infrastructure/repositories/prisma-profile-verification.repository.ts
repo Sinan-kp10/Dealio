@@ -197,6 +197,48 @@ export class PrismaProfileVerificationRepository implements IProfileVerficationR
         });
     };
 
+    verifyEnterpriseBankRecord = async (enterpriseId: string): Promise<void> => {
+        await prisma.$transaction(async (tx) => {
+            const bankRequest = await tx.enterprise_bank_accounts_requests.findFirst({
+                where: { enterprise_id: enterpriseId, status: "PENDING" },
+                orderBy: { created_at: "desc" },
+            });
+
+            if (!bankRequest) {
+                throw new NotFoundError("No pending bank account verification request found for this enterprise");
+            }
+
+            const verifiedAt = new Date();
+
+            await tx.enterprise_bank_accounts.updateMany({
+                where: { enterprise_id: enterpriseId, is_primary: true },
+                data: { is_primary: false },
+            });
+
+            await tx.enterprise_bank_accounts.create({
+                data: {
+                    enterprise_id: enterpriseId,
+                    account_holder_name: bankRequest.account_holder_name,
+                    account_number: bankRequest.account_number,
+                    ifsc_code: bankRequest.ifsc_code,
+                    account_type: bankRequest.account_type,
+                    upi_id: bankRequest.upi_id,
+                    is_primary: true,
+                    verified_at: verifiedAt,
+                },
+            });
+
+            await tx.enterprise_bank_accounts_requests.update({
+                where: { id: bankRequest.id },
+                data: {
+                    status: "VERIFIED",
+                    rejection_reason: null,
+                    verified_at: verifiedAt,
+                },
+            });
+        });
+    };
+
     rejectEnterpriseBankRecord = async (enterpriseId: string, reason: string): Promise<void> => {
         await prisma.$transaction(async (tx) => {
             const bankRequest = await tx.enterprise_bank_accounts_requests.findFirst({

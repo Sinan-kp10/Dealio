@@ -10,6 +10,7 @@ export class ProfileVerificationController {
         private readonly getEnterpriseApprovalDetailsUseCase: IUseCase<string, EnterpriseApprovalDetailsDto>,
         private readonly verfyEnterpriseKycUseCase : IUseCase<string,void>,
         private readonly rejectEnterpriseKycUseCase: IUseCase<RejectVerificationDto, void>,
+        private readonly verifyEnterpriseBankRecordUseCase: IUseCase<string, void>,
         private readonly rejectEnterpriseBankRecordUseCase: IUseCase<RejectVerificationDto, void>
     ) {}
 
@@ -72,6 +73,20 @@ export class ProfileVerificationController {
             res.status(HttpStatusCode.OK).json({
                 success: true,
                 message: "Enterprise KYC rejected successfully",
+            });
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    verifyEnterpriseBankRecord = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+        try {
+            const enterpriseId = req.params.enterpriseId as string;
+            await this.verifyEnterpriseBankRecordUseCase.execute(enterpriseId);
+
+            res.status(HttpStatusCode.OK).json({
+                success: true,
+                message: "Enterprise bank details verified successfully",
             });
         } catch (error) {
             next(error);
