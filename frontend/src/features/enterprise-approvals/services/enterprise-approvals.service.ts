@@ -17,6 +17,14 @@ export const verifyEntepriseKyc = async (enterpriseId: string): Promise<void> =>
 };
 
 export const rejectEntepriseKyc = async (enterpriseId: string, reason : string): Promise<void> => {
-    await axiosInstance.post<void>(`/admin/enterprises/${enterpriseId}/kyc/reject`, reason);
+    await axiosInstance.post<void>(`/admin/enterprises/${enterpriseId}/kyc/reject`, { reason });
+};
+
+export const verifyEnterpriseBankRecord = async (enterpriseId: string): Promise<void> => {
+    await axiosInstance.post<void>(`/admin/enterprises/${enterpriseId}/bank/verify`);
+};
+
+export const rejectEnterpriseBankRecord = async (enterpriseId: string, reason: string): Promise<void> => {
+    await axiosInstance.post<void>(`/admin/enterprises/${enterpriseId}/bank/reject`, { reason });
 };
 

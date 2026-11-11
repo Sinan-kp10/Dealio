@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Landmark, Copy, Check, X, AlertCircle } from "lucide-react";
-import { toast } from "react-toastify";
 import { BANK_ACCOUNT_TYPE_LABELS } from "../../../constants/enterprise.constants";
 import type { EnterpriseBankAccountApprovalDto } from "../types/enterprise-approval-details.types";
 import ReasonModal from "../../../components/common/ReasonModal/ReasonModel";
+import ConfirmationModal from "../../../components/common/confirmationModel/ConfirmationModal";
+import { rejectEnterpriseBankRecord, verifyEnterpriseBankRecord } from "../services/enterprise-approvals.service";
+import { handleApiError } from "../../../utils/errorHandler";
 import useCopyToClipboard from "../../../hook/useCopyToClipboard";
 
 interface BankDetailsApprovalCardProps {
@@ -16,29 +18,37 @@ export function BankDetailsApprovalCard({ bankAccount, enterpriseId }: BankDetai
     const [statusOverride, setStatusOverride] = useState<"PENDING" | "VERIFIED" | "REJECTED" | null>(null);
     const [rejectionReasonOverride, setRejectionReasonOverride] = useState<string | null>(null);
     const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
+    const [isVerifyModalOpen, setIsVerifyModalOpen] = useState(false);
     const [isActionLoading, setIsActionLoading] = useState(false);
 
     const currentStatus = statusOverride ?? bankAccount?.status;
     const currentRejectionReason = rejectionReasonOverride ?? bankAccount?.rejectionReason ?? null;
     const isPending = currentStatus === "PENDING";
 
-    const handleVerify = async () => {
+    const handleConfirmVerify = async () => {
+        if (!enterpriseId) return;
         setIsActionLoading(true);
         try {
+            await verifyEnterpriseBankRecord(enterpriseId);
             setStatusOverride("VERIFIED");
-            toast.info(`Bank account verification action will be wired for ${enterpriseId || "enterprise"}`);
+            setIsVerifyModalOpen(false);
+        } catch (error) {
+            handleApiError(error, "Failed to verify bank details");
         } finally {
             setIsActionLoading(false);
         }
     };
 
     const handleConfirmReject = async (reason: string) => {
+        if (!enterpriseId) return;
         setIsActionLoading(true);
         try {
+            await rejectEnterpriseBankRecord(enterpriseId, reason);
             setStatusOverride("REJECTED");
             setRejectionReasonOverride(reason);
             setIsRejectModalOpen(false);
-            toast.info(`Rejected Bank Details (${enterpriseId || ""}) with reason: "${reason}"`);
+        } catch (error) {
+            handleApiError(error, "Failed to reject bank details");
         } finally {
             setIsActionLoading(false);
         }
@@ -72,7 +82,7 @@ export function BankDetailsApprovalCard({ bankAccount, enterpriseId }: BankDetai
                                     </button>
                                     <button
                                         type="button"
-                                        onClick={handleVerify}
+                                        onClick={() => setIsVerifyModalOpen(true)}
                                         disabled={isActionLoading}
                                         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#e6f7ed] text-[#0d9444] border border-[#0d9444]/30 hover:bg-[#d8f3e3] transition-colors disabled:opacity-50 cursor-pointer"
                                     >
@@ -82,12 +92,10 @@ export function BankDetailsApprovalCard({ bankAccount, enterpriseId }: BankDetai
                                 </>
                             ) : currentStatus === "REJECTED" ? (
                                 <span className="inline-flex items-center gap-1 text-xs font-semibold text-red-700 bg-red-50 border border-red-200 px-2.5 py-1 rounded-full">
-                                    <X size={13} strokeWidth={2.5} />
                                     <span>Rejected</span>
                                 </span>
                             ) : (
                                 <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
-                                    <Check size={13} strokeWidth={2.5} />
                                     <span>Verified</span>
                                 </span>
                             )}
@@ -230,6 +238,17 @@ export function BankDetailsApprovalCard({ bankAccount, enterpriseId }: BankDetai
                     </div>
                 )}
             </div>
+
+            {isVerifyModalOpen && (
+                <ConfirmationModal
+                    isOpen={isVerifyModalOpen}
+                    title="Verify Bank & Settlement Details?"
+                    message="Are you sure you want to verify and activate this bank account for future settlements?"
+                    loading={isActionLoading}
+                    onClose={() => setIsVerifyModalOpen(false)}
+                    onConfirm={handleConfirmVerify}
+                />
+            )}
 
             {isRejectModalOpen && (
                 <ReasonModal

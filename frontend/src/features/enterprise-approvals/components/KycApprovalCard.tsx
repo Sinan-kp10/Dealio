@@ -3,10 +3,12 @@ import { IdCard, FileText, ExternalLink, Check, X, AlertCircle } from "lucide-re
 import { BUSINESS_TYPE_LABELS, DOCUMENT_TYPE_LABELS } from "../../../constants/enterprise.constants";
 import type { EnterpriseKycApprovalDto } from "../types/enterprise-approval-details.types";
 import ReasonModal from "../../../components/common/ReasonModal/ReasonModel";
+import ConfirmationModal from "../../../components/common/confirmationModel/ConfirmationModal";
 import { rejectEntepriseKyc, verifyEntepriseKyc } from "../services/enterprise-approvals.service";
+import { handleApiError } from "../../../utils/errorHandler";
 
 interface KycApprovalCardProps {
-    kyc: EnterpriseKycApprovalDto | null
+    kyc: EnterpriseKycApprovalDto | null;
     enterpriseId?: string;
 }
 
@@ -14,6 +16,7 @@ export function KycApprovalCard({ kyc, enterpriseId }: KycApprovalCardProps) {
     const [statusOverride, setStatusOverride] = useState<"PENDING" | "VERIFIED" | "REJECTED" | null>(null);
     const [rejectionReasonOverride, setRejectionReasonOverride] = useState<string | null>(null);
     const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
+    const [isVerifyModalOpen, setIsVerifyModalOpen] = useState(false);
     const [isActionLoading, setIsActionLoading] = useState(false);
 
     const currentStatus = statusOverride ?? kyc?.status;
@@ -26,12 +29,15 @@ export function KycApprovalCard({ kyc, enterpriseId }: KycApprovalCardProps) {
         }
     };
 
-    const handleVerify = async () => {
+    const handleConfirmVerify = async () => {
         if (!enterpriseId) return;
         setIsActionLoading(true);
         try {
-            await verifyEntepriseKyc(enterpriseId)
+            await verifyEntepriseKyc(enterpriseId);
             setStatusOverride("VERIFIED");
+            setIsVerifyModalOpen(false);
+        } catch (error) {
+            handleApiError(error, "Failed to verify KYC");
         } finally {
             setIsActionLoading(false);
         }
@@ -41,10 +47,12 @@ export function KycApprovalCard({ kyc, enterpriseId }: KycApprovalCardProps) {
         if (!enterpriseId) return;
         setIsActionLoading(true);
         try {
-            await rejectEntepriseKyc(enterpriseId,reason)
+            await rejectEntepriseKyc(enterpriseId, reason);
             setStatusOverride("REJECTED");
             setRejectionReasonOverride(reason);
             setIsRejectModalOpen(false);
+        } catch (error) {
+            handleApiError(error, "Failed to reject KYC");
         } finally {
             setIsActionLoading(false);
         }
@@ -78,7 +86,7 @@ export function KycApprovalCard({ kyc, enterpriseId }: KycApprovalCardProps) {
                                     </button>
                                     <button
                                         type="button"
-                                        onClick={handleVerify}
+                                        onClick={() => setIsVerifyModalOpen(true)}
                                         disabled={isActionLoading}
                                         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#e6f7ed] text-[#0d9444] border border-[#0d9444]/30 hover:bg-[#d8f3e3] transition-colors disabled:opacity-50 cursor-pointer"
                                     >
@@ -88,12 +96,10 @@ export function KycApprovalCard({ kyc, enterpriseId }: KycApprovalCardProps) {
                                 </>
                             ) : currentStatus === "REJECTED" ? (
                                 <span className="inline-flex items-center gap-1 text-xs font-semibold text-red-700 bg-red-50 border border-red-200 px-2.5 py-1 rounded-full">
-                                    <X size={13} strokeWidth={2.5} />
                                     <span>Rejected</span>
                                 </span>
                             ) : (
                                 <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
-                                    <Check size={13} strokeWidth={2.5} />
                                     <span>Verified</span>
                                 </span>
                             )}
@@ -188,6 +194,17 @@ export function KycApprovalCard({ kyc, enterpriseId }: KycApprovalCardProps) {
                     </div>
                 )}
             </div>
+
+            {isVerifyModalOpen && (
+                <ConfirmationModal
+                    isOpen={isVerifyModalOpen}
+                    title="Verify KYC Documents?"
+                    message="Are you sure you want to verify and approve the KYC documents for this enterprise?"
+                    loading={isActionLoading}
+                    onClose={() => setIsVerifyModalOpen(false)}
+                    onConfirm={handleConfirmVerify}
+                />
+            )}
 
             {isRejectModalOpen && (
                 <ReasonModal
