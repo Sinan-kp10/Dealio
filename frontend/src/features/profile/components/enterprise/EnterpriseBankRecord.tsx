@@ -57,7 +57,7 @@ function EnterpriseBankRecord({ onStatusChange }: EnterpriseBankRecordProps = {}
                     setBankRecord(active);
                     setPendingBankRecord(pending);
                     resetForm(active || pending);
-                    onStatusChange?.(pending ? "PENDING" : active ? "VERIFIED" : "REQUIRED");
+                    onStatusChange?.(pending?.status === "PENDING" ? "PENDING" : active ? "VERIFIED" : "REQUIRED");
                 }
             } catch (error) {
                 handleApiError(error, "unable to load bank record");

@@ -119,14 +119,14 @@ function EnterpriseProfilePage() {
               <h2 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight truncate">
                 {profile?.enterpriseName}
               </h2>
-              {profile?.status === "APPROVED" ? (
+              {profile?.status === "VERIFIED" ? (
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#eaf8f1] text-[#22a06b] border border-[#22a06b]/20 shadow-2xs">
                   <BadgeCheck
                     size={14}
                     strokeWidth={2.2}
                     className="shrink-0 text-[#22a06b]"
                   />
-                  <span>Approved</span>
+                  <span>Verified</span>
                 </span>
               ) : (
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#fffbeb] text-[#d97706] border border-[#d97706]/20 shadow-2xs">

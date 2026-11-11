@@ -34,7 +34,7 @@ export class PrismaEnterpriseBankRecordRepository implements IEnterprisBankRecor
 
         return {
             activeBankRecord : activeBankRecord ? EnterpriseBankMapper.toActiveBankRecordDto(activeBankRecord) : null,
-            pendingRequest : pendingBankRecord ? EnterpriseBankMapper.toRequestDto(pendingBankRecord) : null
+            pendingRequest : pendingBankRecord && pendingBankRecord.status !== "VERIFIED" ? EnterpriseBankMapper.toRequestDto(pendingBankRecord) : null
         }
     }
 

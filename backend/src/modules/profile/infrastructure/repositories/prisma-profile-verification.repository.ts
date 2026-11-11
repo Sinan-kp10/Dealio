@@ -172,6 +172,20 @@ export class PrismaProfileVerificationRepository implements IProfileVerficationR
                     verified_at: verifiedAt,
                 },
             });
+
+            const activeBank = await tx.enterprise_bank_accounts.findFirst({
+                where: { enterprise_id: enterpriseId, is_primary: true },
+            });
+
+            if (activeBank) {
+                await tx.enterprises.update({
+                    where: { id: enterpriseId },
+                    data: {
+                        status: "VERIFIED",
+                        verified_at: verifiedAt,
+                    },
+                });
+            }
         })
     }
 
@@ -236,6 +250,20 @@ export class PrismaProfileVerificationRepository implements IProfileVerficationR
                     verified_at: verifiedAt,
                 },
             });
+
+            const activeKyc = await tx.enterprise_kyc.findUnique({
+                where: { enterprise_id: enterpriseId },
+            });
+
+            if (activeKyc) {
+                await tx.enterprises.update({
+                    where: { id: enterpriseId },
+                    data: {
+                        status: "VERIFIED",
+                        verified_at: verifiedAt,
+                    },
+                });
+            }
         });
     };
 
