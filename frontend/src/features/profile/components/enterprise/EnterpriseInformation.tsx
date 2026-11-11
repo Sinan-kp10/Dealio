@@ -302,12 +302,13 @@ export default function EnterpriseInformation({profile,onProfileUpdated,}: Enter
         </div>
       </div>
 
-      <div className="space-y-4 pt-2">
-        <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
-          Business Category & Subcategories
-        </h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 pt-2 items-stretch">
+        {/* Left Column: Category on top, Subcategory below */}
+        <div className="space-y-4">
+          <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+            Business Category & Subcategories
+          </h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
           <div>
             <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
               Category
@@ -348,7 +349,7 @@ export default function EnterpriseInformation({profile,onProfileUpdated,}: Enter
             )}
           </div>
 
-          {!updateMode && (
+          {!updateMode ? (
             <div>
               <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
                 Subcategory{" "}
@@ -373,105 +374,108 @@ export default function EnterpriseInformation({profile,onProfileUpdated,}: Enter
                 )}
               </div>
             </div>
+          ) : (
+            <div className="space-y-2 pt-1">
+              <div className="flex items-center justify-between gap-2">
+                <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
+                  Subcategories{" "}
+                  <span className="text-slate-400 font-normal normal-case">
+                    (Choose up to {MAX_SUBCATEGORIES})
+                  </span>
+                </label>
+                <span
+                  className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${
+                    selectedSubcategoryIds.length >= MAX_SUBCATEGORIES
+                      ? "bg-amber-50 text-amber-700 border-amber-200"
+                      : "bg-slate-100 text-slate-700 border-slate-200"
+                  }`}
+                >
+                  {selectedSubcategoryIds.length} / {MAX_SUBCATEGORIES} Selected
+                </span>
+              </div>
+
+              {!selectedCategoryId ? (
+                <div className="p-4 bg-slate-50 border border-dashed border-slate-200 rounded-xl text-xs text-slate-500 flex items-center gap-2">
+                  <Info size={15} className="text-slate-400 shrink-0" />
+                  <span>Please select a business category above to see and select available subcategories.</span>
+                </div>
+              ) : availableSubcategories.length === 0 ? (
+                <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-500">
+                  No active subcategories available under this category.
+                </div>
+              ) : (
+                <div className="p-3 bg-[#f6f8fb] border border-slate-200/90 rounded-xl flex flex-wrap gap-2 items-center">
+                  {availableSubcategories.map((sub) => {
+                    const isSelected = selectedSubcategoryIds.includes(sub.id);
+                    const isLimitReached =
+                      !isSelected && selectedSubcategoryIds.length >= MAX_SUBCATEGORIES;
+
+                    return (
+                      <button
+                        key={sub.id}
+                        type="button"
+                        disabled={isSubmitting || isLimitReached}
+                        onClick={() => handleToggleSubcategory(sub.id)}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                          isSelected
+                            ? "bg-[#204066] text-white border border-[#204066] shadow-xs hover:bg-[#183250]"
+                            : isLimitReached
+                            ? "bg-white/60 text-slate-400 border border-slate-200/60 cursor-not-allowed opacity-50"
+                            : "bg-white text-slate-700 border border-slate-200/90 shadow-2xs hover:bg-slate-50 hover:border-slate-300"
+                        }`}
+                      >
+                        {isSelected && <Check size={13} strokeWidth={2.5} />}
+                        <span>{sub.name}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+              {errors.subcategoryIds && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.subcategoryIds.message}
+                </p>
+              )}
+            </div>
           )}
         </div>
 
-        {updateMode && (
-          <div className="space-y-2 pt-1">
-            <div className="flex items-center justify-between gap-2">
-              <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
-                Subcategories{" "}
-                <span className="text-slate-400 font-normal normal-case">
-                  (Choose up to {MAX_SUBCATEGORIES})
-                </span>
-              </label>
-              <span
-                className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${
-                  selectedSubcategoryIds.length >= MAX_SUBCATEGORIES
-                    ? "bg-amber-50 text-amber-700 border-amber-200"
-                    : "bg-slate-100 text-slate-700 border-slate-200"
-                }`}
-              >
-                {selectedSubcategoryIds.length} / {MAX_SUBCATEGORIES} Selected
-              </span>
-            </div>
+        <div className="space-y-4 flex flex-col h-full">
+          <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+            Description
+          </h3>
 
-            {!selectedCategoryId ? (
-              <div className="p-4 bg-slate-50 border border-dashed border-slate-200 rounded-xl text-xs text-slate-500 flex items-center gap-2">
-                <Info size={15} className="text-slate-400 shrink-0" />
-                <span>Please select a business category above to see and select available subcategories.</span>
-              </div>
-            ) : availableSubcategories.length === 0 ? (
-              <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-500">
-                No active subcategories available under this category.
+          <div className="flex-1 flex flex-col min-h-0">
+            <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
+              Describe your enterprise
+            </label>
+            {updateMode ? (
+              <div className="flex-1 flex flex-col min-h-0">
+                <textarea
+                  rows={4}
+                  maxLength={1000}
+                  disabled={isSubmitting}
+                  placeholder="Provide a brief overview of your business, key capabilities, or services..."
+                  {...register("description")}
+                  className={`w-full flex-1 min-h-0 p-3.5 bg-white border rounded-xl text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none transition-all resize-y ${
+                    errors.description
+                      ? "border-red-500 focus:ring-2 focus:ring-red-500/10"
+                      : "border-slate-200/90 focus:border-[#204066] focus:ring-2 focus:ring-[#204066]/10"
+                  }`}
+                />
+                {errors.description && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.description.message}
+                  </p>
+                )}
               </div>
             ) : (
-              <div className="p-3 bg-[#f6f8fb] border border-slate-200/90 rounded-xl flex flex-wrap gap-2 items-center">
-                {availableSubcategories.map((sub) => {
-                  const isSelected = selectedSubcategoryIds.includes(sub.id);
-                  const isLimitReached =
-                    !isSelected && selectedSubcategoryIds.length >= MAX_SUBCATEGORIES;
-
-                  return (
-                    <button
-                      key={sub.id}
-                      type="button"
-                      disabled={isSubmitting || isLimitReached}
-                      onClick={() => handleToggleSubcategory(sub.id)}
-                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-                        isSelected
-                          ? "bg-[#204066] text-white border border-[#204066] shadow-xs hover:bg-[#183250]"
-                          : isLimitReached
-                          ? "bg-white/60 text-slate-400 border border-slate-200/60 cursor-not-allowed opacity-50"
-                          : "bg-white text-slate-700 border border-slate-200/90 shadow-2xs hover:bg-slate-50 hover:border-slate-300"
-                      }`}
-                    >
-                      {isSelected && <Check size={13} strokeWidth={2.5} />}
-                      <span>{sub.name}</span>
-                    </button>
-                  );
-                })}
+              <div className="flex-1 min-h-0 p-3.5 bg-[#f6f8fb] border border-slate-200/90 rounded-xl text-sm text-slate-700 leading-relaxed shadow-2xs whitespace-pre-line overflow-y-auto">
+                {profile?.description || "No description provided yet."}
               </div>
             )}
-            {errors.subcategoryIds && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.subcategoryIds.message}
-              </p>
-            )}
           </div>
-        )}
-      </div>
-
-      <div className="space-y-4 pt-2">
-        <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
-          Description
-        </h3>
-
-        {updateMode ? (
-          <div>
-            <textarea
-              rows={4}
-              maxLength={1000}
-              disabled={isSubmitting}
-              placeholder="Provide a brief overview of your business, key capabilities, or services..."
-              {...register("description")}
-              className={`w-full p-3.5 bg-white border rounded-xl text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none transition-all resize-y ${
-                errors.description
-                  ? "border-red-500 focus:ring-2 focus:ring-red-500/10"
-                  : "border-slate-200/90 focus:border-[#204066] focus:ring-2 focus:ring-[#204066]/10"
-              }`}
-            />
-            {errors.description && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.description.message}
-              </p>
-            )}
-          </div>
-        ) : (
-          <div className="p-4 bg-[#f6f8fb] border border-slate-200/90 rounded-xl text-sm text-slate-700 leading-relaxed shadow-2xs min-h-[96px] whitespace-pre-line">
-            {profile?.description || "No description provided yet."}
-          </div>
-        )}
+        </div>
       </div>
     </form>
   );
