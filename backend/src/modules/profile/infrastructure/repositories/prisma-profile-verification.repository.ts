@@ -196,4 +196,26 @@ export class PrismaProfileVerificationRepository implements IProfileVerficationR
             });
         });
     };
+
+    rejectEnterpriseBankRecord = async (enterpriseId: string, reason: string): Promise<void> => {
+        await prisma.$transaction(async (tx) => {
+            const bankRequest = await tx.enterprise_bank_accounts_requests.findFirst({
+                where: { enterprise_id: enterpriseId, status: "PENDING" },
+                orderBy: { created_at: "desc" },
+            });
+
+            if (!bankRequest) {
+                throw new NotFoundError("No pending bank account verification request found for this enterprise");
+            }
+
+            await tx.enterprise_bank_accounts_requests.update({
+                where: { id: bankRequest.id },
+                data: {
+                    status: "REJECTED",
+                    rejection_reason: reason,
+                    verified_at: null,
+                },
+            });
+        });
+    };
 }
