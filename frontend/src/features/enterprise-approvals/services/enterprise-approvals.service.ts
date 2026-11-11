@@ -11,3 +11,12 @@ export const getEnterpriseApprovalDetails = async (enterpriseId: string): Promis
     const response = await axiosInstance.get<EnterpriseApprovalDetailsResponse>(`/admin/enterprises/${enterpriseId}/approval-details`);
     return response.data;
 };
+
+export const verifyEntepriseKyc = async (enterpriseId: string): Promise<void> => {
+    await axiosInstance.post<void>(`/admin/enterprises/${enterpriseId}/kyc/verify`);
+};
+
+export const rejectEntepriseKyc = async (enterpriseId: string, reason : string): Promise<void> => {
+    await axiosInstance.post<void>(`/admin/enterprises/${enterpriseId}/kyc/reject`, reason);
+};
+

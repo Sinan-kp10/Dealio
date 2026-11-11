@@ -20,8 +20,8 @@ function useActiveCategories(): void {
                 if (!cancelled) {
                     setCategories(response.data);
                 }
-            } catch (error) {
-                handleApiError(error, "Unable to load categories");
+            } catch{
+                //silently catch
             } finally {
                 if (!cancelled) {
                     setLoading(false);

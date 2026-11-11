@@ -234,7 +234,7 @@ export function BankDetailsApprovalCard({ bankAccount, enterpriseId }: BankDetai
             {isRejectModalOpen && (
                 <ReasonModal
                     title="Reject Bank & Settlement Details"
-                    description="Please state the reason for rejecting these bank details. The enterprise will be asked to re-submit valid bank information."
+                    description="Please provide a reason for rejecting this bank detail"
                     onClose={() => setIsRejectModalOpen(false)}
                     onConfirm={handleConfirmReject}
                 />

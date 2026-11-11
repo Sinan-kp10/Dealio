@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { IdCard, FileText, ExternalLink, Check, X, AlertCircle } from "lucide-react";
-import { toast } from "react-toastify";
 import { BUSINESS_TYPE_LABELS, DOCUMENT_TYPE_LABELS } from "../../../constants/enterprise.constants";
 import type { EnterpriseKycApprovalDto } from "../types/enterprise-approval-details.types";
 import ReasonModal from "../../../components/common/ReasonModal/ReasonModel";
+import { rejectEntepriseKyc, verifyEntepriseKyc } from "../services/enterprise-approvals.service";
 
 interface KycApprovalCardProps {
-    kyc: EnterpriseKycApprovalDto | null;
+    kyc: EnterpriseKycApprovalDto | null
     enterpriseId?: string;
 }
 
@@ -27,22 +27,24 @@ export function KycApprovalCard({ kyc, enterpriseId }: KycApprovalCardProps) {
     };
 
     const handleVerify = async () => {
+        if (!enterpriseId) return;
         setIsActionLoading(true);
         try {
+            await verifyEntepriseKyc(enterpriseId)
             setStatusOverride("VERIFIED");
-            toast.info(`KYC verification action will be wired for ${enterpriseId || "enterprise"}`);
         } finally {
             setIsActionLoading(false);
         }
     };
 
     const handleConfirmReject = async (reason: string) => {
+        if (!enterpriseId) return;
         setIsActionLoading(true);
         try {
+            await rejectEntepriseKyc(enterpriseId,reason)
             setStatusOverride("REJECTED");
             setRejectionReasonOverride(reason);
             setIsRejectModalOpen(false);
-            toast.info(`Rejected KYC (${enterpriseId || ""}) with reason: "${reason}"`);
         } finally {
             setIsActionLoading(false);
         }
@@ -190,7 +192,7 @@ export function KycApprovalCard({ kyc, enterpriseId }: KycApprovalCardProps) {
             {isRejectModalOpen && (
                 <ReasonModal
                     title="Reject KYC Verification"
-                    description="Please state the reason for rejecting this KYC verification request."
+                    description="Please provide a reason for rejecting this KYC submission."
                     onClose={() => setIsRejectModalOpen(false)}
                     onConfirm={handleConfirmReject}
                 />
