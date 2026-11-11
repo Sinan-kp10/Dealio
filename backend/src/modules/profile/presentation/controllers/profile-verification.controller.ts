@@ -7,7 +7,8 @@ import { HttpStatusCode } from "../../../../shared/enums/http-status-code.enum.j
 export class ProfileVerificationController {
     constructor(
         private readonly profileVerificationUseCase: IUseCase<PendingEnterpriseFiltersDto, PaginatedPendingEnterprisesDto>,
-        private readonly getEnterpriseApprovalDetailsUseCase: IUseCase<string, EnterpriseApprovalDetailsDto>
+        private readonly getEnterpriseApprovalDetailsUseCase: IUseCase<string, EnterpriseApprovalDetailsDto>,
+        private readonly verfyEnterpriseKycUseCase : IUseCase<string,void>
     ) {}
 
     getPendingEnterprises = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
@@ -39,6 +40,21 @@ export class ProfileVerificationController {
                 message: "Enterprise approval details retrieved successfully",
                 data: result,
             });
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    verifyEnterpriseKyc = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+        try {
+            const enterpriseId = req.params.enterpriseId as string;
+            await this.verfyEnterpriseKycUseCase.execute(enterpriseId);
+
+            res.status(HttpStatusCode.OK).json({
+                success: true,
+                message: "Enterprise kyc verified successfully",
+            })
+            
         } catch (error) {
             next(error);
         }

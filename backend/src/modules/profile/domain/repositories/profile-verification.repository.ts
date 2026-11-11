@@ -5,5 +5,6 @@ import {EnterpriseApprovalDetailsDto,PaginatedPendingEnterprisesDto,PendingEnter
 export interface IProfileVerficationRepository extends IBaseRepository<EnterpriseUserDto | null> {
     pendingEnterprises(filters: PendingEnterpriseFiltersDto): Promise<PaginatedPendingEnterprisesDto>;
     getEnterpriseApprovalDetails(enterpriseId: string): Promise<EnterpriseApprovalDetailsDto | null>;
+    VerfyEnterpriseKyc(enterpriseId : string,) : Promise<void>
 }
 

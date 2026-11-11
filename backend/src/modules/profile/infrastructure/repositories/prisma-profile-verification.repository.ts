@@ -1,5 +1,6 @@
 import { Prisma } from "../../../../../generated/prisma/client";
 import { prisma } from "../../../../infrastructure/database/prisma/prisma-client.js";
+import { NotFoundError } from "../../../../shared/errors/app-error.js";
 import { EnterpriseUserDto } from "../../application/dto/enterprise-profile.dto.js";
 import {EnterpriseApprovalDetailsDto,PaginatedPendingEnterprisesDto,PendingEnterpriseFiltersDto,} from "../../application/dto/profile-verification.dto.js";
 import { IProfileVerficationRepository } from "../../domain/repositories/profile-verification.repository.js";
@@ -129,4 +130,47 @@ export class PrismaProfileVerificationRepository implements IProfileVerficationR
 
         return ProfileVerificationMapper.toApprovalDetailsDto(enterprise);
     };
+
+    VerfyEnterpriseKyc = async (enterpriseId: string): Promise<void> => {
+        await prisma.$transaction(async (tx)=> {
+            const kycRequest = await tx.enterprise_kyc_requests.findFirst({
+                where : {enterprise_id : enterpriseId, status : "PENDING"},
+                orderBy : {created_at : "desc"}
+            })
+
+            if(!kycRequest) {
+                throw new NotFoundError("No pending KYC verification request found for this enterprise");
+            }
+
+            const verifiedAt = new Date()
+
+            await tx.enterprise_kyc.upsert({
+                where : { enterprise_id : enterpriseId},
+                create : {
+                    enterprise_id : enterpriseId,
+                    business_type : kycRequest.business_type,
+                    full_legal_name : kycRequest.full_legal_name,
+                    document_type : kycRequest.document_type,
+                    document_storage_key : kycRequest.document_storage_key,
+                    verified_at : verifiedAt
+                },
+                update : {
+                    business_type: kycRequest.business_type,
+                    full_legal_name: kycRequest.full_legal_name,
+                    document_type: kycRequest.document_type,
+                    document_storage_key: kycRequest.document_storage_key,
+                    verified_at: verifiedAt,
+                }
+                
+            })
+
+            await tx.enterprise_kyc_requests.update({
+                where: { id: kycRequest.id },
+                data: {
+                    status: "VERIFIED",
+                    verified_at: verifiedAt,
+                },
+            });
+        })
+    }
 }

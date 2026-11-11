@@ -23,9 +23,10 @@ import { GetEnterpriseBankRecordUseCase } from "../../application/use-cases/ente
 import { EnterpriseBankRecordController } from "../../presentation/controllers/enterprise-bank-record.controller.js";
 import { PrismaEnterpriseBankRecordRepository } from "../repositories/prisma-enterprise-bank-record.repository.js";
 import { PrismaProfileVerificationRepository } from "../repositories/prisma-profile-verification.repository.js";
-import { ProfileVerificationUseCase } from "../../application/use-cases/admin/profile-verification.use-case.js";
+import { GetEnterpriseApprovalUseCase } from "../../application/use-cases/admin/get-enterprise-approvel.use-case.js";
 import { GetEnterpriseApprovalDetailsUseCase } from "../../application/use-cases/admin/get-enterprise-approval-details.use-case.js";
 import { ProfileVerificationController } from "../../presentation/controllers/profile-verification.controller.js";
+import { VerfyEnterpriseKycUseCase } from "../../application/use-cases/admin/verify-enterprise-kyc.use-case.js";
 
 const s3StorageService = new S3StorageService();
 
@@ -65,6 +66,7 @@ export const enterpriseBankRecordController = new EnterpriseBankRecordController
 //admin profile verification
 
 const profileVerificationRepository = new PrismaProfileVerificationRepository();
-const profileVerificationUseCase = new ProfileVerificationUseCase(profileVerificationRepository);
+const getEnterpriseApprovalUseCase = new GetEnterpriseApprovalUseCase(profileVerificationRepository);
 const getEnterpriseApprovalDetailsUseCase = new GetEnterpriseApprovalDetailsUseCase(profileVerificationRepository,s3StorageService);
-export const profileVerificationController = new ProfileVerificationController(profileVerificationUseCase,getEnterpriseApprovalDetailsUseCase);
+const verfyEnterpriseKycUseCase = new VerfyEnterpriseKycUseCase(profileVerificationRepository);
+export const profileVerificationController = new ProfileVerificationController(getEnterpriseApprovalUseCase,getEnterpriseApprovalDetailsUseCase,verfyEnterpriseKycUseCase);

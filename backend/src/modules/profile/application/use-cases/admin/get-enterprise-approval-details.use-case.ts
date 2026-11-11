@@ -15,7 +15,7 @@ export class GetEnterpriseApprovalDetailsUseCase implements IUseCase<string, Ent
             throw new BadRequestError("Enterprise ID is required");
         }
 
-        const details = await this.profileVerificationRepository.getEnterpriseApprovalDetails(enterpriseId.trim());
+        const details = await this.profileVerificationRepository.getEnterpriseApprovalDetails(enterpriseId);
 
         if (!details) {
             throw new NotFoundError("Enterprise approval details not found");
