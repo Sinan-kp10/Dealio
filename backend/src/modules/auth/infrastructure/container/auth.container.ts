@@ -49,15 +49,17 @@ const resetPasswordUseCase = new ResetPasswordUseCase(userRepository, passwordSe
 const changePasswordUseCase = new ChangePasswordUseCase(userRepository, passwordService);
 export const passwordResetController = new PasswordResetController(forgotPasswordUseCase, verifyPasswordResetOtpUseCase, resetPasswordUseCase, changePasswordUseCase);
 
+// Storage
+const s3StorageService = new S3StorageService();
+
 // Login & Refresh Token
-const loginUseCase = new LoginUseCase(userRepository, passwordService, jwtTokenService, refreshTokenService);
+const loginUseCase = new LoginUseCase(userRepository, passwordService, jwtTokenService, refreshTokenService, s3StorageService);
 export const loginController = new LoginController(loginUseCase, refreshTokenService);
 
 const refreshTokenUseCase = new RefreshTokenUseCase(userRepository, jwtTokenService, refreshTokenService);
 export const refreshTokenController = new RefreshTokenController(refreshTokenUseCase);
 
 // Authenticated User (/me)
-const s3StorageService = new S3StorageService();
 const getAuthenticatedUserUseCase = new GetAuthenticatedUserUseCase(userRepository, s3StorageService);
 export const authenticatedUserController = new AuthenticatedUserController(getAuthenticatedUserUseCase);
 

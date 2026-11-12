@@ -2,6 +2,7 @@ import { IUserRepository } from "../../domain/repositories/user.repository";
 import type { IJwtTokenService } from "../../../../shared/interfaces/IJwtTokenService";
 import type { IPasswordService } from "../../../../shared/interfaces/IPasswordService";
 import type { IRefreshTokenService } from "../../../../shared/interfaces/IRefreshTokenService";
+import type { IStorageService } from "../../../../shared/interfaces/IStorageService";
 import { UnauthorizedError, ForbiddenError } from "../../../../shared/errors/app-error";
 import { LoginDto, LoginResponseDto } from "../dto/login.dto";
 import type { IUseCase } from "../../../../shared/application/base.usecase";
@@ -11,7 +12,8 @@ export class LoginUseCase implements IUseCase<LoginDto, LoginResponseDto> {
         private readonly userRepository: IUserRepository,
         private readonly passwordService: IPasswordService,
         private readonly jwtTokenService: IJwtTokenService,
-        private readonly refreshTokenService: IRefreshTokenService
+        private readonly refreshTokenService: IRefreshTokenService,
+        private readonly storageService: IStorageService
     ) {}
 
     execute = async (input : LoginDto): Promise<LoginResponseDto> => {
@@ -44,6 +46,15 @@ export class LoginUseCase implements IUseCase<LoginDto, LoginResponseDto> {
 
         await this.refreshTokenService.store(user.id, refreshToken);
 
+        let profilePictureUrl: string | null = null;
+        if (user.profile_picture_key) {
+            try {
+                profilePictureUrl = await this.storageService.getFileUrl(user.profile_picture_key);
+            } catch {
+                profilePictureUrl = null;
+            }
+        }
+
         return {
             accessToken,
             refreshToken,
@@ -54,6 +65,7 @@ export class LoginUseCase implements IUseCase<LoginDto, LoginResponseDto> {
                 role: user.role,
                 phone: user.phone,
                 phoneVerified: user.phone_verified ?? false,
+                profilePictureUrl,
             },
         };
     };

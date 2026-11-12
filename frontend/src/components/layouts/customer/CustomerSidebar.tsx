@@ -15,8 +15,10 @@ export function CustomerSidebar({ isOpen, onClose }: CustomerSidebarProps) {
     const navigate = useNavigate();
     const clearAuth = useAuthStore((state) => state.clearAuth);
     const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
 
     const handleLogout = async () => {
+        setIsLoggingOut(true);
         try {
             await logout();
             clearAuth();
@@ -25,6 +27,7 @@ export function CustomerSidebar({ isOpen, onClose }: CustomerSidebarProps) {
         } catch {
             toast.error("Failed to log out");
         } finally {
+            setIsLoggingOut(false);
             setIsLogoutModalOpen(false);
         }
     };
@@ -143,6 +146,7 @@ export function CustomerSidebar({ isOpen, onClose }: CustomerSidebarProps) {
                 isOpen={isLogoutModalOpen}
                 onClose={() => setIsLogoutModalOpen(false)}
                 onConfirm={handleLogout}
+                loading={isLoggingOut}
                 title="Log Out"
                 message="Are you sure you want to log out?"
             />

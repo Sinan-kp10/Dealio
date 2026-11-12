@@ -15,6 +15,8 @@ export function CustomerNavbar({ onToggleSidebar, isSidebarOpen }: CustomerNavba
     const navigate = useNavigate();
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
+
     const profileRef = useRef<HTMLDivElement>(null);
     const user = useAuthStore((state) => state.user);
     const clearAuth = useAuthStore((state) => state.clearAuth);
@@ -32,6 +34,7 @@ export function CustomerNavbar({ onToggleSidebar, isSidebarOpen }: CustomerNavba
     }, []);
 
     const handleLogout = async () => {
+        setIsLoggingOut(true);
         try {
             await logout();
             clearAuth();
@@ -40,6 +43,7 @@ export function CustomerNavbar({ onToggleSidebar, isSidebarOpen }: CustomerNavba
         } catch {
             toast.error("Failed to log out");
         } finally {
+            setIsLoggingOut(false);
             setIsLogoutModalOpen(false);
         }
     };
@@ -72,7 +76,7 @@ export function CustomerNavbar({ onToggleSidebar, isSidebarOpen }: CustomerNavba
                 aria-label="Notifications"
                 >
                 <Bell size={21} strokeWidth={2.2} className="text-[#244673]" />
-                <span className="notification-badge absolute -top-0.5 -right-0.5 flex items-center justify-center min-w-[19px] h-[19px] px-1 text-[11px] font-bold text-white bg-[#ea3838] rounded-full shadow-[0_0_0_2px_#ffffff,0_2px_6px_rgba(234,56,56,0.35)]">
+                <span className="notification-badge absolute top-[1px] right-[1px] flex items-center justify-center min-w-[17px] h-[17px] px-1 text-[10px] font-bold leading-none text-white bg-[#ea3838] rounded-full shadow-[0_0_0_1.5px_#ffffff,0_2px_5px_rgba(234,56,56,0.35)]">
                     2
                 </span>
                 </button>
@@ -180,6 +184,7 @@ export function CustomerNavbar({ onToggleSidebar, isSidebarOpen }: CustomerNavba
             isOpen={isLogoutModalOpen}
             onClose={() => setIsLogoutModalOpen(false)}
             onConfirm={handleLogout}
+            loading={isLoggingOut}
             title="Log Out"
             message="Are you sure you want to log out?"
         />
