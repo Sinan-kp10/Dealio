@@ -4,6 +4,7 @@ import { GetActiveCategoriesUseCase } from "../../application/use-cases/get-acti
 import { GetCategoryUseCase } from "../../application/use-cases/get-category.use-case";
 import { GetSubCategoryUseCase } from "../../application/use-cases/get-sub-category.use-case";
 import { UpdateCategoryUseCase } from "../../application/use-cases/update-category.use-case";
+import { UpdateSubCategoryUseCase } from "../../application/use-cases/update-sub-category.use-case";
 import { CategoryController } from "../../presentation/controllers/category.controller";
 import { SubCategoryController } from "../../presentation/controllers/sub-category.controller";
 import { PrismaCategoryRepository } from "../repositories/prisma-category.repository";
@@ -16,8 +17,9 @@ const updateCategoryUseCase = new UpdateCategoryUseCase(categoryRepository)
 const getActiveCategoriesUseCase = new GetActiveCategoriesUseCase(categoryRepository)
 export const categoryController = new CategoryController(getCategoryUseCase,createCategoryUseCase,updateCategoryUseCase,getActiveCategoriesUseCase)
 
-//subcategory
-const subCategoryRepository = new PrismaSubCategoryRepository()
-const createSubCategoryUseCase = new CreateSubCategoryUseCase(subCategoryRepository, categoryRepository)
-const getSubCategoryUseCase = new GetSubCategoryUseCase(subCategoryRepository)
-export const subCategoryController = new SubCategoryController(createSubCategoryUseCase, getSubCategoryUseCase)
+// subcategory
+const subCategoryRepository = new PrismaSubCategoryRepository();
+const createSubCategoryUseCase = new CreateSubCategoryUseCase(subCategoryRepository, categoryRepository);
+const getSubCategoryUseCase = new GetSubCategoryUseCase(subCategoryRepository);
+const updateSubCategoryUseCase = new UpdateSubCategoryUseCase(subCategoryRepository, categoryRepository);
+export const subCategoryController = new SubCategoryController(createSubCategoryUseCase,getSubCategoryUseCase,updateSubCategoryUseCase);

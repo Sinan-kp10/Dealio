@@ -49,3 +49,15 @@ export interface CreateSubCategoryResponse {
     message: string;
     data: SubCategory;
 }
+
+export interface UpdateSubCategoryInput {
+    categoryId: string;
+    subCategoryName?: string;
+    status?: SubCategoryStatus;
+}
+
+export interface UpdateSubCategoryResponse {
+    status: boolean;
+    message: string;
+    data: SubCategory;
+}

@@ -1,14 +1,15 @@
 import type { Request, Response, NextFunction } from "express";
 import { HttpStatusCode } from "../../../../shared/enums/http-status-code.enum";
-import { CreateSubCategoryDto, PaginatedSubCategoryDto, SubCategoryDto, SubCategoryListFiltersDto, SubCategoryStatus } from "../../application/dto/sub-category.dto";
+import {CreateSubCategoryDto,PaginatedSubCategoryDto,SubCategoryDto,SubCategoryListFiltersDto,SubCategoryStatus,UpdateSubCategoryDto,UpdatedSubCategoryFieldsDto,} from "../../application/dto/sub-category.dto";
 import { IUseCase } from "../../../../shared/application/base.usecase";
 import { IApiResponse } from "../../../../shared/application/api-response";
 
 export class SubCategoryController {
     constructor(
-        private readonly createSubCategoryUseCase : IUseCase<CreateSubCategoryDto, SubCategoryDto>,
-        private readonly getSubCategoryUseCase : IUseCase<SubCategoryListFiltersDto, PaginatedSubCategoryDto>,
-    ){}
+        private readonly createSubCategoryUseCase: IUseCase<CreateSubCategoryDto, SubCategoryDto>,
+        private readonly getSubCategoryUseCase: IUseCase<SubCategoryListFiltersDto, PaginatedSubCategoryDto>,
+        private readonly updateSubCategoryUseCase: IUseCase<UpdateSubCategoryDto, SubCategoryDto>
+    ) {}
 
     getSubCategories = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
         try {
@@ -28,30 +29,45 @@ export class SubCategoryController {
         } catch (error) {
             next(error);
         }
-    }
+    };
 
     createSubCategory = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
-
         try {
-            
-            const {categoryId, subCategoryName , status } = req.body as CreateSubCategoryDto
+            const { categoryId, subCategoryName, status } = req.body as CreateSubCategoryDto;
 
             const subCategory = await this.createSubCategoryUseCase.execute({
                 categoryId,
                 subCategoryName,
-                status
-            })
+                status,
+            });
 
             res.status(HttpStatusCode.CREATED).json({
                 success: true,
                 message: "Sub category created successfully",
                 data: subCategory,
-            })
-
+            });
         } catch (error) {
-            next(error)
+            next(error);
         }
-    }
+    };
 
+    updateSubCategory = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+        try {
+            const id = req.params.id as string;
+            const data = req.body as UpdatedSubCategoryFieldsDto;
 
+            const subCategory = await this.updateSubCategoryUseCase.execute({
+                id,
+                ...data,
+            });
+
+            res.status(HttpStatusCode.OK).json({
+                status: true,
+                message: "Sub category updated successfully",
+                data: subCategory,
+            });
+        } catch (error) {
+            next(error);
+        }
+    };
 }

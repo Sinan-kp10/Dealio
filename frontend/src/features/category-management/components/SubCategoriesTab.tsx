@@ -29,6 +29,7 @@ function SubCategoriesTab({onSubCategoryAdded,}: SubCategoriesTabProps) {
     const debouncedSubSearch = useDebounce(subSearch, 500);
     const [refreshCount, setRefreshCount] = useState(0);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [selectedSubCategoryToEdit, setSelectedSubCategoryToEdit] = useState<SubCategoryListItem | null>(null);
 
     useEffect(() => {
         let cancelled = false;
@@ -79,10 +80,25 @@ function SubCategoriesTab({onSubCategoryAdded,}: SubCategoriesTabProps) {
         setSubPage(1);
     };
 
-    const handleModalSuccess = () => {
+    const handleCloseModal = () => {
         setIsAddModalOpen(false);
+        setSelectedSubCategoryToEdit(null);
+    };
+
+    const handleModalSuccess = () => {
+        handleCloseModal();
         setRefreshCount((prev) => prev + 1);
         onSubCategoryAdded?.();
+    };
+
+    const handleOpenAddModal = () => {
+        setSelectedSubCategoryToEdit(null);
+        setIsAddModalOpen(true);
+    };
+
+    const handleEditSubCategory = (item: SubCategoryListItem) => {
+        setSelectedSubCategoryToEdit(item);
+        setIsAddModalOpen(true);
     };
 
     return (
@@ -131,7 +147,7 @@ function SubCategoriesTab({onSubCategoryAdded,}: SubCategoriesTabProps) {
 
                 <button
                     type="button"
-                    onClick={() => setIsAddModalOpen(true)}
+                    onClick={handleOpenAddModal}
                     className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#244673] hover:bg-[#1b3557] text-white text-sm font-semibold rounded-lg shadow-2xs transition-colors cursor-pointer shrink-0 self-start sm:self-auto"
                 >
                     <Plus size={16} strokeWidth={2.5} />
@@ -196,6 +212,7 @@ function SubCategoriesTab({onSubCategoryAdded,}: SubCategoriesTabProps) {
                             <div className="flex items-center justify-center">
                                 <button
                                     type="button"
+                                    onClick={() => handleEditSubCategory(sub)}
                                     className="px-3.5 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer min-w-[56px]"
                                 >
                                     Edit
@@ -209,7 +226,8 @@ function SubCategoriesTab({onSubCategoryAdded,}: SubCategoriesTabProps) {
             <SubCategoryModal
                 isOpen={isAddModalOpen}
                 categories={allCategories}
-                onCancel={() => setIsAddModalOpen(false)}
+                subCategoryToEdit={selectedSubCategoryToEdit}
+                onCancel={handleCloseModal}
                 onSuccess={handleModalSuccess}
             />
         </>
