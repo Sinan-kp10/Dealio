@@ -4,7 +4,7 @@ import { handleApiError } from "../../../utils/errorHandler";
 import { getEnterpriseProfile } from "../services/enterprise-profile.service";
 import EnterpriseProfileSkeleton from "../components/loading/EnterpriseProfileSkeleton";
 import { toast } from "react-toastify";
-import { Camera, Trash2, BadgeCheck, Briefcase, ShieldCheck, Landmark, Loader2, Clock } from "lucide-react";
+import { Camera, Trash2, BadgeCheck, Briefcase, IdCard, Landmark, Loader2, Clock } from "lucide-react";
 import ProfilePictureModal from "../components/profile-picture/ProfilePictureModal";
 import { removeProfilePicture } from "../services/profile.service";
 import useAuthStore from "../../../stores/auth.store";
@@ -119,14 +119,14 @@ function EnterpriseProfilePage() {
               <h2 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight truncate">
                 {profile?.enterpriseName}
               </h2>
-              {profile?.status === "APPROVED" ? (
+              {profile?.status === "VERIFIED" ? (
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#eaf8f1] text-[#22a06b] border border-[#22a06b]/20 shadow-2xs">
                   <BadgeCheck
                     size={14}
                     strokeWidth={2.2}
                     className="shrink-0 text-[#22a06b]"
                   />
-                  <span>Approved</span>
+                  <span>Verified</span>
                 </span>
               ) : (
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#fffbeb] text-[#d97706] border border-[#d97706]/20 shadow-2xs">
@@ -193,7 +193,7 @@ function EnterpriseProfilePage() {
                 : "text-slate-600 hover:text-slate-900 border border-transparent"
             }`}
           >
-            <ShieldCheck size={16} className={activeTab === "kyc" ? "text-slate-700 shrink-0" : "text-slate-500 shrink-0"} />
+            <IdCard size={16} className={activeTab === "kyc" ? "text-slate-700 shrink-0" : "text-slate-500 shrink-0"} />
             <span className="truncate">KYC Verification</span>
             <TabStatusBadge status={kycStatus} />
           </button>

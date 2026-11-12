@@ -1,24 +1,10 @@
-export type BusinessType =| "PRIVATE_LIMITED"| "PUBLIC_LIMITED"| "LLP"| "PARTNERSHIP"| "SOLE_PROPRIETORSHIP"| "OTHER"
-
-export type DocumentType =| "AADHAAR"| "PASSPORT"| "PAN_CARD"| "VOTER_ID"| "DRIVING_LICENCE"| "GST_CERTIFICATE"
-
-export const BUSINESS_TYPE_LABELS: Record<BusinessType, string> = {
-  PRIVATE_LIMITED: "Private Limited Company (Pvt Ltd)",
-  PUBLIC_LIMITED: "Public Limited Company",
-  LLP: "Limited Liability Partnership (LLP)",
-  PARTNERSHIP: "Partnership Firm",
-  SOLE_PROPRIETORSHIP: "Sole Proprietorship",
-  OTHER: "Other",
-};
-
-export const DOCUMENT_TYPE_LABELS: Record<DocumentType, string> = {
-  GST_CERTIFICATE: "Certificate of Incorporation (MCA)",
-  PAN_CARD: "PAN Card",
-  AADHAAR: "Aadhaar Card",
-  PASSPORT: "Passport",
-  VOTER_ID: "Voter ID",
-  DRIVING_LICENCE: "Driving Licence",
-};
+export {
+  BUSINESS_TYPE_LABELS,
+  DOCUMENT_TYPE_LABELS,
+  type BusinessType,
+  type DocumentType,
+} from "../../../constants/enterprise.constants";
+import type { BusinessType, DocumentType } from "../../../constants/enterprise.constants";
 
 export type KycStatus = "PENDING" | "VERIFIED" | "REJECTED";
 

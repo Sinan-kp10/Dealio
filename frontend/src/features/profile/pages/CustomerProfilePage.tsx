@@ -176,7 +176,7 @@ function CustomerProfilePage() {
               </h2>
               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#eaf8f1] text-[#22a06b] border border-[#22a06b]/20 shadow-2xs">
                 <BadgeCheck size={14} strokeWidth={2.2} className="shrink-0 text-[#22a06b]" />
-                <span>Approved</span>
+                <span>Verified</span>
               </span>
             </div>
             <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 truncate">
@@ -225,7 +225,7 @@ function CustomerProfilePage() {
             <div>
               <label
                 htmlFor="profile-name"
-                className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5"
+                className="block text-xs sm:text-[13px] font-medium text-slate-500 mb-1.5"
               >
                 Name
               </label>
@@ -304,7 +304,7 @@ function CustomerProfilePage() {
             <div>
               <label
                 htmlFor="profile-phone"
-                className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5"
+                className="block text-xs sm:text-[13px] font-medium text-slate-500 mb-1.5"
               >
                 Phone Number
               </label>
@@ -342,7 +342,7 @@ function CustomerProfilePage() {
             </div>
 
             <div>
-              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">
+              <label className="block text-xs sm:text-[13px] font-medium text-slate-500 mb-1.5">
                 Email Address
               </label>
               <div className="flex items-center justify-between px-3.5 py-2.5 bg-slate-50/70 border border-slate-200/90 rounded-xl text-sm text-slate-800 shadow-2xs">
@@ -361,7 +361,7 @@ function CustomerProfilePage() {
             </div>
 
             <div>
-              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">
+              <label className="block text-xs sm:text-[13px] font-medium text-slate-500 mb-1.5">
                 Account Created
               </label>
               <div className="flex items-center justify-between px-3.5 py-2.5 bg-slate-50/70 border border-slate-200/90 rounded-xl text-sm text-slate-800 shadow-2xs">

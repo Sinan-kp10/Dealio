@@ -1,4 +1,4 @@
-import { Search} from "lucide-react";
+import { RefreshCw, Search } from "lucide-react";
 import Pagination from "../../../components/common/pagination/Pagination";
 import Table from "../../../components/common/table/Table";
 import TableSkeleton from "../../../components/common/loading/TableSkeleton";
@@ -159,6 +159,22 @@ function CustomerManagementPage() {
                 skeleton={<TableSkeleton rows={PAGE_LIMIT} columns={6} />}
                 isEmpty={customer.length === 0}
                 emptyTitle="No customers found"
+                emptyAction={
+                    (debouncedSearch || status !== "ALL") && (
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setSearch("");
+                                setStatus("ALL");
+                                setPage(1);
+                            }}
+                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-[#204066] bg-[#edf4fb] hover:bg-[#dbe9f6] transition-colors cursor-pointer"
+                        >
+                            <RefreshCw size={13} />
+                            <span>Reset Filters</span>
+                        </button>
+                    )
+                }
                 pagination={
                     totalPages > 0 && (
                         <Pagination

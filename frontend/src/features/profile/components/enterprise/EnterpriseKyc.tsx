@@ -1,13 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Check, ChevronDown, Loader2, Plus, SquarePen, Upload, X } from "lucide-react";
+import { AlertCircle, Check, ChevronDown, Clock, Loader2, Plus, SquarePen, Upload, X } from "lucide-react";
 import { CreateEnterpriseKycSchema } from "../../schemas/enterpise-kyc.schema";
 import { BUSINESS_TYPE_LABELS, DOCUMENT_TYPE_LABELS, type ActiveKycRecord, type BaseKycRecord, type CreateEnterpriseKycFormData, type KycRequestRecord } from "../../types/enterprise-kyc.types";
 import { addKycDetails, getKycDetails, updateKycDetails } from "../../services/enterprise-profile.service";
 import { handleApiError, handleFormError } from "../../../../utils/errorHandler";
 import KycDocumentModal from "./KycDocumentModal";
 import KycDocumentPreviewModal from "./KycDocumentPreviewModal";
+import ConfirmationModal from "../../../../components/common/confirmationModel/ConfirmationModal";
 
 interface EnterpriseKycProps {
     onStatusChange?: (status: "PENDING" | "VERIFIED" | "REQUIRED") => void;
@@ -21,6 +22,7 @@ function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
     const [documentFile, setDocumentFile] = useState<File | null>(null);
     const [isDocModalOpen, setIsDocModalOpen] = useState(false);
     const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
     const { register, handleSubmit, reset, setValue, setError, formState: { errors, isSubmitting },} = useForm<CreateEnterpriseKycFormData>({  resolver: zodResolver(CreateEnterpriseKycSchema)});
 
@@ -55,7 +57,7 @@ function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
                     setKyc(active);
                     setPendingtKyc(pending);
                     resetForm(active || pending);
-                    onStatusChange?.(pending ? "PENDING" : active ? "VERIFIED" : "REQUIRED");
+                    onStatusChange?.(pending?.status === "PENDING" ? "PENDING" : active ? "VERIFIED" : "REQUIRED");
                 }
             } catch (error) {
                 handleApiError(error, "unable to load kyc details");
@@ -90,7 +92,7 @@ function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
         setUpdateMode(false);
     };
 
-    const onSubmit = async (data : CreateEnterpriseKycFormData) => {
+    const onSubmit = async (data: CreateEnterpriseKycFormData) => {
         try {
             const payload = {
                 businessType: data.businessType,
@@ -106,9 +108,11 @@ function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
             setPendingtKyc(response.data);
             setDocumentFile(null);
             setUpdateMode(false);
+            setIsConfirmModalOpen(false);
             onStatusChange?.("PENDING");
         } catch (error) {
             handleFormError(error, setError, "unable to update kyc details");
+            setIsConfirmModalOpen(false);
         }
     };
 
@@ -123,11 +127,27 @@ function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
     return (
         <div className="space-y-6">
             <div>
-                {pendingKyc?.rejectionReason && (<p className="text-xs sm:text-sm text-red-600 bg-red-50 p-3 rounded-xl border border-red-200">{pendingKyc.rejectionReason}</p>)}
-                {isPendingReview && (<p className="text-xs sm:text-sm text-amber-700 bg-amber-50 p-3 rounded-xl border border-amber-200 mt-2">Your KYC verification request is under review. Please wait until admin responds</p>)}
+                {pendingKyc?.rejectionReason && (
+                    <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs sm:text-sm text-red-700">
+                        <AlertCircle size={18} className="shrink-0 text-red-600 mt-0.5" />
+                        <p className="leading-relaxed">
+                            <span className="font-semibold text-red-800">Your KYC verification was rejected by admin. </span>
+                            <span>Reason: </span>
+                            <span className="font-medium text-red-900">"{pendingKyc.rejectionReason}". </span>
+                        </p>
+                    </div>
+                )}
+                {isPendingReview && (
+                    <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-xs sm:text-sm text-amber-800 mt-2">
+                        <Clock size={18} className="shrink-0 text-amber-600 mt-0.5" />
+                        <p className="leading-relaxed">
+                            Your KYC verification request is under review. Please wait until admin responds.
+                        </p>
+                    </div>
+                )}
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={handleSubmit(() => setIsConfirmModalOpen(true))} className="space-y-4">
                 <div className="flex items-center justify-between gap-3 sm:gap-4 pb-2 flex-wrap sm:flex-nowrap">
                     <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
                         KYC Verification
@@ -187,7 +207,7 @@ function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
                     <div>
-                        <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
+                        <label className="block text-xs sm:text-[13px] font-medium text-slate-500 mb-1.5">
                             Business Type
                         </label>
                         {updateMode ? (
@@ -225,7 +245,7 @@ function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
                     </div>
 
                     <div>
-                        <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
+                        <label className="block text-xs sm:text-[13px] font-medium text-slate-500 mb-1.5">
                             Full Legal Name
                         </label>
                         {updateMode ? (
@@ -253,7 +273,7 @@ function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
                     </div>
 
                     <div>
-                        <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
+                        <label className="block text-xs sm:text-[13px] font-medium text-slate-500 mb-1.5">
                             Identification Document Type
                         </label>
                         {updateMode ? (
@@ -291,7 +311,7 @@ function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
                     </div>
 
                     <div>
-                        <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1.5">
+                        <label className="block text-xs sm:text-[13px] font-medium text-slate-500 mb-1.5">
                             Upload Verification Document
                         </label>
                         {updateMode ? (
@@ -353,6 +373,15 @@ function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
                 onClose={() => setIsPreviewModalOpen(false)}
                 imageUrl={displayKyc?.documentUrl || null}
                 documentType={displayKyc?.documentType ? DOCUMENT_TYPE_LABELS[displayKyc.documentType] : undefined}
+            />
+
+            <ConfirmationModal
+                isOpen={isConfirmModalOpen}
+                onClose={() => setIsConfirmModalOpen(false)}
+                onConfirm={handleSubmit(onSubmit)}
+                loading={isSubmitting}
+                title="Confirm KYC Submission"
+                message="Once submitted, your KYC verification request will be under review and you cannot edit these details until the administrator responds. Are you sure you want to proceed?"
             />
         </div>
     )

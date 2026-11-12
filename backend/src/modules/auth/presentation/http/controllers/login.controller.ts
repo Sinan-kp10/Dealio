@@ -3,14 +3,14 @@ import type { IUseCase } from "../../../../../shared/application/base.usecase";
 import type { LoginDto, LoginResponseDto } from "../../../application/dto/login.dto"; 
 import type { IApiResponse } from "../../../../../shared/application/api-response";
 import { HttpStatusCode } from "../../../../../shared/enums/http-status-code.enum.js";
-import { RefreshTokenService } from "../../../infrastructure/security/refresh-token.service.js";
+import type { IRefreshTokenService } from "../../../../../shared/interfaces/IRefreshTokenService.js";
 import { env } from "../../../../../config/env.js";
 
 export class LoginController {
 
     constructor(
         private readonly loginUseCase: IUseCase<LoginDto, LoginResponseDto>,
-        private readonly refreshTokenService: RefreshTokenService
+        private readonly refreshTokenService: IRefreshTokenService
     ) {}
 
     login = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {

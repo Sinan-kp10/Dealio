@@ -1,6 +1,6 @@
 import { IUserRepository } from "../../domain/repositories/user.repository";
 import type { IJwtTokenService } from "../../../../shared/interfaces/IJwtTokenService";
-import { RefreshTokenService } from "../../infrastructure/security/refresh-token.service";
+import type { IRefreshTokenService } from "../../../../shared/interfaces/IRefreshTokenService";
 import { UnauthorizedError, ForbiddenError } from "../../../../shared/errors/app-error";
 import { AuthUserDto } from "../dto/user.dto";
 import type { IUseCase } from "../../../../shared/application/base.usecase";
@@ -15,7 +15,7 @@ export class RefreshTokenUseCase implements IUseCase<string | undefined, Refresh
     constructor(
         private readonly userRepository: IUserRepository,
         private readonly jwtTokenService: IJwtTokenService,
-        private readonly refreshTokenService: RefreshTokenService
+        private readonly refreshTokenService: IRefreshTokenService
     ) {}
 
     execute = async (incomingToken?: string): Promise<RefreshTokenResponseDto> => {

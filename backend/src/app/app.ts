@@ -11,6 +11,7 @@ import customerProfileRouter from "../modules/profile/presentation/routes/custom
 import enterpriseProfileRouter from "../modules/profile/presentation/routes/enterprise-profile.routes"
 import profilePictureRouter from "../modules/profile/presentation/routes/profile-picture.routes";
 import categoryRoutes from "../modules/category-management/presentation/routes/category.routes"
+import profileVerificationRoutes from "../modules/profile/presentation/routes/profile-verification.routes"
 import cookieParser from "cookie-parser";
 const app = express();
 app.use(helmet())
@@ -31,12 +32,14 @@ app.use(httpLogger)
 
 app.use("/api", globalRateLimiter);
 
-app.use("/api/auth", authRouter)
-app.use("/api/admin", userManagementRoutes)
-app.use("/api/admin", categoryRoutes)
-app.use("/api/customer", customerProfileRouter)
-app.use("/api/enterprise", enterpriseProfileRouter)
-app.use("/api/profile", profilePictureRouter)
+app.use("/api/auth", authRouter);
+app.use("/api/admin", userManagementRoutes);
+app.use("/api/admin", categoryRoutes);
+app.use("/api/admin/enterprises", profileVerificationRoutes);
+app.use("/api/customer", customerProfileRouter);
+app.use("/api/enterprise", enterpriseProfileRouter);
+app.use("/api/profile", profilePictureRouter);
+app.use("/api", categoryRoutes);
 
 
 app.use(notFoundMiddleware)

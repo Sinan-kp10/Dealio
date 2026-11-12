@@ -3,14 +3,29 @@ import { IUseCase } from "../../../../shared/application/base.usecase";
 import { CategoryListFiltersDto, PaginatedCategoryDto } from "../../application/dto/category-list.dto";
 import { IApiResponse } from "../../../../shared/application/api-response";
 import { HttpStatusCode } from "../../../../shared/enums/http-status-code.enum";
-import { CategoryDto, CreateCategoryDto, UpdateCategoryDto, UpdatedCategoryFieldsDto } from "../../application/dto/category.dto";
+import { ActiveCategoryDto, CategoryDto, CreateCategoryDto, UpdateCategoryDto, UpdatedCategoryFieldsDto } from "../../application/dto/category.dto";
 
 export class CategoryController {
     constructor(
         private readonly getCategoryUseCase : IUseCase<CategoryListFiltersDto,PaginatedCategoryDto>,
         private readonly createCategoryUseCase : IUseCase<CreateCategoryDto, CategoryDto>,
-        private readonly updateCategoryUseCase : IUseCase<UpdateCategoryDto, CategoryDto>
+        private readonly updateCategoryUseCase : IUseCase<UpdateCategoryDto, CategoryDto>,
+        private readonly getActiveCategoriesUseCase : IUseCase<void, ActiveCategoryDto[]>
     ){}
+
+    getActiveCategories = async (_req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+        try {
+            const categories = await this.getActiveCategoriesUseCase.execute();
+
+            res.status(HttpStatusCode.OK).json({
+                success: true,
+                message: "Active categories retrieved successfully",
+                data: categories,
+            });
+        } catch (error) {
+            next(error);
+        }
+    };
 
     getCategories = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
 

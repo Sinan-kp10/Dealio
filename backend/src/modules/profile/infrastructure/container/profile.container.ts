@@ -22,6 +22,14 @@ import { UpdateEnterpriseBankRecordUseCase } from "../../application/use-cases/e
 import { GetEnterpriseBankRecordUseCase } from "../../application/use-cases/enterprise/get-enterprise-bank-record.use-case.js";
 import { EnterpriseBankRecordController } from "../../presentation/controllers/enterprise-bank-record.controller.js";
 import { PrismaEnterpriseBankRecordRepository } from "../repositories/prisma-enterprise-bank-record.repository.js";
+import { PrismaProfileVerificationRepository } from "../repositories/prisma-profile-verification.repository.js";
+import { GetEnterpriseApprovalUseCase } from "../../application/use-cases/admin/get-enterprise-approvel.use-case.js";
+import { GetEnterpriseApprovalDetailsUseCase } from "../../application/use-cases/admin/get-enterprise-approval-details.use-case.js";
+import { ProfileVerificationController } from "../../presentation/controllers/profile-verification.controller.js";
+import { VerfyEnterpriseKycUseCase } from "../../application/use-cases/admin/verify-enterprise-kyc.use-case.js";
+import { RejectEnterpriseKycUseCase } from "../../application/use-cases/admin/reject-enterprise-kyc.use-case.js";
+import { VerifyEnterpriseBankRecordUseCase } from "../../application/use-cases/admin/verify-enterprise-bank-record.use-case.js";
+import { RejectEnterpriseBankRecordUseCase } from "../../application/use-cases/admin/reject-enterprise-bank-record.use-case.js";
 
 const s3StorageService = new S3StorageService();
 
@@ -57,3 +65,14 @@ const createEnterpriseBankRecordUseCase = new CreateEnterpriseBankRecordUseCase(
 const updateEnterpriseBankRecordUseCase = new UpdateEnterpriseBankRecordUseCase(enterpriseBankRecordRepository);
 const getEnterpriseBankRecordUseCase = new GetEnterpriseBankRecordUseCase(enterpriseBankRecordRepository);
 export const enterpriseBankRecordController = new EnterpriseBankRecordController(getEnterpriseBankRecordUseCase, createEnterpriseBankRecordUseCase, updateEnterpriseBankRecordUseCase);
+
+//admin profile verification
+
+const profileVerificationRepository = new PrismaProfileVerificationRepository();
+const getEnterpriseApprovalUseCase = new GetEnterpriseApprovalUseCase(profileVerificationRepository);
+const getEnterpriseApprovalDetailsUseCase = new GetEnterpriseApprovalDetailsUseCase(profileVerificationRepository,s3StorageService);
+const verfyEnterpriseKycUseCase = new VerfyEnterpriseKycUseCase(profileVerificationRepository);
+const rejectEnterpriseKycUseCase = new RejectEnterpriseKycUseCase(profileVerificationRepository);
+const verifyEnterpriseBankRecordUseCase = new VerifyEnterpriseBankRecordUseCase(profileVerificationRepository);
+const rejectEnterpriseBankRecordUseCase = new RejectEnterpriseBankRecordUseCase(profileVerificationRepository);
+export const profileVerificationController = new ProfileVerificationController(getEnterpriseApprovalUseCase,getEnterpriseApprovalDetailsUseCase,verfyEnterpriseKycUseCase,rejectEnterpriseKycUseCase,verifyEnterpriseBankRecordUseCase,rejectEnterpriseBankRecordUseCase);
