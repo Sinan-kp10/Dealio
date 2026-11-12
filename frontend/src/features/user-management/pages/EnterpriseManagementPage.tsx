@@ -11,7 +11,6 @@ import ReasonModal from "../../../components/common/ReasonModal/ReasonModel";
 import ConfirmationModal from "../../../components/common/confirmationModel/ConfirmationModal";
 import { getEnterprise, reactivateEnterpriseAccount, suspendEnterpriseAccount } from "../service/user-management.service";
 import useDebounce from "../../../hook/useDebounce";
-import Select from "../../../components/common/select/Select";
 import useCategoryStore from "../../../stores/category.store";
 
 const PAGE_LIMIT = 5;
