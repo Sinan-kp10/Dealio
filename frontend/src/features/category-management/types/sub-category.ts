@@ -57,7 +57,7 @@ export interface UpdateSubCategoryInput {
 }
 
 export interface UpdateSubCategoryResponse {
-    status: boolean;
+    success: boolean;
     message: string;
     data: SubCategory;
 }
