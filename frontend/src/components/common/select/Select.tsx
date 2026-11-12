@@ -10,11 +10,10 @@ export interface SelectProps {
     value: string;
     onChange: (value: string) => void;
     options: SelectOption[];
-    className?: string;
     "aria-label"?: string;
 }
 
-export function Select({ value, onChange, options, className = "", "aria-label": ariaLabel }: SelectProps) {
+export function Select({ value, onChange, options, "aria-label": ariaLabel }: SelectProps) {
     const [isOpen, setIsOpen] = useState(false);
 
     const selectedOption = options.find((opt) => opt.value === value);
@@ -22,7 +21,7 @@ export function Select({ value, onChange, options, className = "", "aria-label":
 
     return (
         <div
-            className={`relative inline-block text-left ${className}`}
+            className="relative inline-block text-left"
             onBlur={(e) => {
                 if (!e.currentTarget.contains(e.relatedTarget as Node)) {
                     setIsOpen(false);
@@ -91,3 +90,4 @@ export function Select({ value, onChange, options, className = "", "aria-label":
 }
 
 export default Select;
+

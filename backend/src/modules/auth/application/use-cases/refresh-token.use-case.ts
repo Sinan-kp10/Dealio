@@ -1,6 +1,6 @@
 import { IUserRepository } from "../../domain/repositories/user.repository";
-import { JwtTokenService } from "../../infrastructure/security/jwt-token.service";
-import { RefreshTokenService } from "../../infrastructure/security/refresh-token.service";
+import type { IJwtTokenService } from "../../../../shared/interfaces/IJwtTokenService";
+import type { IRefreshTokenService } from "../../../../shared/interfaces/IRefreshTokenService";
 import { UnauthorizedError, ForbiddenError } from "../../../../shared/errors/app-error";
 import { AuthUserDto } from "../dto/user.dto";
 import type { IUseCase } from "../../../../shared/application/base.usecase";
@@ -14,8 +14,8 @@ export interface RefreshTokenResponseDto {
 export class RefreshTokenUseCase implements IUseCase<string | undefined, RefreshTokenResponseDto> {
     constructor(
         private readonly userRepository: IUserRepository,
-        private readonly jwtTokenService: JwtTokenService,
-        private readonly refreshTokenService: RefreshTokenService
+        private readonly jwtTokenService: IJwtTokenService,
+        private readonly refreshTokenService: IRefreshTokenService
     ) {}
 
     execute = async (incomingToken?: string): Promise<RefreshTokenResponseDto> => {
@@ -62,6 +62,8 @@ export class RefreshTokenUseCase implements IUseCase<string | undefined, Refresh
                 name: user.name,
                 email: user.email,
                 role: user.role,
+                phone: user.phone,
+                phoneVerified: user.phone_verified ?? false,
             },
         };
     };

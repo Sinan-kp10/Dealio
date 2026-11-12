@@ -12,8 +12,9 @@ export interface EnterpriseProfileDto {
   id: string;
   name: string;
   email: string;
+  phone: string | null;
+  phoneVerified: boolean;
   profilePictureKey: string | null;
-  createdAt: Date;
   enterpriseId: string;
   enterpriseName: string;
   description: string | null;
@@ -22,18 +23,33 @@ export interface EnterpriseProfileDto {
   subcategories: SubcategoryDto[];
 }
 
-export interface UpdateEnterpriseProfileDto {
+export interface UpdateEnterpriseDetailsDto {
   userId: string;
-  enterpriseName?: string | null;
-  contactPerson?: string | null;
+  enterpriseName?: string;
+  contactPerson?: string;
+  categoryId?: string;
   description?: string | null;
-  categoryId?: string | null;
   subcategoryIds?: string[];
 }
 
-export interface UpdatedEnterpriseProfileFieldsDto {
-  enterpriseName?: string | null;
-  contactPerson?: string | null;
+export interface UpdatedEnterpriseDetailsDto {
+  enterpriseName?: string;
+  contactPerson?: string;
+  categoryId?: string;
   description?: string | null;
   subcategoryIds?: string[];
+}
+
+export interface CategoryOptionDto {
+  id: string;
+  name: string;
+  subcategories: {
+    id: string;
+    name: string;
+  }[];
+}
+
+export interface EnterpriseUserDto {
+  userId: string;
+  enterpriseId: string;
 }

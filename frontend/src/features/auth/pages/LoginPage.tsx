@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
-
 import { loginSchema } from "../schemas/login.schema";
 import type { LoginFromData } from "../types/login.type";
 import { login } from "../services/auth.service";
@@ -11,7 +10,7 @@ import axios from "axios";
 import { handleFormError, getErrorMessage } from "../../../utils/errorHandler";
 import { toast } from "react-toastify";
 import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
-import useAuthStore from "../stores/auth.store";
+import useAuthStore from "../../../stores/auth.store";
 
 export function LoginPage() {
     const [showPassword, setShowPassword] = useState(false)

@@ -22,7 +22,7 @@ export class SubCategoryController {
             });
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "Sub categories retrieved successfully",
                 data: subCategories,
             });
@@ -42,7 +42,7 @@ export class SubCategoryController {
             });
 
             res.status(HttpStatusCode.CREATED).json({
-                status: true,
+                success: true,
                 message: "Sub category created successfully",
                 data: subCategory,
             });

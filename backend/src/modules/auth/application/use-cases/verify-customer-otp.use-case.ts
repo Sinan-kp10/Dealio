@@ -1,5 +1,5 @@
 import { IUserRepository } from "../../domain/repositories/user.repository";
-import { OtpService } from "../../infrastructure/security/otp.service";
+import type { IOtpService } from "../../../../shared/interfaces/IOtpService";
 import { BadRequestError, ConflictError } from "../../../../shared/errors/app-error";
 import { CustomerRegistrationData } from "../dto/register-customer.dto";
 import { AuthUserDto } from "../dto/user.dto";
@@ -9,7 +9,7 @@ import type { IUseCase } from "../../../../shared/application/base.usecase";
 export class VerifyCustomerOtpuseCase implements IUseCase<VerifyOtpDto, AuthUserDto> {
     constructor(
         private readonly userRepository : IUserRepository,
-        private readonly otpService : OtpService
+        private readonly otpService : IOtpService
     ){}
 
     execute = async (input : VerifyOtpDto): Promise<AuthUserDto> => {
@@ -54,6 +54,8 @@ export class VerifyCustomerOtpuseCase implements IUseCase<VerifyOtpDto, AuthUser
             name: user.name,
             email: user.email,
             role: user.role,
+            phone: user.phone,
+            phoneVerified: user.phone_verified ?? false,
         };
     };
 }

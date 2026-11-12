@@ -1,8 +1,9 @@
 import { randomInt } from "node:crypto";
 import { redis } from "../../../../infrastructure/database/redis/redis-client";
 import { AppError } from "../../../../shared/errors/app-error";
+import type { IOtpService } from "../../../../shared/interfaces/IOtpService.js";
 
-export class OtpService {
+export class OtpService implements IOtpService {
 
     private readonly OTP_EXPIRY_SECONDS = 3 * 60
     private readonly DATA_EXPIRY_SECONDS = 15 * 60
@@ -182,5 +183,63 @@ export class OtpService {
 
     deleteEmailChangeOtp = async (userId: string): Promise<void> => {
         await redis.del([`change-email-otp:${userId}`, `change-email-pending:${userId}`]);
+    };
+
+    generatePhoneOtp = async (userId: string, phone: string): Promise<string> => {
+        const otp = this.generateOtp();
+        const otpKey = `phone-otp:${userId}`;
+        const pendingKey = `pending-phone:${userId}`;
+
+        await redis.set(otpKey, otp, {
+            EX: this.OTP_EXPIRY_SECONDS,
+        });
+
+        await redis.set(pendingKey, phone.trim(), {
+            EX: this.DATA_EXPIRY_SECONDS,
+        });
+
+        return otp;
+    };
+
+    verifyPhoneOtp = async (userId: string, otp: string): Promise<"valid" | "invalid" | "expired"> => {
+        const otpKey = `phone-otp:${userId}`;
+        const storedOtp = await redis.get(otpKey);
+
+        if (!storedOtp) {
+            return "expired";
+        }
+
+        if (storedOtp !== otp) {
+            return "invalid";
+        }
+
+        return "valid";
+    };
+
+    getPendingPhone = async (userId: string): Promise<string | null> => {
+        const pendingKey = `pending-phone:${userId}`;
+        return await redis.get(pendingKey);
+    };
+
+    resendPhoneOtp = async (userId: string): Promise<{ otp: string; phone: string }> => {
+        const pendingKey = `pending-phone:${userId}`;
+        const pendingPhone = await redis.get(pendingKey);
+
+        if (!pendingPhone) {
+            throw new AppError("Phone verification session has expired. Please request a new code.", 400);
+        }
+
+        const otp = this.generateOtp();
+        const otpKey = `phone-otp:${userId}`;
+
+        await redis.set(otpKey, otp, {
+            EX: this.OTP_EXPIRY_SECONDS,
+        });
+
+        return { otp, phone: pendingPhone };
+    };
+
+    deletePhoneOtp = async (userId: string): Promise<void> => {
+        await redis.del([`phone-otp:${userId}`, `pending-phone:${userId}`]);
     };
 }

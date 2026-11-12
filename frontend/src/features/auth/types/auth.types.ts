@@ -1,8 +1,11 @@
 export interface AuthUser {
   id: string;
-  name : string
+  name: string;
   email: string;
   role: "ADMIN" | "ENTERPRISE_MANAGER" | "CUSTOMER";
+  phone: string | null;
+  phoneVerified: boolean;
+  profilePictureUrl?: string | null;
 }
 
 export interface AuthState {
@@ -17,7 +20,7 @@ export interface AuthState {
 
 
 export interface CurrentUserResponse {
-  status: boolean;
+  success: boolean;
   message: string;
   data: {
     user: AuthUser;

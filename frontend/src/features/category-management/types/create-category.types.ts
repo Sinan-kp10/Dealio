@@ -12,7 +12,7 @@ export interface CreateCategoryData {
 }
 
 export interface CreateCategoryResponse {
-    status: boolean;
+    success: boolean;
     message: string;
     data: CreateCategoryData;
 }

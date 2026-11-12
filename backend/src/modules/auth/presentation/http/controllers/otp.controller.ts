@@ -20,7 +20,7 @@ export class OtpController {
             const user = await this.verifyCustomerOtpUseCase.execute(data);
 
             res.status(HttpStatusCode.CREATED).json({
-                status: true,
+                success: true,
                 message: "Email verified and account created successfully",
                 data: {
                     name: user.name,
@@ -40,7 +40,7 @@ export class OtpController {
             const result = await this.verifyEnterpriseOtpUseCase.execute(data);
 
             res.status(HttpStatusCode.CREATED).json({
-                status: true,
+                success: true,
                 message: "Email verified and account created successfully",
                 data: {
                     enterpriseName: result.enterprise.name,
@@ -61,7 +61,7 @@ export class OtpController {
             await this.resendOtpUseCase.execute(data);
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "New OTP sent successfully",
             });
         } catch (error) {

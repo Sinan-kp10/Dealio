@@ -12,8 +12,9 @@ export interface EnterpriseProfile {
   id: string;
   name: string;
   email: string;
+  phone: string | null;
+  phoneVerified: boolean;
   profilePictureKey: string | null;
-  createdAt: Date;
   enterpriseId: string;
   enterpriseName: string;
   description: string | null;
@@ -23,8 +24,30 @@ export interface EnterpriseProfile {
 }
 
 export interface EnterpriseProfileResponse {
-  status: boolean;
+  success: boolean;
   message: string;
   data: EnterpriseProfile;
 }
 
+export interface UpdateEnterpriseDetails {
+  enterpriseName?: string;
+  contactPerson?: string;
+  categoryId?: string;
+  description?: string | null;
+  subcategoryIds?: string[];
+}
+
+export interface CategoryOption {
+  id: string;
+  name: string;
+  subcategories: {
+    id: string;
+    name: string;
+  }[];
+}
+
+export interface CategoryOptionsResponse {
+  success: boolean;
+  message: string;
+  data: CategoryOption[];
+}

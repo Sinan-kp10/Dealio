@@ -1,18 +1,18 @@
-import type { IUserRepository,} from "../../domain/repositories/user.repository";
-import type {RegisterCustomerDto,} from "../dto/register-customer.dto";
+import type { IUserRepository } from "../../domain/repositories/user.repository";
+import type { RegisterCustomerDto } from "../dto/register-customer.dto";
 import { ConflictError, BadGatewayError } from "../../../../shared/errors/app-error";
-import { PasswordService } from "../../infrastructure/security/password.service";
-import { OtpService } from "../../infrastructure/security/otp.service";
-import { EmailService } from "../../../../infrastructure/email/email.service";
+import type { IPasswordService } from "../../../../shared/interfaces/IPasswordService";
+import type { IOtpService } from "../../../../shared/interfaces/IOtpService";
+import type { IEmailService } from "../../../../shared/interfaces/IEmailService";
 import type { IUseCase } from "../../../../shared/application/base.usecase";
 
 export class RegisterCustomerUseCase implements IUseCase<RegisterCustomerDto, void> {
 
     constructor( 
         private readonly userRepository: IUserRepository,
-        private readonly passwordService : PasswordService,
-        private readonly otpService : OtpService,
-        private readonly emailService : EmailService
+        private readonly passwordService: IPasswordService,
+        private readonly otpService: IOtpService,
+        private readonly emailService: IEmailService
 
     ) {}
 

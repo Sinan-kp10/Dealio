@@ -10,7 +10,9 @@ export const customerSelect = {
   suspension_reason: true,
   enterprise_id: true,
   phone: true,
+  phone_verified: true,
   email_verified: true,
+  profile_picture_key: true,
   created_at: true,
   updated_at: true,
 } satisfies Prisma.usersSelect;
@@ -28,7 +30,9 @@ export class CustomerMapper {
       suspension_reason: user.suspension_reason,
       enterprise_id: user.enterprise_id,
       phone: user.phone,
+      phone_verified: user.phone_verified,
       email_verified: user.email_verified,
+      profile_picture_key: user.profile_picture_key,
       created_at: user.created_at,
       updated_at: user.updated_at,
     };

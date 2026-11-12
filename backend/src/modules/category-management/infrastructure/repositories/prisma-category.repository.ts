@@ -1,6 +1,6 @@
 import { prisma } from "../../../../infrastructure/database/prisma/prisma-client";
 import { CategoryListFiltersDto, CategoryListItemDto, CategoryStatus, PaginatedCategoryDto } from "../../application/dto/category-list.dto";
-import { CategoryDto, UpdatedCategoryFieldsDto } from "../../application/dto/category.dto";
+import { ActiveCategoryDto, CategoryDto, UpdatedCategoryFieldsDto } from "../../application/dto/category.dto";
 import { ICategoryRepository } from "../../domain/repositories/category.repository";
 import { categorySelect, CategoryMapper } from "../mappers/category.mapper";
 
@@ -106,4 +106,21 @@ export class PrismaCategoryRepository implements ICategoryRepository {
             status: category.status,
         };
     }
+
+    findActiveCategories = async (): Promise<ActiveCategoryDto[]> => {
+        const categories = await prisma.categories.findMany({
+            where: {
+                status: "ACTIVE",
+            },
+            select: {
+                id: true,
+                name: true,
+            },
+            orderBy: {
+                name: "asc",
+            },
+        });
+
+        return categories;
+    };
 }

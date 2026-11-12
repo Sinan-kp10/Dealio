@@ -39,13 +39,13 @@ export interface PaginatedSubCategory {
 }
 
 export interface SubCategoryListResponse {
-    status: boolean;
+    success: boolean;
     message: string;
     data: PaginatedSubCategory;
 }
 
 export interface CreateSubCategoryResponse {
-    status: boolean;
+    success: boolean;
     message: string;
     data: SubCategory;
 }

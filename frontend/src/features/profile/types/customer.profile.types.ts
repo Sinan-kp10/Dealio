@@ -2,28 +2,25 @@ export interface CustomerProfile {
   name: string;
   email: string;
   phone: string | null;
+  phoneVerified: boolean;
   createdAt: string;
   profilePictureKey: string | null;
 }
 
 export interface CustomerProfileResponse {
-  status: boolean;
+  success: boolean;
   message: string;
   data: CustomerProfile;
 }
 
 export interface UpdateCustomerProfile {
-  name?: string;
-  phone?: string;
+  name: string;
 }
 
-export type UpdataCustomerProfile = UpdateCustomerProfile;
-
 export interface UpdateCustomerProfileResponse {
-  status: boolean;
+  success: boolean;
   message: string;
   data: {
-    name?: string;
-    phone?: string | null;
+    name: string;
   };
 }

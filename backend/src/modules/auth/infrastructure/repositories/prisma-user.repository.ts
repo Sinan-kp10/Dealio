@@ -55,4 +55,26 @@ export class PrismaUserRepository implements IUserRepository {
             }
         })
     }
+
+    verifyPhone = async (id: string, phone: string): Promise<void> => {
+        await prisma.users.update({
+            where: { id },
+            data: {
+                phone,
+                phone_verified: true,
+            },
+        });
+    };
+
+    isPhoneVerified = async (phone: string): Promise<boolean> => {
+        const user = await prisma.users.findFirst({
+            where: {
+                phone,
+                phone_verified: true,
+            },
+            select: { id: true },
+        });
+
+        return user !== null;
+    };
 }

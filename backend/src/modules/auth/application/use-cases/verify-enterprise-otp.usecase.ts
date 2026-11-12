@@ -1,5 +1,5 @@
 import { IEnterpriseRepository, type CreatedEnterpriseResult } from "../../domain/repositories/enterprise.repository";
-import { OtpService } from "../../infrastructure/security/otp.service";
+import type { IOtpService } from "../../../../shared/interfaces/IOtpService";
 import { BadRequestError, ConflictError } from "../../../../shared/errors/app-error";
 import { EnterpriseRegistrationData } from "../dto/register-enterprise.dto";
 import { VerifyOtpDto } from "../dto/verify-otp.dto";
@@ -8,7 +8,7 @@ import type { IUseCase } from "../../../../shared/application/base.usecase";
 export class VerifyEnterpriseOtpuseCase implements IUseCase<VerifyOtpDto, CreatedEnterpriseResult> {
     constructor(
         private readonly enterpriseRepository : IEnterpriseRepository,
-        private readonly otpService : OtpService
+        private readonly otpService : IOtpService
     ){}
 
     execute = async (input : VerifyOtpDto): Promise<CreatedEnterpriseResult> => {
@@ -33,6 +33,15 @@ export class VerifyEnterpriseOtpuseCase implements IUseCase<VerifyOtpDto, Create
         if (existingUser) {
             await this.otpService.delete(normalizedEmail);
             throw new ConflictError("Email is already registered");
+        }
+
+        if (registrationData.phone) {
+            const phone = registrationData.phone.trim();
+            const phoneVerified = await this.enterpriseRepository.isPhoneVerified(phone);
+            if (phoneVerified) {
+                await this.otpService.delete(normalizedEmail);
+                throw new ConflictError("Phone number is already registered and verified", "phone");
+            }
         }
 
         return this.enterpriseRepository.create({

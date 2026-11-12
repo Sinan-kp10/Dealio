@@ -1,8 +1,8 @@
-import { Search } from "lucide-react";
+import { RefreshCw, Search } from "lucide-react";
 import Pagination from "../../../components/common/pagination/Pagination";
 import Select from "../../../components/common/select/Select";
 import Table from "../../../components/common/table/Table";
-import TableSkeleton from "../components/TableSkeleton";
+import TableSkeleton from "../../../components/common/loading/TableSkeleton";
 import { useEffect, useState } from "react";
 import type { Customer, CustomerStatus } from "../types/user-management.types";
 import { handleApiError } from "../../../utils/errorHandler";
@@ -12,6 +12,7 @@ import ReasonModal from "../../../components/common/ReasonModal/ReasonModel";
 import ConfirmationModal from "../../../components/common/confirmationModel/ConfirmationModal";
 import { getCustomers, reactivateCustomerAccount, suspendCustomerAccount } from "../service/user-management.service";
 import useDebounce from "../../../hook/useDebounce";
+import Select from "../../../components/common/select/Select";
 
 const PAGE_LIMIT = 5;
 
@@ -159,6 +160,22 @@ function CustomerManagementPage() {
                 skeleton={<TableSkeleton rows={PAGE_LIMIT} columns={6} />}
                 isEmpty={customer.length === 0}
                 emptyTitle="No customers found"
+                emptyAction={
+                    (debouncedSearch || status !== "ALL") && (
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setSearch("");
+                                setStatus("ALL");
+                                setPage(1);
+                            }}
+                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-[#204066] bg-[#edf4fb] hover:bg-[#dbe9f6] transition-colors cursor-pointer"
+                        >
+                            <RefreshCw size={13} />
+                            <span>Reset Filters</span>
+                        </button>
+                    )
+                }
                 pagination={
                     totalPages > 0 && (
                         <Pagination
@@ -172,25 +189,25 @@ function CustomerManagementPage() {
                 {customer.map((item) => (
                     <tr key={item.id} className="hover:bg-slate-50/60 transition-colors">
                         <td className="py-4 px-6 align-middle">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full bg-[#eef4fa] border border-[#d2e2f0] text-[#244673] flex items-center justify-center shrink-0 shadow-2xs">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                                        <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z" />
-                                    </svg>
-                                </div>
-
-                                <span className="font-bold text-[#0F1D2F] text-[13.5px] whitespace-nowrap">
-                                    {item.name}
-                                </span>
-                            </div>
+                            <span className="font-bold text-[#0F1D2F] text-[13.5px] whitespace-nowrap">
+                                {item.name}
+                            </span>
                         </td>
 
                         <td className="py-4 px-6 text-sm text-slate-600 whitespace-nowrap align-middle">
                             {item.email}
                         </td>
 
-                        <td className="py-4 px-6 text-sm text-slate-700 font-medium whitespace-nowrap align-middle">
-                            {item.phone ?? "-"}
+                        <td className="py-4 px-6 text-sm whitespace-nowrap align-middle">
+                            {item.phone ? (
+                                <span className="text-slate-600">
+                                    {item.phone}
+                                </span>
+                            ) : (
+                                <span className="text-slate-400 italic">
+                                    Not provided
+                                </span>
+                            )}
                         </td>
 
                         <td className="py-4 px-6 text-sm text-slate-600 whitespace-nowrap align-middle">

@@ -1,13 +1,13 @@
-import { OtpService } from "../../infrastructure/security/otp.service";
+import type { IOtpService } from "../../../../shared/interfaces/IOtpService";
 import { BadGatewayError } from "../../../../shared/errors/app-error";
 import { ResendOtpInput } from "../dto/verify-otp.dto";
-import { EmailService } from "../../../../infrastructure/email/email.service";
+import type { IEmailService } from "../../../../shared/interfaces/IEmailService";
 import type { IUseCase } from "../../../../shared/application/base.usecase";
 
 export class ResendOtpUseCase implements IUseCase<ResendOtpInput, void> {
     constructor(
-        private readonly otpService: OtpService,
-        private readonly emailService: EmailService,
+        private readonly otpService: IOtpService,
+        private readonly emailService: IEmailService,
     ) {}
 
     execute = async(input : ResendOtpInput) : Promise<void> => {

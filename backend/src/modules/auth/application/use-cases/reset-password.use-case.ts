@@ -1,16 +1,16 @@
 import { IUserRepository } from "../../domain/repositories/user.repository";
-import { JwtTokenService } from "../../infrastructure/security/jwt-token.service";
+import type { IJwtTokenService } from "../../../../shared/interfaces/IJwtTokenService";
 import { ResetPasswordDto } from "../dto/reset-password.dto";
 import { BadRequestError } from "../../../../shared/errors/app-error";
-import { PasswordService } from "../../infrastructure/security/password.service";
+import type { IPasswordService } from "../../../../shared/interfaces/IPasswordService";
 import type { IUseCase } from "../../../../shared/application/base.usecase";
 
 export class ResetPasswordUseCase implements IUseCase<ResetPasswordDto, void> {
 
     constructor(
         private readonly userRepository : IUserRepository,
-        private readonly passwordService : PasswordService,
-        private readonly jwtTokenService : JwtTokenService
+        private readonly passwordService : IPasswordService,
+        private readonly jwtTokenService : IJwtTokenService
     ){}
 
     execute = async (input : ResetPasswordDto) : Promise<void> => {

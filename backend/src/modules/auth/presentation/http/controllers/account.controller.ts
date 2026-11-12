@@ -3,15 +3,21 @@ import { HttpStatusCode } from "../../../../../shared/enums/http-status-code.enu
 import type { IApiResponse } from "../../../../../shared/application/api-response";
 import type { IUseCase } from "../../../../../shared/application/base.usecase";
 import type { RequestEmailChangeDto, VerifyEmailChangeDto, VerifyEmailChangeResult, ResendEmailChangeOtpDto,} from "../../../application/dto/change-email.dto";
+import type { RequestPhoneOtpDto, VerifyPhoneOtpDto, VerifyPhoneOtpResult, ResendPhoneOtpDto } from "../../../application/dto/phone-otp.dto";
 import type { RequestEmailChangeInput } from "../validators/request-email-change.schema";
 import type { VerifyEmailChangeInput } from "../validators/verify-email-change.schema";
+import type { RequestPhoneOtpInput } from "../validators/request-phone-otp.schema";
+import type { VerifyPhoneOtpInput } from "../validators/verify-phone-otp.schema";
 import { env } from "../../../../../config/env";
 
 export class AccountController {
     constructor(
         private readonly requestEmailChangeUseCase: IUseCase<RequestEmailChangeDto, void>,
         private readonly verifyEmailChangeUseCase: IUseCase<VerifyEmailChangeDto, VerifyEmailChangeResult>,
-        private readonly resendEmailChangeOtpUseCase: IUseCase<ResendEmailChangeOtpDto, void>
+        private readonly resendEmailChangeOtpUseCase: IUseCase<ResendEmailChangeOtpDto, void>,
+        private readonly requestPhoneOtpUseCase: IUseCase<RequestPhoneOtpDto, void>,
+        private readonly verifyPhoneOtpUseCase: IUseCase<VerifyPhoneOtpDto, VerifyPhoneOtpResult>,
+        private readonly resendPhoneOtpUseCase: IUseCase<ResendPhoneOtpDto, void>,
     ) {}
 
     requestEmailChange = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
@@ -22,7 +28,7 @@ export class AccountController {
             await this.requestEmailChangeUseCase.execute({ userId, newEmail });
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "OTP sent to your new email address",
             });
         } catch (error) {
@@ -54,7 +60,7 @@ export class AccountController {
             });
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "Email changed successfully",
                 data: {
                     email: result.email,
@@ -72,8 +78,56 @@ export class AccountController {
             await this.resendEmailChangeOtpUseCase.execute({ userId });
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "Verification OTP has been resent to your new email address",
+            });
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    requestPhoneOtp = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+        try {
+            const userId = req.auth!.userId;
+            const { phone } = req.body as RequestPhoneOtpInput;
+
+            await this.requestPhoneOtpUseCase.execute({ userId, phone });
+
+            res.status(HttpStatusCode.OK).json({
+                success: true,
+                message: "OTP sent to your phone number",
+            });
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    verifyPhoneOtp = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+        try {
+            const userId = req.auth!.userId;
+            const { otp } = req.body as VerifyPhoneOtpInput;
+
+            const result = await this.verifyPhoneOtpUseCase.execute({ userId, otp });
+
+            res.status(HttpStatusCode.OK).json({
+                success: true,
+                message: "Phone number verified successfully",
+                data: result,
+            });
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    resendPhoneOtp = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+        try {
+            const userId = req.auth!.userId;
+
+            await this.resendPhoneOtpUseCase.execute({ userId });
+
+            res.status(HttpStatusCode.OK).json({
+                success: true,
+                message: "OTP has been resent to your phone number",
             });
         } catch (error) {
             next(error);

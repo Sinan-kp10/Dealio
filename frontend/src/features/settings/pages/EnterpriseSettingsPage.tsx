@@ -1,12 +1,14 @@
 import { useState } from "react";
-import useAuthStore from "../../auth/stores/auth.store";
-import { Mail, Lock } from "lucide-react";
-import ChangePasswordModal from "../components/ChangePasswordModal";
-import ChangeEmailModal from "../components/ChangeEmailModal";
+import useAuthStore from "../../../stores/auth.store";
+import { SquarePen, Lock, Plus } from "lucide-react";
+import ChangeEmailModal from "../components/email/ChangeEmailModal";
+import ChangePasswordModal from "../components/password/ChangePasswordModal";
+import ChangePhoneModal from "../components/phone/ChangePhoneModal";
 
 function EnterpriseSettingsPage() {
     const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
     const [isChangeEmailModalOpen, setIsChangeEmailModalOpen] = useState(false);
+    const [isChangePhoneModalOpen, setIsChangePhoneModalOpen] = useState(false);
     const setUser = useAuthStore((state) => state.setUser);
     const currentUser = useAuthStore((state) => state.user);
 
@@ -34,10 +36,55 @@ function EnterpriseSettingsPage() {
                     <button
                         type="button"
                         onClick={() => setIsChangeEmailModalOpen(true)}
-                        className="inline-flex items-center justify-center gap-2 w-full sm:w-44 px-4 py-2 sm:py-2.5 border border-slate-200/90 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-2xs whitespace-nowrap shrink-0 cursor-pointer"
+                        className="inline-flex items-center justify-center gap-1.5 w-full sm:w-24 px-3 py-2 border border-slate-200/90 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-2xs whitespace-nowrap shrink-0 cursor-pointer"
                     >
-                        <Mail size={16} className="text-slate-600" />
-                        <span>Change Email</span>
+                        <SquarePen size={15} className="text-slate-600 shrink-0" />
+                        <span>Edit</span>
+                    </button>
+                </div>
+
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+                    <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                            <p className="text-xs sm:text-sm font-semibold text-slate-900">
+                                Phone Number
+                            </p>
+                            {currentUser?.phone && (
+                                currentUser.phoneVerified ? (
+                                    <span className="inline-flex items-center text-[10.5px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
+                                        Verified
+                                    </span>
+                                ) : (
+                                    <span className="inline-flex items-center text-[10.5px] font-medium text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">
+                                        Unverified
+                                    </span>
+                                )
+                            )}
+                        </div>
+                        <p className="text-xs sm:text-sm text-slate-500 mt-0.5 truncate">
+                            {currentUser?.phone || "No phone number added"}
+                        </p>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={() => setIsChangePhoneModalOpen(true)}
+                        className="inline-flex items-center justify-center gap-1.5 w-full sm:w-24 px-3 py-2 border border-slate-200/90 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-2xs whitespace-nowrap shrink-0 cursor-pointer"
+                    >
+                        {currentUser?.phone ? (
+                            currentUser.phoneVerified ? (
+                                <>
+                                    <SquarePen size={15} className="text-slate-600 shrink-0" />
+                                    <span>Edit</span>
+                                </>
+                            ) : (
+                                <span>Verify</span>
+                            )
+                        ) : (
+                            <>
+                                <Plus size={15} className="text-slate-600 shrink-0" />
+                                <span>Add</span>
+                            </>
+                        )}
                     </button>
                 </div>
 
@@ -53,10 +100,10 @@ function EnterpriseSettingsPage() {
                     <button
                         type="button"
                         onClick={() => setIsChangePasswordModalOpen(true)}
-                        className="inline-flex items-center justify-center gap-2 w-full sm:w-44 px-4 py-2 sm:py-2.5 border border-slate-200/90 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-2xs whitespace-nowrap shrink-0 cursor-pointer"
+                        className="inline-flex items-center justify-center gap-1.5 w-full sm:w-24 px-3 py-2 border border-slate-200/90 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-2xs whitespace-nowrap shrink-0 cursor-pointer"
                     >
-                        <Lock size={16} className="text-slate-600" />
-                        <span>Change Password</span>
+                        <Lock size={15} className="text-slate-600 shrink-0" />
+                        <span>Change</span>
                     </button>
                 </div>
         </div>
@@ -65,16 +112,26 @@ function EnterpriseSettingsPage() {
             isOpen={isChangeEmailModalOpen}
             onClose={() => setIsChangeEmailModalOpen(false)}
             onSuccess={(newEmail) => {
-            const user = useAuthStore.getState().user;
-            if (user) {
-                setUser({ ...user, email: newEmail });
-            }
+                if (currentUser) {
+                    setUser({ ...currentUser, email: newEmail });
+                }
             }}
         />
 
         <ChangePasswordModal
             isOpen={isChangePasswordModalOpen}
             onClose={() => setIsChangePasswordModalOpen(false)}
+        />
+
+        <ChangePhoneModal
+            isOpen={isChangePhoneModalOpen}
+            onClose={() => setIsChangePhoneModalOpen(false)}
+            onSuccess={(newPhone) => {
+                if (currentUser) {
+                    setUser({ ...currentUser, phone: newPhone, phoneVerified: true });
+                }
+            }}
+            currentPhone={currentUser?.phone}
         />
         </div>
     );

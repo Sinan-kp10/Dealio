@@ -14,7 +14,7 @@ export class AuthenticatedUserController {
             const user = await this.getAuthenticatedUserUseCase.execute(req.auth!.userId);
 
             res.status(HttpStatusCode.OK).json({
-                status: true,
+                success: true,
                 message: "User profile retrieved successfully",
                 data: { user },
             });

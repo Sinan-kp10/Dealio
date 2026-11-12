@@ -51,7 +51,6 @@ function CategoryManagementPage() {
 
             <div className={activeTab === "SUBCATEGORIES" ? "space-y-6" : "hidden"}>
                 <SubCategoriesTab
-                    categoriesRefreshTrigger={refreshCount}
                     onSubCategoryAdded={() => setRefreshCount((prev) => prev + 1)}
                 />
             </div>

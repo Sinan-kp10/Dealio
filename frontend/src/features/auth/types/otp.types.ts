@@ -8,7 +8,7 @@ export interface VerifyOtpRequest {
 }
 
 export interface CustomerVerifyOtpResponse {
-  status: boolean;
+  success: boolean;
   message: string;
   data?: {
     email: string;
@@ -17,7 +17,7 @@ export interface CustomerVerifyOtpResponse {
 }
 
 export interface EnterpriseVerifyOtpResponse {
-  status: boolean;
+  success: boolean;
   message: string;
   data?: {
     enterpriseName : string
@@ -33,7 +33,7 @@ export interface ResendOtpRequest {
 }
 
 export interface ResendOtpResponse {
-  status: boolean;
+  success: boolean;
   message: string;
 }
 
@@ -43,7 +43,7 @@ export interface VerifyPasswordResetOtpRequest {
 }
 
 export interface VerifyPasswordResetOtpResponse {
-  status: boolean;
+  success: boolean;
   message: string;
   data: {
     resetToken: string;

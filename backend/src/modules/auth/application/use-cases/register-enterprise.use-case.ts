@@ -1,18 +1,18 @@
-import { PasswordService } from "../../infrastructure/security/password.service";
+import type { IPasswordService } from "../../../../shared/interfaces/IPasswordService";
 import { RegisterEnterpriseDto } from "../dto/register-enterprise.dto";
 import { IEnterpriseRepository } from "../../domain/repositories/enterprise.repository";
 import { ConflictError, BadGatewayError } from "../../../../shared/errors/app-error";
-import { OtpService } from "../../infrastructure/security/otp.service";
-import { EmailService } from "../../../../infrastructure/email/email.service";
+import type { IOtpService } from "../../../../shared/interfaces/IOtpService";
+import type { IEmailService } from "../../../../shared/interfaces/IEmailService";
 
 import type { IUseCase } from "../../../../shared/application/base.usecase";
 
 export class RegisterEnterpriseUseCase implements IUseCase<RegisterEnterpriseDto, void> {
     constructor(
         private readonly enterpriseRepository : IEnterpriseRepository,
-        private readonly passwordService : PasswordService,
-        private readonly otpService : OtpService,
-        private readonly emailService : EmailService
+        private readonly passwordService : IPasswordService,
+        private readonly otpService : IOtpService,
+        private readonly emailService : IEmailService
     ){}
 
     execute = async (input : RegisterEnterpriseDto) => {
@@ -23,6 +23,14 @@ export class RegisterEnterpriseUseCase implements IUseCase<RegisterEnterpriseDto
 
         if (emailExist){
             throw new ConflictError("Email is already registered", "email");
+        }
+
+        if (input.phone) {
+            const phone = input.phone.trim();
+            const phoneVerified = await this.enterpriseRepository.isPhoneVerified(phone);
+            if (phoneVerified) {
+                throw new ConflictError("Phone number is already registered and verified", "phone");
+            }
         }
 
         const passwordHash = await this.passwordService.hash(input.password)

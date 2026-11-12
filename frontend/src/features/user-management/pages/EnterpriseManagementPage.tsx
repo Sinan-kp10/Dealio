@@ -1,8 +1,8 @@
-import { Search } from "lucide-react";
+import { RefreshCw, Search } from "lucide-react";
 import Pagination from "../../../components/common/pagination/Pagination";
 import Select from "../../../components/common/select/Select";
 import Table from "../../../components/common/table/Table";
-import TableSkeleton from "../components/TableSkeleton";
+import TableSkeleton from "../../../components/common/loading/TableSkeleton";
 import { useEffect, useState } from "react";
 import type { Enterprise, EnterpriseStatus } from "../types/enterprise-management.types";
 import { handleApiError } from "../../../utils/errorHandler";
@@ -11,12 +11,14 @@ import ReasonModal from "../../../components/common/ReasonModal/ReasonModel";
 import ConfirmationModal from "../../../components/common/confirmationModel/ConfirmationModal";
 import { getEnterprise, reactivateEnterpriseAccount, suspendEnterpriseAccount } from "../service/user-management.service";
 import useDebounce from "../../../hook/useDebounce";
+import Select from "../../../components/common/select/Select";
+import useCategoryStore from "../../../stores/category.store";
 
 const PAGE_LIMIT = 5;
 
 export function EnterpriseManagementPage() {
+    const categories = useCategoryStore((state) => state.categories);
     const [enterprise, setEnterprise] = useState<Enterprise[]>([]);
-    const [categoryOptions, setCategoryOptions] = useState<string[]>([]);
     const [search, setSearch] = useState("");
     const [status, setStatus] = useState<"ALL" | EnterpriseStatus>("ALL");
     const [category, setCategory] = useState("ALL");
@@ -45,14 +47,6 @@ export function EnterpriseManagementPage() {
 
                 setEnterprise(response.data.items);
                 setTotalPages(response.data.totalPages);
-                setCategoryOptions((prev) => {
-                    const next = new Set(prev);
-                    response.data.items.forEach((item) => {
-                        if (item.category) next.add(item.category);
-                    });
-                    return Array.from(next);
-                });
-
             } catch (error) {
 
                 if (cancelled) return;
@@ -173,9 +167,9 @@ export function EnterpriseManagementPage() {
                     aria-label="Filter by category"
                     options={[
                         { label: "Category: All", value: "ALL" },
-                        ...categoryOptions.map((cat) => ({
-                            label: cat,
-                            value: cat,
+                        ...categories.map((cat) => ({
+                            label: cat.name,
+                            value: cat.name,
                         })),
                     ]}
                 />
@@ -194,6 +188,23 @@ export function EnterpriseManagementPage() {
                 skeleton={<TableSkeleton rows={PAGE_LIMIT} columns={5} />}
                 isEmpty={enterprise.length === 0}
                 emptyTitle="No enterprises found"
+                emptyAction={
+                    (debouncedSearch || status !== "ALL" || category !== "ALL") && (
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setSearch("");
+                                setStatus("ALL");
+                                setCategory("ALL");
+                                setPage(1);
+                            }}
+                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-[#204066] bg-[#edf4fb] hover:bg-[#dbe9f6] transition-colors cursor-pointer"
+                        >
+                            <RefreshCw size={13} />
+                            <span>Reset Filters</span>
+                        </button>
+                    )
+                }
                 pagination={
                     totalPages > 0 && (
                         <Pagination
@@ -207,21 +218,13 @@ export function EnterpriseManagementPage() {
                 {enterprise.map((item) => (
                     <tr key={item.id} className="hover:bg-slate-50/60 transition-colors">
                         <td className="py-4 px-6 align-middle">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full bg-[#eef4fa] border border-[#d2e2f0] text-[#244673] flex items-center justify-center shrink-0 shadow-2xs">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                                        <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z" />
-                                    </svg>
-                                </div>
-
-                                <div className="flex flex-col">
-                                    <span className="font-bold text-[#0F1D2F] text-[13.5px] whitespace-nowrap">
-                                        {item.enterpriseName}
-                                    </span>
-                                    <span className="text-xs text-slate-500 whitespace-nowrap mt-0.5">
-                                        {item.email}
-                                    </span>
-                                </div>
+                            <div className="flex flex-col">
+                                <span className="font-bold text-[#0F1D2F] text-[13.5px] whitespace-nowrap">
+                                    {item.enterpriseName}
+                                </span>
+                                <span className="text-xs text-slate-500 whitespace-nowrap mt-0.5">
+                                    {item.email}
+                                </span>
                             </div>
                         </td>
 

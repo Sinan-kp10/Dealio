@@ -1,7 +1,7 @@
 import { IUserRepository } from "../../domain/repositories/user.repository";
-import { JwtTokenService } from "../../infrastructure/security/jwt-token.service";
-import { PasswordService } from "../../infrastructure/security/password.service";
-import { RefreshTokenService } from "../../infrastructure/security/refresh-token.service";
+import type { IJwtTokenService } from "../../../../shared/interfaces/IJwtTokenService";
+import type { IPasswordService } from "../../../../shared/interfaces/IPasswordService";
+import type { IRefreshTokenService } from "../../../../shared/interfaces/IRefreshTokenService";
 import { UnauthorizedError, ForbiddenError } from "../../../../shared/errors/app-error";
 import { LoginDto, LoginResponseDto } from "../dto/login.dto";
 import type { IUseCase } from "../../../../shared/application/base.usecase";
@@ -9,9 +9,9 @@ import type { IUseCase } from "../../../../shared/application/base.usecase";
 export class LoginUseCase implements IUseCase<LoginDto, LoginResponseDto> {
     constructor(
         private readonly userRepository: IUserRepository,
-        private readonly passwordService: PasswordService,
-        private readonly jwtTokenService: JwtTokenService,
-        private readonly refreshTokenService: RefreshTokenService
+        private readonly passwordService: IPasswordService,
+        private readonly jwtTokenService: IJwtTokenService,
+        private readonly refreshTokenService: IRefreshTokenService
     ) {}
 
     execute = async (input : LoginDto): Promise<LoginResponseDto> => {
@@ -52,6 +52,8 @@ export class LoginUseCase implements IUseCase<LoginDto, LoginResponseDto> {
                 name: user.name,
                 email: user.email,
                 role: user.role,
+                phone: user.phone,
+                phoneVerified: user.phone_verified ?? false,
             },
         };
     };
