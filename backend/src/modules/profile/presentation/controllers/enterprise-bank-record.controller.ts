@@ -1,7 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
-import type { IApiResponse } from "../../../../shared/application/api-response.js";
+import { sendResponse } from "../../../../shared/presentation/api-response.js";
 import type { IUseCase } from "../../../../shared/application/base.usecase.js";
-import { HttpStatusCode } from "../../../../shared/enums/http-status-code.enum.js";
 import type { BankRecordRequestDto, CreateEnterpriseBankRecordDto, EnterpriseBankrecordDto, UpdateEnterpriseBankRecordDto} from "../../application/dto/enterprise-bank-details.dto.js";
 
 export class EnterpriseBankRecordController {
@@ -11,63 +10,51 @@ export class EnterpriseBankRecordController {
         private readonly updateEnterpriseBankRecordUseCase: IUseCase<UpdateEnterpriseBankRecordDto, BankRecordRequestDto>,
     ) {}
 
-    getBankRecord = async (req: Request, res: Response<IApiResponse<EnterpriseBankrecordDto>>, next: NextFunction): Promise<void> => {
+    getBankRecord = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.auth?.userId;
 
             const bankRecord = await this.getEnterpriseBankRecordUseCase.execute(userId!);
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "Bank record retrieved successfully",
-                data: bankRecord,
-            });
+            sendResponse(res, "Bank record retrieved successfully", bankRecord);
         } catch (error) {
             next(error);
         }
     };
 
-    addBankRecord = async (req: Request, res: Response<IApiResponse<BankRecordRequestDto>>, next: NextFunction): Promise<void> => {
+    addBankRecord = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.auth?.userId;
 
             const bankRecord = await this.createEnterpriseBankRecordUseCase.execute({
                 userId: userId!,
-                AccountHolderName: req.body.accountHolderName ?? req.body.AccountHolderName,
-                BankAccountNumber: req.body.bankAccountNumber ?? req.body.BankAccountNumber,
+                accountHolderName: req.body.accountHolderName,
+                bankAccountNumber: req.body.bankAccountNumber,
                 ifscCode: req.body.ifscCode,
                 accountType: req.body.accountType,
                 upiId: req.body.upiId,
             });
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "Bank record submitted successfully",
-                data: bankRecord,
-            });
+            sendResponse(res, "Bank record submitted successfully", bankRecord);
         } catch (error) {
             next(error);
         }
     };
 
-    updateBankRecord = async (req: Request, res: Response<IApiResponse<BankRecordRequestDto>>, next: NextFunction): Promise<void> => {
+    updateBankRecord = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.auth?.userId;
 
             const bankRecord = await this.updateEnterpriseBankRecordUseCase.execute({
                 userId: userId!,
-                AccountHolderName: req.body.accountHolderName ?? req.body.AccountHolderName,
-                BankAccountNumber: req.body.bankAccountNumber ?? req.body.BankAccountNumber,
+                accountHolderName: req.body.accountHolderName,
+                bankAccountNumber: req.body.bankAccountNumber,
                 ifscCode: req.body.ifscCode,
                 accountType: req.body.accountType,
                 upiId: req.body.upiId,
             });
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "Bank record updated successfully",
-                data: bankRecord,
-            });
+            sendResponse(res, "Bank record updated successfully", bankRecord);
         } catch (error) {
             next(error);
         }

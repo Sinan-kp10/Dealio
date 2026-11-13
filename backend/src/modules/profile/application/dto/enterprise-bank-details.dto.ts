@@ -1,36 +1,36 @@
 export interface CreateEnterpriseBankRecordDto {
   userId: string;
-  AccountHolderName : string;
-  BankAccountNumber: string;
-  ifscCode : string;
-  accountType : string;
-  upiId : string;
+  accountHolderName: string;
+  bankAccountNumber: string;
+  ifscCode: string;
+  accountType: string;
+  upiId: string;
 }
 
 export interface UpdateEnterpriseBankRecordDto {
-    userId : string
-    AccountHolderName? : string;
-    BankAccountNumber? : string;
-    ifscCode? : string;
-    accountType? : string;
-    upiId? : string;
+    userId: string;
+    accountHolderName?: string;
+    bankAccountNumber?: string;
+    ifscCode?: string;
+    accountType?: string;
+    upiId?: string;
 }
 
 export interface SaveEnterpriseBankRecordRequestDto {
-  AccountHolderName : string;
-  BankAccountNumber: string;
-  ifscCode : string;
-  accountType : string;
-  upiId : string;
+  accountHolderName: string;
+  bankAccountNumber: string;
+  ifscCode: string;
+  accountType: string;
+  upiId: string;
 }
 
 export interface BaseBankRecordDto {
   id: string;
-  AccountHolderName : string;
-  BankAccountNumber: string;
-  ifscCode : string;
-  accountType : string;
-  upiId : string | null;
+  accountHolderName: string;
+  bankAccountNumber: string;
+  ifscCode: string;
+  accountType: string;
+  upiId: string | null;
   verifiedAt: Date | null;
 }
 

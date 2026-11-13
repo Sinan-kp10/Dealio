@@ -1,8 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
-import { IApiResponse } from "../../../../shared/application/api-response";
+import { sendResponse } from "../../../../shared/presentation/api-response";
 import { IUseCase } from "../../../../shared/application/base.usecase";
 import { CategoryOptionDto, EnterpriseProfileDto, UpdateEnterpriseDetailsDto } from "../../application/dto/enterprise-profile.dto";
-import { HttpStatusCode } from "../../../../shared/enums/http-status-code.enum";
 
 export class EnterpriseProfileController {
 
@@ -12,25 +11,21 @@ export class EnterpriseProfileController {
         private readonly getActiveCategoriesUseCase : IUseCase<void, CategoryOptionDto[]>
     ){}
 
-    getProfile = async(req: Request, res: Response<IApiResponse>, next: NextFunction)=> {
+    getProfile = async(req: Request, res: Response, next: NextFunction)=> {
         try {
 
             const userId = req.auth?.userId;
 
             const profile = await this.getEnterpriseProfileUseCase.execute(userId!)
             
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "Enterprise profile retrieved successfully",
-                data: profile,
-            });
+            sendResponse(res, "Enterprise profile retrieved successfully", profile);
             
         } catch (error) {
             next(error)
         }
     }
 
-    updateDetails = async(req: Request, res: Response<IApiResponse>, next: NextFunction)=> {
+    updateDetails = async(req: Request, res: Response, next: NextFunction)=> {
         try {
 
             const userId = req.auth?.userId
@@ -40,26 +35,18 @@ export class EnterpriseProfileController {
                 ...req.body
             })
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "Enterprise details updated successfully",
-                data: updatedDetails,
-            });
+            sendResponse(res, "Enterprise details updated successfully", updatedDetails);
             
         } catch (error) {
             next(error)
         }
     }
 
-    getCategories = async(_req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    getCategories = async(_req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const categories = await this.getActiveCategoriesUseCase.execute();
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "Categories retrieved successfully",
-                data: categories,
-            });
+            sendResponse(res, "Categories retrieved successfully", categories);
         } catch (error) {
             next(error);
         }

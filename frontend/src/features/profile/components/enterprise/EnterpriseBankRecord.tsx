@@ -27,8 +27,8 @@ function EnterpriseBankRecord({ onStatusChange }: EnterpriseBankRecordProps = {}
     const resetForm = useCallback((record: BaseBankRecord | null) => {
         if (record) {
             reset({
-                accountHolderName: record.AccountHolderName,
-                bankAccountNumber: record.BankAccountNumber,
+                accountHolderName: record.accountHolderName,
+                bankAccountNumber: record.bankAccountNumber,
                 ifscCode: record.ifscCode,
                 accountType: (record.accountType as "CURRENT" | "SAVINGS") || undefined,
                 upiId: record.upiId || "",
@@ -221,7 +221,7 @@ function EnterpriseBankRecord({ onStatusChange }: EnterpriseBankRecordProps = {}
                             </div>
                         ) : (
                             <div className="w-full h-11 px-4 bg-[#f0f4f9] border border-slate-200/80 rounded-xl text-sm font-medium text-slate-900 flex items-center shadow-2xs">
-                                <span className="truncate">{displayRecord?.AccountHolderName || "Not provided"}</span>
+                                <span className="truncate">{displayRecord?.accountHolderName || "Not provided"}</span>
                             </div>
                         )}
                     </div>
@@ -249,11 +249,11 @@ function EnterpriseBankRecord({ onStatusChange }: EnterpriseBankRecordProps = {}
                             </div>
                         ) : (
                             <div className="w-full h-11 px-4 bg-[#f0f4f9] border border-slate-200/80 rounded-xl text-sm font-medium text-slate-900 flex items-center justify-between shadow-2xs">
-                                <span className="truncate font-medium">{displayRecord?.BankAccountNumber || "Not provided"}</span>
-                                {displayRecord?.BankAccountNumber && (
+                                <span className="truncate font-medium">{displayRecord?.bankAccountNumber || "Not provided"}</span>
+                                {displayRecord?.bankAccountNumber && (
                                     <button
                                         type="button"
-                                        onClick={() => copyToClipboard(displayRecord.BankAccountNumber, "accountNumber")}
+                                        onClick={() => copyToClipboard(displayRecord.bankAccountNumber, "accountNumber")}
                                         className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 shadow-2xs transition-colors cursor-pointer shrink-0 ml-2"
                                     >
                                         {copiedField === "accountNumber" ? (
