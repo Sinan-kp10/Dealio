@@ -16,6 +16,10 @@ export const changePasswordSchema = z
   .refine((data) => data.newPassword === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
+  })
+  .refine((data) => data.currentPassword !== data.newPassword, {
+    message: "New password cannot be the same as current password",
+    path: ["newPassword"],
   });
 
 export type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
