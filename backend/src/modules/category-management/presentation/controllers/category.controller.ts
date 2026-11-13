@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import { IUseCase } from "../../../../shared/application/base.usecase";
 import { CategoryListFiltersDto, PaginatedCategoryDto } from "../../application/dto/category-list.dto";
-import { IApiResponse } from "../../../../shared/application/api-response";
+import { sendResponse } from "../../../../shared/presentation/api-response";
 import { HttpStatusCode } from "../../../../shared/enums/http-status-code.enum";
 import { ActiveCategoryDto, CategoryDto, CreateCategoryDto, UpdateCategoryDto, UpdatedCategoryFieldsDto } from "../../application/dto/category.dto";
 
@@ -13,21 +13,17 @@ export class CategoryController {
         private readonly getActiveCategoriesUseCase : IUseCase<void, ActiveCategoryDto[]>
     ){}
 
-    getActiveCategories = async (_req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    getActiveCategories = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const categories = await this.getActiveCategoriesUseCase.execute();
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "Active categories retrieved successfully",
-                data: categories,
-            });
+            sendResponse(res, "Active categories retrieved successfully", categories);
         } catch (error) {
             next(error);
         }
     };
 
-    getCategories = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    getCategories = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
         try {
 
@@ -38,11 +34,7 @@ export class CategoryController {
                 limit: Number(req.query.limit ?? 10),
             })
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "Categories retrieved successfully",
-                data: categories,
-            });
+            sendResponse(res, "Categories retrieved successfully", categories);
             
 
         } catch (error) {
@@ -50,7 +42,7 @@ export class CategoryController {
         }
     }
 
-    createCategory = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    createCategory = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
         try {
             
@@ -61,18 +53,14 @@ export class CategoryController {
                 status
             })
 
-            res.status(HttpStatusCode.CREATED).json({
-                success: true,
-                message: "Category created successfully",
-                data: category,
-            })
+            sendResponse(res, "Category created successfully", category, HttpStatusCode.CREATED);
 
         } catch (error) {
             next(error)
         }
     }
 
-    updateCategory = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    updateCategory = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const id = req.params.id as string;
             const data = req.body as UpdatedCategoryFieldsDto;
@@ -82,11 +70,7 @@ export class CategoryController {
                 ...data,
             });
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "Category updated successfully",
-                data: category,
-            });
+            sendResponse(res, "Category updated successfully", category);
 
         } catch (error) {
             next(error);

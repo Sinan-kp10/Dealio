@@ -3,7 +3,7 @@ import type { IUseCase } from "../../../../../shared/application/base.usecase";
 import type { VerifyOtpDto, ResendOtpInput } from "../../../application/dto/verify-otp.dto";
 import type { AuthUserDto } from "../../../application/dto/user.dto";
 import type { CreatedEnterpriseResult } from "../../../domain/repositories/enterprise.repository";
-import type { IApiResponse } from "../../../../../shared/application/api-response";
+import { sendResponse } from "../../../../../shared/presentation/api-response";
 import { HttpStatusCode } from "../../../../../shared/enums/http-status-code.enum.js";
 
 export class OtpController {
@@ -13,57 +13,46 @@ export class OtpController {
         private readonly resendOtpUseCase: IUseCase<ResendOtpInput, void>,
     ) {}
 
-    verifyCustomerOtp = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    verifyCustomerOtp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const data = req.body as VerifyOtpDto;
 
             const user = await this.verifyCustomerOtpUseCase.execute(data);
 
-            res.status(HttpStatusCode.CREATED).json({
-                success: true,
-                message: "Email verified and account created successfully",
-                data: {
-                    name: user.name,
-                    email: user.email,
-                    role: user.role,
-                },
-            });
+            sendResponse(res, "Email verified and account created successfully", {
+                name: user.name,
+                email: user.email,
+                role: user.role,
+            }, HttpStatusCode.CREATED);
         } catch (error) {
             next(error);
         }
     };
 
-    verifyEnterpriseOtp = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    verifyEnterpriseOtp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const data = req.body as VerifyOtpDto;
 
             const result = await this.verifyEnterpriseOtpUseCase.execute(data);
 
-            res.status(HttpStatusCode.CREATED).json({
-                success: true,
-                message: "Email verified and account created successfully",
-                data: {
-                    enterpriseName: result.enterprise.name,
-                    contactPersonName: result.data.name,
-                    email: result.data.email,
-                    role: result.data.role,
-                },
-            });
+            sendResponse(res, "Email verified and account created successfully", {
+                enterpriseName: result.enterprise.name,
+                contactPersonName: result.data.name,
+                email: result.data.email,
+                role: result.data.role,
+            }, HttpStatusCode.CREATED);
         } catch (error) {
             next(error);
         }
     };
 
-    resendOtp = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    resendOtp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const data = req.body as ResendOtpInput;
 
             await this.resendOtpUseCase.execute(data);
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "New OTP sent successfully",
-            });
+            sendResponse(res, "New OTP sent successfully");
         } catch (error) {
             next(error);
         }

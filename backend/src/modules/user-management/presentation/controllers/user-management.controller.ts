@@ -3,8 +3,7 @@ import type { IUseCase } from "../../../../shared/application/base.usecase";
 import type { CustomerListFiltersDto, PaginatedCustomerDto } from "../../application/dto/customer-list-item.dto";
 import type { EnterpriseListFiltersDto, PaginatedEnterprisesDto } from "../../application/dto/enterprise-list-item.dto";
 import type { SuspendAccountDto, ReactivateAccountDto } from "../../application/dto/suspend-account.dto";
-import type { IApiResponse } from "../../../../shared/application/api-response";
-import { HttpStatusCode } from "../../../../shared/enums/http-status-code.enum.js";
+import { sendResponse } from "../../../../shared/presentation/api-response";
 
 export class UserManagementController {
     constructor(
@@ -14,7 +13,7 @@ export class UserManagementController {
         private readonly reactivateAccountUseCase: IUseCase<ReactivateAccountDto, void>,
     ){}
 
-    getCustomers = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    getCustomers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const result = await this.getCustomerUseCase.execute({
                 search: req.query.search as string | undefined,
@@ -23,18 +22,13 @@ export class UserManagementController {
                 limit: Number(req.query.limit ?? 10),
             });
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "Customers retrieved successfully",
-                data: result,
-            });
-
+            sendResponse(res, "Customers retrieved successfully", result);
         } catch (error) {
             next(error);
         }
     };
 
-    getEnterprise = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    getEnterprise = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const result = await this.getEnterpriseUseCase.execute({
                 search: req.query.search as string | undefined,
@@ -44,43 +38,32 @@ export class UserManagementController {
                 limit: Number(req.query.limit ?? 10),
             });
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "Enterprises retrieved successfully",
-                data: result,
-            });
-
+            sendResponse(res, "Enterprises retrieved successfully", result);
         } catch (error) {
             next(error);
         }
     };
 
-    suspendAccount = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    suspendAccount = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             await this.suspendAccountUseCase.execute({
                 accountId: req.params.accountId as string,
                 reason: req.body.reason,
             });
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "Account suspended successfully",
-            });
+            sendResponse(res, "Account suspended successfully");
         } catch (error) {
             next(error);
         }
     };
 
-    reactivateAccount = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    reactivateAccount = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             await this.reactivateAccountUseCase.execute({
                 accountId: req.params.accountId as string,
             });
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "Account reactivated successfully",
-            });
+            sendResponse(res, "Account reactivated successfully");
         } catch (error) {
             next(error);
         }

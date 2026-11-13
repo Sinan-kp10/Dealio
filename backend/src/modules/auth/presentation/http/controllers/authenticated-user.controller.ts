@@ -1,23 +1,18 @@
 import type { Request, Response, NextFunction } from "express";
 import type { IUseCase } from "../../../../../shared/application/base.usecase";
 import type { AuthUserDto } from "../../../application/dto/user.dto";
-import type { IApiResponse } from "../../../../../shared/application/api-response";
-import { HttpStatusCode } from "../../../../../shared/enums/http-status-code.enum.js";
+import { sendResponse } from "../../../../../shared/presentation/api-response";
 
 export class AuthenticatedUserController {
     constructor(
         private readonly getAuthenticatedUserUseCase: IUseCase<string, AuthUserDto>,
     ) {}
 
-    getAuthenticatedUser = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    getAuthenticatedUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const user = await this.getAuthenticatedUserUseCase.execute(req.auth!.userId);
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "User profile retrieved successfully",
-                data: { user },
-            });
+            sendResponse(res, "User profile retrieved successfully", { user });
         } catch (error) {
             next(error);
         }

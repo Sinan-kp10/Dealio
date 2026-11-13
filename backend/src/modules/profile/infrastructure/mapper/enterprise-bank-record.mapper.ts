@@ -5,8 +5,8 @@ export class EnterpriseBankMapper {
     static toActiveBankRecordDto(record : enterprise_bank_accounts): ActiveBankRecordDto {
         return {
             id: record.id,
-            AccountHolderName : record.account_holder_name,
-            BankAccountNumber : record.account_number,
+            accountHolderName: record.account_holder_name,
+            bankAccountNumber: record.account_number,
             ifscCode : record.ifsc_code,
             accountType : record.account_type,
             upiId : record.upi_id ?? null,
@@ -17,8 +17,8 @@ export class EnterpriseBankMapper {
     static toRequestDto(record: enterprise_bank_accounts_requests): BankRecordRequestDto {
         return {
             id: record.id,
-            AccountHolderName : record.account_holder_name,
-            BankAccountNumber : record.account_number,
+            accountHolderName: record.account_holder_name,
+            bankAccountNumber: record.account_number,
             ifscCode : record.ifsc_code,
             accountType : record.account_type,
             upiId : record.upi_id ?? null,

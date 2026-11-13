@@ -5,8 +5,8 @@ export type BankRecordStatus = "PENDING" | "VERIFIED" | "REJECTED";
 
 export interface BaseBankRecord {
   id: string;
-  AccountHolderName: string;
-  BankAccountNumber: string;
+  accountHolderName: string;
+  bankAccountNumber: string;
   ifscCode: string;
   accountType: BankAccountType;
   upiId: string | null;

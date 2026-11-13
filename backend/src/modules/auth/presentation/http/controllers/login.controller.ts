@@ -1,8 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import type { IUseCase } from "../../../../../shared/application/base.usecase"; 
 import type { LoginDto, LoginResponseDto } from "../../../application/dto/login.dto"; 
-import type { IApiResponse } from "../../../../../shared/application/api-response";
-import { HttpStatusCode } from "../../../../../shared/enums/http-status-code.enum.js";
+import { sendResponse } from "../../../../../shared/presentation/api-response";
 import type { IRefreshTokenService } from "../../../../../shared/interfaces/IRefreshTokenService.js";
 import { env } from "../../../../../config/env.js";
 
@@ -13,7 +12,7 @@ export class LoginController {
         private readonly refreshTokenService: IRefreshTokenService
     ) {}
 
-    login = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const data = req.body as LoginDto;
 
@@ -35,19 +34,15 @@ export class LoginController {
                 maxAge: env.auth.refreshTokenMaxAgeMs,
             });
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "Login successful",
-                data: {
-                    user: result.user,
-                },
+            sendResponse(res, "Login successful", {
+                user: result.user,
             });
         } catch (error) {
             next(error);
         }
     };
 
-    logout = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    logout = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.auth?.userId;
 
@@ -69,10 +64,7 @@ export class LoginController {
                 path: "/",
             });
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "Logged out successfully.",
-            });
+            sendResponse(res, "Logged out successfully.");
         } catch (error) {
             next(error);
         }

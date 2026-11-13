@@ -9,7 +9,7 @@ export class UpdateEnterpriseBankRecordUseCase implements IUseCase<UpdateEnterpr
     ) {}
 
     execute = async (input: UpdateEnterpriseBankRecordDto): Promise<BankRecordRequestDto> => {
-        const { userId, AccountHolderName, BankAccountNumber, ifscCode, accountType, upiId } = input;
+        const { userId, accountHolderName, bankAccountNumber, ifscCode, accountType, upiId } = input;
 
         const user = await this.bankRecordRepository.findById(userId);
         if (!user) {
@@ -27,8 +27,8 @@ export class UpdateEnterpriseBankRecordUseCase implements IUseCase<UpdateEnterpr
         }
 
         return await this.bankRecordRepository.createBankRecordRequest(user.enterpriseId, {
-            AccountHolderName: AccountHolderName ?? activeBankRecord.AccountHolderName,
-            BankAccountNumber: BankAccountNumber ?? activeBankRecord.BankAccountNumber,
+            accountHolderName: accountHolderName ?? activeBankRecord.accountHolderName,
+            bankAccountNumber: bankAccountNumber ?? activeBankRecord.bankAccountNumber,
             ifscCode: ifscCode ?? activeBankRecord.ifscCode,
             accountType: accountType ?? activeBankRecord.accountType,
             upiId: upiId ?? activeBankRecord.upiId ?? "",

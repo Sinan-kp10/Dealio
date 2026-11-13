@@ -1,6 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { HttpStatusCode } from "../../../../../shared/enums/http-status-code.enum";
-import type { IApiResponse } from "../../../../../shared/application/api-response";
+import { sendResponse } from "../../../../../shared/presentation/api-response";
 import type { IUseCase } from "../../../../../shared/application/base.usecase";
 import type { RequestEmailChangeDto, VerifyEmailChangeDto, VerifyEmailChangeResult, ResendEmailChangeOtpDto,} from "../../../application/dto/change-email.dto";
 import type { RequestPhoneOtpDto, VerifyPhoneOtpDto, VerifyPhoneOtpResult, ResendPhoneOtpDto } from "../../../application/dto/phone-otp.dto";
@@ -20,23 +19,20 @@ export class AccountController {
         private readonly resendPhoneOtpUseCase: IUseCase<ResendPhoneOtpDto, void>,
     ) {}
 
-    requestEmailChange = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    requestEmailChange = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.auth!.userId;
             const { newEmail } = req.body as RequestEmailChangeInput;
 
             await this.requestEmailChangeUseCase.execute({ userId, newEmail });
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "OTP sent to your new email address",
-            });
+            sendResponse(res, "OTP sent to your new email address");
         } catch (error) {
             next(error);
         }
     };
 
-    verifyEmailChange = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    verifyEmailChange = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.auth!.userId;
             const { otp } = req.body as VerifyEmailChangeInput;
@@ -59,76 +55,59 @@ export class AccountController {
                 maxAge: env.auth.refreshTokenMaxAgeMs,
             });
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "Email changed successfully",
-                data: {
-                    email: result.email,
-                },
+            sendResponse(res, "Email changed successfully", {
+                email: result.email,
             });
         } catch (error) {
             next(error);
         }
     };
 
-    resendEmailChangeOtp = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    resendEmailChangeOtp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.auth!.userId;
 
             await this.resendEmailChangeOtpUseCase.execute({ userId });
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "Verification OTP has been resent to your new email address",
-            });
+            sendResponse(res, "Verification OTP has been resent to your new email address");
         } catch (error) {
             next(error);
         }
     };
 
-    requestPhoneOtp = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    requestPhoneOtp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.auth!.userId;
             const { phone } = req.body as RequestPhoneOtpInput;
 
             await this.requestPhoneOtpUseCase.execute({ userId, phone });
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "OTP sent to your phone number",
-            });
+            sendResponse(res, "OTP sent to your phone number");
         } catch (error) {
             next(error);
         }
     };
 
-    verifyPhoneOtp = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    verifyPhoneOtp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.auth!.userId;
             const { otp } = req.body as VerifyPhoneOtpInput;
 
             const result = await this.verifyPhoneOtpUseCase.execute({ userId, otp });
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "Phone number verified successfully",
-                data: result,
-            });
+            sendResponse(res, "Phone number verified successfully", result);
         } catch (error) {
             next(error);
         }
     };
 
-    resendPhoneOtp = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    resendPhoneOtp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.auth!.userId;
 
             await this.resendPhoneOtpUseCase.execute({ userId });
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "OTP has been resent to your phone number",
-            });
+            sendResponse(res, "OTP has been resent to your phone number");
         } catch (error) {
             next(error);
         }

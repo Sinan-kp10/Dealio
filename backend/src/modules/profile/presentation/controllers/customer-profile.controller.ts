@@ -1,8 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import type { IUseCase } from "../../../../shared/application/base.usecase.js";
 import type {CustomerProfileDto, UpdateCustomerProfileDto, UpdatedCustomerProfileFieldsDto } from "../../application/dto/customer-profile.dto.js";
-import type { IApiResponse } from "../../../../shared/application/api-response.js";
-import { HttpStatusCode } from "../../../../shared/enums/http-status-code.enum.js";
+import { sendResponse } from "../../../../shared/presentation/api-response.js";
 
 export class CustomerProfileController {
     constructor(
@@ -10,23 +9,19 @@ export class CustomerProfileController {
         private readonly editCustomerProfileUseCase: IUseCase<UpdateCustomerProfileDto, UpdatedCustomerProfileFieldsDto>
     ) {}
 
-    getProfile = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    getProfile = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.auth?.userId;
 
             const profile = await this.getCustomerProfileUseCase.execute(userId!);
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "Customer profile retrieved successfully",
-                data: profile,
-            });
+            sendResponse(res, "Customer profile retrieved successfully", profile);
         } catch (error) {
             next(error);
         }
     };
 
-    updateProfile = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    updateProfile = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.auth?.userId;
             const { name } = req.body;
@@ -36,11 +31,7 @@ export class CustomerProfileController {
                 name,
             });
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "Profile updated successfully",
-                data: updatedFields,
-            });
+            sendResponse(res, "Profile updated successfully", updatedFields);
         } catch (error) {
             next(error);
         }

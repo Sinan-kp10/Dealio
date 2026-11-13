@@ -3,8 +3,7 @@ import type { IUseCase } from "../../../../../shared/application/base.usecase";
 import type { EmailDto } from "../../../application/dto/email.dto"; 
 import type { VerifyOtpDto } from "../../../application/dto/verify-otp.dto";
 import type { ResetPasswordDto } from "../../../application/dto/reset-password.dto";
-import type { IApiResponse } from "../../../../../shared/application/api-response";
-import { HttpStatusCode } from "../../../../../shared/enums/http-status-code.enum.js";
+import { sendResponse } from "../../../../../shared/presentation/api-response";
 import { ChangePasswordDto } from "../../../application/dto/change-password.dto";
 
 export class PasswordResetController {
@@ -16,55 +15,45 @@ export class PasswordResetController {
         private readonly changePasswordUseCase : IUseCase<ChangePasswordDto, void>
     ){}
 
-    forgotPassword = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    forgotPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const data = req.body as EmailDto;
 
             await this.forgotPasswordUseCase.execute(data);
             
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "A password reset code has been sent",
-            });
+            sendResponse(res, "A password reset code has been sent");
         } catch (error) {
             next(error);
         }
     };
 
-    verifyPasswordResetOtp = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    verifyPasswordResetOtp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const data = req.body as VerifyOtpDto;
 
             const result = await this.verifyPasswordResetOtpUseCase.execute(data);
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "OTP verified successfully",
-                data: {
-                    resetToken: result.resetToken,
-                },
+            sendResponse(res, "OTP verified successfully", {
+                resetToken: result.resetToken,
             });
         } catch (error) {
             next(error);
         }
     };
 
-    resetPassword = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    resetPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const data = req.body as ResetPasswordDto;
 
             await this.resetPasswordUseCase.execute(data);
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "Password reset successful",
-            });
+            sendResponse(res, "Password reset successful");
         } catch (error) {
             next(error);
         }
     };
 
-    changePassword = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    changePassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
         try {
 
@@ -75,10 +64,7 @@ export class PasswordResetController {
                 email : email! , currentPassword : currentPassword, newPassword : newPassword 
             })
 
-            res.status(HttpStatusCode.OK).json({
-                success : true,
-                message : "Password updated successfully"
-            })
+            sendResponse(res, "Password updated successfully");
             
         } catch (error) {
             next(error)
