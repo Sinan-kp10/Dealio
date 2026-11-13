@@ -149,9 +149,14 @@ function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
 
             <form onSubmit={handleSubmit(() => setIsConfirmModalOpen(true))} className="space-y-4">
                 <div className="flex items-center justify-between gap-3 sm:gap-4 pb-2 flex-wrap sm:flex-nowrap">
-                    <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
-                        KYC Verification
-                    </h3>
+                    <div>
+                        <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+                            KYC Verification
+                        </h3>
+                        <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+                            Official documents to verify your enterprise identity, build customer trust, and unlock platform deals.
+                        </p>
+                    </div>
 
                     {!updateMode ? (
                         canEdit && (
