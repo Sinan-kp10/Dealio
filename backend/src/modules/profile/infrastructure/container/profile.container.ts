@@ -30,6 +30,7 @@ import { VerfyEnterpriseKycUseCase } from "../../application/use-cases/admin/ver
 import { RejectEnterpriseKycUseCase } from "../../application/use-cases/admin/reject-enterprise-kyc.use-case.js";
 import { VerifyEnterpriseBankRecordUseCase } from "../../application/use-cases/admin/verify-enterprise-bank-record.use-case.js";
 import { RejectEnterpriseBankRecordUseCase } from "../../application/use-cases/admin/reject-enterprise-bank-record.use-case.js";
+import { notificationService } from "../../../notification/infrastructure/container/notification.container.js";
 
 const s3StorageService = new S3StorageService();
 
@@ -71,8 +72,8 @@ export const enterpriseBankRecordController = new EnterpriseBankRecordController
 const profileVerificationRepository = new PrismaProfileVerificationRepository();
 const getEnterpriseApprovalUseCase = new GetEnterpriseApprovalUseCase(profileVerificationRepository);
 const getEnterpriseApprovalDetailsUseCase = new GetEnterpriseApprovalDetailsUseCase(profileVerificationRepository,s3StorageService);
-const verfyEnterpriseKycUseCase = new VerfyEnterpriseKycUseCase(profileVerificationRepository);
-const rejectEnterpriseKycUseCase = new RejectEnterpriseKycUseCase(profileVerificationRepository);
-const verifyEnterpriseBankRecordUseCase = new VerifyEnterpriseBankRecordUseCase(profileVerificationRepository);
-const rejectEnterpriseBankRecordUseCase = new RejectEnterpriseBankRecordUseCase(profileVerificationRepository);
+const verfyEnterpriseKycUseCase = new VerfyEnterpriseKycUseCase(profileVerificationRepository, notificationService);
+const rejectEnterpriseKycUseCase = new RejectEnterpriseKycUseCase(profileVerificationRepository, notificationService);
+const verifyEnterpriseBankRecordUseCase = new VerifyEnterpriseBankRecordUseCase(profileVerificationRepository, notificationService);
+const rejectEnterpriseBankRecordUseCase = new RejectEnterpriseBankRecordUseCase(profileVerificationRepository, notificationService);
 export const profileVerificationController = new ProfileVerificationController(getEnterpriseApprovalUseCase,getEnterpriseApprovalDetailsUseCase,verfyEnterpriseKycUseCase,rejectEnterpriseKycUseCase,verifyEnterpriseBankRecordUseCase,rejectEnterpriseBankRecordUseCase);
