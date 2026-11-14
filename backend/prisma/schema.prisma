@@ -41,6 +41,7 @@ model users {
   suspension_reason   String?     @db.Text
 
   enterprise          enterprises?  @relation("enterprise_members", fields: [enterprise_id], references: [id])
+  notifications       notifications[] @relation("user_notifications")
 
   @@map("users")
 }
@@ -222,4 +223,28 @@ model enterprise_subcategories {
   @@unique([enterprise_id, subcategory_id])
   @@index([subcategory_id])
   @@map("enterprise_subcategories")
+}
+
+enum notification_type {
+  KYC_VERIFIED
+  KYC_REJECTED
+  BANK_DETAILS_VERIFIED
+  BANK_DETAILS_REJECTED
+}
+
+model notifications {
+  id         String    @id @default(uuid()) @db.Uuid
+  user_id    String    @db.Uuid
+  type       notification_type
+  title      String    @db.VarChar(255)
+  message    String    @db.Text
+  is_read    Boolean   @default(false)
+  read_at    DateTime? @db.Timestamptz
+  created_at DateTime  @default(now()) @db.Timestamptz
+
+  user       users     @relation("user_notifications", fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id, is_read, created_at(sort: Desc)])
+  @@index([user_id, created_at(sort: Desc), id(sort: Desc)])
+  @@map("notifications")
 }
