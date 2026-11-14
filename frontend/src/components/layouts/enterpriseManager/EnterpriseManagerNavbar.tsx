@@ -5,6 +5,9 @@ import { toast } from "react-toastify";
 import { logout } from "../../../features/auth/services/auth.service";
 import useAuthStore from "../../../stores/auth.store";
 import ConfirmationModal from "../../common/confirmationModel/ConfirmationModal";
+import { NotificationDropdown } from "../../common/NotificationDropdown";
+import useNotificationStore from "../../../stores/notification.store";
+import { getUnreadCount } from "../../../services/notification.service";
 
 interface EnterpriseManagerNavbarProps {
   onToggleSidebar: () => void;
@@ -14,11 +17,34 @@ interface EnterpriseManagerNavbarProps {
 export function EnterpriseManagerNavbar({ onToggleSidebar, isSidebarOpen,}: EnterpriseManagerNavbarProps) {
   const navigate = useNavigate()
   const [isProfileOpen, setIsProfileOpen] = useState(false)
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false)
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const profileRef = useRef<HTMLDivElement>(null)
+  const notificationRef = useRef<HTMLDivElement>(null)
   const user = useAuthStore((state) => state.user)
   const clearAuth = useAuthStore((state) => state.clearAuth)
+  const unreadCount = useNotificationStore((state) => state.unreadCount)
+  const setUnreadCount = useNotificationStore((state) => state.setUnreadCount)
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchCount = async () => {
+      try {
+        const count = await getUnreadCount();
+        if (isMounted) {
+          setUnreadCount(count);
+        }
+      } catch {
+        // Silently handle
+      }
+    };
+
+    fetchCount();
+    return () => {
+      isMounted = false;
+    };
+  }, [setUnreadCount]);
 
 
 
@@ -27,6 +53,9 @@ export function EnterpriseManagerNavbar({ onToggleSidebar, isSidebarOpen,}: Ente
     function handleClickOutside(event: MouseEvent) {
       if ( profileRef.current && !profileRef.current.contains(event.target as Node)) {
         setIsProfileOpen(false);
+      }
+      if ( notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+        setIsNotificationOpen(false);
       }
     }
 
@@ -72,23 +101,37 @@ export function EnterpriseManagerNavbar({ onToggleSidebar, isSidebarOpen,}: Ente
         </div>
 
         <div className="flex items-center gap-3 sm:gap-4">
-          <div className="relative">
+          <div className="relative" ref={notificationRef}>
             <button
               type="button"
+              onClick={() => {
+                setIsNotificationOpen((prev) => !prev);
+                setIsProfileOpen(false);
+              }}
               className="relative p-2 text-[#244673] hover:text-[#183252] hover:bg-[#f0f6fc] rounded-full transition-colors cursor-pointer"
               aria-label="Notifications"
+              aria-expanded={isNotificationOpen}
             >
               <Bell size={21} strokeWidth={2.2} className="text-[#244673]" />
-              <span className="notification-badge absolute top-[1px] right-[1px] flex items-center justify-center min-w-[17px] h-[17px] px-1 text-[10px] font-bold leading-none text-white bg-[#ea3838] rounded-full shadow-[0_0_0_1.5px_#ffffff,0_2px_5px_rgba(234,56,56,0.35)]">
-                2
-              </span>
+              {unreadCount > 0 && (
+                <span className="notification-badge absolute top-[1px] right-[1px] flex items-center justify-center min-w-[17px] h-[17px] px-1 text-[10px] font-bold leading-none text-white bg-[#ea3838] rounded-full shadow-[0_0_0_1.5px_#ffffff,0_2px_5px_rgba(234,56,56,0.35)]">
+                  {unreadCount > 99 ? "99+" : unreadCount}
+                </span>
+              )}
             </button>
+
+            {isNotificationOpen && (
+              <NotificationDropdown />
+            )}
           </div>
 
           <div className="relative" ref={profileRef}>
             <button
               type="button"
-              onClick={() => setIsProfileOpen((prev) => !prev)}
+              onClick={() => {
+                setIsProfileOpen((prev) => !prev);
+                setIsNotificationOpen(false);
+              }}
               className="flex items-center gap-3 pl-1.5 pr-4 sm:pr-5 py-1.5 bg-[#f0f6fc] hover:bg-[#e7f0f9] border border-[#dce8f5] rounded-full transition-all duration-150 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#355982]/20 shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
               aria-label="User profile menu"
               aria-expanded={isProfileOpen}
@@ -124,7 +167,7 @@ export function EnterpriseManagerNavbar({ onToggleSidebar, isSidebarOpen,}: Ente
             </button>
 
             {isProfileOpen && (
-              <div className="absolute right-0 mt-3 w-72 bg-white rounded-[20px] shadow-[0_12px_36px_-6px_rgba(15,23,42,0.12),0_4px_12px_rgba(15,23,42,0.06)] border border-slate-200/80 py-2.5 z-50 animate-in fade-in duration-150">
+              <div className="absolute right-0 mt-1.5 w-72 bg-white rounded-[22px] shadow-[0_16px_40px_-8px_rgba(15,23,42,0.14),0_4px_16px_rgba(15,23,42,0.06)] border border-slate-200/90 py-2.5 z-50 animate-in fade-in zoom-in-95 duration-150 origin-top-right">
                 <div className="px-5 pt-3.5 pb-3 border-b border-slate-100 flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-[#2f5581] flex items-center justify-center text-white shrink-0 shadow-xs overflow-hidden">
                     {user?.profilePictureUrl ? (
