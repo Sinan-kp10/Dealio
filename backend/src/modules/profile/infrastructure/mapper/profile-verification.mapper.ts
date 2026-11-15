@@ -29,6 +29,9 @@ export const enterpriseApprovalDetailsSelect = {
     id: true,
     enterprise_name: true,
     description: true,
+    status: true,
+    kyc_status: true,
+    bank_status: true,
     created_at: true,
     category: {
         select: {
@@ -152,7 +155,7 @@ export class ProfileVerificationMapper {
                 documentType: kyc.document_type,
                 documentKey: kyc.document_storage_key,
                 documentUrl: null,
-                status: (latestKycRequest ? latestKycRequest.status : "VERIFIED") as VerificationStatus,
+                status: record.kyc_status as VerificationStatus,
                 rejectionReason: latestKycRequest?.rejection_reason ?? null,
                 createdAt: kyc.created_at,
             }
@@ -167,7 +170,7 @@ export class ProfileVerificationMapper {
                 ifscCode: bank.ifsc_code,
                 accountType: bank.account_type,
                 upiId: bank.upi_id ?? null,
-                status: (latestBankRequest ? latestBankRequest.status : "VERIFIED") as VerificationStatus,
+                status: record.bank_status as VerificationStatus,
                 rejectionReason: latestBankRequest?.rejection_reason ?? null,
                 createdAt: bank.created_at,
             }

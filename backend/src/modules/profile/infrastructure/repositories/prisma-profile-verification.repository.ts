@@ -41,16 +41,8 @@ export class PrismaProfileVerificationRepository implements IProfileVerficationR
             AND: [
                 {
                     OR: [
-                        {
-                            kyc_requests: {
-                                some: { status: "PENDING" },
-                            },
-                        },
-                        {
-                            bank_account_requests: {
-                                some: { status: "PENDING" },
-                            },
-                        },
+                        { kyc_status: "PENDING" },
+                        { bank_status: "PENDING" },
                     ],
                 },
                 ...(category && category !== "ALL"

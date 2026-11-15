@@ -34,8 +34,8 @@ export function TabStatusBadge({ status }: TabStatusBadgeProps) {
 
     case "REJECTED":
       return (
-        <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-red-950/10 text-red-900 border border-red-300 shrink-0">
-          <XCircle size={12} strokeWidth={2.4} className="text-red-700" />
+        <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-rose-50 text-rose-600 border border-rose-200/80 shrink-0">
+          <XCircle size={12} strokeWidth={2.4}/>
           <span>Rejected</span>
         </span>
       );
