@@ -9,6 +9,7 @@ export interface TableProps {
   loadingRows?: number;
   isEmpty?: boolean;
   emptyTitle?: string;
+  emptyAction?: React.ReactNode;
   pagination?: React.ReactNode;
   skeleton?: React.ReactNode;
 }
@@ -20,6 +21,7 @@ export function Table({
   loadingRows = 5,
   isEmpty = false,
   emptyTitle = "No records found",
+  emptyAction,
   pagination,
   skeleton,
 }: PropsWithChildren<TableProps>) {
@@ -58,6 +60,9 @@ export function Table({
                   <p className="text-xs text-slate-400 mt-1 m-0">
                     Try changing your search or status filter.
                   </p>
+                  {emptyAction && (
+                    <div className="mt-3.5 flex justify-center">{emptyAction}</div>
+                  )}
                 </td>
               </tr>
             ) : (

@@ -5,45 +5,60 @@ import { X, ChevronDown } from "lucide-react";
 import { toast } from "react-toastify";
 import { createSubCategorySchema } from "../schemas/create-sub-category.schema";
 import { handleFormError } from "../../../utils/errorHandler";
-import { createSubCategory } from "../sevices/category-management.service";
+import { createSubCategory, updateSubCategory } from "../sevices/category-management.service";
 import ButtonSpinner from "../../../components/common/loading/ButtonSpinner";
-import type { CreateSubCategoryInput } from "../types/sub-category";
+import type { CreateSubCategoryInput, SubCategoryListItem } from "../types/sub-category";
 
 export interface SubCategoryModalProps {
     isOpen: boolean;
     categories?: { id: string; name: string }[];
+    subCategoryToEdit?: SubCategoryListItem | null;
     onSuccess: () => void;
     onCancel: () => void;
 }
 
-function SubCategoryFormModal({isOpen,categories = [],onCancel,onSuccess,}: SubCategoryModalProps) {
+function SubCategoryFormModal({isOpen,categories = [],subCategoryToEdit,onCancel,onSuccess,}: SubCategoryModalProps) {
     const { register, handleSubmit, reset, setError, formState: { errors, isSubmitting }} = useForm<CreateSubCategoryInput>({resolver: zodResolver(createSubCategorySchema)})
 
     useEffect(() => {
         if (isOpen) {
             reset({
-                categoryId: "",
-                subCategoryName: "",
-                status: "ACTIVE",
+                categoryId: subCategoryToEdit?.categoryId ?? "",
+                subCategoryName: subCategoryToEdit?.name ?? "",
+                status: subCategoryToEdit?.status ?? "ACTIVE",
             });
         }
-    }, [isOpen, reset]);
+    }, [isOpen, subCategoryToEdit, reset]);
 
     if (!isOpen) return null;
 
     const onSubmit = async (data: CreateSubCategoryInput) => {
         try {
-            await createSubCategory({
-                categoryId: data.categoryId,
-                subCategoryName: data.subCategoryName.trim(),
-                status: data.status,
-            });
+            if (subCategoryToEdit) {
+                await updateSubCategory(subCategoryToEdit.id, {
+                    categoryId: data.categoryId,
+                    subCategoryName: data.subCategoryName.trim(),
+                    status: data.status,
+                });
 
-            toast.success(`Subcategory '${data.subCategoryName.trim()}' created successfully`);
+                toast.success(`Subcategory '${data.subCategoryName.trim()}' updated successfully`);
+            } else {
+                await createSubCategory({
+                    categoryId: data.categoryId,
+                    subCategoryName: data.subCategoryName.trim(),
+                    status: data.status,
+                });
+
+                toast.success(`Subcategory '${data.subCategoryName.trim()}' created successfully`);
+            }
             reset();
             onSuccess();
         } catch (error) {
-            handleFormError(error, setError, "Failed to create subcategory");
+            handleFormError(
+                error,
+                setError,
+                subCategoryToEdit ? "Failed to update subcategory" : "Failed to create subcategory"
+            );
         }
     };
 
@@ -76,10 +91,12 @@ function SubCategoryFormModal({isOpen,categories = [],onCancel,onSuccess,}: SubC
                             id="sub-category-modal-title"
                             className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight m-0"
                         >
-                            Add Subcategory
+                            {subCategoryToEdit ? "Edit Subcategory" : "Add Subcategory"}
                         </h2>
                         <p className="text-xs sm:text-sm text-slate-500 mt-1 m-0">
-                            Add a new subcategory and assign it to a parent category.
+                            {subCategoryToEdit
+                                ? "Update subcategory details and category assignment."
+                                : "Add a new subcategory and assign it to a parent category."}
                         </p>
                     </div>
 
@@ -205,6 +222,8 @@ function SubCategoryFormModal({isOpen,categories = [],onCancel,onSuccess,}: SubC
                         >
                             {isSubmitting ? (
                                 <ButtonSpinner size="sm" />
+                            ) : subCategoryToEdit ? (
+                                "Save Changes"
                             ) : (
                                 "Add Subcategory"
                             )}

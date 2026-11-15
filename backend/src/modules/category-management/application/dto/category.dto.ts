@@ -21,3 +21,8 @@ export interface UpdatedCategoryFieldsDto {
     categoryName?: string;
     status?: CategoryStatus
 }
+
+export interface ActiveCategoryDto {
+    id: string;
+    name: string;
+}

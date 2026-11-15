@@ -2,24 +2,24 @@ import { useEffect, useState } from "react";
 import { Search, Plus } from "lucide-react";
 import type { SubCategoryListItem, SubCategoryStatus } from "../types/sub-category";
 import useDebounce from "../../../hook/useDebounce";
-import { getCategories, getSubCategories } from "../sevices/category-management.service";
+import { getSubCategories } from "../sevices/category-management.service";
 import { handleApiError } from "../../../utils/errorHandler";
 import { formatDateTime } from "../../../utils/dateFormatter";
 import Table from "../../../components/common/table/Table";
 import Pagination from "../../../components/common/pagination/Pagination";
 import SubCategoryModal from "./SubCategoryFormModal";
 import Select from "../../../components/common/select/Select";
+import useCategoryStore from "../../../stores/category.store";
 
 const DEFAULT_LIMIT = 5;
 
 export interface SubCategoriesTabProps {
     onSubCategoryAdded?: () => void;
-    categoriesRefreshTrigger?: number;
 }
 
-function SubCategoriesTab({onSubCategoryAdded,categoriesRefreshTrigger = 0,}: SubCategoriesTabProps) {
+function SubCategoriesTab({onSubCategoryAdded,}: SubCategoriesTabProps) {
+    const allCategories = useCategoryStore((state) => state.categories);
     const [subcategories, setSubcategories] = useState<SubCategoryListItem[]>([]);
-    const [allCategories, setAllCategories] = useState<{ id: string; name: string }[]>([]);
     const [subStatus, setSubStatus] = useState<"ALL" | SubCategoryStatus>("ALL");
     const [subCategoryFilter, setSubCategoryFilter] = useState<string>("ALL");
     const [subPage, setSubPage] = useState(1);
@@ -29,27 +29,7 @@ function SubCategoriesTab({onSubCategoryAdded,categoriesRefreshTrigger = 0,}: Su
     const debouncedSubSearch = useDebounce(subSearch, 500);
     const [refreshCount, setRefreshCount] = useState(0);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-
-    useEffect(() => {
-        let cancelled = false;
-        const fetchAllCategories = async () => {
-            try {
-                const response = await getCategories({ page: 1, limit: 100 });
-                if (!cancelled) {
-                    setAllCategories(response.data.items.map((c) => ({ id: c.id, name: c.name })));
-                }
-            } catch (error){
-                if (!cancelled) {
-                handleApiError(error, "Failed to load category options")
-            }
-            }
-        };
-        void fetchAllCategories();
-
-        return () => {
-            cancelled = true;
-        };
-    }, [refreshCount, categoriesRefreshTrigger]);
+    const [selectedSubCategoryToEdit, setSelectedSubCategoryToEdit] = useState<SubCategoryListItem | null>(null);
 
     useEffect(() => {
         let cancelled = false;
@@ -100,10 +80,25 @@ function SubCategoriesTab({onSubCategoryAdded,categoriesRefreshTrigger = 0,}: Su
         setSubPage(1);
     };
 
-    const handleModalSuccess = () => {
+    const handleCloseModal = () => {
         setIsAddModalOpen(false);
+        setSelectedSubCategoryToEdit(null);
+    };
+
+    const handleModalSuccess = () => {
+        handleCloseModal();
         setRefreshCount((prev) => prev + 1);
         onSubCategoryAdded?.();
+    };
+
+    const handleOpenAddModal = () => {
+        setSelectedSubCategoryToEdit(null);
+        setIsAddModalOpen(true);
+    };
+
+    const handleEditSubCategory = (item: SubCategoryListItem) => {
+        setSelectedSubCategoryToEdit(item);
+        setIsAddModalOpen(true);
     };
 
     return (
@@ -152,7 +147,7 @@ function SubCategoriesTab({onSubCategoryAdded,categoriesRefreshTrigger = 0,}: Su
 
                 <button
                     type="button"
-                    onClick={() => setIsAddModalOpen(true)}
+                    onClick={handleOpenAddModal}
                     className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#244673] hover:bg-[#1b3557] text-white text-sm font-semibold rounded-lg shadow-2xs transition-colors cursor-pointer shrink-0 self-start sm:self-auto"
                 >
                     <Plus size={16} strokeWidth={2.5} />
@@ -217,6 +212,7 @@ function SubCategoriesTab({onSubCategoryAdded,categoriesRefreshTrigger = 0,}: Su
                             <div className="flex items-center justify-center">
                                 <button
                                     type="button"
+                                    onClick={() => handleEditSubCategory(sub)}
                                     className="px-3.5 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer min-w-[56px]"
                                 >
                                     Edit
@@ -230,7 +226,8 @@ function SubCategoriesTab({onSubCategoryAdded,categoriesRefreshTrigger = 0,}: Su
             <SubCategoryModal
                 isOpen={isAddModalOpen}
                 categories={allCategories}
-                onCancel={() => setIsAddModalOpen(false)}
+                subCategoryToEdit={selectedSubCategoryToEdit}
+                onCancel={handleCloseModal}
                 onSuccess={handleModalSuccess}
             />
         </>

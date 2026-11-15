@@ -1,8 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import type { IUseCase } from "../../../../shared/application/base.usecase";
-import type { IApiResponse } from "../../../../shared/application/api-response";
+import { sendResponse } from "../../../../shared/presentation/api-response";
 import type { RemoveProfilePictureDto, UpdateProfilePictureDto, UpdatedProfilePictureDto } from "../../application/dto/profile-picture.dto";
-import { HttpStatusCode } from "../../../../shared/enums/http-status-code.enum";
 import { BadRequestError, UnauthorizedError } from "../../../../shared/errors/app-error";
 
 export class ProfilePictureController {
@@ -11,7 +10,7 @@ export class ProfilePictureController {
         private readonly removeProfilePictureUseCase: IUseCase<RemoveProfilePictureDto, void>,
     ) {}
 
-    updateProfilePicture = async (req: Request, res: Response<IApiResponse<UpdatedProfilePictureDto>>, next: NextFunction): Promise<void> => {
+    updateProfilePicture = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.auth?.userId;
             if (!userId) {
@@ -31,17 +30,13 @@ export class ProfilePictureController {
                 },
             });
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "Profile picture updated successfully",
-                data: result,
-            });
+            sendResponse(res, "Profile picture updated successfully", result);
         } catch (error) {
             next(error);
         }
     };
 
-    removeProfilePicture = async (req: Request, res: Response<IApiResponse>, next: NextFunction): Promise<void> => {
+    removeProfilePicture = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.auth?.userId;
             if (!userId) {
@@ -50,10 +45,7 @@ export class ProfilePictureController {
 
             await this.removeProfilePictureUseCase.execute({ userId });
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: "Profile picture removed successfully",
-            });
+            sendResponse(res, "Profile picture removed successfully");
         } catch (error) {
             next(error);
         }

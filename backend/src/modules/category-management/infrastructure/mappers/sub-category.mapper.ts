@@ -28,23 +28,23 @@ export type subCategoryListRecord = Prisma.subcategoriesGetPayload<{ select: typ
 
 export class SubCategoryMapper {
 
-    static toDto(subCategory: subCategoryRecord): SubCategoryDto {
-        return {
-            id: subCategory.id,
-            categoryId : subCategory.category_id,
-            name: subCategory.name,
-            status: subCategory.status,
-        };
-    }
+  static toDto(subCategory: subCategoryRecord): SubCategoryDto {
+    return {
+      id: subCategory.id,
+      categoryId : subCategory.category_id,
+      name: subCategory.name,
+      status: subCategory.status,
+    };
+  }
 
-    static toListItemDto(subCategory: subCategoryListRecord): SubCategoryListItemDto {
-        return {
-            id: subCategory.id,
-            categoryId: subCategory.category_id,
-            categoryName: subCategory.category.name,
-            name: subCategory.name,
-            status: subCategory.status,
-            updatedAt: subCategory.updated_at,
-        };
-    }
+  static toListItemDto(subCategory: subCategoryListRecord): SubCategoryListItemDto {
+    return {
+      id: subCategory.id,
+      categoryId: subCategory.category_id,
+      categoryName: subCategory.category.name,
+      name: subCategory.name,
+      status: subCategory.status,
+      updatedAt: subCategory.updated_at,
+    };
+  }
 }

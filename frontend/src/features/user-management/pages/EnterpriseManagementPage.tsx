@@ -1,5 +1,6 @@
-import { Search } from "lucide-react";
+import { RefreshCw, Search } from "lucide-react";
 import Pagination from "../../../components/common/pagination/Pagination";
+import Select from "../../../components/common/select/Select";
 import Table from "../../../components/common/table/Table";
 import TableSkeleton from "../../../components/common/loading/TableSkeleton";
 import { useEffect, useState } from "react";
@@ -10,13 +11,13 @@ import ReasonModal from "../../../components/common/ReasonModal/ReasonModel";
 import ConfirmationModal from "../../../components/common/confirmationModel/ConfirmationModal";
 import { getEnterprise, reactivateEnterpriseAccount, suspendEnterpriseAccount } from "../service/user-management.service";
 import useDebounce from "../../../hook/useDebounce";
-import Select from "../../../components/common/select/Select";
+import useCategoryStore from "../../../stores/category.store";
 
 const PAGE_LIMIT = 5;
 
 export function EnterpriseManagementPage() {
+    const categories = useCategoryStore((state) => state.categories);
     const [enterprise, setEnterprise] = useState<Enterprise[]>([]);
-    const [categoryOptions, setCategoryOptions] = useState<string[]>([]);
     const [search, setSearch] = useState("");
     const [status, setStatus] = useState<"ALL" | EnterpriseStatus>("ALL");
     const [category, setCategory] = useState("ALL");
@@ -45,14 +46,6 @@ export function EnterpriseManagementPage() {
 
                 setEnterprise(response.data.items);
                 setTotalPages(response.data.totalPages);
-                setCategoryOptions((prev) => {
-                    const next = new Set(prev);
-                    response.data.items.forEach((item) => {
-                        if (item.category) next.add(item.category);
-                    });
-                    return Array.from(next);
-                });
-
             } catch (error) {
 
                 if (cancelled) return;
@@ -173,9 +166,9 @@ export function EnterpriseManagementPage() {
                     aria-label="Filter by category"
                     options={[
                         { label: "Category: All", value: "ALL" },
-                        ...categoryOptions.map((cat) => ({
-                            label: cat,
-                            value: cat,
+                        ...categories.map((cat) => ({
+                            label: cat.name,
+                            value: cat.name,
                         })),
                     ]}
                 />
@@ -194,6 +187,23 @@ export function EnterpriseManagementPage() {
                 skeleton={<TableSkeleton rows={PAGE_LIMIT} columns={5} />}
                 isEmpty={enterprise.length === 0}
                 emptyTitle="No enterprises found"
+                emptyAction={
+                    (debouncedSearch || status !== "ALL" || category !== "ALL") && (
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setSearch("");
+                                setStatus("ALL");
+                                setCategory("ALL");
+                                setPage(1);
+                            }}
+                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-[#204066] bg-[#edf4fb] hover:bg-[#dbe9f6] transition-colors cursor-pointer"
+                        >
+                            <RefreshCw size={13} />
+                            <span>Reset Filters</span>
+                        </button>
+                    )
+                }
                 pagination={
                     totalPages > 0 && (
                         <Pagination

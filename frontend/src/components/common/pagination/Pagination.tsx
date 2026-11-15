@@ -2,9 +2,11 @@ export interface PaginationProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  variant?: "table" | "standalone";
+  className?: string;
 }
 
-export function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
+export function Pagination({currentPage,totalPages,onPageChange,variant = "table",className = "",}: PaginationProps) {
     if (totalPages <= 0) return null;
 
     const pages: (number | "...")[] = [];
@@ -26,8 +28,13 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
         pages.push(totalPages);
     }
 
+    const containerClasses =
+        variant === "standalone"
+            ? `flex flex-col sm:flex-row items-center justify-between gap-4 py-2 ${className}`.trim()
+            : `border-t border-slate-100 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white ${className}`.trim();
+
     return (
-        <div className="border-t border-slate-100 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white"aria-label="Pagination Navigation">
+        <div className={containerClasses} aria-label="Pagination Navigation">
             <p className="text-xs sm:text-sm text-slate-500 font-normal m-0">
                 Showing {currentPage} of {totalPages} pages
             </p>

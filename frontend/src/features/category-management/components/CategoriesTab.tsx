@@ -9,6 +9,7 @@ import Table from "../../../components/common/table/Table";
 import Pagination from "../../../components/common/pagination/Pagination";
 import CategoryFormModal from "./CategoryFormModal";
 import Select from "../../../components/common/select/Select";
+import { refreshActiveCategories } from "../../../hook/useActiveCategories";
 
 const DEFAULT_LIMIT = 5;
 
@@ -27,7 +28,6 @@ function CategoriesTab({ onCategoryChanged, refreshTrigger = 0 }: CategoriesTabP
     const debouncedSearch = useDebounce(search, 500);
     const [selectedCategoryToEdit, setSelectedCategoryToEdit] = useState<Category | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [internalRefreshCount, setInternalRefreshCount] = useState(0);
 
     useEffect(() => {
         let cancelled = false;
@@ -60,7 +60,7 @@ function CategoriesTab({ onCategoryChanged, refreshTrigger = 0 }: CategoriesTabP
         return () => {
             cancelled = true;
         };
-    }, [page, status, debouncedSearch, internalRefreshCount, refreshTrigger]);
+    }, [page, status, debouncedSearch, refreshTrigger]);
 
     const handleSearchChange = (value: string) => {
         setSearch(value);
@@ -84,8 +84,8 @@ function CategoriesTab({ onCategoryChanged, refreshTrigger = 0 }: CategoriesTabP
 
     const handleModalSuccess = () => {
         handleCloseModal();
-        setInternalRefreshCount((prev) => prev + 1);
         onCategoryChanged?.();
+        void refreshActiveCategories();
     };
 
     const handleEditCategory = (item: Category) => {

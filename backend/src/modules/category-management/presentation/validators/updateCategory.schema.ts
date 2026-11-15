@@ -8,6 +8,7 @@ export const updateCategorySchema = z.object({
         .trim()
         .min(2, "Category name must be at least 2 characters")
         .max(100, "Category name cannot exceed 100 characters")
+        .regex(/^[A-Za-z\s]+$/, "Category name can only contain letters")
         .optional(),
 
     status: z.enum(["ACTIVE", "INACTIVE"]).optional(),

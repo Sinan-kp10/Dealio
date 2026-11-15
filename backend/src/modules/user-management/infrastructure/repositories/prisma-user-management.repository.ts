@@ -79,7 +79,7 @@ export class PrismaUserManagementRepository implements IUserManagementRepository
         const searchTerm = search?.trim()
 
         const where = {
-            status: "APPROVED" as const,
+            status: "VERIFIED" as const,
 
             users: {
                 some: {

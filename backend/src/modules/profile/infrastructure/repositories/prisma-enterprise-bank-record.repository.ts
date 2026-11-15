@@ -23,7 +23,9 @@ export class PrismaEnterpriseBankRecordRepository implements IEnterprisBankRecor
 
     getBankRecord = async (enterpriseId: string): Promise<{ activeBankRecord: ActiveBankRecordDto | null; pendingRequest: BankRecordRequestDto | null; }> => {
         const [activeBankRecord, pendingBankRecord] = await Promise.all([
-            prisma.enterprise_bank_accounts.findUnique({ where : {enterprise_id : enterpriseId}}),
+            prisma.enterprise_bank_accounts.findFirst({
+                where: { enterprise_id: enterpriseId, is_primary: true },
+            }),
             prisma.enterprise_bank_accounts_requests.findFirst({
                 where : {enterprise_id : enterpriseId},
                 orderBy : {created_at : "desc"}
@@ -32,7 +34,7 @@ export class PrismaEnterpriseBankRecordRepository implements IEnterprisBankRecor
 
         return {
             activeBankRecord : activeBankRecord ? EnterpriseBankMapper.toActiveBankRecordDto(activeBankRecord) : null,
-            pendingRequest : pendingBankRecord ? EnterpriseBankMapper.toRequestDto(pendingBankRecord) : null
+            pendingRequest : pendingBankRecord && pendingBankRecord.status !== "VERIFIED" ? EnterpriseBankMapper.toRequestDto(pendingBankRecord) : null
         }
     }
 
@@ -40,8 +42,8 @@ export class PrismaEnterpriseBankRecordRepository implements IEnterprisBankRecor
         const bankRecord = await prisma.enterprise_bank_accounts_requests.create({
             data: {
                 enterprise_id: enterpriseId,
-                account_holder_name: data.AccountHolderName,
-                account_number: data.BankAccountNumber,
+                account_holder_name: data.accountHolderName,
+                account_number: data.bankAccountNumber,
                 ifsc_code: data.ifscCode,
                 account_type: data.accountType as bank_account_type,
                 upi_id: data.upiId || null,

@@ -1,16 +1,12 @@
-export type BankAccountType = "CURRENT" | "SAVINGS";
-
-export const BANK_ACCOUNT_TYPE_LABELS: Record<BankAccountType, string> = {
-  CURRENT: "Current Account",
-  SAVINGS: "Savings Account",
-};
+export {BANK_ACCOUNT_TYPE_LABELS,type BankAccountType,} from "../../../constants/enterprise.constants";
+import type { BankAccountType } from "../../../constants/enterprise.constants";
 
 export type BankRecordStatus = "PENDING" | "VERIFIED" | "REJECTED";
 
 export interface BaseBankRecord {
   id: string;
-  AccountHolderName: string;
-  BankAccountNumber: string;
+  accountHolderName: string;
+  bankAccountNumber: string;
   ifscCode: string;
   accountType: BankAccountType;
   upiId: string | null;
