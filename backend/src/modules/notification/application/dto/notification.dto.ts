@@ -36,3 +36,8 @@ export interface PaginatedNotificationsDto {
 export interface UnreadNotificationCountDto {
     count: number;
 }
+
+export interface MarkNotificationAsReadDto {
+    notificationId: string;
+    userId: string;
+}

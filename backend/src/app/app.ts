@@ -14,12 +14,13 @@ import categoryRoutes from "../modules/category-management/presentation/routes/c
 import profileVerificationRoutes from "../modules/profile/presentation/routes/profile-verification.routes"
 import notificationRoutes from "../modules/notification/presentation/routes/notification.routes";
 import cookieParser from "cookie-parser";
+import { env } from "../config/env";
 const app = express();
 app.use(helmet())
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: env.clientUrl,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,

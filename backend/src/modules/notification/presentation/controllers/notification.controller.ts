@@ -1,8 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import { sendResponse } from "../../../../shared/presentation/api-response.js";
 import { IUseCase } from "../../../../shared/application/base.usecase.js";
-import { NotificationFiltersDto, PaginatedNotificationsDto } from "../../application/dto/notification.dto.js";
-import { MarkNotificationAsReadDto } from "../../application/use-cases/mark-notification-as-read.use-case.js";
+import { MarkNotificationAsReadDto, NotificationFiltersDto, PaginatedNotificationsDto } from "../../application/dto/notification.dto.js";
 
 export class NotificationController {
     constructor(

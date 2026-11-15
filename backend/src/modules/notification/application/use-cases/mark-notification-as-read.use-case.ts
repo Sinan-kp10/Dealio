@@ -1,10 +1,6 @@
 import { IUseCase } from "../../../../shared/application/base.usecase.js";
 import { INotificationRepository } from "../../domain/repositories/notification.repository.js";
-
-export interface MarkNotificationAsReadDto {
-    notificationId: string;
-    userId: string;
-}
+import { MarkNotificationAsReadDto } from "../dto/notification.dto.js";
 
 export class MarkNotificationAsReadUseCase implements IUseCase<MarkNotificationAsReadDto, void> {
 

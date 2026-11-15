@@ -1,3 +1,4 @@
+import { getSocketServer } from "../../../../infrastructure/socket/socket-server.js";
 import type { INotificationService, SendNotification } from "../../../../shared/interfaces/INotificationService.js";
 import type { INotificationRepository } from "../../domain/repositories/notification.repository.js";
 
@@ -8,7 +9,9 @@ export class NotificationService implements INotificationService {
 
     send = async (data: SendNotification): Promise<void> => {
 
-        await this.notificationRepository.createNotification(data);
+        const notification = await this.notificationRepository.createNotification(data);
+
+        getSocketServer().to(`user:${data.userId}`).emit("notification:new", notification);
 
     };
 }

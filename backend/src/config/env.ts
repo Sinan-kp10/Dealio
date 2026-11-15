@@ -12,6 +12,7 @@ const rawEnv = parsed.data;
 
 export const env = {
   port: rawEnv.PORT,
+  clientUrl: rawEnv.CLIENT_URL,
   nodeEnv: rawEnv.NODE_ENV,
   isProduction: rawEnv.NODE_ENV === "production",
   isDevelopment: rawEnv.NODE_ENV === "development",
