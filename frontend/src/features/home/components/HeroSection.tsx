@@ -2,8 +2,17 @@ import { Link } from "react-router-dom";
 
 export function HeroSection() {
   return (
-    <section className="w-full bg-[var(--color-dark)] mt-[var(--navbar-height,5rem)] flex flex-col justify-center items-center text-center text-white py-16 px-4 sm:py-20 sm:px-6 lg:min-h-[calc(100vh-var(--navbar-height,5rem))] lg:py-16 lg:px-8 box-border">
-      <div className="w-full max-w-[var(--container-standard,1440px)] mx-auto px-[clamp(1rem,3.5vw,3.5rem)]">
+    <section className="relative w-full bg-gradient-to-br from-[#0c2340] via-[#102e52] to-[#0c2340] mt-[var(--navbar-height,5rem)] flex flex-col justify-center items-center text-center text-white py-16 px-4 sm:py-20 sm:px-6 lg:min-h-[calc(100vh-var(--navbar-height,5rem))] lg:py-16 lg:px-8 box-border overflow-hidden">
+      <div 
+        className="absolute -right-20 -top-20 w-96 h-96 rounded-full bg-blue-400/10 blur-3xl pointer-events-none" 
+        aria-hidden="true" 
+      />
+      <div 
+        className="absolute -left-20 -bottom-20 w-96 h-96 rounded-full bg-indigo-500/10 blur-3xl pointer-events-none" 
+        aria-hidden="true" 
+      />
+
+      <div className="relative z-10 w-full max-w-[var(--container-standard,1440px)] mx-auto px-[clamp(1rem,3.5vw,3.5rem)]">
         <h1 className="text-[clamp(2.5rem,5.5vw,4.25rem)] font-bold leading-[1.15] tracking-tight text-white m-0 max-w-[68rem] mx-auto">
           Find What You Need.
           <br />
@@ -17,13 +26,13 @@ export function HeroSection() {
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
             to="/register/customer"
-            className="w-full sm:w-auto px-7 py-3.5 bg-[var(--color-secondary)] text-white font-medium rounded-lg text-sm no-underline text-center transition-all duration-200 shadow-xs hover:bg-[var(--color-secondary-hover)] active:bg-[var(--color-primary)]"
+            className="w-full sm:w-auto px-7 py-3.5 bg-[var(--color-secondary)] text-white font-medium rounded-xl text-sm no-underline text-center transition-all duration-200 shadow-xs hover:bg-[var(--color-secondary-hover)] active:bg-[var(--color-primary)]"
           >
             Create a Quotation
           </Link>
           <Link
             to="/register/enterprise"
-            className="w-full sm:w-auto px-7 py-3.5 bg-[var(--color-dark)] border border-[#294668] text-white font-medium rounded-lg text-sm no-underline text-center transition-all duration-200 hover:bg-[#162e49] hover:border-slate-400"
+            className="w-full sm:w-auto px-7 py-3.5 text-white font-medium bg-white/10 hover:bg-white/15 border border-white/20 rounded-xl backdrop-blur-xs text-sm no-underline text-center transition-all duration-150 shadow-xs cursor-pointer active:scale-[0.98]"
           >
             Join as an Enterprise
           </Link>
