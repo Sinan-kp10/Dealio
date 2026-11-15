@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import useAuthStore from "../stores/auth.store";
 import socket from "../services/socket.service";
 import useNotificationStore from "../stores/notification.store";
+import { playNotificationSound } from "../utils/soundUtils";
 
 function useSocketConnection(): void {
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -18,6 +19,7 @@ function useSocketConnection(): void {
 
         const handleNewNotification = () => {
             incrementUnreadCount();
+            void playNotificationSound();
         };
 
         socket.on("notification:new", handleNewNotification);
