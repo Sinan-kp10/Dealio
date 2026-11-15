@@ -15,6 +15,9 @@ import ForbiddenPage from "../../pages/ForbiddenPage";
 import AccountSuspendedPage from "../../pages/AccountSuspendedPage";
 import OtpVerificationPage from "../../features/auth/pages/OtpVerificationPage";
 import VerifyPasswordResetOtpPage from "../../features/auth/pages/VerifyPasswordResetOtpPage";
+const CustomerHomePage = lazy(()=> import("../../features/home/pages/CustomerHomePage"))
+const CreateQuotationPage = lazy(() => import("../../features/quotations/pages/customer/CreateQuotationPage"))
+const CustomerConversationsPage = lazy(() => import("../../features/conversations/pages/customer/CustomerConversationsPage"))
 const CustomerSettingsPage = lazy(()=> import("../../features/settings/pages/CustomerSttingsPage"))
 const EnterpriseSettingsPage = lazy(()=> import("../../features/settings/pages/EnterpriseSettingsPage"))
 const EnterpriseProfilePage = lazy(()=> import("../../features/profile/pages/EnterpriseProfilePage"))
@@ -22,7 +25,6 @@ const CustomerProfilePage = lazy(()=> import("../../features/profile/pages/Custo
 const CustomerLayout = lazy(() => import("../../components/layouts/customer/CustomerLayout"))
 const AdminLayout = lazy(()=> import("../../components/layouts/admin/AdminLayout"))
 const EnterpriseManagerLayout = lazy(()=> import("../../components/layouts/enterpriseManager/EnterpriseManagerLayout"))
-const QuotationsPage = lazy(()=> import("../../features/quotations/pages/customer/QuotationsPage"))
 const AdminDashboardPage = lazy(()=> import("../../features/dashboard/pages/AdminDashboardPage"))
 const EnterpriseDashboardPage = lazy(()=> import("../../features/dashboard/pages/EnterpriseDashboardPage"))
 const CustomerManagementPage = lazy(()=> import("../../features/user-management/pages/CustomerManagementPage"))
@@ -50,7 +52,9 @@ export function AppRouter() {
 
           <Route element={<ProtectedRoute allowedRoles={["CUSTOMER"]} />}>
             <Route element={<CustomerLayout />}>
-              <Route path="/customer" element={<QuotationsPage />} />
+              <Route path="/customer" element={<CustomerHomePage />} />
+              <Route path="/customer/quotations/create" element={<CreateQuotationPage />} />
+              <Route path="/customer/conversations" element={<CustomerConversationsPage />} />
               <Route path="/customer/profile" element={<CustomerProfilePage />} />
               <Route path="/customer/settings" element={<CustomerSettingsPage />} />
 

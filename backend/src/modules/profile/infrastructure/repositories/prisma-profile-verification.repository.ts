@@ -4,13 +4,18 @@ import { NotFoundError } from "../../../../shared/errors/app-error.js";
 import { EnterpriseUserDto } from "../../application/dto/enterprise-profile.dto.js";
 import {EnterpriseApprovalDetailsDto,PaginatedPendingEnterprisesDto,PendingEnterpriseFiltersDto,} from "../../application/dto/profile-verification.dto.js";
 import { IProfileVerficationRepository } from "../../domain/repositories/profile-verification.repository.js";
-import {
-    enterpriseApprovalDetailsSelect,
-    pendingEnterpriseSelect,
-    ProfileVerificationMapper,
-} from "../mapper/profile-verification.mapper.js";
+import {enterpriseApprovalDetailsSelect,pendingEnterpriseSelect,ProfileVerificationMapper,} from "../mapper/profile-verification.mapper.js";
 
 export class PrismaProfileVerificationRepository implements IProfileVerficationRepository {
+    
+    private async getEnterpriseManagerUserId(tx: Prisma.TransactionClient,enterpriseId: string): Promise<string | null> {
+        const manager = await tx.users.findFirst({
+            where: { enterprise_id: enterpriseId, role: "ENTERPRISE_MANAGER" },
+            select: { id: true },
+        });
+        return manager?.id ?? null;
+    }
+
     findById = async (userId: string): Promise<EnterpriseUserDto | null> => {
         const user = await prisma.users.findUnique({
             where: { id: userId },
@@ -131,8 +136,8 @@ export class PrismaProfileVerificationRepository implements IProfileVerficationR
         return ProfileVerificationMapper.toApprovalDetailsDto(enterprise);
     };
 
-    VerfyEnterpriseKyc = async (enterpriseId: string): Promise<void> => {
-        await prisma.$transaction(async (tx)=> {
+    VerfyEnterpriseKyc = async (enterpriseId: string): Promise<string | null> => {
+        return await prisma.$transaction(async (tx)=> {
             const kycRequest = await tx.enterprise_kyc_requests.findFirst({
                 where : {enterprise_id : enterpriseId, status : "PENDING"},
                 orderBy : {created_at : "desc"}
@@ -186,11 +191,13 @@ export class PrismaProfileVerificationRepository implements IProfileVerficationR
                     },
                 });
             }
+
+            return await this.getEnterpriseManagerUserId(tx, enterpriseId);
         })
     }
 
-    rejectEnterpriseKyc = async (enterpriseId: string, reason: string): Promise<void> => {
-        await prisma.$transaction(async (tx) => {
+    rejectEnterpriseKyc = async (enterpriseId: string, reason: string): Promise<string | null> => {
+        return await prisma.$transaction(async (tx) => {
             const kycRequest = await tx.enterprise_kyc_requests.findFirst({
                 where: { enterprise_id: enterpriseId, status: "PENDING" },
                 orderBy: { created_at: "desc" },
@@ -208,11 +215,13 @@ export class PrismaProfileVerificationRepository implements IProfileVerficationR
                     verified_at: null,
                 },
             });
+
+            return await this.getEnterpriseManagerUserId(tx, enterpriseId);
         });
     };
 
-    verifyEnterpriseBankRecord = async (enterpriseId: string): Promise<void> => {
-        await prisma.$transaction(async (tx) => {
+    verifyEnterpriseBankRecord = async (enterpriseId: string): Promise<string | null> => {
+        return await prisma.$transaction(async (tx) => {
             const bankRequest = await tx.enterprise_bank_accounts_requests.findFirst({
                 where: { enterprise_id: enterpriseId, status: "PENDING" },
                 orderBy: { created_at: "desc" },
@@ -264,11 +273,13 @@ export class PrismaProfileVerificationRepository implements IProfileVerficationR
                     },
                 });
             }
+
+            return await this.getEnterpriseManagerUserId(tx, enterpriseId);
         });
     };
 
-    rejectEnterpriseBankRecord = async (enterpriseId: string, reason: string): Promise<void> => {
-        await prisma.$transaction(async (tx) => {
+    rejectEnterpriseBankRecord = async (enterpriseId: string, reason: string): Promise<string | null> => {
+        return await prisma.$transaction(async (tx) => {
             const bankRequest = await tx.enterprise_bank_accounts_requests.findFirst({
                 where: { enterprise_id: enterpriseId, status: "PENDING" },
                 orderBy: { created_at: "desc" },
@@ -286,6 +297,8 @@ export class PrismaProfileVerificationRepository implements IProfileVerficationR
                     verified_at: null,
                 },
             });
+
+            return await this.getEnterpriseManagerUserId(tx, enterpriseId);
         });
     };
 }

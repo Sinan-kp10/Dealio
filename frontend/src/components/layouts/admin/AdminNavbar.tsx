@@ -121,7 +121,7 @@ export function AdminNavbar({ onToggleSidebar, isSidebarOpen }: AdminNavbarProps
                         </button>
 
                         {isProfileOpen && (
-                        <div className="absolute right-0 mt-3 w-72 bg-white rounded-[20px] shadow-[0_12px_36px_-6px_rgba(15,23,42,0.12),0_4px_12px_rgba(15,23,42,0.06)] border border-slate-200/80 py-2.5 z-50 animate-in fade-in duration-150">
+                        <div className="absolute right-0 mt-1.5 w-72 bg-white rounded-[22px] shadow-[0_16px_40px_-8px_rgba(15,23,42,0.14),0_4px_16px_rgba(15,23,42,0.06)] border border-slate-200/90 py-2.5 z-50 animate-in fade-in zoom-in-95 duration-150 origin-top-right">
 
                             <div className="px-5 pt-3.5 pb-3 border-b border-slate-100 flex items-center gap-3">
                                 <div className="w-10 h-10 rounded-full bg-[#2f5581] flex items-center justify-center text-white shrink-0 shadow-xs overflow-hidden">

@@ -3,7 +3,7 @@ import useAuthStore from "../../stores/auth.store";
 import { toast } from "react-toastify";
 
 const axiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL,
+    baseURL: `${import.meta.env.VITE_SERVER_URL}/api`,
     headers: {
         "Content-Type": "application/json",
     },

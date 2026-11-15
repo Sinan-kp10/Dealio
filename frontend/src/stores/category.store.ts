@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { ActiveCategory } from "../services/category.service";
+import type { ActiveCategory } from "../types/category.types";
 
 interface CategoryState {
     categories: ActiveCategory[];

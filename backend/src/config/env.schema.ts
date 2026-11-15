@@ -11,6 +11,11 @@ export const envSchema = z.object({
     .max(65535, "PORT must be at most 65535")
     .default(5000),
 
+  CLIENT_URL: z
+    .string()
+    .min(1, "CLIENT_URL is required")
+    .default("http://localhost:5173"),
+
   DATABASE_URL: z
     .string()
     .min(1, "DATABASE_URL is required"),
