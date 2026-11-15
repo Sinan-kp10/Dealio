@@ -5,9 +5,9 @@ import { toast } from "react-toastify";
 import { logout } from "../../../features/auth/services/auth.service";
 import useAuthStore from "../../../stores/auth.store";
 import ConfirmationModal from "../../common/confirmationModel/ConfirmationModal";
-import { NotificationDropdown } from "../../common/NotificationDropdown";
 import useNotificationStore from "../../../stores/notification.store";
 import { getUnreadCount } from "../../../services/notification.service";
+import { NotificationDropdown } from "../../common/notification/NotificationDropdown";
 
 interface EnterpriseManagerNavbarProps {
   onToggleSidebar: () => void;

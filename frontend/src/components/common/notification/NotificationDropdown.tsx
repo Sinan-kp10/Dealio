@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { BellOff, Check, CheckCheck, Loader2 } from "lucide-react";
-import {getNotifications,getUnreadCount,markNotificationAsRead,markAllNotificationsAsRead} from "../../services/notification.service";
-import type { NotificationItem } from "../../types/notification.types";
-import useNotificationStore from "../../stores/notification.store";
-import { handleApiError } from "../../utils/errorHandler";
-import { formatTimeAgo } from "../../utils/dateFormatter";
+import useNotificationStore from "../../../stores/notification.store";
+import { getNotifications, getUnreadCount, markAllNotificationsAsRead, markNotificationAsRead } from "../../../services/notification.service";
+import { handleApiError } from "../../../utils/errorHandler";
+import { formatTimeAgo } from "../../../utils/dateFormatter";
+import type { NotificationItem } from "../../../types/notification.types";
+import socket from "../../../services/socket.service";
+
 
 const PAGE_LIMIT = 8;
 
@@ -77,6 +79,28 @@ export function NotificationDropdown() {
       isMounted = false;
     };
   }, [activeTab]);
+
+  useEffect(()=> {
+    const handleNewNotification = (notification : NotificationItem) => {
+      setNotifications((prev)=> {
+        const alreadyExist = prev.some((item) => 
+          item.id === notification.id
+        )
+
+        if(alreadyExist){
+          return prev
+        }
+
+        return [notification, ...prev];
+      })
+    }
+
+    socket.on("notification:new", handleNewNotification);
+
+    return () => {
+      socket.off("notification:new", handleNewNotification);
+    };
+  },[])
 
   const handleTabChange = (tab: "unread" | "all") => {
     if (tab === activeTab) return;
