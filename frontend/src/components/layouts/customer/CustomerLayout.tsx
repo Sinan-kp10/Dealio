@@ -1,35 +1,22 @@
-import { useState, useCallback } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { CustomerNavbar } from "./CustomerNavbar";
-import { CustomerSidebar } from "./CustomerSidebar";
 
 function CustomerLayout() {
-    const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-
-    const handleCloseSidebar = useCallback(() => {
-        setIsMobileSidebarOpen(false);
-    }, []);
-
-    const handleToggleSidebar = useCallback(() => {
-        setIsMobileSidebarOpen((prev) => !prev);
-    }, []);
+    const location = useLocation();
+    const isConversations = location.pathname.startsWith("/customer/conversations");
 
     return (
-        <div className="min-h-screen bg-[#F4F7FB] text-slate-800 flex flex-col antialiased">
-        <CustomerNavbar
-            onToggleSidebar={handleToggleSidebar}
-            isSidebarOpen={isMobileSidebarOpen}
-        />
-
-        <div className="flex-1 flex w-full relative">
-            <CustomerSidebar
-            isOpen={isMobileSidebarOpen}
-            onClose={handleCloseSidebar}
-            />
-            <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 overflow-y-auto">
-            <Outlet />
+        <div className="h-screen bg-[#F4F7FB] text-slate-800 flex flex-col antialiased overflow-hidden">
+            <CustomerNavbar />
+            <main
+                className={`flex-1 w-full min-h-0 ${
+                    isConversations
+                        ? "p-0 h-[calc(100vh-64px)] md:h-[calc(100vh-68px)] overflow-hidden"
+                        : "px-4 sm:px-6 lg:px-8 py-6 sm:py-8 overflow-y-auto"
+                }`}
+            >
+                <Outlet />
             </main>
-        </div>
         </div>
     );
 }
