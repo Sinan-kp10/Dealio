@@ -10,11 +10,7 @@ import KycDocumentModal from "./KycDocumentModal";
 import KycDocumentPreviewModal from "./KycDocumentPreviewModal";
 import ConfirmationModal from "../../../../components/common/confirmationModel/ConfirmationModal";
 
-interface EnterpriseKycProps {
-    onStatusChange?: (status: "PENDING" | "VERIFIED" | "REQUIRED") => void;
-}
-
-function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
+function EnterpriseKyc() {
     const [kyc, setKyc] = useState<ActiveKycRecord | null>(null);
     const [pendingKyc, setPendingtKyc] = useState<KycRequestRecord | null>(null);
     const [updateMode, setUpdateMode] = useState(false);
@@ -57,11 +53,9 @@ function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
                     setKyc(active);
                     setPendingtKyc(pending);
                     resetForm(active || pending);
-                    onStatusChange?.(pending?.status === "PENDING" ? "PENDING" : active ? "VERIFIED" : "REQUIRED");
                 }
             } catch (error) {
                 handleApiError(error, "unable to load kyc details");
-                onStatusChange?.("REQUIRED");
             } finally {
                 if (!cancelled) {
                     setLoading(false);
@@ -73,7 +67,7 @@ function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
         return () => {
             cancelled = true;
         };
-    }, [resetForm, onStatusChange]);
+    }, [resetForm]);
 
     const isPendingReview = pendingKyc?.status === "PENDING";
     const canEdit = !isPendingReview;
@@ -109,7 +103,6 @@ function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
             setDocumentFile(null);
             setUpdateMode(false);
             setIsConfirmModalOpen(false);
-            onStatusChange?.("PENDING");
         } catch (error) {
             handleFormError(error, setError, "unable to update kyc details");
             setIsConfirmModalOpen(false);

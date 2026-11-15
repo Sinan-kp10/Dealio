@@ -1,6 +1,6 @@
-import { AlertCircle, BadgeCheck, Clock, Loader2 } from "lucide-react";
+import { AlertCircle, BadgeCheck, Clock, Loader2, XCircle } from "lucide-react";
 
-export type VerificationStatus = "LOADING" | "PENDING" | "VERIFIED" | "REQUIRED";
+export type VerificationStatus = "LOADING" | "PENDING" | "VERIFIED" | "REQUIRED" | "REJECTED";
 
 interface TabStatusBadgeProps {
   status: VerificationStatus;
@@ -32,6 +32,14 @@ export function TabStatusBadge({ status }: TabStatusBadgeProps) {
         </span>
       );
 
+    case "REJECTED":
+      return (
+        <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-red-950/10 text-red-900 border border-red-300 shrink-0">
+          <XCircle size={12} strokeWidth={2.4} className="text-red-700" />
+          <span>Rejected</span>
+        </span>
+      );
+
     case "REQUIRED":
     default:
       return (
@@ -44,4 +52,3 @@ export function TabStatusBadge({ status }: TabStatusBadgeProps) {
 }
 
 export default TabStatusBadge;
-

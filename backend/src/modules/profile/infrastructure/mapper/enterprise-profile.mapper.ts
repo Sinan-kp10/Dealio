@@ -1,5 +1,5 @@
 import { Prisma } from "../../../../../generated/prisma/client";
-import { EnterpriseProfileDto } from "../../application/dto/enterprise-profile.dto.js";
+import { EnterpriseProfileDto, VerificationStatusType } from "../../application/dto/enterprise-profile.dto.js";
 
 export const enterpriseProfileSelect = {
   id: true,
@@ -14,6 +14,8 @@ export const enterpriseProfileSelect = {
       enterprise_name: true,
       description: true,
       status: true,
+      kyc_status: true,
+      bank_status: true,
       category: {
         select: {
           id: true,
@@ -53,6 +55,9 @@ export class EnterpriseProfileMapper {
         name: item.subcategory.name,
       })) ?? [];
 
+    const kycStatus = (enterprise?.kyc_status as VerificationStatusType) ?? "REQUIRED";
+    const bankRecordStatus = (enterprise?.bank_status as VerificationStatusType) ?? "REQUIRED";
+
     return {
       id: user.id,
       name: user.name,
@@ -63,9 +68,11 @@ export class EnterpriseProfileMapper {
       enterpriseId: enterprise?.id ?? "",
       enterpriseName: enterprise?.enterprise_name ?? "",
       description: enterprise?.description ?? null,
-      status: enterprise?.status ?? "PENDING",
+      status: enterprise?.status ?? "",
       category,
       subcategories,
+      kycStatus,
+      bankRecordStatus,
     };
   }
 }

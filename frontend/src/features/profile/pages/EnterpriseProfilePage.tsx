@@ -11,7 +11,7 @@ import useAuthStore from "../../../stores/auth.store";
 import EnterpriseInformation from "../components/enterprise/EnterpriseInformation";
 import EnterpriseKyc from "../components/enterprise/EnterpriseKyc";
 import EnterpriseBankRecord from "../components/enterprise/EnterpriseBankRecord";
-import TabStatusBadge, { type VerificationStatus } from "../components/enterprise/TabStatusBadge";
+import TabStatusBadge from "../components/enterprise/TabStatusBadge";
 
 type EnterpriseTab = "enterprise" | "kyc" | "bank";
 
@@ -19,11 +19,19 @@ function EnterpriseProfilePage() {
   const [profile, setProfile] = useState<EnterpriseProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<EnterpriseTab>("enterprise");
-  const [kycStatus, setKycStatus] = useState<VerificationStatus>("LOADING");
-  const [bankRecordStatus, setBankRecordStatus] = useState<VerificationStatus>("LOADING");
+  const [visitedTabs, setVisitedTabs] = useState<Record<EnterpriseTab, boolean>>({
+    enterprise: true,
+    kyc: false,
+    bank: false,
+  });
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [isRemovingPhoto, setIsRemovingPhoto] = useState(false);
   const [imageLoadError, setImageLoadError] = useState(false);
+
+  const handleTabChange = (tab: EnterpriseTab) => {
+    setActiveTab(tab);
+    setVisitedTabs((prev) => (prev[tab] ? prev : { ...prev, [tab]: true }));
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -174,7 +182,7 @@ function EnterpriseProfilePage() {
         <div className="bg-[#f0f4f9] p-1.5 rounded-2xl grid grid-cols-1 sm:grid-cols-3 gap-1.5 sm:gap-2 border border-slate-200/60">
           <button
             type="button"
-            onClick={() => setActiveTab("enterprise")}
+            onClick={() => handleTabChange("enterprise")}
             className={`w-full flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
               activeTab === "enterprise"
                 ? "bg-white text-slate-900 shadow-xs border border-slate-200/60"
@@ -186,7 +194,7 @@ function EnterpriseProfilePage() {
           </button>
           <button
             type="button"
-            onClick={() => setActiveTab("kyc")}
+            onClick={() => handleTabChange("kyc")}
             className={`w-full flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all cursor-pointer ${
               activeTab === "kyc"
                 ? "bg-white text-slate-900 shadow-xs border border-slate-200/60 font-semibold"
@@ -195,11 +203,11 @@ function EnterpriseProfilePage() {
           >
             <IdCard size={16} className={activeTab === "kyc" ? "text-slate-700 shrink-0" : "text-slate-500 shrink-0"} />
             <span className="truncate">KYC Verification</span>
-            <TabStatusBadge status={kycStatus} />
+            <TabStatusBadge status={profile?.kycStatus || "LOADING"} />
           </button>
           <button
             type="button"
-            onClick={() => setActiveTab("bank")}
+            onClick={() => handleTabChange("bank")}
             className={`w-full flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all cursor-pointer ${
               activeTab === "bank"
                 ? "bg-white text-slate-900 shadow-xs border border-slate-200/60 font-semibold"
@@ -208,7 +216,7 @@ function EnterpriseProfilePage() {
           >
             <Landmark size={16} className={activeTab === "bank" ? "text-slate-700 shrink-0" : "text-slate-500 shrink-0"} />
             <span className="truncate">Bank & Settlement Details</span>
-            <TabStatusBadge status={bankRecordStatus} />
+            <TabStatusBadge status={profile?.bankRecordStatus || "LOADING"} />
           </button>
         </div>
 
@@ -220,11 +228,11 @@ function EnterpriseProfilePage() {
         </div>
 
         <div className={activeTab === "kyc" ? "block" : "hidden"}>
-          <EnterpriseKyc onStatusChange={setKycStatus} />
+          {visitedTabs.kyc && <EnterpriseKyc />}
         </div>
 
         <div className={activeTab === "bank" ? "block" : "hidden"}>
-          <EnterpriseBankRecord onStatusChange={setBankRecordStatus} />
+          {visitedTabs.bank && <EnterpriseBankRecord />}
         </div>
       </div>
 

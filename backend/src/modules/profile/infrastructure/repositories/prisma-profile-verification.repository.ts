@@ -182,15 +182,13 @@ export class PrismaProfileVerificationRepository implements IProfileVerficationR
                 where: { enterprise_id: enterpriseId, is_primary: true },
             });
 
-            if (activeBank) {
-                await tx.enterprises.update({
-                    where: { id: enterpriseId },
-                    data: {
-                        status: "VERIFIED",
-                        verified_at: verifiedAt,
-                    },
-                });
-            }
+            await tx.enterprises.update({
+                where: { id: enterpriseId },
+                data: {
+                    kyc_status: "VERIFIED",
+                    ...(activeBank ? { status: "VERIFIED", verified_at: verifiedAt } : {}),
+                },
+            });
 
             return await this.getEnterpriseManagerUserId(tx, enterpriseId);
         })
@@ -213,6 +211,17 @@ export class PrismaProfileVerificationRepository implements IProfileVerficationR
                     status: "REJECTED",
                     rejection_reason: reason,
                     verified_at: null,
+                },
+            });
+
+            const activeKyc = await tx.enterprise_kyc.findUnique({
+                where: { enterprise_id: enterpriseId },
+            });
+
+            await tx.enterprises.update({
+                where: { id: enterpriseId },
+                data: {
+                    kyc_status: activeKyc ? "VERIFIED" : "REJECTED",
                 },
             });
 
@@ -264,15 +273,13 @@ export class PrismaProfileVerificationRepository implements IProfileVerficationR
                 where: { enterprise_id: enterpriseId },
             });
 
-            if (activeKyc) {
-                await tx.enterprises.update({
-                    where: { id: enterpriseId },
-                    data: {
-                        status: "VERIFIED",
-                        verified_at: verifiedAt,
-                    },
-                });
-            }
+            await tx.enterprises.update({
+                where: { id: enterpriseId },
+                data: {
+                    bank_status: "VERIFIED",
+                    ...(activeKyc ? { status: "VERIFIED", verified_at: verifiedAt } : {}),
+                },
+            });
 
             return await this.getEnterpriseManagerUserId(tx, enterpriseId);
         });
@@ -295,6 +302,17 @@ export class PrismaProfileVerificationRepository implements IProfileVerficationR
                     status: "REJECTED",
                     rejection_reason: reason,
                     verified_at: null,
+                },
+            });
+
+            const activeBank = await tx.enterprise_bank_accounts.findFirst({
+                where: { enterprise_id: enterpriseId, is_primary: true },
+            });
+
+            await tx.enterprises.update({
+                where: { id: enterpriseId },
+                data: {
+                    bank_status: activeBank ? "VERIFIED" : "REJECTED",
                 },
             });
 

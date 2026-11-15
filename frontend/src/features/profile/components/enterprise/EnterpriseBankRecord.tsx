@@ -10,11 +10,7 @@ import { CreateEnterpriseBankRecordSchema } from "../../schemas/enterprise-bank.
 import ConfirmationModal from "../../../../components/common/confirmationModel/ConfirmationModal";
 import useCopyToClipboard from "../../../../hook/useCopyToClipboard";
 
-interface EnterpriseBankRecordProps {
-    onStatusChange?: (status: "PENDING" | "VERIFIED" | "REQUIRED") => void;
-}
-
-function EnterpriseBankRecord({ onStatusChange }: EnterpriseBankRecordProps = {}) {
+function EnterpriseBankRecord() {
     const [bankRecord, setBankRecord] = useState<ActiveBankRecord | null>(null);
     const [pendingBankRecord, setPendingBankRecord] = useState<BankRecordRequest | null>(null);
     const [updateMode, setUpdateMode] = useState(false);
@@ -57,11 +53,9 @@ function EnterpriseBankRecord({ onStatusChange }: EnterpriseBankRecordProps = {}
                     setBankRecord(active);
                     setPendingBankRecord(pending);
                     resetForm(active || pending);
-                    onStatusChange?.(pending?.status === "PENDING" ? "PENDING" : active ? "VERIFIED" : "REQUIRED");
                 }
             } catch (error) {
                 handleApiError(error, "unable to load bank record");
-                onStatusChange?.("REQUIRED");
             } finally {
                 if (!cancelled) {
                     setLoading(false);
@@ -73,7 +67,7 @@ function EnterpriseBankRecord({ onStatusChange }: EnterpriseBankRecordProps = {}
         return () => {
             cancelled = true;
         };
-    }, [resetForm, onStatusChange]);
+    }, [resetForm]);
 
     const isPendingReview = pendingBankRecord?.status === "PENDING";
     const canEdit = !isPendingReview;
@@ -96,7 +90,6 @@ function EnterpriseBankRecord({ onStatusChange }: EnterpriseBankRecordProps = {}
             setPendingBankRecord(response.data);
             setUpdateMode(false);
             setIsConfirmModalOpen(false);
-            onStatusChange?.("PENDING");
         } catch (error) {
             handleFormError(error, setError, "unable to update bank record");
             setIsConfirmModalOpen(false);

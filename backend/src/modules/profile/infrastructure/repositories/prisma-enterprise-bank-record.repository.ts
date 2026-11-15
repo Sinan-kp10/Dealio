@@ -39,18 +39,25 @@ export class PrismaEnterpriseBankRecordRepository implements IEnterprisBankRecor
     }
 
     createBankRecordRequest = async (enterpriseId: string, data: SaveEnterpriseBankRecordRequestDto): Promise<BankRecordRequestDto> => {
-        const bankRecord = await prisma.enterprise_bank_accounts_requests.create({
-            data: {
-                enterprise_id: enterpriseId,
-                account_holder_name: data.accountHolderName,
-                account_number: data.bankAccountNumber,
-                ifsc_code: data.ifscCode,
-                account_type: data.accountType as bank_account_type,
-                upi_id: data.upiId || null,
-                status: "PENDING",
-            },
-        });
+        return await prisma.$transaction(async (tx) => {
+            const bankRecord = await tx.enterprise_bank_accounts_requests.create({
+                data: {
+                    enterprise_id: enterpriseId,
+                    account_holder_name: data.accountHolderName,
+                    account_number: data.bankAccountNumber,
+                    ifsc_code: data.ifscCode,
+                    account_type: data.accountType as bank_account_type,
+                    upi_id: data.upiId || null,
+                    status: "PENDING",
+                },
+            });
 
-        return EnterpriseBankMapper.toRequestDto(bankRecord);
+            await tx.enterprises.update({
+                where: { id: enterpriseId },
+                data: { bank_status: "PENDING" },
+            });
+
+            return EnterpriseBankMapper.toRequestDto(bankRecord);
+        });
     };
 }
