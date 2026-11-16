@@ -13,13 +13,13 @@ export class QuotationRequestController {
     createQuotationRequest = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const userId = req.auth?.userId;
-            const { productName, category, subCategory, quantity, budget, location, description } = req.body as CreateQuotationRequestInput;
+            const { productName, categoryId, subCategoryId, quantity, budget, location, description } = req.body as CreateQuotationRequestInput;
 
             const quotationRequest = await this.createQuotationRequestUseCase.execute({
                 userId: userId!,
                 productName,
-                category,
-                subCategory,
+                categoryId,
+                subCategoryId,
                 quantity,
                 budget: budget ?? null,
                 location: location ?? null,

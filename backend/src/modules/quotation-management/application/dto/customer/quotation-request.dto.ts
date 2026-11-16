@@ -23,8 +23,8 @@ export interface QuotationRequestDto {
 export interface CreateQuotationRequestDto {
     userId : string
     productName : string;
-    category : Category;
-    subCategory : SubCategory
+    categoryId : string;
+    subCategoryId : string;
     quantity : number
     budget : number | null;
     location : string | null;

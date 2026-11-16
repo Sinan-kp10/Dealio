@@ -17,8 +17,8 @@ export class PrismaQuotationRequestRepository implements IQuotationRequestReposi
             data : {
                 customer_id : data.userId,
                 product_name : data.productName,
-                category_id : data.category.id,
-                subcategory_id : data.subCategory.id,
+                category_id : data.categoryId,
+                subcategory_id : data.subCategoryId,
                 quantity : data.quantity,
                 budget : data.budget,
                 location : data.location,

@@ -8,15 +8,9 @@ export const createQuotationRequestSchema = z.object({
         .max(120, "Product name cannot exceed 120 characters")
         .regex(/^[a-zA-Z0-9\s]+$/, "Product name must not contain special characters"),
 
-    category: z.object({
-        id: z.string().uuid("Invalid category ID"),
-        name: z.string().trim().min(1, "Category name is required"),
-    }, { message: "Category is required" }),
+    categoryId: z.string({ message: "Category is required" }).uuid("Invalid category ID"),
 
-    subCategory: z.object({
-        id: z.string().uuid("Invalid subcategory ID"),
-        name: z.string().trim().min(1, "Subcategory name is required"),
-    }, { message: "Sub category is required" }),
+    subCategoryId: z.string({ message: "Sub category is required" }).uuid("Invalid subcategory ID"),
 
     quantity: z
         .number({ message: "Quantity must be a number" })
