@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router-dom";
-import { Mail, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { otpSchema,} from "../schemas/otp.schema";
 import OtpInput from "./OTPinput";
 import type { OtpVerificationFormProps } from "../types/otp-verification-form.types";
@@ -71,90 +71,137 @@ export function OtpVerificationForm({ email, title, countdownKey, onSubmit, onRe
   }, [countdown, countdownKey]);
 
   return (
-    <div className="w-full max-w-[440px] bg-white rounded-[24px] sm:rounded-[28px] shadow-[0_20px_45px_-15px_rgba(15,30,60,0.08),0_0_1px_rgba(15,30,60,0.06)] border border-slate-200/70 p-5 sm:p-8 md:p-9">
-      <header className="text-center mb-6">
-        <Link
-          to="/"
-          className="inline-flex items-center justify-center mb-4 transition-transform duration-200 hover:scale-[1.02]"
-          aria-label="Dealio home"
-        >
-          <img
-            src="/dealio-logo.png"
-            alt="Dealio"
-            className="h-8 sm:h-9 w-auto object-contain"
-          />
-        </Link>
-        <h1 className="text-[1.5rem] sm:text-[1.75rem] font-extrabold text-[#0e2238] mb-1.5 tracking-[-0.03em] leading-tight">
-          {title}
-        </h1>
-        <p className="text-sm sm:text-[0.9375rem] text-slate-500 leading-relaxed m-0">
-          Enter the 6-digit code sent to your email.
-        </p>
-      </header>
-
-      <div className="flex items-center justify-center gap-2.5 py-2.5 sm:py-3 px-3 sm:px-4 bg-[#f0f6fc] border border-[#e2eaf3] rounded-2xl mb-6 max-w-full">
-        <Mail
-          size={17}
-          className="text-[#355982] shrink-0"
-          aria-hidden="true"
+    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-[#f8fafc]">
+      <div className="relative hidden lg:flex lg:w-1/2 min-h-screen flex-col justify-between p-10 xl:p-14 2xl:p-18 bg-gradient-to-br from-[#081a30] via-[#0c2340] to-[#102e52] text-white overflow-hidden border-r border-[#1a3860]/40 shadow-[4px_0_24px_rgba(12,35,64,0.12)]">
+        <div 
+          className="absolute -right-20 -top-20 w-96 h-96 rounded-full bg-[#4D79A8]/20 blur-3xl pointer-events-none" 
+          aria-hidden="true" 
         />
-        <p className="text-xs sm:text-sm text-slate-600 m-0 truncate">
-          Sent to <span className="font-semibold text-slate-900">{email}</span>
-        </p>
-      </div>
+        <div 
+          className="absolute -left-20 -bottom-20 w-96 h-96 rounded-full bg-[#69ACCC]/15 blur-3xl pointer-events-none" 
+          aria-hidden="true" 
+        />
+        <div 
+          className="absolute -right-20 top-1/2 -translate-y-1/2 w-72 h-[500px] rounded-full bg-[#69ACCC]/10 blur-3xl pointer-events-none" 
+          aria-hidden="true" 
+        />
 
-      <form onSubmit={handleSubmit(handleFormSubmit)} noValidate>
-        <input type="hidden" {...register("otp")} />
-        <div className="mb-2">
-          <OtpInput
-            onChange={(val) =>
-              setValue("otp", val, {
-                shouldValidate: !!errors.otp || val.length === 6,
-              })
-            }
-            hasError={!!errors.otp}
+        <div className="relative z-10">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 transition-transform duration-200 hover:scale-[1.02]"
+            aria-label="Dealio home"
+          >
+            <img
+              src="/dealio-logo-white.png"
+              alt="Dealio"
+              className="h-8 xl:h-9 w-auto object-contain"
+            />
+          </Link>
+        </div>
+
+        <div className="relative z-10 my-auto py-10 flex flex-col items-center justify-center">
+          <div 
+            className="absolute w-80 xl:w-96 h-80 xl:h-96 rounded-full bg-[#69ACCC]/20 blur-3xl pointer-events-none -z-10" 
+            aria-hidden="true" 
+          />
+          <img
+            src="/auth-image.png"
+            alt="Dealio Secure Verification"
+            className="w-full max-w-[440px] xl:max-w-[490px] 2xl:max-w-[540px] h-auto object-contain drop-shadow-[0_24px_45px_rgba(0,0,0,0.5)] select-none pointer-events-none transition-transform duration-300 hover:scale-[1.01]"
+            loading="eager"
           />
         </div>
 
-        {errors.otp && (
-          <p className="text-red-500 text-[0.8125rem] text-center mt-2 mb-0 leading-[1.35] font-medium">
-            {errors.otp.message}
+        <div className="relative z-10 max-w-xl">
+          <h2 className="text-xl xl:text-2xl font-bold text-white tracking-tight leading-snug m-0">
+            Secure Verification
+          </h2>
+          <p className="text-xs xl:text-sm text-slate-300/90 mt-2 leading-relaxed m-0">
+            Confirm your credentials and protect your Dealio account with fast, verified authentication.
           </p>
-        )}
+        </div>
+      </div>
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full h-12 mt-6 bg-[#2e4d75] hover:not-disabled:bg-[#233b5c] text-white border-0 rounded-xl text-[0.95rem] font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-[0_4px_14px_rgba(46,77,117,0.3)] hover:not-disabled:shadow-[0_6px_18px_rgba(46,77,117,0.35)] hover:not-disabled:-translate-y-0.5 active:not-disabled:translate-y-0 disabled:opacity-65 disabled:cursor-not-allowed transition-all duration-200"
-        >
-          {isSubmitting ? (
-            <ButtonSpinner />
-          ) : (
-            <>
-              <span>Verify & Continue</span>
-              <ArrowRight size={18} aria-hidden="true" />
-            </>
-          )}
-        </button>
-      </form>
+      <div className="w-full lg:w-1/2 min-h-screen flex items-center justify-center p-6 sm:p-10 md:p-12 xl:p-16 bg-[#f8fafc] overflow-y-auto">
+        <div className="w-full max-w-[420px] py-8 my-auto">
+          <header className="mb-7">
+            <div className="flex lg:hidden justify-center mb-5">
+              <Link
+                to="/"
+                className="inline-flex items-center transition-transform duration-200 hover:scale-[1.02]"
+                aria-label="Dealio home"
+              >
+                <img
+                  src="/dealio-logo.png"
+                  alt="Dealio"
+                  className="h-8 sm:h-9 w-auto object-contain"
+                />
+              </Link>
+            </div>
+            <h1 className="text-2xl sm:text-[1.85rem] font-extrabold text-[#0e2238] mb-1.5 tracking-[-0.03em] leading-tight text-center lg:text-left">
+              {title}
+            </h1>
+            <p className="text-sm sm:text-[0.9375rem] text-slate-500 leading-relaxed m-0 text-center lg:text-left">
+              Enter the 6-digit code sent to{" "}
+              <span className="font-semibold text-slate-800 break-all">{email}</span>
+            </p>
+          </header>
 
-      <p className="text-center text-sm text-slate-500 mt-6 mb-0">
-        Didn't receive the code?{" "}
-        {countdown > 0 ? (
-          <span className="text-slate-500 font-medium">
-            Resend code in {String(countdown).padStart(2, "0")}
-          </span>
-        ) : (
-          <button
-            type="button"
-            onClick={handleResend}
-            disabled={isResending}
-            className="font-semibold text-[#2e4d75] hover:text-[#203650] transition-colors disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
-          >
-            {isResending ? "Sending..." : "Resend code"}
-          </button>
-        )}
-      </p>
+          <form onSubmit={handleSubmit(handleFormSubmit)} noValidate>
+            <input type="hidden" {...register("otp")} />
+            <div className="mb-2">
+              <OtpInput
+                onChange={(val) =>
+                  setValue("otp", val, {
+                    shouldValidate: !!errors.otp || val.length === 6,
+                  })
+                }
+                hasError={!!errors.otp}
+              />
+            </div>
+
+            {errors.otp && (
+              <p className="text-red-500 text-[0.8125rem] text-center mt-2 mb-0 leading-[1.35] font-medium">
+                {errors.otp.message}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full h-12 mt-6 bg-[#2e4d75] hover:not-disabled:bg-[#233b5c] text-white border-0 rounded-xl text-[0.95rem] font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-[0_4px_14px_rgba(46,77,117,0.3)] hover:not-disabled:shadow-[0_6px_18px_rgba(46,77,117,0.35)] hover:not-disabled:-translate-y-0.5 active:not-disabled:translate-y-0 disabled:opacity-65 disabled:cursor-not-allowed transition-all duration-200"
+            >
+              {isSubmitting ? (
+                <ButtonSpinner />
+              ) : (
+                <>
+                  <span>Verify & Continue</span>
+                  <ArrowRight size={18} aria-hidden="true" />
+                </>
+              )}
+            </button>
+          </form>
+
+          <p className="text-center text-sm text-slate-500 mt-6 mb-0">
+            Didn't receive the code?{" "}
+            {countdown > 0 ? (
+              <span className="text-slate-500 font-medium">
+                Resend code in {String(countdown).padStart(2, "0")}s
+              </span>
+            ) : (
+              <button
+                type="button"
+                onClick={handleResend}
+                disabled={isResending}
+                className="font-semibold text-[#2e4d75] hover:text-[#203650] transition-colors disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+              >
+                {isResending ? "Sending..." : "Resend code"}
+              </button>
+            )}
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

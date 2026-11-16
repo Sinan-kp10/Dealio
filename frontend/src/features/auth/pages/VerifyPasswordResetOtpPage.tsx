@@ -53,7 +53,7 @@ function VerifyPasswordResetOtpPage(){
 
 
     return (
-        <main className="min-h-screen w-full flex items-center justify-center bg-[radial-gradient(circle_at_50%_0%,#f7faff_0%,#edf3f9_100%)] p-4 sm:p-6 md:p-8 box-border">
+        <main className="min-h-screen w-full">
             <OtpVerificationForm
                 email={email}
                 title="Verify Reset Code"

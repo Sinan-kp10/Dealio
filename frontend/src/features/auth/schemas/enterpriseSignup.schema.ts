@@ -5,7 +5,7 @@ export const enterpriseSignupSchema = z
     enterpriseName: z
       .string()
       .trim()
-      .min(2, "Enterprise name must contain at least 2 characters")
+      .min(2, "Name must contain at least 2 characters")
       .regex(/[a-zA-Z0-9]/, "Enterprise name cannot contain only special characters"),
 
     contactPersonName: z
@@ -17,7 +17,7 @@ export const enterpriseSignupSchema = z
     email: z
       .string()
       .trim()
-      .pipe(z.email("Enter a valid work email address")),
+      .pipe(z.email("Enter a valid email address")),
 
     phone: z
       .string()
