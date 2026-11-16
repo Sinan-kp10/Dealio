@@ -44,15 +44,6 @@ export interface UpdatedEnterpriseDetailsDto {
   subcategoryIds?: string[];
 }
 
-export interface CategoryOptionDto {
-  id: string;
-  name: string;
-  subcategories: {
-    id: string;
-    name: string;
-  }[];
-}
-
 export interface EnterpriseUserDto {
   userId: string;
   enterpriseId: string;

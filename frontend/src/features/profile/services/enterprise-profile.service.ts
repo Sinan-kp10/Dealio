@@ -1,6 +1,6 @@
 import axiosInstance from "../../../app/lib/axios";
 import type { CreateEnterpriseKycInput, EnterpriseKycDetailsResponse, SubmitKycResponse, UpdateEnterpriseKycInput } from "../types/enterprise-kyc.types";
-import type { CategoryOption, CategoryOptionsResponse, EnterpriseProfile, EnterpriseProfileResponse, UpdateEnterpriseDetails } from "../types/enterprise-profile.types";
+import type { EnterpriseProfile, EnterpriseProfileResponse, UpdateEnterpriseDetails } from "../types/enterprise-profile.types";
 import type {CreateEnterpriseBankRecordFormData, EnterpriseBankRecordResponse,SubmitBankRecordResponse,UpdateEnterpriseBankRecordInput,} from "../types/enterprise-bank-record.types";
 
 export const getEnterpriseProfile = async (): Promise<EnterpriseProfile> => {
@@ -10,11 +10,6 @@ export const getEnterpriseProfile = async (): Promise<EnterpriseProfile> => {
 
 export const updateEnterpriseDetails = async (payload: UpdateEnterpriseDetails): Promise<EnterpriseProfile> => {
   const response = await axiosInstance.patch<EnterpriseProfileResponse>("/enterprise/profile", payload);
-  return response.data.data;
-};
-
-export const getEnterpriseCategories = async (): Promise<CategoryOption[]> => {
-  const response = await axiosInstance.get<CategoryOptionsResponse>("/enterprise/categories");
   return response.data.data;
 };
 

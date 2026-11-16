@@ -1,13 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {SquarePen,Mail,BadgeCheck,Phone,ChevronDown,Check,X,Loader2,Building2,User,Info,AlertTriangle,} from "lucide-react";
-import type {EnterpriseProfile,UpdateEnterpriseDetails,CategoryOption,} from "../../types/enterprise-profile.types";
-import { getEnterpriseCategories, updateEnterpriseDetails,} from "../../services/enterprise-profile.service";
+import type {EnterpriseProfile,UpdateEnterpriseDetails} from "../../types/enterprise-profile.types";
+import { updateEnterpriseDetails } from "../../services/enterprise-profile.service";
+import useCategoryStore from "../../../../stores/category.store";
 import { UpdateEnterpriseDetailsSchema } from "../../schemas/update-enterprise-details.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "react-toastify";
-import { handleApiError, handleFormError } from "../../../../utils/errorHandler";
+import { handleFormError } from "../../../../utils/errorHandler";
 import useAuthStore from "../../../../stores/auth.store";
 
 interface EnterpriseInformationProps {
@@ -20,8 +21,8 @@ const MAX_SUBCATEGORIES = 6;
 export default function EnterpriseInformation({profile,onProfileUpdated,}: EnterpriseInformationProps) {
   const navigate = useNavigate();
   const [updateMode, setUpdateMode] = useState(false);
-  const [categories, setCategories] = useState<CategoryOption[]>([]);
-  const [loadingCategories, setLoadingCategories] = useState(false);
+  const categories = useCategoryStore((state) => state.categories);
+  const loadingCategories = useCategoryStore((state) => state.isLoading);
 
   const {register,handleSubmit,reset,control,setValue,setError,formState: { errors, isSubmitting },} = useForm<UpdateEnterpriseDetails>({resolver: zodResolver(UpdateEnterpriseDetailsSchema)});
 
@@ -29,22 +30,6 @@ export default function EnterpriseInformation({profile,onProfileUpdated,}: Enter
   const selectedSubcategoryIds = useWatch({ control, name: "subcategoryIds" }) || [];
 
   const availableSubcategories = categories.find((cat) => cat.id === selectedCategoryId)?.subcategories || [];
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        setLoadingCategories(true);
-        const data = await getEnterpriseCategories();
-        setCategories(data);
-      } catch (error) {
-        handleApiError(error, "Failed to load categories");
-      } finally {
-        setLoadingCategories(false);
-      }
-    };
-
-    void fetchCategories();
-  }, []);
 
   const resetForm = () => {
     if (!profile) return;

@@ -1,5 +1,5 @@
 import { prisma } from "../../../../infrastructure/database/prisma/prisma-client";
-import { CategoryOptionDto, EnterpriseProfileDto, UpdatedEnterpriseDetailsDto,} from "../../application/dto/enterprise-profile.dto";
+import { EnterpriseProfileDto, UpdatedEnterpriseDetailsDto,} from "../../application/dto/enterprise-profile.dto";
 import { IEnterpriseProfileRepository } from "../../domain/repositories/enterprise-profile.repository";
 import { EnterpriseProfileMapper, enterpriseProfileSelect } from "../mapper/enterprise-profile.mapper";
 
@@ -64,25 +64,6 @@ export class PrismaEnterpriseProfileRepository implements IEnterpriseProfileRepo
             });
 
             return EnterpriseProfileMapper.toDto(updatedUser);
-        });
-    };
-
-    getActiveCategoriesWithSubcategories = async (): Promise<CategoryOptionDto[]> => {
-        return await prisma.categories.findMany({
-            where: { status: "ACTIVE" },
-            select: {
-                id: true,
-                name: true,
-                subcategories: {
-                    where: { status: "ACTIVE" },
-                    select: {
-                        id: true,
-                        name: true,
-                    },
-                    orderBy: { name: "asc" },
-                },
-            },
-            orderBy: { name: "asc" },
         });
     };
 }

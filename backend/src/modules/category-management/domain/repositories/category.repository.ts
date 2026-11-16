@@ -7,5 +7,5 @@ export interface ICategoryRepository extends IBaseRepository<CategoryListItemDto
     findByName(name: string): Promise<CategoryDto | null>;
     createCategory(name : string, status : CategoryStatus) : Promise<CategoryDto>
     updateCategory(id : string, data : UpdatedCategoryFieldsDto) : Promise<CategoryDto>
-    findActiveCategories(): Promise<ActiveCategoryDto[]>
+    findActiveCategoriesWithSubcategories(): Promise<ActiveCategoryDto[]>
 }

@@ -1,14 +1,13 @@
 import type { Request, Response, NextFunction } from "express";
 import { sendResponse } from "../../../../shared/presentation/api-response";
 import { IUseCase } from "../../../../shared/application/base.usecase";
-import { CategoryOptionDto, EnterpriseProfileDto, UpdateEnterpriseDetailsDto } from "../../application/dto/enterprise-profile.dto";
+import { EnterpriseProfileDto, UpdateEnterpriseDetailsDto } from "../../application/dto/enterprise-profile.dto";
 
 export class EnterpriseProfileController {
 
     constructor(
         private readonly getEnterpriseProfileUseCase : IUseCase<string, EnterpriseProfileDto>,
-        private readonly updateEnterpriseDetailsUseCase : IUseCase<UpdateEnterpriseDetailsDto, EnterpriseProfileDto>,
-        private readonly getActiveCategoriesUseCase : IUseCase<void, CategoryOptionDto[]>
+        private readonly updateEnterpriseDetailsUseCase : IUseCase<UpdateEnterpriseDetailsDto, EnterpriseProfileDto>
     ){}
 
     getProfile = async(req: Request, res: Response, next: NextFunction)=> {
@@ -39,16 +38,6 @@ export class EnterpriseProfileController {
             
         } catch (error) {
             next(error)
-        }
-    }
-
-    getCategories = async(_req: Request, res: Response, next: NextFunction): Promise<void> => {
-        try {
-            const categories = await this.getActiveCategoriesUseCase.execute();
-
-            sendResponse(res, "Categories retrieved successfully", categories);
-        } catch (error) {
-            next(error);
         }
     }
 }

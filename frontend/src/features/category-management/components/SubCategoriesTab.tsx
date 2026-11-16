@@ -10,6 +10,7 @@ import Pagination from "../../../components/common/pagination/Pagination";
 import SubCategoryModal from "./SubCategoryFormModal";
 import Select from "../../../components/common/select/Select";
 import useCategoryStore from "../../../stores/category.store";
+import { refreshActiveCategories } from "../../../hook/useActiveCategories";
 
 const DEFAULT_LIMIT = 5;
 
@@ -89,6 +90,7 @@ function SubCategoriesTab({onSubCategoryAdded,}: SubCategoriesTabProps) {
         handleCloseModal();
         setRefreshCount((prev) => prev + 1);
         onSubCategoryAdded?.();
+        void refreshActiveCategories();
     };
 
     const handleOpenAddModal = () => {

@@ -13,7 +13,7 @@ export class CategoryController {
         private readonly getActiveCategoriesUseCase : IUseCase<void, ActiveCategoryDto[]>
     ){}
 
-    getActiveCategories = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
+    getActiveCategoriesWithSubcategories = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const categories = await this.getActiveCategoriesUseCase.execute();
 
