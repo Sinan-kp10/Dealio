@@ -23,6 +23,13 @@ enum enterprise_status {
   VERIFIED
 }
 
+enum verification_status {
+  PENDING
+  VERIFIED
+  REJECTED
+  REQUIRED
+}
+
 model users {
   id                  String      @id @default(uuid()) @db.Uuid
   name                String      @db.VarChar(255)
@@ -47,14 +54,16 @@ model users {
 }
 
 model enterprises {
-  id              String            @id @default(uuid()) @db.Uuid
-  enterprise_name String            @db.VarChar(255)
-  category_id     String?           @db.Uuid
-  description     String?           @db.Text
-  status          enterprise_status @default(PENDING)
-  verified_at     DateTime?         @db.Timestamptz
-  created_at      DateTime          @default(now()) @db.Timestamptz
-  updated_at      DateTime          @updatedAt @db.Timestamptz
+  id              String              @id @default(uuid()) @db.Uuid
+  enterprise_name String              @db.VarChar(255)
+  category_id     String?             @db.Uuid
+  description     String?             @db.Text
+  status          enterprise_status   @default(PENDING)
+  kyc_status      verification_status @default(REQUIRED)
+  bank_status     verification_status @default(REQUIRED)
+  verified_at     DateTime?           @db.Timestamptz
+  created_at      DateTime            @default(now()) @db.Timestamptz
+  updated_at      DateTime            @updatedAt @db.Timestamptz
 
   users                 users[]                              @relation("enterprise_members")
   kyc                   enterprise_kyc?

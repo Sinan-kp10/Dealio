@@ -36,17 +36,24 @@ export class PrismaEnterpriseKycRepository implements IEnterpriseKycRepository {
     };
 
     createKycRequest = async (enterpriseId: string, data: SaveEnterpriseKycRequestDto): Promise<KycRequestDto> => {
-        const kyc = await prisma.enterprise_kyc_requests.create({
-            data: {
-                enterprise_id: enterpriseId,
-                business_type: data.businessType as business_type,
-                full_legal_name: data.fullLegalName,
-                document_type: data.documentType as document_type,
-                document_storage_key: data.documentStorageKey,
-                status: "PENDING",
-            },
-        });
+        return await prisma.$transaction(async (tx) => {
+            const kyc = await tx.enterprise_kyc_requests.create({
+                data: {
+                    enterprise_id: enterpriseId,
+                    business_type: data.businessType as business_type,
+                    full_legal_name: data.fullLegalName,
+                    document_type: data.documentType as document_type,
+                    document_storage_key: data.documentStorageKey,
+                    status: "PENDING",
+                },
+            });
 
-        return EnterpriseKycMapper.toRequestDto(kyc);
+            await tx.enterprises.update({
+                where: { id: enterpriseId },
+                data: { kyc_status: "PENDING" },
+            });
+
+            return EnterpriseKycMapper.toRequestDto(kyc);
+        });
     };
 }

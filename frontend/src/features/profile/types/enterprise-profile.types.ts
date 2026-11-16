@@ -8,6 +8,8 @@ export interface Subcategory {
   name: string;
 }
 
+export type VerificationStatusType = "PENDING" | "VERIFIED" | "REQUIRED" | "REJECTED";
+
 export interface EnterpriseProfile {
   id: string;
   name: string;
@@ -21,6 +23,8 @@ export interface EnterpriseProfile {
   status: string;
   category: Category | null;
   subcategories: Subcategory[];
+  kycStatus?: VerificationStatusType;
+  bankRecordStatus?: VerificationStatusType;
 }
 
 export interface EnterpriseProfileResponse {

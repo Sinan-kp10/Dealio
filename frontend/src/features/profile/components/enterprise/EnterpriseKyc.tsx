@@ -9,12 +9,9 @@ import { handleApiError, handleFormError } from "../../../../utils/errorHandler"
 import KycDocumentModal from "./KycDocumentModal";
 import KycDocumentPreviewModal from "./KycDocumentPreviewModal";
 import ConfirmationModal from "../../../../components/common/confirmationModel/ConfirmationModal";
+import EnterpriseKycSkeleton from "../loading/EnterpriseKycSkeleton";
 
-interface EnterpriseKycProps {
-    onStatusChange?: (status: "PENDING" | "VERIFIED" | "REQUIRED") => void;
-}
-
-function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
+function EnterpriseKyc() {
     const [kyc, setKyc] = useState<ActiveKycRecord | null>(null);
     const [pendingKyc, setPendingtKyc] = useState<KycRequestRecord | null>(null);
     const [updateMode, setUpdateMode] = useState(false);
@@ -57,11 +54,9 @@ function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
                     setKyc(active);
                     setPendingtKyc(pending);
                     resetForm(active || pending);
-                    onStatusChange?.(pending?.status === "PENDING" ? "PENDING" : active ? "VERIFIED" : "REQUIRED");
                 }
             } catch (error) {
                 handleApiError(error, "unable to load kyc details");
-                onStatusChange?.("REQUIRED");
             } finally {
                 if (!cancelled) {
                     setLoading(false);
@@ -73,7 +68,7 @@ function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
         return () => {
             cancelled = true;
         };
-    }, [resetForm, onStatusChange]);
+    }, [resetForm]);
 
     const isPendingReview = pendingKyc?.status === "PENDING";
     const canEdit = !isPendingReview;
@@ -109,7 +104,6 @@ function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
             setDocumentFile(null);
             setUpdateMode(false);
             setIsConfirmModalOpen(false);
-            onStatusChange?.("PENDING");
         } catch (error) {
             handleFormError(error, setError, "unable to update kyc details");
             setIsConfirmModalOpen(false);
@@ -117,11 +111,7 @@ function EnterpriseKyc({ onStatusChange }: EnterpriseKycProps = {}) {
     };
 
     if (loading) {
-        return (
-            <div className="py-12 flex items-center justify-center text-slate-500">
-                <Loader2 size={24} className="animate-spin text-[#204066]" />
-            </div>
-        );
+        return <EnterpriseKycSkeleton />;
     }
 
     return (
