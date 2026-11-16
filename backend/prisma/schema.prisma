@@ -49,6 +49,7 @@ model users {
 
   enterprise          enterprises?  @relation("enterprise_members", fields: [enterprise_id], references: [id])
   notifications       notifications[] @relation("user_notifications")
+  quotation_requests  quotation_requests[] @relation("customer_quotation_requests")
 
   @@map("users")
 }
@@ -200,8 +201,9 @@ model categories {
   created_at    DateTime        @default(now()) @db.Timestamptz
   updated_at    DateTime        @updatedAt @db.Timestamptz
 
-  subcategories subcategories[]
-  enterprises   enterprises[]
+  subcategories      subcategories[]
+  enterprises        enterprises[]
+  quotation_requests quotation_requests[]
 
   @@map("categories")
 }
@@ -214,8 +216,9 @@ model subcategories {
   created_at  DateTime           @default(now()) @db.Timestamptz
   updated_at  DateTime           @updatedAt @db.Timestamptz
 
-  category    categories                 @relation(fields: [category_id], references: [id])
-  enterprises enterprise_subcategories[]
+  category           categories                 @relation(fields: [category_id], references: [id])
+  enterprises        enterprise_subcategories[]
+  quotation_requests quotation_requests[]
 
   @@map("subcategories")
 }
@@ -256,4 +259,40 @@ model notifications {
   @@index([user_id, is_read, created_at(sort: Desc)])
   @@index([user_id, created_at(sort: Desc), id(sort: Desc)])
   @@map("notifications")
+}
+
+enum quotation_request_status {
+  PENDING
+  PROPOSAL_RECEIVED
+  ACCEPTED
+  COMPLETED
+  CANCELLED
+}
+
+model quotation_requests {
+  id             String                   @id @default(uuid()) @db.Uuid
+  customer_id    String                   @db.Uuid
+  category_id    String                   @db.Uuid
+  subcategory_id String                   @db.Uuid
+  product_name   String                   @db.VarChar(255)
+  description    String                   @db.Text
+  quantity       Int
+  budget         Int?
+  location       String?                  @db.VarChar(255)
+  status         quotation_request_status @default(PENDING)
+  created_at     DateTime                 @default(now()) @db.Timestamptz
+  updated_at     DateTime                 @updatedAt @db.Timestamptz
+  cancelled_at   DateTime?                @db.Timestamptz
+  accepted_at    DateTime?                @db.Timestamptz
+
+
+  customer       users                    @relation("customer_quotation_requests", fields: [customer_id], references: [id], onDelete: Cascade)
+  category       categories               @relation(fields: [category_id], references: [id])
+  subcategory    subcategories            @relation(fields: [subcategory_id], references: [id])
+
+  @@index([customer_id])
+  @@index([category_id])
+  @@index([subcategory_id])
+  @@index([status])
+  @@map("quotation_requests")
 }
