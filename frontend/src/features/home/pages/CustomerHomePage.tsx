@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Plus, FilePlus } from "lucide-react";
+import { Plus, FilePlus, ArrowRight, ShieldCheck, Clock, CheckCircle2 } from "lucide-react";
 
 function CustomerHomePage() {
   const navigate = useNavigate();
@@ -7,45 +7,98 @@ function CustomerHomePage() {
   return (
     <div className="w-full space-y-6 sm:space-y-8 animate-in fade-in duration-200">
       {/* Hero Section Banner */}
-      <section className="relative w-full rounded-2xl sm:rounded-3xl bg-gradient-to-br from-[#0c2340] via-[#102e52] to-[#0c2340] text-white p-6 sm:p-8 lg:p-10 shadow-[0_4px_20px_-4px_rgba(12,35,64,0.25)] overflow-hidden">
-        {/* Subtle decorative background glow */}
+      <section className="relative w-full rounded-2xl sm:rounded-3xl bg-gradient-to-br from-[#0c2340] via-[#102e52] to-[#0c2340] text-white p-7 sm:p-9 lg:p-11 xl:p-14 shadow-[0_4px_20px_-4px_rgba(12,35,64,0.25)] overflow-hidden">
+        {/* Decorative background ambient glows */}
         <div 
-          className="absolute -right-16 -top-16 w-72 h-72 rounded-full bg-blue-400/10 blur-3xl pointer-events-none" 
+          className="absolute -right-20 -top-20 w-80 sm:w-96 h-80 sm:h-96 rounded-full bg-[#4D79A8]/20 blur-3xl pointer-events-none" 
           aria-hidden="true" 
         />
         <div 
-          className="absolute -left-16 -bottom-16 w-72 h-72 rounded-full bg-indigo-500/10 blur-3xl pointer-events-none" 
+          className="absolute -left-20 -bottom-20 w-80 sm:w-96 h-80 sm:h-96 rounded-full bg-[#69ACCC]/15 blur-3xl pointer-events-none" 
           aria-hidden="true" 
         />
 
-        <div className="relative z-10 max-w-4xl">
-          <h1 className="text-2xl sm:text-3xl lg:text-[32px] font-bold text-white tracking-tight leading-snug">
-            Get Guaranteed Best Prices from Verified Enterprises
-          </h1>
+        <div className="relative z-10 w-full max-w-[1360px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 xl:gap-12 items-center">
+          
+          {/* Left Column: Heading, Subtitle, Action Buttons, Trust Highlights */}
+          <div className="lg:col-span-6 xl:col-span-6 flex flex-col items-start text-left z-10">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.35rem] xl:text-[2.7rem] font-extrabold text-white tracking-tight leading-[1.15] m-0">
+              Get Guaranteed Best Prices
+              <span className="block mt-1.5 text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-sky-200 to-white">
+                from Verified Enterprises
+              </span>
+            </h1>
 
-          <p className="mt-3 sm:mt-3.5 text-xs sm:text-sm lg:text-[15px] text-slate-200/90 leading-relaxed max-w-3xl">
-            Post your requirement in seconds. Verified suppliers across active categories compete to submit competitive proposals, flexible commercial terms, and escrow-protected transactions.
-          </p>
+            <p className="mt-5 sm:mt-6 text-xs sm:text-sm lg:text-[15px] text-slate-200/90 leading-relaxed max-w-xl m-0 font-normal text-pretty">
+              Post your requirement in seconds. Verified suppliers compete to deliver competitive proposals, flexible terms, and escrow-protected deals.
+            </p>
 
-          <div className="mt-5 sm:mt-7 flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
-            <button
-              type="button"
-              onClick={() => navigate("/customer/quotations/create")}
-              className="flex-1 sm:flex-initial inline-flex items-center justify-center px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-[#0c2340] bg-[#eef5fc] hover:bg-white border border-[#d2e4f5] rounded-xl shadow-xs transition-all duration-150 cursor-pointer active:scale-[0.98] text-center whitespace-nowrap"
-            >
-              <span className="hidden min-[420px]:inline">Create Quotation Request</span>
-              <span className="min-[420px]:hidden">Create Request</span>
-            </button>
+            {/* Action Buttons */}
+            <div className="mt-8 sm:mt-9 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full sm:w-auto">
+              <button
+                type="button"
+                onClick={() => navigate("/customer/quotations/create")}
+                className="inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3.5 text-xs sm:text-sm font-semibold text-[#0c2340] bg-[#eef5fc] hover:bg-white border border-[#d2e4f5] rounded-xl shadow-xs transition-all duration-150 cursor-pointer active:scale-[0.98] whitespace-nowrap"
+              >
+                <span>Create Quotation Request</span>
+                <ArrowRight size={15} />
+              </button>
 
-            <button
-              type="button"
-              onClick={() => navigate("/customer/quotations")}
-              className="flex-1 sm:flex-initial inline-flex items-center justify-center px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-white bg-white/10 hover:bg-white/15 border border-white/20 rounded-xl backdrop-blur-xs transition-all duration-150 cursor-pointer active:scale-[0.98] text-center whitespace-nowrap"
-            >
-              <span className="hidden min-[420px]:inline">My Quotation Requests</span>
-              <span className="min-[420px]:hidden">My Requests</span>
-            </button>
+              <button
+                type="button"
+                onClick={() => navigate("/customer/quotations")}
+                className="inline-flex items-center justify-center px-6 sm:px-7 py-3.5 text-xs sm:text-sm font-medium text-white bg-white/10 hover:bg-white/15 border border-white/20 rounded-xl backdrop-blur-xs transition-all duration-150 cursor-pointer active:scale-[0.98] whitespace-nowrap"
+              >
+                <span>My Quotation Requests</span>
+              </button>
+            </div>
+
+            {/* Value Highlights */}
+            <div className="mt-10 sm:mt-12 lg:mt-14 pt-7 sm:pt-8 border-t border-white/10 grid grid-cols-3 gap-4 sm:gap-6 w-full max-w-md sm:max-w-lg">
+              <div className="flex flex-col">
+                <div className="flex items-center gap-1.5 text-sky-300 text-xs sm:text-[13px] font-semibold">
+                  <ShieldCheck size={16} />
+                  <span>Verified</span>
+                </div>
+                <span className="text-xs text-slate-400 mt-1">Compliant enterprises</span>
+              </div>
+
+              <div className="flex flex-col">
+                <div className="flex items-center gap-1.5 text-sky-300 text-xs sm:text-[13px] font-semibold">
+                  <Clock size={16} />
+                  <span>Fast Bids</span>
+                </div>
+                <span className="text-xs text-slate-400 mt-1">Quick proposal turnaround</span>
+              </div>
+
+              <div className="flex flex-col">
+                <div className="flex items-center gap-1.5 text-sky-300 text-xs sm:text-[13px] font-semibold">
+                  <CheckCircle2 size={16} />
+                  <span>Protected</span>
+                </div>
+                <span className="text-xs text-slate-400 mt-1">Escrow-safe transactions</span>
+              </div>
+            </div>
           </div>
+
+          {/* Right Column: Customer Hero Image (Positioned close to the content) */}
+          <div className="lg:col-span-6 xl:col-span-6 flex items-center justify-center lg:justify-start xl:justify-center mt-4 lg:mt-0">
+            <div className="relative w-full max-w-[480px] sm:max-w-[540px] lg:max-w-[560px] xl:max-w-[620px] 2xl:max-w-[660px] flex justify-center lg:justify-start xl:justify-center">
+              {/* Radial ambient glow behind the illustration */}
+              <div 
+                className="absolute w-64 sm:w-72 lg:w-80 h-64 sm:h-72 lg:h-80 rounded-full bg-[#69ACCC]/20 blur-3xl pointer-events-none -z-10" 
+                aria-hidden="true" 
+              />
+              
+              <img
+                src="/customer-hero-image.png"
+                alt="Customer Quotations & Deals"
+                className="w-full h-auto object-contain drop-shadow-[0_20px_35px_rgba(0,0,0,0.45)] select-none pointer-events-none transition-transform duration-300 hover:scale-[1.01]"
+                loading="eager"
+              />
+            </div>
+          </div>
+
         </div>
       </section>
 
