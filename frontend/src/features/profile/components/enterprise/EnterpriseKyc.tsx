@@ -9,6 +9,7 @@ import { handleApiError, handleFormError } from "../../../../utils/errorHandler"
 import KycDocumentModal from "./KycDocumentModal";
 import KycDocumentPreviewModal from "./KycDocumentPreviewModal";
 import ConfirmationModal from "../../../../components/common/confirmationModel/ConfirmationModal";
+import EnterpriseKycSkeleton from "../loading/EnterpriseKycSkeleton";
 
 function EnterpriseKyc() {
     const [kyc, setKyc] = useState<ActiveKycRecord | null>(null);
@@ -110,11 +111,7 @@ function EnterpriseKyc() {
     };
 
     if (loading) {
-        return (
-            <div className="py-12 flex items-center justify-center text-slate-500">
-                <Loader2 size={24} className="animate-spin text-[#204066]" />
-            </div>
-        );
+        return <EnterpriseKycSkeleton />;
     }
 
     return (

@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateEnterpriseBankRecordSchema } from "../../schemas/enterprise-bank.record.schema";
 import ConfirmationModal from "../../../../components/common/confirmationModel/ConfirmationModal";
 import useCopyToClipboard from "../../../../hook/useCopyToClipboard";
+import EnterpriseBankRecordSkeleton from "../loading/EnterpriseBankRecordSkeleton";
 
 function EnterpriseBankRecord() {
     const [bankRecord, setBankRecord] = useState<ActiveBankRecord | null>(null);
@@ -97,11 +98,7 @@ function EnterpriseBankRecord() {
     };
 
     if (loading) {
-        return (
-            <div className="py-12 flex items-center justify-center text-slate-500">
-                <Loader2 size={24} className="animate-spin text-[#204066]" />
-            </div>
-        );
+        return <EnterpriseBankRecordSkeleton />;
     }
 
     return (
