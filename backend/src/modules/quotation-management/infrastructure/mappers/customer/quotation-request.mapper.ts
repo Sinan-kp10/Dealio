@@ -1,32 +1,46 @@
 import { Prisma } from "../../../../../../generated/prisma/client";
-import { QuotationRequestDto } from "../../../application/dto/customer/quotation-request.dto";
+import { QuotationRequestListItemDto, QuotationRequestStatus } from "../../../application/dto/customer/quotation-request-list.dto";
 
-export const quotationRequestSelect = {
-    product_name : true,
-    category : true,
-    subcategory : true,
-    quantity : true,
-    budget : true,
-    location : true,
-    description : true,
-    status : true,
-    created_at : true
+export const quotationRequestListItemSelect = {
+    id: true,
+    product_name: true,
+    quantity: true,
+    description: true,
+    status: true,
+    created_at: true,
+    category: {
+        select: {
+            id: true,
+            name: true,
+        },
+    },
+    subcategory: {
+        select: {
+            id: true,
+            name: true,
+        },
+    },
 } satisfies Prisma.quotation_requestsSelect;
 
-export type quotationRequestRecord = Prisma.quotation_requestsGetPayload<{ select: typeof quotationRequestSelect }>;
+export type QuotationRequestListItemRecord = Prisma.quotation_requestsGetPayload<{ select: typeof quotationRequestListItemSelect }>;
 
 export class QuotationRequestMapper {
-  static toDto( data : quotationRequestRecord): QuotationRequestDto {
+  static toListItemDto(data: QuotationRequestListItemRecord): QuotationRequestListItemDto {
     return {
-        productName : data.product_name,
-        category : data.category,
-        subCategory : data.subcategory,
-        quantity : data.quantity,
-        budget : data.budget,
-        location : data.location,
-        description : data.description,
-        status : data.status,
-        createdAt : data.created_at
+      id: data.id,
+      productName: data.product_name,
+      category: {
+        id: data.category.id,
+        name: data.category.name,
+      },
+      subCategory: {
+        id: data.subcategory.id,
+        name: data.subcategory.name,
+      },
+      quantity: data.quantity,
+      description: data.description,
+      status: data.status as QuotationRequestStatus,
+      createdAt: data.created_at,
     };
   }
 }
