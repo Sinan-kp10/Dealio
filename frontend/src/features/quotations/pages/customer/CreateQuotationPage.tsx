@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
-import { Sparkles, Info, MapPin, ChevronDown, ChevronRight, Loader2 } from "lucide-react";
+import { Info, MapPin, ChevronDown, ChevronRight, Loader2 } from "lucide-react";
 import { createQuotationFormSchema, type CreateQuotationFormData } from "../../schemas/create-quotation-request.schema";
 import { createQuotationRequest } from "../../services/quotation.service";
 import useCategoryStore from "../../../../stores/category.store";
@@ -46,25 +46,13 @@ export function CreateQuotationPage() {
   return (
     <div className="w-full animate-in fade-in duration-200">
       <div className="w-full bg-white rounded-2xl sm:rounded-3xl border border-slate-200/85 p-6 sm:p-8 lg:p-10 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-6 sm:space-y-7">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-1">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-[#0e2238] tracking-tight">
-              Create Quotation Request
-            </h1>
-            <p className="mt-1.5 text-xs sm:text-sm text-slate-500 leading-relaxed">
-              Tell us what you are looking for, and receive competitive structured quotations from vetted suppliers.
-            </p>
-          </div>
-
-          <div className="flex items-center shrink-0 self-start sm:self-center">
-            <button
-              type="button"
-              className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 hover:text-slate-900 bg-slate-50 hover:bg-slate-100 border border-slate-200/90 rounded-xl transition-all shadow-2xs cursor-pointer active:scale-[0.98]"
-            >
-              <Sparkles size={15} className="text-blue-600" />
-              <span>Prefill Sample Data</span>
-            </button>
-          </div>
+        <div>
+          <h1 className="text-2xl sm:text-[1.75rem] font-bold text-[#0F1D2F] tracking-tight leading-tight m-0">
+            Create Quotation Request
+          </h1>
+          <p className="text-slate-500 text-sm sm:text-[0.9375rem] mt-1.5 m-0">
+            Tell us what you are looking for, and receive competitive structured quotations from vetted suppliers.
+          </p>
         </div>
 
         <form
