@@ -68,8 +68,7 @@ export function CustomerQuotationDetailsPage() {
     );
   }
 
-  const isCancellable =
-    quotation.status === "PENDING" || quotation.status === "PROPOSAL_RECEIVED";
+  const isCancellable = quotation.status === "PENDING" || quotation.status === "PROPOSAL_RECEIVED";
 
   const hasBudget = quotation.budget !== null && quotation.budget > 0;
   const hasLocation = Boolean(quotation.location && quotation.location.trim().length > 0);
