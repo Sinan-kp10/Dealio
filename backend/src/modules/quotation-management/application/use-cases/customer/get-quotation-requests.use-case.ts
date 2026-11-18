@@ -8,6 +8,6 @@ export class GetQuotationRequestsUseCase implements IUseCase<GetQuotationRequest
     ) {}
 
     execute = async (input: GetQuotationRequestsDto): Promise<PaginatedQuotationDto> => {
-        return await this.quotationRequestRepository.findQuotationRequest(input.userId, input.filter);
+        return await this.quotationRequestRepository.findQuotationRequests(input.userId, input.filter);
     };
 }

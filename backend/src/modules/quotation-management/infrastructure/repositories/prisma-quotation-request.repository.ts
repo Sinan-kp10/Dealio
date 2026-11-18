@@ -3,17 +3,20 @@ import { Prisma, quotation_request_status } from "../../../../../generated/prism
 import { CreateQuotationRequestDto } from "../../application/dto/customer/quotation-request.dto";
 import { IQuotationRequestRepository } from "../../domain/repositories/customer/quotation.request.repository";
 import { QuotationRequestMapper, quotationRequestListItemSelect } from "../mappers/customer/quotation-request.mapper";
-import { PaginatedQuotationDto, QuotationListFiltersDto } from "../../application/dto/customer/quotation-request-list.dto";
+import { PaginatedQuotationDto, QuotationListFiltersDto, QuotationRequestStatus } from "../../application/dto/customer/quotation-request-list.dto";
+import { QuotationRequestDetailsDto } from "../../application/dto/customer/quoatation-deatails.dto";
+import { QuotationRequestDetailsMapper, quotationRequestDetailsSelect } from "../mappers/customer/quoatation-reqeust.details.repository";
 
 export class PrismaQuotationRequestRepository implements IQuotationRequestRepository {
 
-    findById = async (id: string): Promise<boolean> => {
-        const user = await prisma.users.findUnique({
+    findById = async (id: string): Promise<{id : string , status : QuotationRequestStatus} | null> => {
+        const quotationRequest = await prisma.quotation_requests.findUnique({
             where: { id },
-            select: { id: true },
+            select: { id: true, status : true },
         });
 
-        return user !== null;
+        return quotationRequest ?? null
+
     };
 
     createQuatationRequest = async (data: CreateQuotationRequestDto): Promise<void> => {
@@ -31,7 +34,7 @@ export class PrismaQuotationRequestRepository implements IQuotationRequestReposi
         });
     };
 
-    findQuotationRequest = async (userId: string, filter: QuotationListFiltersDto): Promise<PaginatedQuotationDto> => {
+    findQuotationRequests = async (userId: string, filter: QuotationListFiltersDto): Promise<PaginatedQuotationDto> => {
         const DEFAULT_LIMIT = 9;
         const { search, limit, page, status, categoryId } = filter;
         const pageSize = limit || DEFAULT_LIMIT;
@@ -73,5 +76,14 @@ export class PrismaQuotationRequestRepository implements IQuotationRequestReposi
             total,
             totalPages,
         };
+    };
+
+    findQuotationRequestDetails = async (quoationId: string): Promise<QuotationRequestDetailsDto | null> => {
+        const qotationRequestDetails = await prisma.quotation_requests.findUnique({
+            where: { id: quoationId },
+            select: quotationRequestDetailsSelect,
+        });
+
+        return qotationRequestDetails ? QuotationRequestDetailsMapper.toDto(qotationRequestDetails) : null;
     };
 }

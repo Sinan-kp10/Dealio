@@ -5,11 +5,13 @@ import { sendResponse } from "../../../../../shared/presentation/api-response";
 import { CreateQuotationRequestDto } from "../../../application/dto/customer/quotation-request.dto";
 import type { CreateQuotationRequestInput } from "../../validators/customer/create-quotation-request.schema";
 import { GetQuotationRequestsDto, PaginatedQuotationDto, QuotationRequestStatus } from "../../../application/dto/customer/quotation-request-list.dto";
+import { QuotationRequestDetailsDto } from "../../../application/dto/customer/quoatation-deatails.dto";
 
 export class QuotationRequestController {
     constructor(
         private readonly createQuotationRequestUseCase: IUseCase<CreateQuotationRequestDto, void>,
-        private readonly getQuotationRequestsUseCase: IUseCase<GetQuotationRequestsDto, PaginatedQuotationDto>
+        private readonly getQuotationRequestsUseCase: IUseCase<GetQuotationRequestsDto, PaginatedQuotationDto>,
+        private readonly getQuotationRequestDetailsUseCase: IUseCase<string, QuotationRequestDetailsDto>
     ) {}
 
     createQuotationRequest = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -50,6 +52,17 @@ export class QuotationRequestController {
             });
 
             sendResponse(res, "Quotation requests retrieved successfully", quotationRequest, HttpStatusCode.OK);
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    getQuotationRequestDetails = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            const quotationId = req.params.id as string;
+            const quotationDetails = await this.getQuotationRequestDetailsUseCase.execute(quotationId);
+
+            sendResponse(res, "Quotation request details retrieved successfully", quotationDetails, HttpStatusCode.OK);
         } catch (error) {
             next(error);
         }
