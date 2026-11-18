@@ -59,7 +59,7 @@ export class QuotationRequestController {
 
     getQuotationRequestDetails = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            const quotationId = req.params.id as string;
+            const quotationId = (req.params.quotationId) as string;
             const quotationDetails = await this.getQuotationRequestDetailsUseCase.execute(quotationId);
 
             sendResponse(res, "Quotation request details retrieved successfully", quotationDetails, HttpStatusCode.OK);

@@ -17,6 +17,7 @@ import OtpVerificationPage from "../../features/auth/pages/OtpVerificationPage";
 import VerifyPasswordResetOtpPage from "../../features/auth/pages/VerifyPasswordResetOtpPage";
 const CustomerHomePage = lazy(()=> import("../../features/home/pages/CustomerHomePage"))
 const CustomerQuotationsPage = lazy(() => import("../../features/quotations/pages/customer/CustomerQuotationsPage"))
+const CustomerQuotationDetailsPage = lazy(() => import("../../features/quotations/pages/customer/CustomerQuotationDetailsPage"))
 const CreateQuotationPage = lazy(() => import("../../features/quotations/pages/customer/CreateQuotationPage"))
 const CustomerConversationsPage = lazy(() => import("../../features/conversations/pages/customer/CustomerConversationsPage"))
 const CustomerSettingsPage = lazy(()=> import("../../features/settings/pages/CustomerSttingsPage"))
@@ -56,6 +57,7 @@ export function AppRouter() {
               <Route path="/customer" element={<CustomerHomePage />} />
               <Route path="/customer/quotations" element={<CustomerQuotationsPage />} />
               <Route path="/customer/quotations/create" element={<CreateQuotationPage />} />
+              <Route path="/customer/quotations/:id" element={<CustomerQuotationDetailsPage />} />
               <Route path="/customer/conversations" element={<CustomerConversationsPage />} />
               <Route path="/customer/profile" element={<CustomerProfilePage />} />
               <Route path="/customer/settings" element={<CustomerSettingsPage />} />
