@@ -16,3 +16,7 @@ export const getCustomerQuotationDetails = async (id: string): Promise<Quotation
     const response = await axiosInstance.get<QuotationDetailsResponse>(`/customer/quotations/${id}`);
     return response.data;
 };
+
+export const cancelCustomerQuotation = async (id: string): Promise<void> => {
+    await axiosInstance.patch<void>(`/customer/quotations/${id}`);
+};

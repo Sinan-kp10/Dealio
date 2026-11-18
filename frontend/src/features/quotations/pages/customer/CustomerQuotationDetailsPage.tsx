@@ -4,11 +4,10 @@ import { ArrowLeft, FileText, Layers, Tag, Package, IndianRupee, MapPin, Ban, Lo
 import { QuotationStatusBadge } from "../../components/QuotationStatusBadge";
 import { QuotationStatusBar } from "../../components/QuotationStatusBar";
 import ConfirmationModal from "../../../../components/common/confirmationModel/ConfirmationModal";
-import { getCustomerQuotationDetails } from "../../services/quotation.service";
+import { cancelCustomerQuotation, getCustomerQuotationDetails } from "../../services/quotation.service";
 import { handleApiError } from "../../../../utils/errorHandler";
 import { formatDate } from "../../../../utils/dateFormatter";
 import type { QuotationDetails } from "../../types/quotation-details";
-import { toast } from "react-toastify";
 
 export function CustomerQuotationDetailsPage() {
   const navigate = useNavigate();
@@ -48,11 +47,15 @@ export function CustomerQuotationDetailsPage() {
   }, [id]);
 
   const handleConfirmCancel = async () => {
+    if (!id) return;
     setIsCancelling(true);
+
     try {
+
+      await cancelCustomerQuotation(id)
       setQuotation((prev) => (prev ? { ...prev, status: "CANCELLED" } : prev));
       setIsCancelModal(false);
-      toast.success("Quotation request cancelled successfully");
+      
     } catch (error) {
       handleApiError(error, "Failed to cancel quotation request, please try again");
     } finally {
