@@ -11,7 +11,8 @@ export class QuotationRequestController {
     constructor(
         private readonly createQuotationRequestUseCase: IUseCase<CreateQuotationRequestDto, void>,
         private readonly getQuotationRequestsUseCase: IUseCase<GetQuotationRequestsDto, PaginatedQuotationDto>,
-        private readonly getQuotationRequestDetailsUseCase: IUseCase<string, QuotationRequestDetailsDto>
+        private readonly getQuotationRequestDetailsUseCase: IUseCase<string, QuotationRequestDetailsDto>,
+        private readonly  cancelQuotationRequestUseCase : IUseCase<string, void>
     ) {}
 
     createQuotationRequest = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -63,6 +64,17 @@ export class QuotationRequestController {
             const quotationDetails = await this.getQuotationRequestDetailsUseCase.execute(quotationId);
 
             sendResponse(res, "Quotation request details retrieved successfully", quotationDetails, HttpStatusCode.OK);
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    cancelQuotationRequest = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            const quotationId = (req.params.quotationId) as string;
+            const quotationDetails = await this.cancelQuotationRequestUseCase.execute(quotationId)
+
+            sendResponse(res, "Quotation request cancelled successfully", quotationDetails, HttpStatusCode.OK);
         } catch (error) {
             next(error);
         }

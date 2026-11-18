@@ -7,4 +7,5 @@ export interface IQuotationRequestRepository extends IBaseRepository<{id : strin
     createQuatationRequest(data: CreateQuotationRequestDto): Promise<void>;
     findQuotationRequests(userId: string, filter: QuotationListFiltersDto): Promise<PaginatedQuotationDto>;
     findQuotationRequestDetails(quoationId: string): Promise<QuotationRequestDetailsDto | null>;
+    cancelQuotationRequest(quoationId : string) : Promise<void>
 }

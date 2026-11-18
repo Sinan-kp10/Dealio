@@ -86,4 +86,14 @@ export class PrismaQuotationRequestRepository implements IQuotationRequestReposi
 
         return qotationRequestDetails ? QuotationRequestDetailsMapper.toDto(qotationRequestDetails) : null;
     };
+
+    cancelQuotationRequest = async (quoationId: string): Promise<void> => {
+        await prisma.quotation_requests.update({
+            where : {id : quoationId},
+            data : {
+                status : "CANCELLED",
+                cancelled_at : new Date()
+            }
+        })
+    }
 }
