@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, FileText, Layers, Tag, Package, IndianRupee, MapPin, Ban, Loader2 } from "lucide-react";
-import { QuotationStatusBadge } from "../../components/QuotationStatusBadge";
+import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
 import { QuotationStatusBar } from "../../components/QuotationStatusBar";
 import ConfirmationModal from "../../../../components/common/confirmationModel/ConfirmationModal";
 import { cancelCustomerQuotation, getCustomerQuotationDetails } from "../../services/quotation.service";
@@ -145,7 +145,7 @@ export function CustomerQuotationDetailsPage() {
                   <FileText size={16} className="text-[#2f5581]" />
                   <span>Request Information</span>
                 </div>
-                <QuotationStatusBadge status={quotation.status} />
+                <StatusBadge status={quotation.status} />
               </div>
 
               <h2 className="text-xl sm:text-2xl font-extrabold text-[#0e2238] tracking-tight leading-tight m-0">

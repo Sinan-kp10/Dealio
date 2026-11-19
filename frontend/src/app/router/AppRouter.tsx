@@ -4,7 +4,6 @@ import FullPageSpinner from "../../components/common/loading/FullPageSpinner";
 import { PublicRoute } from "./PublicRoute";
 import ProtectedRoute from "./ProtectedRoute";
 import { PublicLayout } from "../../components/layouts/PublicLayout";
-import { HomePage } from "../../features/home/pages/HomePage";
 import CustomerSignupPage from "../../features/auth/pages/CustomerSignupPage";
 import EnterpriseSignupPage from "../../features/auth/pages/EnterpriseSignupPage";
 import LoginPage from "../../features/auth/pages/LoginPage"
@@ -15,7 +14,8 @@ import ForbiddenPage from "../../pages/ForbiddenPage";
 import AccountSuspendedPage from "../../pages/AccountSuspendedPage";
 import OtpVerificationPage from "../../features/auth/pages/OtpVerificationPage";
 import VerifyPasswordResetOtpPage from "../../features/auth/pages/VerifyPasswordResetOtpPage";
-const CustomerHomePage = lazy(()=> import("../../features/home/pages/CustomerHomePage"))
+import { HomePage } from "../../features/home/pages/common/HomePage";
+const CustomerHomePage = lazy(()=> import("../../features/home/pages/customer/CustomerHomePage"))
 const CustomerQuotationsPage = lazy(() => import("../../features/quotations/pages/customer/CustomerQuotationsPage"))
 const CustomerQuotationDetailsPage = lazy(() => import("../../features/quotations/pages/customer/CustomerQuotationDetailsPage"))
 const CreateQuotationPage = lazy(() => import("../../features/quotations/pages/customer/CreateQuotationPage"))

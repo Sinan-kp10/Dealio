@@ -10,7 +10,7 @@ import { handleApiError } from "../../../../utils/errorHandler";
 import { getCustomerQuotations } from "../../services/quotation.service";
 import type { QuotationRequestListItem, QuotationRequestStatus } from "../../types/quotation.types";
 import { QuotationCardSkeleton } from "../../components/QuotationCardSkeleton";
-import { QuotationStatusBadge } from "../../components/QuotationStatusBadge";
+import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
 
 const PAGE_LIMIT = 9;
 const SKELETON_ITEMS = [1, 2, 3, 4, 5, 6];
@@ -181,7 +181,7 @@ export function CustomerQuotationsPage() {
                     {item.productName}
                   </h2>
                   <div className="shrink-0">
-                    <QuotationStatusBadge status={item.status} />
+                    <StatusBadge status={item.status} />
                   </div>
                 </div>
 
