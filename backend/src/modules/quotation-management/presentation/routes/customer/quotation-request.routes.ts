@@ -13,6 +13,7 @@ router.use(authMiddleware);
 router.use(requireRole("CUSTOMER"));
 
 router.get("/", validateRequest(getQuotationRequestsSchema, "query"), quotationRequestController.getQuotationRequests);
+router.get("/recent", quotationRequestController.getRecentQuotationRequests);
 router.get("/:quotationId", validateRequest(getQuotationRequestSchema, "params"), quotationRequestController.getQuotationRequestDetails);
 router.post("/", validateRequest(createQuotationRequestSchema), quotationRequestController.createQuotationRequest);
 router.patch("/:quotationId", validateRequest(getQuotationRequestSchema, "params"), quotationRequestController.cancelQuotationRequest);

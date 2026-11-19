@@ -4,7 +4,7 @@ import { IUseCase } from "../../../../../shared/application/base.usecase";
 import { sendResponse } from "../../../../../shared/presentation/api-response";
 import { CreateQuotationRequestDto } from "../../../application/dto/customer/quotation-request.dto";
 import type { CreateQuotationRequestInput } from "../../validators/customer/create-quotation-request.schema";
-import { GetQuotationRequestsDto, PaginatedQuotationDto, QuotationRequestStatus } from "../../../application/dto/customer/quotation-request-list.dto";
+import { GetQuotationRequestsDto, PaginatedQuotationDto, QuotationRequestListItemDto, QuotationRequestStatus } from "../../../application/dto/customer/quotation-request-list.dto";
 import { QuotationRequestDetailsDto } from "../../../application/dto/customer/quoatation-deatails.dto";
 
 export class QuotationRequestController {
@@ -12,7 +12,8 @@ export class QuotationRequestController {
         private readonly createQuotationRequestUseCase: IUseCase<CreateQuotationRequestDto, void>,
         private readonly getQuotationRequestsUseCase: IUseCase<GetQuotationRequestsDto, PaginatedQuotationDto>,
         private readonly getQuotationRequestDetailsUseCase: IUseCase<string, QuotationRequestDetailsDto>,
-        private readonly  cancelQuotationRequestUseCase : IUseCase<string, void>
+        private readonly cancelQuotationRequestUseCase: IUseCase<string, void>,
+        private readonly getRecentQuotationRequestsUseCase: IUseCase<string, QuotationRequestListItemDto[]>
     ) {}
 
     createQuotationRequest = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -75,6 +76,17 @@ export class QuotationRequestController {
             const quotationDetails = await this.cancelQuotationRequestUseCase.execute(quotationId)
 
             sendResponse(res, "Quotation request cancelled successfully", quotationDetails, HttpStatusCode.OK);
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    getRecentQuotationRequests = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            const userId = req.auth?.userId;
+            const recentQuotations = await this.getRecentQuotationRequestsUseCase.execute(userId!);
+
+            sendResponse(res, "Recent quotation requests retrieved successfully", recentQuotations, HttpStatusCode.OK);
         } catch (error) {
             next(error);
         }

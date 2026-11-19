@@ -3,7 +3,7 @@ import { Prisma, quotation_request_status } from "../../../../../generated/prism
 import { CreateQuotationRequestDto } from "../../application/dto/customer/quotation-request.dto";
 import { IQuotationRequestRepository } from "../../domain/repositories/customer/quotation.request.repository";
 import { QuotationRequestMapper, quotationRequestListItemSelect } from "../mappers/customer/quotation-request.mapper";
-import { PaginatedQuotationDto, QuotationListFiltersDto, QuotationRequestStatus } from "../../application/dto/customer/quotation-request-list.dto";
+import { PaginatedQuotationDto, QuotationListFiltersDto, QuotationRequestListItemDto, QuotationRequestStatus } from "../../application/dto/customer/quotation-request-list.dto";
 import { QuotationRequestDetailsDto } from "../../application/dto/customer/quoatation-deatails.dto";
 import { QuotationRequestDetailsMapper, quotationRequestDetailsSelect } from "../mappers/customer/quoatation-reqeust.details.repository";
 
@@ -96,4 +96,20 @@ export class PrismaQuotationRequestRepository implements IQuotationRequestReposi
             }
         })
     }
+
+    recentQuotationRequests = async (userId: string): Promise<QuotationRequestListItemDto[]> => {
+        const limit = 3;
+
+        const quotationRequests = await prisma.quotation_requests.findMany({
+            where: {
+                customer_id: userId,
+                status: { not: "CANCELLED" },
+            },
+            select: quotationRequestListItemSelect,
+            take: limit,
+            orderBy: { created_at: "desc" },
+        });
+
+        return quotationRequests.map(QuotationRequestMapper.toListItemDto);
+    };
 }
