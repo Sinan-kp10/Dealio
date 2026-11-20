@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { useState, useEffect } from "react";
 import { Eye, ArrowRight, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
@@ -18,26 +18,35 @@ export function LatestActiveQuotationCard({ quotation }: LatestActiveQuotationCa
   const isCompleted = quotation.status === "COMPLETED";
 
   const step1Done = true;
-  const step2Done = isAccepted || isPayAdvance || isCompleted;
-  const step2Active = isProposalReceived;
+  const step2Done = isProposalReceived || isAccepted || isPayAdvance || isCompleted;
   const step3Done = isAccepted || isPayAdvance || isCompleted;
-  const step3Active = false;
-  const step4Done = isCompleted;
-  const step4Active = isAccepted || isPayAdvance;
+  const step4Done = isPayAdvance || isCompleted;
   const step5Done = isCompleted;
 
-  const isLine1Done = isProposalReceived || isAccepted || isPayAdvance || isCompleted;
-  const isLine2Done = isAccepted || isPayAdvance || isCompleted;
-  const isLine3Done = isPayAdvance || isCompleted;
-  const isLine4Done = isCompleted;
+  const targetProgress = isCompleted
+    ? 100
+    : isPayAdvance
+    ? 87.5
+    : isAccepted
+    ? 62.5
+    : isProposalReceived
+    ? 37.5
+    : 12.5;
+
+  const [progressWidth, setProgressWidth] = useState(0);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setProgressWidth(targetProgress);
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [targetProgress]);
 
   const steps = [
     {
       title: "Request Created",
       subtitle: formatDate(quotation.createdAt) || "Sent to verified sellers",
       isDone: step1Done,
-      isActive: false,
-      isLineDone: isLine1Done,
     },
     {
       title: "Proposal Received",
@@ -47,15 +56,11 @@ export function LatestActiveQuotationCard({ quotation }: LatestActiveQuotationCa
         ? "Proposal Accepted"
         : "Awaiting Proposals",
       isDone: step2Done,
-      isActive: step2Active,
-      isLineDone: isLine2Done,
     },
     {
       title: "Proposal Accepted",
       subtitle: isAccepted || isPayAdvance || isCompleted ? "Proposal accepted" : "Accept a proposal",
       isDone: step3Done,
-      isActive: step3Active,
-      isLineDone: isLine3Done,
     },
     {
       title: "Pay Advance",
@@ -65,15 +70,11 @@ export function LatestActiveQuotationCard({ quotation }: LatestActiveQuotationCa
         ? "Payment in progress"
         : "Lock proposal & deposit",
       isDone: step4Done,
-      isActive: step4Active,
-      isLineDone: isLine4Done,
     },
     {
       title: "Completed",
       subtitle: isCompleted ? "Request completed" : "Close the Request",
       isDone: step5Done,
-      isActive: false,
-      isLineDone: false,
     },
   ];
 
@@ -123,33 +124,26 @@ export function LatestActiveQuotationCard({ quotation }: LatestActiveQuotationCa
           </div>
 
           <div className="w-full py-2">
-            <div className="flex items-center w-full">
-              {steps.map((step, index) => {
-                const isLast = index === steps.length - 1;
-                return (
-                  <Fragment key={step.title}>
-                    <div
-                      className={`relative z-10 shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-xs transition-colors ${
-                        step.isDone
-                          ? "bg-emerald-600 text-white ring-4 ring-emerald-50"
-                          : step.isActive
-                          ? "bg-[#2f5581] text-white ring-4 ring-[#2f5581]/20"
-                          : "bg-white border-2 border-slate-300 text-slate-400"
-                      }`}
-                    >
-                      {step.isDone ? <Check size={15} strokeWidth={3} /> : index + 1}
-                    </div>
+            <div className="relative flex items-center justify-between w-full">
+              <div className="absolute top-1/2 -translate-y-1/2 left-3.5 right-3.5 sm:left-4 sm:right-4 h-[3px] bg-slate-200 rounded-full pointer-events-none overflow-hidden">
+                <div
+                  className="h-full rounded-full transition-all duration-1000 ease-out bg-emerald-600"
+                  style={{ width: `${progressWidth}%` }}
+                />
+              </div>
 
-                    {!isLast && (
-                      <div
-                        className={`flex-1 h-[2.5px] transition-colors ${
-                          step.isLineDone ? "bg-emerald-600" : "bg-slate-200"
-                        }`}
-                      />
-                    )}
-                  </Fragment>
-                );
-              })}
+              {steps.map((step, index) => (
+                <div
+                  key={step.title}
+                  className={`relative z-10 shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-xs transition-colors ${
+                    step.isDone
+                      ? "bg-emerald-600 text-white ring-4 ring-emerald-50"
+                      : "bg-white border-2 border-slate-300 text-slate-400"
+                  }`}
+                >
+                  {step.isDone ? <Check size={15} strokeWidth={3} /> : index + 1}
+                </div>
+              ))}
             </div>
 
             <div className="flex justify-between w-full mt-3">
@@ -161,13 +155,13 @@ export function LatestActiveQuotationCard({ quotation }: LatestActiveQuotationCa
                   : isLast
                   ? "text-right"
                   : "text-center";
-                const widthClass = isFirst || isLast ? "w-[17%]" : "w-[22%]";
+                const widthClass = isFirst || isLast ? "w-[12.5%]" : "w-[25%]";
 
                 return (
-                  <div key={step.title} className={`${widthClass} ${alignClass} min-w-0`}>
+                  <div key={step.title} className={`${widthClass} ${alignClass} min-w-0 overflow-visible`}>
                     <p
                       className={`text-[11px] sm:text-xs font-bold leading-tight m-0 ${
-                        step.isDone || step.isActive ? "text-[#0e2238]" : "text-slate-500"
+                        step.isDone ? "text-[#0e2238]" : "text-slate-500"
                       }`}
                     >
                       {index + 1}. {step.title}

@@ -31,7 +31,7 @@ export function CreateQuotationPage() {
         categoryId: data.categoryId,
         subCategoryId: data.subCategoryId,
         quantity: parseInt(data.quantity, 10),
-        budget: data.budget ? parseInt(data.budget, 10) : null,
+        budget: data.budget ? parseInt(data.budget.replace(/,/g, ""), 10) : null,
         location: data.location?.trim() || null,
         description: data.description,
       });

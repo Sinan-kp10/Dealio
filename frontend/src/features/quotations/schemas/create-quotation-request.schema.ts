@@ -22,8 +22,11 @@ export const createQuotationFormSchema = z.object({
   budget: z
     .string()
     .trim()
-    .regex(/^\d+$/, "Budget must contain only numbers")
-    .refine((val) => parseInt(val, 10) > 0, "Budget must be greater than 0")
+    .regex(/^[\d,]*$/, "Budget must contain only numbers")
+    .refine((val) => {
+      const clean = val.replace(/,/g, "");
+      return clean === "" || parseInt(clean, 10) > 0;
+    }, "Budget must be greater than 0")
     .optional()
     .or(z.literal("")),
 
