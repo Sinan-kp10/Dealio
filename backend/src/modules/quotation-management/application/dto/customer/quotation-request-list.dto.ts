@@ -1,4 +1,4 @@
-export type QuotationRequestStatus = 'PENDING' | 'PROPOSAL_RECEIVED' | 'ACCEPTED' | 'COMPLETED' | 'CANCELLED';
+export type QuotationRequestStatus = 'PENDING' | 'PROPOSAL_RECEIVED' | 'ACCEPTED' | 'PAY_ADVANCE' | 'COMPLETED' | 'CANCELLED';
 
 export interface QuotationListFiltersDto {
     search?: string;
