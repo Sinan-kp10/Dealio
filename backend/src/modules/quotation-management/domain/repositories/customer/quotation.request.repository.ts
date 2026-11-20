@@ -4,7 +4,7 @@ import { QuotationListFiltersDto, PaginatedQuotationDto, QuotationRequestStatus,
 import { CreateQuotationRequestDto } from "../../../application/dto/customer/quotation-request.dto";
 
 export interface IQuotationRequestRepository extends IBaseRepository<{id : string , status : QuotationRequestStatus} | null> {
-    createQuatationRequest(data: CreateQuotationRequestDto): Promise<void>;
+    createQuatationRequest(data: CreateQuotationRequestDto): Promise<string[]>;
     findQuotationRequests(userId: string, filter: QuotationListFiltersDto): Promise<PaginatedQuotationDto>;
     findQuotationRequestDetails(quoationId: string): Promise<QuotationRequestDetailsDto | null>;
     cancelQuotationRequest(quoationId : string) : Promise<void>

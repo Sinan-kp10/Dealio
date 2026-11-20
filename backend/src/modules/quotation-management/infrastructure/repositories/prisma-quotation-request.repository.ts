@@ -19,18 +19,55 @@ export class PrismaQuotationRequestRepository implements IQuotationRequestReposi
 
     };
 
-    createQuatationRequest = async (data: CreateQuotationRequestDto): Promise<void> => {
-        await prisma.quotation_requests.create({
-            data: {
-                customer_id: data.userId,
-                product_name: data.productName,
-                category_id: data.categoryId,
-                subcategory_id: data.subCategoryId,
-                quantity: data.quantity,
-                budget: data.budget,
-                location: data.location,
-                description: data.description,
-            },
+    createQuatationRequest = async (data: CreateQuotationRequestDto): Promise<string[]> => {
+        return await prisma.$transaction(async (tx) => {
+            const enterprises = await tx.enterprises.findMany({
+                where: {
+                    status: "VERIFIED",
+                    subcategories: {
+                        some: {
+                            subcategory_id: data.subCategoryId,
+                        },
+                    },
+                },
+                select: {
+                    id: true,
+                    users: {
+                        where: {
+                            status: "ACTIVE",
+                        },
+                        select: {
+                            id: true,
+                        },
+                    },
+                },
+            });
+
+            const quotationRequest = await tx.quotation_requests.create({
+                data: {
+                    customer_id: data.userId,
+                    product_name: data.productName,
+                    category_id: data.categoryId,
+                    subcategory_id: data.subCategoryId,
+                    quantity: data.quantity,
+                    budget: data.budget,
+                    location: data.location,
+                    description: data.description,
+                },
+            });
+
+            if (enterprises.length > 0) {
+                await tx.enterprise_quotation_requests.createMany({
+                    data: enterprises.map((enterprise) => ({
+                        enterprise_id: enterprise.id,
+                        quotation_id: quotationRequest.id,
+                    })),
+                    skipDuplicates: true,
+                });
+            }
+
+            const userIds = enterprises.flatMap((enterprise) => enterprise.users.map((user) => user.id));
+            return userIds;
         });
     };
 

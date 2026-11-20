@@ -5,9 +5,10 @@ import { GetQuotationRequestDetailsUseCase } from "../../application/use-cases/c
 import { QuotationRequestController } from "../../presentation/controllers/customer/quotation-request.controller";
 import { CancelQuotationRequestUseCase } from "../../application/use-cases/customer/cancel-quotation-request.use-case";
 import { GetRecentQuotationRequestsUseCase } from "../../application/use-cases/customer/get-recent-quotation-requests.use-case";
+import { notificationService } from "../../../notification/infrastructure/container/notification.container";
 
 const quotationRequestRepository = new PrismaQuotationRequestRepository();
-const createQuotationRequestUseCase = new CreateQuotationRequestUseCase(quotationRequestRepository);
+const createQuotationRequestUseCase = new CreateQuotationRequestUseCase(quotationRequestRepository,notificationService);
 const getQuotationRequestsUseCase = new GetQuotationRequestsUseCase(quotationRequestRepository);
 const getQuotationRequestDetailsUseCase = new GetQuotationRequestDetailsUseCase(quotationRequestRepository);
 const cancelQuotationRequestUseCase = new CancelQuotationRequestUseCase(quotationRequestRepository);

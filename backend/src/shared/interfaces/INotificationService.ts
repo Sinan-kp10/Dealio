@@ -2,7 +2,8 @@ export type NotificationType =
     | "KYC_VERIFIED"
     | "KYC_REJECTED"
     | "BANK_DETAILS_VERIFIED"
-    | "BANK_DETAILS_REJECTED";
+    | "BANK_DETAILS_REJECTED"
+    | "QUOTATION_RECEIVED";
 
 export interface SendNotification {
     userId: string;
