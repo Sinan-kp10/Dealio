@@ -37,6 +37,14 @@ export function StatusBadge({ status, className = "" }: StatusBadgeProps) {
           Accepted
         </span>
       );
+    case "PAY_ADVANCE":
+      return (
+        <span
+          className={`inline-flex items-center px-2.5 py-1 text-[11px] font-semibold tracking-wide rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200/70 ${className}`}
+        >
+          Pay Advance
+        </span>
+      );
     case "COMPLETED":
       return (
         <span

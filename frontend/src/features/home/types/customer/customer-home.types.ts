@@ -2,6 +2,7 @@ export type CustomerQuotationStatus =
   | "PENDING"
   | "PROPOSAL_RECEIVED"
   | "ACCEPTED"
+  | "PAY_ADVANCE"
   | "COMPLETED"
   | "CANCELLED";
 

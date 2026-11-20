@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { Eye, ArrowRight, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
@@ -13,44 +14,66 @@ export function LatestActiveQuotationCard({ quotation }: LatestActiveQuotationCa
 
   const isProposalReceived = quotation.status === "PROPOSAL_RECEIVED";
   const isAccepted = quotation.status === "ACCEPTED";
+  const isPayAdvance = quotation.status === "PAY_ADVANCE";
   const isCompleted = quotation.status === "COMPLETED";
 
-  const isLine1Done = isProposalReceived || isAccepted || isCompleted;
-  const isLine2Done = isAccepted || isCompleted;
-  const isLine3Done = isCompleted;
+  const step1Done = true;
+  const step2Done = isAccepted || isPayAdvance || isCompleted;
+  const step2Active = isProposalReceived;
+  const step3Done = isAccepted || isPayAdvance || isCompleted;
+  const step3Active = false;
+  const step4Done = isCompleted;
+  const step4Active = isAccepted || isPayAdvance;
+  const step5Done = isCompleted;
+
+  const isLine1Done = isProposalReceived || isAccepted || isPayAdvance || isCompleted;
+  const isLine2Done = isAccepted || isPayAdvance || isCompleted;
+  const isLine3Done = isPayAdvance || isCompleted;
+  const isLine4Done = isCompleted;
 
   const steps = [
     {
-      step: 1,
-      title: "1. Request Created",
+      title: "Request Created",
       subtitle: formatDate(quotation.createdAt) || "Sent to verified sellers",
-      isCompleted: true,
+      isDone: step1Done,
       isActive: false,
+      isLineDone: isLine1Done,
     },
     {
-      step: 2,
-      title: "2. Quotes Received",
+      title: "Proposal Received",
       subtitle: isProposalReceived
         ? "Proposals Available"
-        : isAccepted || isCompleted
+        : isAccepted || isPayAdvance || isCompleted
         ? "Proposal Accepted"
         : "Awaiting Proposals",
-      isCompleted: isAccepted || isCompleted,
-      isActive: isProposalReceived,
+      isDone: step2Done,
+      isActive: step2Active,
+      isLineDone: isLine2Done,
     },
     {
-      step: 3,
-      title: "3. Pay Advance",
-      subtitle: "Lock proposal & deposit",
-      isCompleted: isCompleted,
-      isActive: isAccepted,
+      title: "Proposal Accepted",
+      subtitle: isAccepted || isPayAdvance || isCompleted ? "Proposal accepted" : "Accept a proposal",
+      isDone: step3Done,
+      isActive: step3Active,
+      isLineDone: isLine3Done,
     },
     {
-      step: 4,
-      title: "4. Completed",
-      subtitle: "Close the Request",
-      isCompleted: isCompleted,
+      title: "Pay Advance",
+      subtitle: isCompleted
+        ? "Advance paid"
+        : isPayAdvance
+        ? "Payment in progress"
+        : "Lock proposal & deposit",
+      isDone: step4Done,
+      isActive: step4Active,
+      isLineDone: isLine4Done,
+    },
+    {
+      title: "Completed",
+      subtitle: isCompleted ? "Request completed" : "Close the Request",
+      isDone: step5Done,
       isActive: false,
+      isLineDone: false,
     },
   ];
 
@@ -66,7 +89,6 @@ export function LatestActiveQuotationCard({ quotation }: LatestActiveQuotationCa
       </div>
 
       <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 p-5 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-6">
-        {/* Header row: Product name, specs & View Details button */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-100">
           <div>
             <div className="flex items-center gap-3">
@@ -95,98 +117,67 @@ export function LatestActiveQuotationCard({ quotation }: LatestActiveQuotationCa
           </button>
         </div>
 
-        {/* Purchase Progress Tracker */}
         <div className="space-y-3">
-          <span className="text-[11px] font-bold tracking-wider text-slate-400 uppercase block">
-            Purchase Progress Tracker
-          </span>
+          <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-[#0e2238]">
+            <span>Purchase Progress Tracker</span>
+          </div>
 
           <div className="w-full py-2">
             <div className="flex items-center w-full">
-              {/* Step 1 Circle */}
-              <div className="relative z-10 shrink-0 w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-xs ring-4 ring-emerald-50">
-                <Check size={15} strokeWidth={3} />
-              </div>
+              {steps.map((step, index) => {
+                const isLast = index === steps.length - 1;
+                return (
+                  <Fragment key={step.title}>
+                    <div
+                      className={`relative z-10 shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-xs transition-colors ${
+                        step.isDone
+                          ? "bg-emerald-600 text-white ring-4 ring-emerald-50"
+                          : step.isActive
+                          ? "bg-[#2f5581] text-white ring-4 ring-[#2f5581]/20"
+                          : "bg-white border-2 border-slate-300 text-slate-400"
+                      }`}
+                    >
+                      {step.isDone ? <Check size={15} strokeWidth={3} /> : index + 1}
+                    </div>
 
-              {/* Line 1 */}
-              <div
-                className={`flex-1 h-[2.5px] ${
-                  isLine1Done ? "bg-emerald-600" : "bg-slate-200"
-                }`}
-              />
-
-              {/* Step 2 Circle */}
-              <div
-                className={`relative z-10 shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-xs ${
-                  isLine2Done
-                    ? "bg-emerald-600 text-white ring-4 ring-emerald-50"
-                    : isProposalReceived
-                    ? "bg-[#2f5581] text-white ring-4 ring-[#2f5581]/20"
-                    : "bg-white border-2 border-slate-300 text-slate-400"
-                }`}
-              >
-                {isLine2Done ? <Check size={15} strokeWidth={3} /> : 2}
-              </div>
-
-              {/* Line 2 */}
-              <div
-                className={`flex-1 h-[2.5px] ${
-                  isLine2Done ? "bg-emerald-600" : "bg-slate-200"
-                }`}
-              />
-
-              {/* Step 3 Circle */}
-              <div
-                className={`relative z-10 shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${
-                  isLine3Done
-                    ? "bg-emerald-600 text-white ring-4 ring-emerald-50"
-                    : isAccepted
-                    ? "bg-[#2f5581] text-white ring-4 ring-[#2f5581]/20"
-                    : "bg-white border-2 border-slate-300 text-slate-400"
-                }`}
-              >
-                {isLine3Done ? <Check size={15} strokeWidth={3} /> : 3}
-              </div>
-
-              {/* Line 3 */}
-              <div
-                className={`flex-1 h-[2.5px] ${
-                  isLine3Done ? "bg-emerald-600" : "bg-slate-200"
-                }`}
-              />
-
-              {/* Step 4 Circle */}
-              <div
-                className={`relative z-10 shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${
-                  isCompleted
-                    ? "bg-emerald-600 text-white ring-4 ring-emerald-50 shadow-xs"
-                    : "bg-white border-2 border-slate-300 text-slate-400"
-                }`}
-              >
-                {isCompleted ? <Check size={15} strokeWidth={3} /> : 4}
-              </div>
+                    {!isLast && (
+                      <div
+                        className={`flex-1 h-[2.5px] transition-colors ${
+                          step.isLineDone ? "bg-emerald-600" : "bg-slate-200"
+                        }`}
+                      />
+                    )}
+                  </Fragment>
+                );
+              })}
             </div>
 
-            {/* Labels under circles */}
-            <div className="grid grid-cols-4 gap-2 mt-3 pt-1">
-              {steps.map((st) => (
-                <div key={st.step} className="flex flex-col">
-                  <span
-                    className={`text-xs font-bold ${
-                      st.isCompleted
-                        ? "text-emerald-700"
-                        : st.isActive
-                        ? "text-[#2f5581]"
-                        : "text-slate-600"
-                    }`}
-                  >
-                    {st.title}
-                  </span>
-                  <span className="text-[11px] text-slate-400 mt-0.5 line-clamp-1">
-                    {st.subtitle}
-                  </span>
-                </div>
-              ))}
+            <div className="flex justify-between w-full mt-3">
+              {steps.map((step, index) => {
+                const isFirst = index === 0;
+                const isLast = index === steps.length - 1;
+                const alignClass = isFirst
+                  ? "text-left"
+                  : isLast
+                  ? "text-right"
+                  : "text-center";
+                const widthClass = isFirst || isLast ? "w-[17%]" : "w-[22%]";
+
+                return (
+                  <div key={step.title} className={`${widthClass} ${alignClass} min-w-0`}>
+                    <p
+                      className={`text-[11px] sm:text-xs font-bold leading-tight m-0 ${
+                        step.isDone || step.isActive ? "text-[#0e2238]" : "text-slate-500"
+                      }`}
+                    >
+                      {index + 1}. {step.title}
+                    </p>
+                    <p className="text-[10px] sm:text-[11px] text-slate-400 mt-1 m-0 leading-tight hidden sm:block">
+                      {step.subtitle}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
