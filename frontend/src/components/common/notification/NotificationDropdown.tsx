@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { BellOff, Check, CheckCheck, Loader2 } from "lucide-react";
 import useNotificationStore from "../../../stores/notification.store";
-import { getNotifications, getUnreadCount, markAllNotificationsAsRead, markNotificationAsRead } from "../../../services/notification.service";
+import { getNotifications, markAllNotificationsAsRead, markNotificationAsRead } from "../../../services/notification.service";
 import { handleApiError } from "../../../utils/errorHandler";
 import { formatTimeAgo } from "../../../utils/dateFormatter";
 import type { NotificationItem } from "../../../types/notification.types";
@@ -20,32 +20,8 @@ export function NotificationDropdown() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const unreadCount = useNotificationStore((state) => state.unreadCount);
-  const setUnreadCount = useNotificationStore((state) => state.setUnreadCount);
   const decrementUnreadCount = useNotificationStore((state) => state.decrementUnreadCount);
   const resetUnreadCount = useNotificationStore((state) => state.resetUnreadCount);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchCount = async () => {
-      try {
-        const count = await getUnreadCount();
-        if (isMounted) {
-          setUnreadCount(count);
-        }
-      } catch (error) {
-        if (isMounted) {
-          handleApiError(error, "Failed to fetch unread count");
-        }
-      }
-    };
-
-    void fetchCount();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [setUnreadCount]);
 
   useEffect(() => {
     let isMounted = true;
