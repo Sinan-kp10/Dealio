@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Check, Ban, Info } from "lucide-react";
-import { formatDate } from "../../../utils/dateFormatter";
-import type { QuotationRequestStatus } from "../types/quotation.types";
+import { formatDate } from "../../../../utils/dateFormatter";
+import type { QuotationRequestStatus } from "../../types/quotation.types";
 
 interface QuotationStatusBarProps {
   status: QuotationRequestStatus;
@@ -37,7 +37,6 @@ export function QuotationStatusBar({ status, createdAt, className = "" }: Quotat
   const [progressWidth, setProgressWidth] = useState(0);
 
   useEffect(() => {
-    // Smooth entrance animation from 0% to the active step's target progress
     const timer = setTimeout(() => {
       setProgressWidth(targetProgress);
     }, 50);
@@ -98,11 +97,8 @@ export function QuotationStatusBar({ status, createdAt, className = "" }: Quotat
       </div>
 
       <div className="w-full py-2">
-        {/* Step Circles and Continuous Animated Connecting Line */}
         <div className="relative flex items-center justify-between w-full">
-          {/* Continuous Background Track running exactly between center of Step 1 and Step 5 */}
           <div className="absolute top-1/2 -translate-y-1/2 left-3.5 right-3.5 sm:left-4 sm:right-4 h-[3px] bg-slate-200 rounded-full pointer-events-none overflow-hidden">
-            {/* Smooth Animated Progress Fill */}
             <div
               className={`h-full rounded-full transition-all duration-1000 ease-out ${
                 isCancelled ? "bg-rose-500" : "bg-emerald-600"
@@ -139,7 +135,6 @@ export function QuotationStatusBar({ status, createdAt, className = "" }: Quotat
           })}
         </div>
 
-        {/* Step Labels Distributed Directly Under Circles */}
         <div className="flex justify-between w-full mt-3">
           {steps.map((step, index) => {
             const isFirst = index === 0;

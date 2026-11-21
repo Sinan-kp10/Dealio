@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {ArrowLeft,FileText,Layers,Tag,Package,IndianRupee,MapPin,Ban,Loader2,ExternalLink,ShieldCheck,} from "lucide-react";
 import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
-import { QuotationStatusBar } from "../../components/QuotationStatusBar";
+import { QuotationStatusBar } from "../../components/customer/QuotationStatusBar";
 import { QuotationDescriptionModal } from "../../components/QuotationDescriptionModal";
 import ConfirmationModal from "../../../../components/common/confirmationModel/ConfirmationModal";
 import { cancelCustomerQuotation, getCustomerQuotationDetails } from "../../services/quotation.service";
