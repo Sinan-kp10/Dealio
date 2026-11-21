@@ -29,6 +29,7 @@ const AdminLayout = lazy(()=> import("../../components/layouts/admin/AdminLayout
 const EnterpriseManagerLayout = lazy(()=> import("../../components/layouts/enterpriseManager/EnterpriseManagerLayout"))
 const AdminDashboardPage = lazy(()=> import("../../features/dashboard/pages/AdminDashboardPage"))
 const EnterpriseDashboardPage = lazy(()=> import("../../features/dashboard/pages/EnterpriseDashboardPage"))
+const EnterpriseQuotationsPage = lazy(() => import("../../features/quotations/pages/enterprise/EnterpriseQuotationsPage"))
 const CustomerManagementPage = lazy(()=> import("../../features/user-management/pages/CustomerManagementPage"))
 const EnterpriseManagementPage = lazy(()=> import("../../features/user-management/pages/EnterpriseManagementPage"))
 const EnterpriseApprovalsPage = lazy(() => import("../../features/enterprise-approvals/pages/EnterpriseApprovalsPage"))
@@ -68,6 +69,7 @@ export function AppRouter() {
           <Route element={<ProtectedRoute allowedRoles={["ENTERPRISE_MANAGER"]} />}>
             <Route element={<EnterpriseManagerLayout />}>
               <Route path="/enterprise" element={<EnterpriseDashboardPage />} />
+              <Route path="/enterprise/quotations" element={<EnterpriseQuotationsPage />} />
               <Route path="/enterprise/profile" element={<EnterpriseProfilePage />} />
               <Route path="/enterprise/settings" element={<EnterpriseSettingsPage />} />
             </Route>
