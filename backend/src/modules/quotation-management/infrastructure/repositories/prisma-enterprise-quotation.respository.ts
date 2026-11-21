@@ -1,8 +1,10 @@
 import { Prisma } from "../../../../../generated/prisma/client";
 import { prisma } from "../../../../infrastructure/database/prisma/prisma-client";
-import { EnterpriseQuotationListFiltersDto, PaginatedQuotationDto } from "../../application/dto/enterprise/enterprise-quotation-details.dto";
+import { EnterpriseQuotationDetailsDto } from "../../application/dto/enterprise/enterprise-quotation-details.dto";
+import { EnterpriseQuotationListFiltersDto, PaginatedQuotationDto } from "../../application/dto/enterprise/enterprise-quotation-list.dto";
 import { IEnterpriseQuotationRepository } from "../../domain/repositories/enterprise/enterprise-quotation.repository.dto";
-import { EnterpriseQuotationMapper, enterpriseQuotationListItemSelect } from "../mappers/enterprise/enterprise-quotation.mapper";
+import { EnterpriseQuotationDetailsMapper, enterpriseProposalDetailsSelect, enterpriseQuotationDetailsSelect } from "../mappers/enterprise/enterprise-quotation-details.mapper";
+import { EnterpriseQuotationListMapper, enterpriseQuotationListItemSelect } from "../mappers/enterprise/enterprise-quotation-list.mapper";
 
 export class PrismaEnterpriseQuotationRepository implements IEnterpriseQuotationRepository {
   findById = async (id: string) => {
@@ -45,12 +47,40 @@ export class PrismaEnterpriseQuotationRepository implements IEnterpriseQuotation
     const totalPages = Math.ceil(total / pageSize);
 
     return {
-      items: records.map(EnterpriseQuotationMapper.toListItemDto),
+      items: records.map(EnterpriseQuotationListMapper.toListItemDto),
       page: currentPage,
       limit: pageSize,
       total,
       totalPages,
     };
+  };
+
+  findQuotationDetails = async (enterpriseId: string, quotationId: string): Promise<EnterpriseQuotationDetailsDto | null> => {
+    const [record, proposal] = await Promise.all([
+      prisma.enterprise_quotation_requests.findFirst({
+        where: {
+          enterprise_id: enterpriseId,
+          quotation_id: quotationId,
+          status: {
+            notIn: ["CLOSED", "CANCELLED"],
+          },
+        },
+        select: enterpriseQuotationDetailsSelect,
+      }),
+      prisma.proposals.findUnique({
+        where: {
+          quotation_id_enterprise_id: {
+            quotation_id: quotationId,
+            enterprise_id: enterpriseId,
+          },
+        },
+        select: enterpriseProposalDetailsSelect,
+      }),
+    ]);
+
+    if (!record) return null;
+
+    return EnterpriseQuotationDetailsMapper.toDetailsDto(record, proposal);
   };
 
   markNotInterested = async (enterpriseId: string, quotationId: string): Promise<void> => {

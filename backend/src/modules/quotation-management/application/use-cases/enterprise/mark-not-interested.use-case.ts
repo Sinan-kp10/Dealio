@@ -1,7 +1,7 @@
 import { IUseCase } from "../../../../../shared/application/base.usecase";
 import { NotFoundError } from "../../../../../shared/errors/app-error";
 import { IEnterpriseQuotationRepository } from "../../../domain/repositories/enterprise/enterprise-quotation.repository.dto";
-import { MarkNotInterestedDto } from "../../dto/enterprise/enterprise-quotation-details.dto";
+import { MarkNotInterestedDto } from "../../dto/enterprise/enterprise-quotation-list.dto";
 
 export class MarkNotInterestedUseCase implements IUseCase<MarkNotInterestedDto, void> {
   constructor(

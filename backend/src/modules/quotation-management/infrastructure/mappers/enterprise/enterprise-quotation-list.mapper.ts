@@ -1,5 +1,5 @@
 import { Prisma } from "../../../../../../generated/prisma/client";
-import { EnterpriseQuotationListItemDto } from "../../../application/dto/enterprise/enterprise-quotation-details.dto";
+import { EnterpriseQuotationListItemDto } from "../../../application/dto/enterprise/enterprise-quotation-list.dto";
 
 export const enterpriseQuotationListItemSelect = {
   id: true,
@@ -23,7 +23,7 @@ export const enterpriseQuotationListItemSelect = {
 
 export type EnterpriseQuotationListItemRecord = Prisma.enterprise_quotation_requestsGetPayload<{select: typeof enterpriseQuotationListItemSelect}>;
 
-export class EnterpriseQuotationMapper {
+export class EnterpriseQuotationListMapper {
   static toListItemDto(data: EnterpriseQuotationListItemRecord): EnterpriseQuotationListItemDto {
     return {
       id: data.quotation_id,
@@ -39,3 +39,4 @@ export class EnterpriseQuotationMapper {
     };
   }
 }
+

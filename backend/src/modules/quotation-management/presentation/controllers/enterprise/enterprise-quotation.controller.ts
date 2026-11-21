@@ -2,12 +2,21 @@ import type { Request, Response, NextFunction } from "express";
 import { HttpStatusCode } from "../../../../../shared/enums/http-status-code.enum";
 import { IUseCase } from "../../../../../shared/application/base.usecase";
 import { sendResponse } from "../../../../../shared/presentation/api-response";
-import {GetEnterpriseQuotationsDto,MarkNotInterestedDto,PaginatedQuotationDto} from "../../../application/dto/enterprise/enterprise-quotation-details.dto";
+import {
+  GetEnterpriseQuotationsDto,
+  MarkNotInterestedDto,
+  PaginatedQuotationDto,
+} from "../../../application/dto/enterprise/enterprise-quotation-list.dto";
+import {
+  EnterpriseQuotationDetailsDto,
+  GetEnterpriseQuotationDetailsDto,
+} from "../../../application/dto/enterprise/enterprise-quotation-details.dto";
 
 export class EnterpriseQuotationController {
   constructor(
     private readonly getAvailableQuotationsUseCase: IUseCase<GetEnterpriseQuotationsDto, PaginatedQuotationDto>,
-    private readonly markNotInterestedUseCase: IUseCase<MarkNotInterestedDto, void>
+    private readonly markNotInterestedUseCase: IUseCase<MarkNotInterestedDto, void>,
+    private readonly getEnterpriseQuotationDetailsUseCase: IUseCase<GetEnterpriseQuotationDetailsDto, EnterpriseQuotationDetailsDto>
   ) {}
 
   getAvailableQuotations = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -25,6 +34,22 @@ export class EnterpriseQuotationController {
       });
 
       sendResponse(res, "Available quotations retrieved successfully", quotations, HttpStatusCode.OK);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getQuotationDetails = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const userId = req.auth?.userId;
+      const quotationId = req.params.quotationId as string;
+
+      const quotation = await this.getEnterpriseQuotationDetailsUseCase.execute({
+        userId: userId!,
+        quotationId,
+      });
+
+      sendResponse(res, "Quotation details retrieved successfully", quotation, HttpStatusCode.OK);
     } catch (error) {
       next(error);
     }

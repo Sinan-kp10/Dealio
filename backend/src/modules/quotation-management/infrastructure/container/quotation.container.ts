@@ -9,6 +9,7 @@ import { notificationService } from "../../../notification/infrastructure/contai
 import { PrismaEnterpriseQuotationRepository } from "../repositories/prisma-enterprise-quotation.respository";
 import { GetAvailableQuotationsUseCase } from "../../application/use-cases/enterprise/get-available-quotations.use-case";
 import { MarkNotInterestedUseCase } from "../../application/use-cases/enterprise/mark-not-interested.use-case";
+import { GetEnterpriseQuotationDetailsUseCase } from "../../application/use-cases/enterprise/get-enterprise-quotation-details.use-case";
 import { EnterpriseQuotationController } from "../../presentation/controllers/enterprise/enterprise-quotation.controller";
 
 const quotationRequestRepository = new PrismaQuotationRequestRepository();
@@ -29,5 +30,10 @@ export const quotationRequestController = new QuotationRequestController(
 const enterpriseQuotationRepository = new PrismaEnterpriseQuotationRepository();
 const getAvailableQuotationsUseCase = new GetAvailableQuotationsUseCase(enterpriseQuotationRepository);
 const markNotInterestedUseCase = new MarkNotInterestedUseCase(enterpriseQuotationRepository);
+const getEnterpriseQuotationDetailsUseCase = new GetEnterpriseQuotationDetailsUseCase(enterpriseQuotationRepository);
 
-export const enterpriseQuotationController = new EnterpriseQuotationController(getAvailableQuotationsUseCase, markNotInterestedUseCase);
+export const enterpriseQuotationController = new EnterpriseQuotationController(
+    getAvailableQuotationsUseCase,
+    markNotInterestedUseCase,
+    getEnterpriseQuotationDetailsUseCase
+);
