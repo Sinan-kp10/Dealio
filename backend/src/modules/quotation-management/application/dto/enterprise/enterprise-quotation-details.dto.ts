@@ -25,8 +25,6 @@ export interface EnterpriseQuotationListItemDto {
         name: string;
     };
     quantity: number;
-    budget: number | null;
-    location: string | null;
     description: string;
     status: QuotationRequestStatus;
     createdAt: Date;

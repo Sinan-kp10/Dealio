@@ -9,7 +9,7 @@ import { markNotInterestedSchema } from "../../validators/enterprise/mark-not-in
 const router = Router();
 
 router.use(authMiddleware);
-router.use(requireRole("ENTERPRISE"));
+router.use(requireRole("ENTERPRISE_MANAGER"));
 
 router.get("/", validateRequest(getEnterpriseQuotationsSchema, "query"), enterpriseQuotationController.getAvailableQuotations);
 router.post("/:quotationId/not-interested", validateRequest(markNotInterestedSchema, "params"), enterpriseQuotationController.markNotInterested);
