@@ -11,14 +11,17 @@ interface EnterpriseQuotationCardProps {
 
 export function EnterpriseQuotationCard({ item, onChat }: EnterpriseQuotationCardProps) {
   const navigate = useNavigate();
+  const isCancelled = item.status === "CANCELLED";
+  const isClosed = item.status === "CLOSED";
+  const isInactive = isCancelled || isClosed;
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover:border-slate-300 hover:shadow-md transition-all flex flex-col justify-between space-y-4">
+    <div className={`bg-white rounded-2xl border border-slate-200/90 p-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)] ${isInactive ? "opacity-90" : "hover:border-slate-300 hover:shadow-md"} transition-all flex flex-col justify-between space-y-4`}>
       <div className="space-y-3">
         <div className="flex items-start justify-between gap-2.5">
           <h2
-            onClick={() => navigate(`/enterprise/quotations/${item.id}`)}
-            className="text-base font-bold text-[#0e2238] tracking-tight line-clamp-2 leading-snug m-0 flex-1 hover:text-[#355982] transition-colors cursor-pointer"
+            onClick={() => !isInactive && navigate(`/enterprise/quotations/${item.id}`)}
+            className={`text-base font-bold text-[#0e2238] tracking-tight line-clamp-2 leading-snug m-0 flex-1 ${isInactive ? "" : "hover:text-[#355982] cursor-pointer"} transition-colors`}
             title={item.productName}
           >
             {item.productName}
@@ -48,24 +51,36 @@ export function EnterpriseQuotationCard({ item, onChat }: EnterpriseQuotationCar
         </p>
       </div>
 
-      <div className="pt-3 border-t border-slate-100 flex items-center gap-2">
-        <button
-          type="button"
-          onClick={() => onChat(item)}
-          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200/90 border border-slate-300 hover:border-slate-400 active:scale-[0.99] rounded-xl transition-all cursor-pointer shadow-2xs"
-        >
-          <MessageCircleMore size={14} className="text-slate-600 shrink-0" />
-          <span>Chat</span>
-        </button>
+      <div className="pt-3 border-t border-slate-100">
+        {isCancelled ? (
+          <div className="w-full py-2.5 px-3 rounded-xl bg-rose-50/80 border border-rose-200/70 text-rose-700 text-xs font-semibold flex items-center justify-center gap-2">
+            <span>Cancelled by Customer</span>
+          </div>
+        ) : isClosed ? (
+          <div className="w-full py-2.5 px-3 rounded-xl bg-slate-100/90 border border-slate-200/90 text-slate-600 text-xs font-semibold flex items-center justify-center gap-2">
+            <span>Quotation Closed by Customer</span>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => onChat(item)}
+              className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200/90 border border-slate-300 hover:border-slate-400 active:scale-[0.99] rounded-xl transition-all cursor-pointer shadow-2xs"
+            >
+              <MessageCircleMore size={14} className="text-slate-600 shrink-0" />
+              <span>Chat</span>
+            </button>
 
-        <button
-          type="button"
-          onClick={() => navigate(`/enterprise/quotations/${item.id}`)}
-          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 text-xs font-bold text-white bg-[#355982] hover:bg-[#284566] active:scale-[0.99] rounded-xl transition-all shadow-xs cursor-pointer"
-        >
-          <Eye size={14} />
-          <span>View Details</span>
-        </button>
+            <button
+              type="button"
+              onClick={() => navigate(`/enterprise/quotations/${item.id}`)}
+              className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 text-xs font-bold text-white bg-[#355982] hover:bg-[#284566] active:scale-[0.99] rounded-xl transition-all shadow-xs cursor-pointer"
+            >
+              <Eye size={14} />
+              <span>View Details</span>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
