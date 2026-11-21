@@ -125,14 +125,22 @@ export class PrismaQuotationRequestRepository implements IQuotationRequestReposi
     };
 
     cancelQuotationRequest = async (quoationId: string): Promise<void> => {
-        await prisma.quotation_requests.update({
-            where : {id : quoationId},
-            data : {
-                status : "CANCELLED",
-                cancelled_at : new Date()
-            }
-        })
-    }
+        await prisma.$transaction([
+            prisma.quotation_requests.update({
+                where: { id: quoationId },
+                data: {
+                    status: "CANCELLED",
+                    cancelled_at: new Date(),
+                },
+            }),
+            prisma.enterprise_quotation_requests.updateMany({
+                where: { quotation_id: quoationId },
+                data: {
+                    status: "CANCELLED",
+                },
+            }),
+        ]);
+    };
 
     recentQuotationRequests = async (userId: string): Promise<QuotationRequestListItemDto[]> => {
         const limit = 3;

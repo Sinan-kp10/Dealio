@@ -23,6 +23,7 @@ export class EnterpriseQuotationController {
         filter: {
           search: req.query.search as string | undefined,
           subcategoryId: req.query.subcategoryId as string | undefined,
+          status: req.query.status as any,
           page: Number(req.query.page ?? 1),
           limit: Number(req.query.limit ?? 9),
         },

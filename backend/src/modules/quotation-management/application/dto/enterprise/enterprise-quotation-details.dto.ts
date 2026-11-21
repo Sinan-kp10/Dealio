@@ -1,8 +1,10 @@
-import { QuotationRequestStatus } from "../customer/quotation-request-list.dto";
+export type EnterpriseQuotationStatus = "OPEN" | "PROPOSAL_SENT" | "CLOSED" | "CANCELLED";
+export type ProposalStatus = "PENDING" | "ACCEPTED" | "PAY_ADVANCE" | "COMPLETED" | "REJECTED";
 
 export interface EnterpriseQuotationListFiltersDto {
     search?: string;
     subcategoryId?: string;
+    status?: EnterpriseQuotationStatus | "ALL";
     page?: number;
     limit?: number;
 }
@@ -26,7 +28,7 @@ export interface EnterpriseQuotationListItemDto {
     };
     quantity: number;
     description: string;
-    status: QuotationRequestStatus;
+    status: EnterpriseQuotationStatus;
     createdAt: Date;
 }
 

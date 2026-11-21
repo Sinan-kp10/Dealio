@@ -1,36 +1,40 @@
 import { Prisma } from "../../../../../../generated/prisma/client";
-import { QuotationRequestStatus } from "../../../application/dto/customer/quotation-request-list.dto";
 import { EnterpriseQuotationListItemDto } from "../../../application/dto/enterprise/enterprise-quotation-details.dto";
 
 export const enterpriseQuotationListItemSelect = {
   id: true,
-  product_name: true,
-  quantity: true,
-  description: true,
+  quotation_id: true,
   status: true,
   created_at: true,
-  subcategory: {
+  quotation: {
     select: {
-      id: true,
-      name: true,
+      product_name: true,
+      quantity: true,
+      description: true,
+      subcategory: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
     },
   },
-} satisfies Prisma.quotation_requestsSelect;
+} satisfies Prisma.enterprise_quotation_requestsSelect;
 
-export type EnterpriseQuotationListItemRecord = Prisma.quotation_requestsGetPayload<{select: typeof enterpriseQuotationListItemSelect}>;
+export type EnterpriseQuotationListItemRecord = Prisma.enterprise_quotation_requestsGetPayload<{select: typeof enterpriseQuotationListItemSelect}>;
 
 export class EnterpriseQuotationMapper {
   static toListItemDto(data: EnterpriseQuotationListItemRecord): EnterpriseQuotationListItemDto {
     return {
-      id: data.id,
-      productName: data.product_name,
+      id: data.quotation_id,
+      productName: data.quotation.product_name,
       subCategory: {
-        id: data.subcategory.id,
-        name: data.subcategory.name,
+        id: data.quotation.subcategory.id,
+        name: data.quotation.subcategory.name,
       },
-      quantity: data.quantity,
-      description: data.description,
-      status: data.status as QuotationRequestStatus,
+      quantity: data.quotation.quantity,
+      description: data.quotation.description,
+      status: data.status,
       createdAt: data.created_at,
     };
   }

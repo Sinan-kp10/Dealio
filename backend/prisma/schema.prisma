@@ -303,17 +303,26 @@ model quotation_requests {
   @@map("quotation_requests")
 }
 
-model enterprise_quotation_requests {
-  id             String   @id @default(uuid()) @db.Uuid
-  enterprise_id  String   @db.Uuid
-  quotation_id   String   @db.Uuid
-  created_at     DateTime @default(now()) @db.Timestamptz
+enum enterprise_quotation_status {
+  OPEN
+  PROPOSAL_SENT
+  CLOSED
+  CANCELLED
+}
 
-  enterprise     enterprises       @relation(fields: [enterprise_id], references: [id], onDelete: Cascade)
+model enterprise_quotation_requests {
+  id             String                      @id @default(uuid()) @db.Uuid
+  enterprise_id  String                      @db.Uuid
+  quotation_id   String                      @db.Uuid
+  status         enterprise_quotation_status @default(OPEN)
+  created_at     DateTime                    @default(now()) @db.Timestamptz
+
+  enterprise     enterprises        @relation(fields: [enterprise_id], references: [id], onDelete: Cascade)
   quotation      quotation_requests @relation(fields: [quotation_id], references: [id], onDelete: Cascade)
 
   @@unique([enterprise_id, quotation_id])
   @@index([enterprise_id, created_at])
+  @@index([enterprise_id, status])
   @@index([quotation_id])
   @@map("enterprise_quotation_requests")
 }
