@@ -21,14 +21,13 @@ export class PrismaEnterpriseQuotationRepository implements IEnterpriseQuotation
 
   findAvailableQuotations = async (enterpriseId: string, filter: EnterpriseQuotationListFiltersDto): Promise<PaginatedQuotationDto> => {
     const DEFAULT_LIMIT = 9;
-    const { search, limit, page, subcategoryId, status } = filter;
+    const { search, limit, page, status } = filter;
     const pageSize = limit || DEFAULT_LIMIT;
     const currentPage = page || 1;
 
     const where: Prisma.enterprise_quotation_requestsWhereInput = {
       enterprise_id: enterpriseId,
       ...(status && status !== "ALL" ? { status } : {}),
-      ...(subcategoryId && subcategoryId !== "ALL" ? { quotation: { subcategory_id: subcategoryId } } : {}),
       ...(search ? { quotation: { product_name: { contains: search, mode: "insensitive" } } } : {}),
     };
 

@@ -3,7 +3,6 @@ export type ProposalStatus = "PENDING" | "ACCEPTED" | "PAY_ADVANCE" | "COMPLETED
 
 export interface EnterpriseQuotationListFiltersDto {
     search?: string;
-    subcategoryId?: string;
     status?: EnterpriseQuotationStatus | "ALL";
     page?: number;
     limit?: number;
