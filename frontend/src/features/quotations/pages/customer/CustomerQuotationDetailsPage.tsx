@@ -101,7 +101,7 @@ export function CustomerQuotationDetailsPage() {
         >
           <ArrowLeft
             size={16}
-            className="group-hover:-translate-x-1 transition-transform text-slate-500 group-hover:text-[#2f5581]"
+            className="text-slate-500 group-hover:text-[#2f5581]"
           />
           <span>Back to Quotation Requests</span>
         </button>

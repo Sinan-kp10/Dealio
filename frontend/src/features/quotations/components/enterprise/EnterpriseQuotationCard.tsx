@@ -17,21 +17,23 @@ export function EnterpriseQuotationCard({ item, onChat }: EnterpriseQuotationCar
 
   return (
     <div className={`bg-white rounded-2xl border border-slate-200/90 p-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)] ${isInactive ? "opacity-90" : "hover:border-slate-300 hover:shadow-md"} transition-all flex flex-col justify-between space-y-4`}>
-      <div className="space-y-3">
-        <div className="flex items-start justify-between gap-2.5">
-          <h2
-            onClick={() => !isInactive && navigate(`/enterprise/quotations/${item.id}`)}
-            className={`text-base font-bold text-[#0e2238] tracking-tight line-clamp-2 leading-snug m-0 flex-1 ${isInactive ? "" : "hover:text-[#355982] cursor-pointer"} transition-colors`}
-            title={item.productName}
-          >
-            {item.productName}
-          </h2>
-          <StatusBadge status={item.status} className="shrink-0" />
-        </div>
+      <div className="space-y-3.5">
+        <div className="space-y-1">
+          <div className="flex items-start justify-between gap-2.5">
+            <h2
+              onClick={() => !isInactive && navigate(`/enterprise/quotations/${item.id}`)}
+              className={`text-base font-bold text-[#0e2238] tracking-tight line-clamp-2 leading-snug m-0 flex-1 ${isInactive ? "" : "hover:text-[#355982] cursor-pointer"} transition-colors`}
+              title={item.productName}
+            >
+              {item.productName}
+            </h2>
+            <StatusBadge status={item.status} className="shrink-0" />
+          </div>
 
-        <div className="flex items-center gap-1.5 text-xs text-slate-400">
-          <Clock size={12} className="text-slate-400 shrink-0" />
-          <span>Received {formatTimeAgo(item.createdAt)}</span>
+          <div className="flex items-center gap-1.5 text-xs font-medium text-slate-500">
+            <Clock size={12.5} className="text-slate-500 shrink-0" />
+            <span>Received {formatTimeAgo(item.createdAt)}</span>
+          </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">

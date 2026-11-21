@@ -46,7 +46,7 @@ export function QuotationDescriptionModal({isOpen,onClose,productName,descriptio
                 id="specifications-modal-title"
                 className="text-base sm:text-lg font-bold text-[#0E2238] m-0 truncate"
               >
-                Requirement Specifications
+                Requirements & Specifications
               </h3>
             </div>
             <p className="text-xs text-slate-500 m-0 truncate pl-9 font-medium">
