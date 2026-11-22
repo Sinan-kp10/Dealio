@@ -35,10 +35,14 @@ export const enterpriseQuotationDetailsSelect = {
 export const enterpriseProposalDetailsSelect = {
   id: true,
   item_name: true,
+  description: true,
+  quantity: true,
   unit_price: true,
   total_amount: true,
-  description: true,
-  terms_and_conditions: true,
+  delivery_timeline: true,
+  warranty_coverage: true,
+  replacement_policy: true,
+  additional_notes: true,
   status: true,
   created_at: true,
 } satisfies Prisma.proposalsSelect;
@@ -51,10 +55,14 @@ export class EnterpriseQuotationDetailsMapper {
     return {
       id: proposal.id,
       itemName: proposal.item_name,
+      description: proposal.description,
+      quantity: proposal.quantity,
       unitPrice: Number(proposal.unit_price),
       totalAmount: Number(proposal.total_amount),
-      description: proposal.description,
-      termsAndConditions: proposal.terms_and_conditions,
+      deliveryTimeline: proposal.delivery_timeline,
+      warrantyCoverage: proposal.warranty_coverage,
+      replacementPolicy: proposal.replacement_policy,
+      additionalNotes: proposal.additional_notes,
       status: proposal.status,
       createdAt: proposal.created_at,
     };

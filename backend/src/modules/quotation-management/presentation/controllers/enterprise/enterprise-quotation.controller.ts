@@ -2,15 +2,8 @@ import type { Request, Response, NextFunction } from "express";
 import { HttpStatusCode } from "../../../../../shared/enums/http-status-code.enum";
 import { IUseCase } from "../../../../../shared/application/base.usecase";
 import { sendResponse } from "../../../../../shared/presentation/api-response";
-import {
-  GetEnterpriseQuotationsDto,
-  MarkNotInterestedDto,
-  PaginatedQuotationDto,
-} from "../../../application/dto/enterprise/enterprise-quotation-list.dto";
-import {
-  EnterpriseQuotationDetailsDto,
-  GetEnterpriseQuotationDetailsDto,
-} from "../../../application/dto/enterprise/enterprise-quotation-details.dto";
+import {EnterpriseQuotationStatus,GetEnterpriseQuotationsDto,MarkNotInterestedDto,PaginatedQuotationDto,} from "../../../application/dto/enterprise/enterprise-quotation-list.dto";
+import {EnterpriseQuotationDetailsDto,GetEnterpriseQuotationDetailsDto} from "../../../application/dto/enterprise/enterprise-quotation-details.dto";
 
 export class EnterpriseQuotationController {
   constructor(
@@ -27,7 +20,7 @@ export class EnterpriseQuotationController {
         userId: userId!,
         filter: {
           search: req.query.search as string | undefined,
-          status: req.query.status as any,
+          status: req.query.status as (EnterpriseQuotationStatus | "ALL") | undefined,
           page: Number(req.query.page ?? 1),
           limit: Number(req.query.limit ?? 9),
         },
