@@ -1,17 +1,5 @@
+import type { EnterpriseProposalDetails } from "./enterprise-proposal.types";
 import type { EnterpriseQuotationStatus } from "./enterprise-quotation.types";
-
-export type EnterpriseProposalStatus = "PENDING" | "ACCEPTED" | "PAY_ADVANCE" | "COMPLETED" | "REJECTED";
-
-export interface EnterpriseProposalDetails {
-  id: string;
-  itemName: string;
-  unitPrice: number;
-  totalAmount: number;
-  description: string | null;
-  termsAndConditions: string;
-  status: EnterpriseProposalStatus;
-  createdAt: string;
-}
 
 export interface EnterpriseQuotationDetails {
   id: string;

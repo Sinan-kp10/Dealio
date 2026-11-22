@@ -8,6 +8,7 @@ export type BadgeStatus =
   | "PAY_ADVANCE"
   | "COMPLETED"
   | "CANCELLED"
+  | "REJECTED"
   | string;
 
 export interface StatusBadgeProps {
@@ -87,6 +88,14 @@ export function StatusBadge({ status, className = "" }: StatusBadgeProps) {
           className={`inline-flex items-center px-2.5 py-1 text-[11px] font-semibold tracking-wide rounded-md bg-red-50 text-red-700 border border-red-200/70 ${className}`}
         >
           Cancelled
+        </span>
+      );
+    case "REJECTED":
+      return (
+        <span
+          className={`inline-flex items-center px-2.5 py-1 text-[11px] font-semibold tracking-wide rounded-md bg-rose-50 text-rose-700 border border-rose-200/70 ${className}`}
+        >
+          Rejected
         </span>
       );
     default:
