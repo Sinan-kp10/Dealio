@@ -13,18 +13,28 @@ export class EnterpriseProposalController {
         try {
             const userId = req.auth?.userId;
             const quotationId = req.params.quotationId as string;
+            const {
+                itemName,
+                description,
+                quantity,
+                unitPrice,
+                deliveryTimeline,
+                warrantyCoverage,
+                replacementPolicy,
+                additionalNotes,
+            } = req.body;
 
             await this.createProposalUseCase.execute({
                 userId: userId!,
                 quotationId,
-                itemName: req.body.itemName,
-                description: req.body.description,
-                quantity: Number(req.body.quantity),
-                unitPrice: Number(req.body.unitPrice),
-                deliveryTimeline: req.body.deliveryTimeline,
-                warrantyCoverage: req.body.warrantyCoverage,
-                replacementPolicy: req.body.replacementPolicy,
-                additionalNotes: req.body.additionalNotes ?? null,
+                itemName,
+                description,
+                quantity,
+                unitPrice,
+                deliveryTimeline,
+                warrantyCoverage,
+                replacementPolicy,
+                additionalNotes,
             });
 
             sendResponse(res, "Proposal submitted successfully", null, HttpStatusCode.CREATED);
