@@ -10,7 +10,11 @@ import socket from "../../../services/socket.service";
 
 const PAGE_LIMIT = 8;
 
-export function NotificationDropdown() {
+interface NotificationDropdownProps {
+  className?: string;
+}
+
+export function NotificationDropdown({ className = "" }: NotificationDropdownProps = {}) {
   const [activeTab, setActiveTab] = useState<"unread" | "all">("unread");
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
@@ -148,7 +152,7 @@ export function NotificationDropdown() {
 
   return (
     <div
-      className="absolute right-0 mt-3 w-[calc(100vw-2rem)] sm:w-[410px] max-w-[420px] bg-white rounded-[22px] shadow-[0_16px_40px_-8px_rgba(15,23,42,0.14),0_4px_16px_rgba(15,23,42,0.06)] border border-slate-200/90 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150 origin-top-right"
+      className={`absolute right-0 mt-3 w-[calc(100vw-2rem)] sm:w-[410px] max-w-[420px] bg-white rounded-[22px] shadow-[0_16px_40px_-8px_rgba(15,23,42,0.14),0_4px_16px_rgba(15,23,42,0.06)] border border-slate-200/90 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150 origin-top-right ${className}`}
       role="dialog"
       aria-label="Notifications panel"
     >

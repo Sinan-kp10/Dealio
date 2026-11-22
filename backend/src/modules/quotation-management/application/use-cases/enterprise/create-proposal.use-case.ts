@@ -1,11 +1,13 @@
 import { IUseCase } from "../../../../../shared/application/base.usecase";
 import { ConflictError, NotFoundError } from "../../../../../shared/errors/app-error";
+import { INotificationService } from "../../../../../shared/interfaces/INotificationService";
 import { IEnterpriseProposalRepository } from "../../../domain/repositories/enterprise/enterprise-proposal.repository";
 import { CreateProposalInputDto } from "../../dto/enterprise/enterprise-proposal.dto";
 
 export class CreateProposalUseCase implements IUseCase<CreateProposalInputDto, void> {
     constructor(
-        private readonly enterpriseProposalRepository: IEnterpriseProposalRepository
+        private readonly enterpriseProposalRepository: IEnterpriseProposalRepository,
+        private readonly notificationService: INotificationService
     ) {}
 
     execute = async (input: CreateProposalInputDto): Promise<void> => {
@@ -14,8 +16,8 @@ export class CreateProposalUseCase implements IUseCase<CreateProposalInputDto, v
             throw new NotFoundError("Enterprise not found");
         }
 
-        const quotationExists = await this.enterpriseProposalRepository.findQuotationById(input.quotationId);
-        if (!quotationExists) {
+        const quotation = await this.enterpriseProposalRepository.findQuotationById(input.quotationId);
+        if (!quotation) {
             throw new NotFoundError("Quotation not found");
         }
 
@@ -29,5 +31,12 @@ export class CreateProposalUseCase implements IUseCase<CreateProposalInputDto, v
 
         const totalAmount = Number((input.quantity * input.unitPrice).toFixed(2));
         await this.enterpriseProposalRepository.createEnterpriseProposal(enterpriseId, input, totalAmount);
+
+        await this.notificationService.send({
+            userId: quotation.customerId,
+            type: "NEW_PROPOSAL_RECEIVED",
+            title: "New Proposal Received",
+            message: `An enterprise has submitted a proposal for your quotation "${quotation.productName}".`,
+        });
     };
 }

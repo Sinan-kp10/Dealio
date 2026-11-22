@@ -1,9 +1,4 @@
-export type NotificationType =
-    | "KYC_VERIFIED"
-    | "KYC_REJECTED"
-    | "BANK_DETAILS_VERIFIED"
-    | "BANK_DETAILS_REJECTED"
-    | "QUOTATION_RECEIVED";
+import type { NotificationType } from "../../../../shared/interfaces/INotificationService.js";
 
 export interface CreateNotificationDto {
     userId: string;

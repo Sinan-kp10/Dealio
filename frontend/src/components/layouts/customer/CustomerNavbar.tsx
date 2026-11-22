@@ -5,23 +5,51 @@ import { toast } from "react-toastify";
 import { logout } from "../../../features/auth/services/auth.service";
 import useAuthStore from "../../../stores/auth.store";
 import ConfirmationModal from "../../common/confirmationModel/ConfirmationModal";
+import useNotificationStore from "../../../stores/notification.store";
+import { getUnreadCount } from "../../../services/notification.service";
+import { NotificationDropdown } from "../../common/notification/NotificationDropdown";
 
 export function CustomerNavbar() {
     const navigate = useNavigate();
     const location = useLocation();
     const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const [isNotificationOpen, setIsNotificationOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
 
     const profileRef = useRef<HTMLDivElement>(null);
+    const notificationRef = useRef<HTMLDivElement>(null);
     const user = useAuthStore((state) => state.user);
     const clearAuth = useAuthStore((state) => state.clearAuth);
+    const unreadCount = useNotificationStore((state) => state.unreadCount);
+    const setUnreadCount = useNotificationStore((state) => state.setUnreadCount);
+
+    useEffect(() => {
+        let isMounted = true;
+        const fetchCount = async () => {
+            try {
+                const count = await getUnreadCount();
+                if (isMounted) {
+                    setUnreadCount(count);
+                }
+            } catch {
+            }
+        };
+
+        fetchCount();
+        return () => {
+            isMounted = false;
+        };
+    }, [setUnreadCount]);
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
             if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
                 setIsProfileOpen(false);
+            }
+            if ( notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+                setIsNotificationOpen(false);
             }
         }
 
@@ -112,23 +140,35 @@ export function CustomerNavbar() {
                         <MessageCircleMore size={21} strokeWidth={2.2} className="text-[#244673]" />
                     </button>
 
-                    <div className="relative">
+                    <div className="relative" ref={notificationRef}>
                         <button
                             type="button"
+                            onClick={() => {
+                                setIsNotificationOpen((prev) => !prev);
+                                setIsProfileOpen(false);
+                            }}
                             className="relative p-2.5 text-[#244673] hover:text-[#183252] hover:bg-[#f0f6fc] rounded-full transition-colors cursor-pointer"
                             aria-label="Notifications"
+                            aria-expanded={isNotificationOpen}
                         >
                             <Bell size={21} strokeWidth={2.2} className="text-[#244673]" />
-                            <span className="notification-badge absolute top-[3px] right-[3px] flex items-center justify-center min-w-[17px] h-[17px] px-1 text-[10px] font-bold leading-none text-white bg-[#ea3838] rounded-full shadow-[0_0_0_1.5px_#ffffff,0_2px_5px_rgba(234,56,56,0.35)]">
-                                2
-                            </span>
+                            {unreadCount > 0 && (
+                                <span className="notification-badge absolute top-[3px] right-[3px] flex items-center justify-center min-w-[17px] h-[17px] px-1 text-[10px] font-bold leading-none text-white bg-[#ea3838] rounded-full shadow-[0_0_0_1.5px_#ffffff,0_2px_5px_rgba(234,56,56,0.35)]">
+                                    {unreadCount > 99 ? "99+" : unreadCount}
+                                </span>
+                            )}
                         </button>
+
+                        {isNotificationOpen && <NotificationDropdown />}
                     </div>
 
                     <div className="relative" ref={profileRef}>
                         <button
                             type="button"
-                            onClick={() => setIsProfileOpen((prev) => !prev)}
+                            onClick={() => {
+                                setIsProfileOpen((prev) => !prev);
+                                setIsNotificationOpen(false);
+                            }}
                             className="flex items-center gap-3 pl-1.5 pr-4 sm:pr-5 py-1.5 bg-[#f0f6fc] hover:bg-[#e7f0f9] border border-[#dce8f5] rounded-full transition-all duration-150 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#355982]/20 shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
                             aria-label="User profile menu"
                             aria-expanded={isProfileOpen}
@@ -244,18 +284,10 @@ export function CustomerNavbar() {
 
                     <button
                         type="button"
-                        className="relative p-2 text-[#244673] hover:text-[#183252] hover:bg-[#f0f6fc] rounded-full transition-colors cursor-pointer"
-                        aria-label="Notifications"
-                    >
-                        <Bell size={20} strokeWidth={2.2} />
-                        <span className="notification-badge absolute top-[2px] right-[2px] flex items-center justify-center min-w-[15px] h-[15px] px-0.5 text-[9px] font-bold leading-none text-white bg-[#ea3838] rounded-full">
-                            2
-                        </span>
-                    </button>
-
-                    <button
-                        type="button"
-                        onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+                        onClick={() => {
+                            setIsMobileMenuOpen((prev) => !prev);
+                            setIsNotificationOpen(false);
+                        }}
                         className="p-2 ml-0.5 text-slate-700 hover:text-[#2f5581] hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
                         aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
                     >

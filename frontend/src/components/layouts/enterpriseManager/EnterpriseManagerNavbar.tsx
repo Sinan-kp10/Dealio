@@ -46,9 +46,6 @@ export function EnterpriseManagerNavbar({ onToggleSidebar, isSidebarOpen,}: Ente
     };
   }, [setUnreadCount]);
 
-
-
-
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if ( profileRef.current && !profileRef.current.contains(event.target as Node)) {

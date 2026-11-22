@@ -3,7 +3,8 @@ export type NotificationType =
   | "KYC_REJECTED"
   | "BANK_DETAILS_VERIFIED"
   | "BANK_DETAILS_REJECTED"
-  | "QUOTATION_RECEIVED";
+  | "QUOTATION_RECEIVED"
+  | "NEW_PROPOSAL_RECEIVED";
 
 export interface NotificationItem {
   id: string;
