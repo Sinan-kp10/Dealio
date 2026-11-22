@@ -18,8 +18,8 @@ export class CreateQuotationRequestUseCase implements IUseCase<CreateQuotationRe
                     this.notificationService.send({
                         userId,
                         type: "QUOTATION_RECEIVED",
-                        title: "New quotation request from customer",
-                        message: `A new quotation request for ${input.productName} is available.`,
+                        title: "New quotation request is available",
+                        message: `Review the request for "${input.productName}" and submit your proposal.`,
                     })
                 )
             );
