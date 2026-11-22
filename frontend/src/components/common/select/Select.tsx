@@ -12,6 +12,7 @@ export interface SelectProps {
     options: SelectOption[];
     placeholder?: string;
     className?: string;
+    hasError?: boolean;
     "aria-label"?: string;
 }
 
@@ -21,6 +22,7 @@ export function Select({
     options,
     placeholder,
     className = "",
+    hasError = false,
     "aria-label": ariaLabel,
 }: SelectProps) {
     const [isOpen, setIsOpen] = useState(false);
@@ -57,7 +59,11 @@ export function Select({
                 onClick={() => setIsOpen((prev) => !prev)}
                 aria-label={ariaLabel}
                 aria-expanded={isOpen}
-                className={`w-full h-11 px-3.5 bg-white border border-slate-200/90 rounded-xl text-xs sm:text-sm font-medium flex items-center justify-between gap-2.5 shadow-xs hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#355982]/20 focus:border-[#355982] transition-colors cursor-pointer text-left whitespace-nowrap ${
+                className={`w-full h-11 px-3.5 bg-white border rounded-xl text-xs sm:text-sm font-medium flex items-center justify-between gap-2.5 shadow-xs focus:outline-none transition-colors cursor-pointer text-left whitespace-nowrap ${
+                    hasError
+                        ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                        : "border-slate-200/90 hover:border-slate-300 focus:border-[#355982] focus:ring-2 focus:ring-[#355982]/20"
+                } ${
                     isPlaceholder ? "text-slate-400" : "text-slate-800"
                 }`}
             >

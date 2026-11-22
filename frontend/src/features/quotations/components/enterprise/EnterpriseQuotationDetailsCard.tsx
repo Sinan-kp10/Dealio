@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {Tag,Package,IndianRupee,MapPin,Clock,MessageCircleMore,Ban,Send,FileText,ExternalLink} from "lucide-react";
+import {Tag,Package,IndianRupee,MapPin,Clock,MessageCircleMore,Ban,Send,FileText,ExternalLink,ShoppingCart} from "lucide-react";
 import { toast } from "react-toastify";
 import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
 import ConfirmationModal from "../../../../components/common/confirmationModel/ConfirmationModal";
@@ -39,29 +39,34 @@ export function EnterpriseQuotationDetailsCard({ quotation }: EnterpriseQuotatio
   };
 
   return (
-    <>
-      <div className="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-6">
+    <div className="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+      <div className="space-y-6">
         <div className="pb-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-          <div className="space-y-1.5">
-            <div className="flex flex-wrap items-center gap-3">
-              <h1 className="text-xl sm:text-2xl font-extrabold text-[#0e2238] tracking-tight m-0">
-                {quotation.productName}
-              </h1>
-              <StatusBadge status={quotation.status} />
+          <div className="flex items-start gap-3.5 sm:gap-4 min-w-0">
+            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#edf4fb] border border-[#204066]/15 flex items-center justify-center text-[#204066] shrink-0 mt-0.5 shadow-2xs">
+              <ShoppingCart size={22} className="text-[#204066]" />
             </div>
 
-            <div className="flex items-center gap-1.5 text-xs font-medium text-slate-500">
-              <Clock size={13.5} className="text-slate-500 shrink-0" />
-              <span>Received {formatTimeAgo(quotation.createdAt)}</span>
+            <div className="space-y-1 min-w-0">
+              <span className="text-[11px] sm:text-xs font-bold text-[#204066] uppercase tracking-wider block">
+                Buyer Quotation Request
+              </span>
+
+              <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+                <h1 className="text-xl sm:text-2xl font-extrabold text-[#0e2238] tracking-tight m-0 break-words">
+                  {quotation.productName}
+                </h1>
+                <StatusBadge status={quotation.status} />
+              </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 self-start sm:self-center flex-wrap sm:flex-nowrap">
+          <div className="flex items-center gap-2 self-start sm:self-center flex-wrap sm:flex-nowrap w-full sm:w-auto">
             {!quotation.proposal && (
               <button
                 type="button"
                 onClick={() => setIsNotInterestedModalOpen(true)}
-                className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200/90 rounded-xl transition-all cursor-pointer shadow-2xs"
+                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200/90 rounded-xl transition-all cursor-pointer shadow-2xs"
               >
                 <Ban size={13} strokeWidth={2.2} />
                 <span>Not Interested</span>
@@ -71,7 +76,7 @@ export function EnterpriseQuotationDetailsCard({ quotation }: EnterpriseQuotatio
             <button
               type="button"
               onClick={handleChat}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-slate-700 hover:text-[#0e2238] bg-slate-100 hover:bg-slate-200/80 rounded-xl transition-all cursor-pointer shadow-2xs"
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-slate-700 hover:text-[#0e2238] bg-slate-100 hover:bg-slate-200/80 rounded-xl transition-all cursor-pointer shadow-2xs"
             >
               <MessageCircleMore size={14} className="text-slate-500" />
               <span>Chat with Buyer</span>
@@ -80,8 +85,8 @@ export function EnterpriseQuotationDetailsCard({ quotation }: EnterpriseQuotatio
             {!quotation.proposal && (
               <button
                 type="button"
-                onClick={()=>navigate(`/enterprise/quotations/${quotation.id}/proposal`)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-[#355982] hover:bg-[#284566] rounded-xl transition-all shadow-xs cursor-pointer active:scale-[0.98]"
+                onClick={() => navigate(`/enterprise/quotations/${quotation.id}/proposal`, { state: { quotation } })}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-[#355982] hover:bg-[#284566] rounded-xl transition-all shadow-xs cursor-pointer active:scale-[0.98]"
               >
                 <Send size={13} />
                 <span>Send Proposal</span>
@@ -125,6 +130,11 @@ export function EnterpriseQuotationDetailsCard({ quotation }: EnterpriseQuotatio
               </span>
             </div>
           )}
+
+          <div className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 sm:ml-auto shrink-0 py-1">
+            <Clock size={13} className="text-slate-400 shrink-0" />
+            <span>Received {formatTimeAgo(quotation.createdAt)}</span>
+          </div>
         </div>
 
         <div
@@ -172,7 +182,7 @@ export function EnterpriseQuotationDetailsCard({ quotation }: EnterpriseQuotatio
         productName={quotation.productName}
         description={quotation.description}
       />
-    </>
+    </div>
   );
 }
 

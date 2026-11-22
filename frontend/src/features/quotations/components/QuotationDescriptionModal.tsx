@@ -6,9 +6,16 @@ export interface QuotationDescriptionModalProps {
   onClose: () => void;
   productName: string;
   description: string;
+  title?: string;
 }
 
-export function QuotationDescriptionModal({isOpen,onClose,productName,description}: QuotationDescriptionModalProps) {
+export function QuotationDescriptionModal({
+  isOpen,
+  onClose,
+  productName,
+  description,
+  title = "Requirements & Specifications",
+}: QuotationDescriptionModalProps) {
   useEffect(() => {
     if (!isOpen) return;
 
@@ -26,7 +33,7 @@ export function QuotationDescriptionModal({isOpen,onClose,productName,descriptio
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[#0E2238]/60 backdrop-blur-xs animate-in fade-in duration-150"
+      className="fixed inset-0 !m-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[#0E2238]/60 backdrop-blur-xs"
       onClick={onClose}
     >
       <div
@@ -46,7 +53,7 @@ export function QuotationDescriptionModal({isOpen,onClose,productName,descriptio
                 id="specifications-modal-title"
                 className="text-base sm:text-lg font-bold text-[#0E2238] m-0 truncate"
               >
-                Requirements & Specifications
+                {title}
               </h3>
             </div>
             <p className="text-xs text-slate-500 m-0 truncate pl-9 font-medium">
