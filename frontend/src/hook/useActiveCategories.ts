@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import useCategoryStore from "../stores/category.store";
-import { getActiveCategories } from "../services/category.service";
+import { getActiveCategoriesWithSubcategories } from "../services/category.service";
 import { handleApiError } from "../utils/errorHandler";
 
 function useActiveCategories(): void {
@@ -16,7 +16,7 @@ function useActiveCategories(): void {
         const loadCategories = async () => {
             setLoading(true);
             try {
-                const response = await getActiveCategories();
+                const response = await getActiveCategoriesWithSubcategories();
                 if (!cancelled) {
                     setCategories(response.data);
                 }
@@ -39,7 +39,7 @@ function useActiveCategories(): void {
 
 export const refreshActiveCategories = async (): Promise<void> => {
     try {
-        const response = await getActiveCategories();
+        const response = await getActiveCategoriesWithSubcategories();
         useCategoryStore.getState().setCategories(response.data);
     } catch (error) {
         handleApiError(error, "Unable to refresh categories");

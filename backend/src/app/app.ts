@@ -13,6 +13,8 @@ import profilePictureRouter from "../modules/profile/presentation/routes/profile
 import categoryRoutes from "../modules/category-management/presentation/routes/category.routes"
 import profileVerificationRoutes from "../modules/profile/presentation/routes/profile-verification.routes"
 import notificationRoutes from "../modules/notification/presentation/routes/notification.routes";
+import customerQuotationRoutes from "../modules/quotation-management/presentation/routes/customer/quotation-request.routes";
+import enterpriseQuotationRoutes from "../modules/quotation-management/presentation/routes/enterprise/enterprise-quotation.routes";
 import cookieParser from "cookie-parser";
 import { env } from "../config/env";
 const app = express();
@@ -39,7 +41,9 @@ app.use("/api/admin", userManagementRoutes);
 app.use("/api/admin", categoryRoutes);
 app.use("/api/admin/enterprises", profileVerificationRoutes);
 app.use("/api/customer", customerProfileRouter);
+app.use("/api/customer/quotations", customerQuotationRoutes);
 app.use("/api/enterprise", enterpriseProfileRouter);
+app.use("/api/enterprise/quotations", enterpriseQuotationRoutes);
 app.use("/api/profile", profilePictureRouter);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api", categoryRoutes);

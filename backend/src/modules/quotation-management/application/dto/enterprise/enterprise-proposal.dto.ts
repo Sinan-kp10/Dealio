@@ -1,0 +1,29 @@
+export type ProposalStatus = "PENDING" | "ACCEPTED" | "PAY_ADVANCE" | "COMPLETED" | "REJECTED";
+
+export interface EnterpriseProposalDetailsDto {
+    id: string;
+    itemName: string;
+    description: string;
+    quantity: number;
+    unitPrice: number;
+    totalAmount: number;
+    deliveryTimeline: string;
+    warrantyCoverage: string;
+    replacementPolicy: string;
+    additionalNotes?: string | null;
+    status: ProposalStatus;
+    createdAt: Date;
+}
+
+export interface CreateProposalInputDto {
+    userId: string;
+    quotationId: string;
+    itemName: string;
+    description: string;
+    quantity: number;
+    unitPrice: number;
+    deliveryTimeline: string;
+    warrantyCoverage: string;
+    replacementPolicy: string;
+    additionalNotes?: string | null;
+}

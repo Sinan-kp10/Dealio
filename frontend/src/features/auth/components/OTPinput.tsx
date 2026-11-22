@@ -122,10 +122,10 @@ export function OtpInput({ onChange, hasError = false }: OTPinputProps) {
                     onFocus={(event) => event.target.select()}
                     aria-label={`OTP digit ${index + 1}`}
                     aria-invalid={hasError}
-                    className={`flex-1 min-w-0 max-w-[48px] sm:max-w-[52px] h-12 sm:h-14 text-center text-lg sm:text-2xl font-bold text-[#0f1d2f] bg-white border-[1.5px] rounded-xl sm:rounded-2xl transition-all duration-200 hover:border-slate-300 focus:outline-none ${
+                    className={`flex-1 min-w-0 max-w-[48px] sm:max-w-[52px] h-12 sm:h-14 text-center text-lg sm:text-2xl font-bold text-[#0c2340] rounded-xl sm:rounded-2xl transition-all duration-200 focus:outline-none ${
                         hasError
-                            ? "border-red-500 focus:border-red-500 focus:ring-[3px] focus:ring-red-500/12"
-                            : "border-slate-200 focus:border-[#355982] focus:ring-[3px] focus:ring-[#355982]/12"
+                            ? "bg-red-50/40 border-[1.5px] border-red-500 focus:bg-white focus:border-red-500 focus:ring-[3px] focus:ring-red-500/15"
+                            : "bg-[#edf3f9] hover:bg-[#e4ecf5] border-[1.5px] border-[#cbd8e6] hover:border-[#9ab9d8] focus:bg-white focus:border-[#2e4d75] focus:ring-[3px] focus:ring-[#2e4d75]/15 shadow-2xs"
                     }`}
                 />
             ))}

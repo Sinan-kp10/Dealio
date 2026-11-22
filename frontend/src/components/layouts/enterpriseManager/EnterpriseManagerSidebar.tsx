@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LayoutDashboard, FileText, SquareCheckBig, MessageSquare, CreditCard, LogOut, X } from "lucide-react";
+import { LayoutDashboard, FileText, SquareCheckBig, MessageCircleMore, CreditCard, LogOut, X } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { logout } from "../../../features/auth/services/auth.service";
@@ -166,7 +166,7 @@ export function EnterpriseManagerSidebar({ isOpen, onClose }: EnterpriseManagerS
                             >
                             {({ isActive }) => (
                                 <>
-                                <MessageSquare
+                                <MessageCircleMore
                                     size={18}
                                     className={`shrink-0 transition-colors ${
                                     isActive
@@ -174,7 +174,7 @@ export function EnterpriseManagerSidebar({ isOpen, onClose }: EnterpriseManagerS
                                         : "text-slate-400 group-hover:text-slate-600"
                                     }`}
                                 />
-                                <span>Conversations</span>
+                                <span>Messages</span>
                                 </>
                             )}
                         </NavLink>

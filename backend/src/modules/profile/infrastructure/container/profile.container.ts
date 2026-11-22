@@ -12,7 +12,6 @@ import { GetCustomerProfileUseCase } from "../../application/use-cases/cutsomer/
 import { UpdateCustomerProfileUseCase } from "../../application/use-cases/cutsomer/update-customer-profile.use-case.js";
 import { GetEnterpriseProfileUseCase } from "../../application/use-cases/enterprise/get-enterprise-profile.use-case.js";
 import { UpdateEnterpriseDetailsUseCase } from "../../application/use-cases/enterprise/update-enterprise-details.use-case.js";
-import { GetActiveCategoriesUseCase } from "../../application/use-cases/enterprise/get-active-categories.use-case.js";
 import { RemoveProfilePictureUseCase } from "../../application/use-cases/profile-picture/remove-profile-picture.use-case.js";
 import { CreateEnterpriseKycUseCase } from "../../application/use-cases/enterprise/create-enterprise-kyc.use-case.js";
 import { UpdateEnterpriseKycUseCase } from "../../application/use-cases/enterprise/update-enterprise-kyc.use-case.js";
@@ -44,8 +43,7 @@ export const customerProfileController = new CustomerProfileController(getCustom
 const enterpriseProfileRepository = new PrismaEnterpriseProfileRepository()
 const getEnterpriseProfileUseCase = new GetEnterpriseProfileUseCase(enterpriseProfileRepository, s3StorageService)
 const updateEnterpriseDetailsUseCase = new UpdateEnterpriseDetailsUseCase(enterpriseProfileRepository)
-const getActiveCategoriesUseCase = new GetActiveCategoriesUseCase(enterpriseProfileRepository)
-export const enterpriseProfileController = new EnterpriseProfileController(getEnterpriseProfileUseCase, updateEnterpriseDetailsUseCase, getActiveCategoriesUseCase)
+export const enterpriseProfileController = new EnterpriseProfileController(getEnterpriseProfileUseCase, updateEnterpriseDetailsUseCase)
 
 //profile picture
 const profileRepository = new PrismaProfileRepository();

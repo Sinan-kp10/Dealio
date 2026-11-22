@@ -22,7 +22,15 @@ export interface UpdatedCategoryFieldsDto {
     status?: CategoryStatus
 }
 
-export interface ActiveCategoryDto {
+export interface ActiveSubCategoryDto {
     id: string;
     name: string;
 }
+
+export interface ActiveCategoryDto {
+    id: string;
+    name: string;
+    subcategories?: ActiveSubCategoryDto[];
+}
+
+export type ActiveCategoryWithSubcategoriesDto = ActiveCategoryDto;

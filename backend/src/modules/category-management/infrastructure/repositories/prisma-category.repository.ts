@@ -107,7 +107,7 @@ export class PrismaCategoryRepository implements ICategoryRepository {
         };
     }
 
-    findActiveCategories = async (): Promise<ActiveCategoryDto[]> => {
+    findActiveCategoriesWithSubcategories = async (): Promise<ActiveCategoryDto[]> => {
         const categories = await prisma.categories.findMany({
             where: {
                 status: "ACTIVE",
@@ -115,6 +115,18 @@ export class PrismaCategoryRepository implements ICategoryRepository {
             select: {
                 id: true,
                 name: true,
+                subcategories: {
+                    where: {
+                        status: "ACTIVE",
+                    },
+                    select: {
+                        id: true,
+                        name: true,
+                    },
+                    orderBy: {
+                        name: "asc",
+                    },
+                },
             },
             orderBy: {
                 name: "asc",

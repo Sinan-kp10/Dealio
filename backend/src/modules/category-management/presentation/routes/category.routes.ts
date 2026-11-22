@@ -13,7 +13,7 @@ import { updateSubCategorySchema } from "../validators/update-sub-category.schem
 const router = Router();
 
 // Public active categories
-router.get("/categories/active", categoryController.getActiveCategories);
+router.get("/categories/active", categoryController.getActiveCategoriesWithSubcategories);
 
 router.use(authMiddleware);
 router.use(requireRole("ADMIN"));

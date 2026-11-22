@@ -16,7 +16,6 @@ router.use(authMiddleware)
 router.use(requireRole("ENTERPRISE_MANAGER"))
 router.get("/profile", enterpriseProfileController.getProfile)
 router.patch("/profile", validateRequest(UpdateEnterpriseDetailsSchema), enterpriseProfileController.updateDetails)
-router.get("/categories", enterpriseProfileController.getCategories)
 
 router.get("/kyc", enterpriseKycController.getKyc)
 router.post("/kyc", validateImage, validateRequest(CreateEnterpriseKycSchema), enterpriseKycController.addKyc)

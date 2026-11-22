@@ -10,18 +10,30 @@ export interface SelectProps {
     value: string;
     onChange: (value: string) => void;
     options: SelectOption[];
+    placeholder?: string;
+    className?: string;
+    hasError?: boolean;
     "aria-label"?: string;
 }
 
-export function Select({ value, onChange, options, "aria-label": ariaLabel }: SelectProps) {
+export function Select({
+    value,
+    onChange,
+    options,
+    placeholder,
+    className = "",
+    hasError = false,
+    "aria-label": ariaLabel,
+}: SelectProps) {
     const [isOpen, setIsOpen] = useState(false);
 
     const selectedOption = options.find((opt) => opt.value === value);
-    const displayLabel = selectedOption?.label ?? value;
+    const displayLabel = selectedOption?.label ?? (placeholder && !value ? placeholder : value);
+    const isPlaceholder = !selectedOption && !value && Boolean(placeholder);
 
     return (
         <div
-            className="relative inline-block text-left"
+            className={`relative text-left ${className || "inline-block"}`}
             onBlur={(e) => {
                 if (!e.currentTarget.contains(e.relatedTarget as Node)) {
                     setIsOpen(false);
@@ -47,7 +59,13 @@ export function Select({ value, onChange, options, "aria-label": ariaLabel }: Se
                 onClick={() => setIsOpen((prev) => !prev)}
                 aria-label={ariaLabel}
                 aria-expanded={isOpen}
-                className="w-full h-10 px-3.5 bg-white border border-slate-200/90 rounded-lg text-sm text-slate-700 font-medium flex items-center justify-between gap-2.5 shadow-xs hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#355982]/20 focus:border-[#355982] transition-colors cursor-pointer text-left whitespace-nowrap"
+                className={`w-full h-11 px-3.5 bg-white border rounded-xl text-xs sm:text-sm font-medium flex items-center justify-between gap-2.5 shadow-xs focus:outline-none transition-colors cursor-pointer text-left whitespace-nowrap ${
+                    hasError
+                        ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                        : "border-slate-200/90 hover:border-slate-300 focus:border-[#355982] focus:ring-2 focus:ring-[#355982]/20"
+                } ${
+                    isPlaceholder ? "text-slate-400" : "text-slate-800"
+                }`}
             >
                 <span className="truncate">{displayLabel}</span>
                 <ChevronDown
@@ -61,7 +79,7 @@ export function Select({ value, onChange, options, "aria-label": ariaLabel }: Se
             {isOpen && (
                 <div
                     onMouseDown={(e) => e.preventDefault()}
-                    className="absolute left-0 mt-1.5 w-full max-h-56 overflow-y-auto bg-white border border-slate-200 rounded-lg shadow-lg py-1 z-50"
+                    className="absolute left-0 mt-1.5 w-full max-h-56 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-lg py-1 z-50"
                 >
                     {options.map((option) => {
                         const isSelected = option.value === value;
@@ -73,7 +91,7 @@ export function Select({ value, onChange, options, "aria-label": ariaLabel }: Se
                                     onChange(option.value);
                                     setIsOpen(false);
                                 }}
-                                className={`w-full px-3.5 py-2 text-left text-sm font-medium transition-colors cursor-pointer flex items-center justify-between whitespace-nowrap ${
+                                className={`w-full px-3.5 py-2.5 text-left text-xs sm:text-sm font-medium transition-colors cursor-pointer flex items-center justify-between whitespace-nowrap ${
                                     isSelected
                                         ? "bg-[#244673]/10 text-[#244673] font-semibold"
                                         : "text-slate-700 hover:bg-slate-50"
@@ -90,4 +108,3 @@ export function Select({ value, onChange, options, "aria-label": ariaLabel }: Se
 }
 
 export default Select;
-
