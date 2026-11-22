@@ -27,7 +27,7 @@ export class CreateProposalUseCase implements IUseCase<CreateProposalInputDto, v
             throw new ConflictError("A proposal has already been submitted for this quotation");
         }
 
-        const totalAmount = Math.round(Number(input.quantity) * Number(input.unitPrice));
+        const totalAmount = Number((input.quantity * input.unitPrice).toFixed(2));
         await this.enterpriseProposalRepository.createEnterpriseProposal(enterpriseId, input, totalAmount);
     };
 }
