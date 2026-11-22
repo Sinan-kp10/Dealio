@@ -297,10 +297,10 @@ model quotation_requests {
   enterprise_requests enterprise_quotation_requests[]
   proposals      proposals[]
 
-  @@index([customer_id])
+  @@index([customer_id, created_at(sort: Desc)])
+  @@index([customer_id, status, created_at(sort: Desc)])
   @@index([category_id])
   @@index([subcategory_id])
-  @@index([status])
   @@map("quotation_requests")
 }
 
