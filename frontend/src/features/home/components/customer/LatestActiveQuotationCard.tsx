@@ -103,7 +103,7 @@ export function LatestActiveQuotationCard({ quotation }: LatestActiveQuotationCa
               <span>•</span>
               <span>Qty: {String(quotation.quantity).padStart(2, "0")} Units</span>
               <span>•</span>
-              <span>{quotation.category.name}</span>
+              <span className="uppercase">{quotation.category.name}</span>
             </div>
           </div>
 
