@@ -1,23 +1,21 @@
 import { prisma } from "../../../../infrastructure/database/prisma/prisma-client";
 import { Prisma } from "../../../../../generated/prisma/client";
 import { ICustomerProposalRepository } from "../../domain/repositories/customer/customer-proposal.repository";
-import { GetReceivedProposalsQueryDto, PaginatedCustomerReceivedProposalsDto, ProposalStatus } from "../../application/dto/customer/customer-received-proposal.dto";
+import { GetReceivedProposalsQueryDto, PaginatedCustomerReceivedProposalsDto, ReceivedProposalWithQuotationDto } from "../../application/dto/customer/customer-received-proposal.dto";
 import { ReceivedProposalDetailsDto } from "../../application/dto/customer/received-proposal-details.dto";
 import { customerProposalListItemSelect, customerProposalDetailsSelect, CustomerProposalMapper } from "../mappers/customer/customer-proposal.mapper";
+import { receivedProposalWithQuotationSelect, ReceivedProposalWithQuotationMapper } from "../mappers/customer/received-proposal-with-quotation.mapper";
 
 export class PrismaCustomerProposalRepository implements ICustomerProposalRepository {
-    findById = async (id: string): Promise<{ id: string; status: ProposalStatus } | null> => {
+    findById = async (id: string): Promise<ReceivedProposalWithQuotationDto | null> => {
         const proposal = await prisma.proposals.findFirst({
             where: {
                 id,
                 status: { not: "WITHDRAWN" },
             },
-            select: {
-                id: true,
-                status: true,
-            },
+            select: receivedProposalWithQuotationSelect,
         });
-        return proposal ? { id: proposal.id, status: proposal.status as ProposalStatus } : null;
+        return proposal ? ReceivedProposalWithQuotationMapper.toDto(proposal) : null;
     };
 
     findProposalsByQuotationId = async (quotationId: string,userId: string,query: GetReceivedProposalsQueryDto): Promise<PaginatedCustomerReceivedProposalsDto> => {
@@ -76,5 +74,54 @@ export class PrismaCustomerProposalRepository implements ICustomerProposalReposi
         });
 
         return proposal ? CustomerProposalMapper.toDetailsDto(proposal) : null;
+    };
+
+    acceptReceivedProposal = async (proposalId: string, quotationId: string, enterpriseId: string): Promise<string | null> => {
+        return await prisma.$transaction(async (tx) => {
+            await tx.proposals.update({
+                where: { id: proposalId },
+                data: {
+                    status: "ACCEPTED",
+                },
+            });
+
+            await tx.proposals.updateMany({
+                where: {
+                    quotation_id: quotationId,
+                    id: { not: proposalId },
+                    status: "PENDING",
+                },
+                data: {
+                    status: "REJECTED",
+                },
+            });
+
+            await tx.quotation_requests.update({
+                where: { id: quotationId },
+                data: {
+                    status: "ACCEPTED",
+                    accepted_at: new Date(),
+                },
+            });
+
+            await tx.enterprise_quotation_requests.updateMany({
+                where: { quotation_id: quotationId },
+                data: {
+                    status: "CLOSED",
+                },
+            });
+
+            const manager = await tx.users.findFirst({
+                where: {
+                    enterprise_id: enterpriseId,
+                    role: "ENTERPRISE_MANAGER",
+                },
+                select: {
+                    id: true,
+                },
+            });
+
+            return manager?.id ?? null;
+        });
     };
 }

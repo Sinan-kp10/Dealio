@@ -4,7 +4,8 @@ export type NotificationType =
     | "BANK_DETAILS_VERIFIED"
     | "BANK_DETAILS_REJECTED"
     | "QUOTATION_RECEIVED"
-    | "NEW_PROPOSAL_RECEIVED";
+    | "NEW_PROPOSAL_RECEIVED"
+    | "PROPOSAL_ACCEPTED";
 
 export interface SendNotification {
     userId: string;

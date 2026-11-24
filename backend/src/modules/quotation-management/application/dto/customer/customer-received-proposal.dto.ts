@@ -36,3 +36,19 @@ export interface PaginatedCustomerReceivedProposalsDto {
     total: number;
     totalPages: number;
 }
+
+export interface AcceptReceivedProposalInputDto {
+    proposalId: string;
+    quotationId: string;
+    userId: string;
+}
+
+export interface ReceivedProposalWithQuotationDto {
+    id: string;
+    quotationId: string;
+    enterpriseId: string;
+    status: ProposalStatus;
+    customerId: string;
+    productName: string;
+    quotationStatus: string;
+}

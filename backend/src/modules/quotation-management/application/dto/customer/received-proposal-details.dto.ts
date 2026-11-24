@@ -8,6 +8,7 @@ export interface ReceivedProposalEnterpriseDto {
 export interface ReceivedProposalDetailsDto {
     id: string;
     quotationId: string;
+    quotationStatus: string;
     enterprise: ReceivedProposalEnterpriseDto;
     itemName: string;
     description: string;

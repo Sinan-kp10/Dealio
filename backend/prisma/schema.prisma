@@ -246,6 +246,7 @@ enum notification_type {
   BANK_DETAILS_REJECTED
   QUOTATION_RECEIVED
   NEW_PROPOSAL_RECEIVED
+  PROPOSAL_ACCEPTED
 }
 
 model notifications {

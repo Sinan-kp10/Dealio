@@ -20,6 +20,7 @@ router.get("/recent", quotationRequestController.getRecentQuotationRequests);
 router.get("/:quotationId", validateRequest(getQuotationRequestSchema, "params"), quotationRequestController.getQuotationRequestDetails);
 router.get("/:quotationId/proposals", validateRequest(getQuotationRequestSchema, "params"), validateRequest(getReceivedProposalsSchema, "query"), customerProposalController.getReceivedProposals);
 router.get("/:quotationId/proposals/:proposalId", validateRequest(getReceivedProposalDetailsSchema, "params"), customerProposalController.getReceivedProposalDetails);
+router.patch("/:quotationId/proposals/:proposalId/accept", validateRequest(getReceivedProposalDetailsSchema, "params"), customerProposalController.acceptReceivedProposal);
 router.post("/", validateRequest(createQuotationRequestSchema), quotationRequestController.createQuotationRequest);
 router.patch("/:quotationId", validateRequest(getQuotationRequestSchema, "params"), quotationRequestController.cancelQuotationRequest);
 

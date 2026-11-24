@@ -41,6 +41,11 @@ export const customerProposalDetailsSelect = {
             enterprise_name: true,
         },
     },
+    quotation: {
+        select: {
+            status: true,
+        },
+    },
 } satisfies Prisma.proposalsSelect;
 
 export type CustomerProposalListItemRecord = Prisma.proposalsGetPayload<{ select: typeof customerProposalListItemSelect }>;
@@ -70,6 +75,7 @@ export class CustomerProposalMapper {
         return {
             id: data.id,
             quotationId: data.quotation_id,
+            quotationStatus: data.quotation.status,
             enterprise: {
                 id: data.enterprise.id,
                 name: data.enterprise.enterprise_name,
