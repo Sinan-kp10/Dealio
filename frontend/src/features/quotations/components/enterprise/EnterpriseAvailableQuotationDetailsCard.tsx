@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {Tag,Package,IndianRupee,MapPin,Clock,MessageCircleMore,Ban,Send,FileText,ExternalLink,ShoppingCart} from "lucide-react";
+import { Tag, Package, IndianRupee, MapPin, Clock, MessageCircleMore, Ban, Send, FileText, ExternalLink, ShoppingCart } from "lucide-react";
 import { toast } from "react-toastify";
 import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
 import ConfirmationModal from "../../../../components/common/confirmationModel/ConfirmationModal";
@@ -8,13 +8,13 @@ import { QuotationDescriptionModal } from "../QuotationDescriptionModal";
 import { markQuotationNotInterested } from "../../services/enterprise-quotation.service";
 import { handleApiError } from "../../../../utils/errorHandler";
 import { formatTimeAgo } from "../../../../utils/dateFormatter";
-import type { EnterpriseQuotationDetails } from "../../types/enterprise-quotation-details.types";
+import type { AvailableQuotationDetails } from "../../types/enterprise-available-quotation-details.types";
 
-interface EnterpriseQuotationDetailsCardProps {
-  quotation: EnterpriseQuotationDetails;
+interface EnterpriseAvailableQuotationDetailsCardProps {
+  quotation: AvailableQuotationDetails;
 }
 
-export function EnterpriseQuotationDetailsCard({ quotation }: EnterpriseQuotationDetailsCardProps) {
+export function EnterpriseAvailableQuotationDetailsCard({ quotation }: EnterpriseAvailableQuotationDetailsCardProps) {
   const navigate = useNavigate();
   const [isNotInterestedModalOpen, setIsNotInterestedModalOpen] = useState(false);
   const [isNotInterestedLoading, setIsNotInterestedLoading] = useState(false);
@@ -35,7 +35,7 @@ export function EnterpriseQuotationDetailsCard({ quotation }: EnterpriseQuotatio
   };
 
   const handleChat = () => {
-    toast.info(`Opening secure chat with buyer for "${quotation.productName}"...`);
+    toast.info(`Opening secure chat with customer for "${quotation.productName}"...`);
   };
 
   return (
@@ -49,7 +49,7 @@ export function EnterpriseQuotationDetailsCard({ quotation }: EnterpriseQuotatio
 
             <div className="space-y-1 min-w-0">
               <span className="text-[11px] sm:text-xs font-bold text-[#204066] uppercase tracking-wider block">
-                Buyer Quotation Request
+                Customer Quotation Request
               </span>
 
               <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
@@ -79,7 +79,7 @@ export function EnterpriseQuotationDetailsCard({ quotation }: EnterpriseQuotatio
               className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-slate-700 hover:text-[#0e2238] bg-slate-100 hover:bg-slate-200/80 rounded-xl transition-all cursor-pointer shadow-2xs"
             >
               <MessageCircleMore size={14} className="text-slate-500" />
-              <span>Chat with Buyer</span>
+              <span>Chat with Customer</span>
             </button>
 
             {!quotation.proposal && (
@@ -186,4 +186,4 @@ export function EnterpriseQuotationDetailsCard({ quotation }: EnterpriseQuotatio
   );
 }
 
-export default EnterpriseQuotationDetailsCard;
+export default EnterpriseAvailableQuotationDetailsCard;

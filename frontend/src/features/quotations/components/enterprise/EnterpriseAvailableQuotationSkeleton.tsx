@@ -1,4 +1,4 @@
-export function EnterpriseQuotationSkeleton() {
+export function EnterpriseAvailableQuotationSkeleton() {
   return (
     <div className="bg-white rounded-2xl border border-slate-200/90 p-5 space-y-4 animate-pulse flex flex-col justify-between">
       <div className="space-y-3">
@@ -27,4 +27,4 @@ export function EnterpriseQuotationSkeleton() {
   );
 }
 
-export default EnterpriseQuotationSkeleton;
+export default EnterpriseAvailableQuotationSkeleton;

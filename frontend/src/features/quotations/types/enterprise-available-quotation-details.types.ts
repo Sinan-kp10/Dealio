@@ -1,7 +1,7 @@
 import type { EnterpriseProposalDetails } from "./enterprise-proposal.types";
-import type { EnterpriseQuotationStatus } from "./enterprise-quotation.types";
+import type { AvailableQuotationStatus } from "./enterprise-available-quotation.types";
 
-export interface EnterpriseQuotationDetails {
+export interface AvailableQuotationDetails {
   id: string;
   productName: string;
   category: {
@@ -16,13 +16,13 @@ export interface EnterpriseQuotationDetails {
   budget: number | null;
   location: string | null;
   description: string;
-  status: EnterpriseQuotationStatus;
+  status: AvailableQuotationStatus;
   createdAt: string;
   proposal: EnterpriseProposalDetails | null;
 }
 
-export interface EnterpriseQuotationDetailsResponse {
+export interface AvailableQuotationDetailsResponse {
   success: boolean;
   message: string;
-  data: EnterpriseQuotationDetails;
+  data: AvailableQuotationDetails;
 }

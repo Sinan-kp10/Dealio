@@ -1,5 +1,5 @@
 import axiosInstance from "../../../app/lib/axios";
-import type { CustomerReceivedProposalsResponse, GetReceivedProposalsParams } from "../types/customer-proposal.types";
+import type { CustomerReceivedProposalsResponse, ReceivedProposalDetailsResponse, GetReceivedProposalsParams } from "../types/customer-received-proposal.types";
 import type { QuotationDetailsResponse } from "../types/quotation-details";
 import type {CreateQuotationRequestPayload,CreateQuotationResponse,QuotationListParams,QuotationListResponse,} from "../types/quotation.types";
 
@@ -24,5 +24,10 @@ export const cancelCustomerQuotation = async (id: string): Promise<void> => {
 
 export const getCustomerReceivedProposals = async (quotationId: string,params?: GetReceivedProposalsParams): Promise<CustomerReceivedProposalsResponse> => {
     const response = await axiosInstance.get<CustomerReceivedProposalsResponse>(`/customer/quotations/${quotationId}/proposals`, { params });
+    return response.data;
+};
+
+export const getReceivedProposalDetails = async (quotationId: string, proposalId: string): Promise<ReceivedProposalDetailsResponse> => {
+    const response = await axiosInstance.get<ReceivedProposalDetailsResponse>(`/customer/quotations/${quotationId}/proposals/${proposalId}`);
     return response.data;
 };

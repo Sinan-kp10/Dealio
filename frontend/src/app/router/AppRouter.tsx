@@ -21,6 +21,7 @@ import { HomePage } from "../../features/home/pages/common/HomePage";
 const CustomerHomePage = lazy(()=> import("../../features/home/pages/customer/CustomerHomePage"))
 const CustomerQuotationsPage = lazy(() => import("../../features/quotations/pages/customer/CustomerQuotationsPage"))
 const CustomerQuotationDetailsPage = lazy(() => import("../../features/quotations/pages/customer/CustomerQuotationDetailsPage"))
+const CustomerProposalDetailsPage = lazy(() => import("../../features/quotations/pages/customer/CustomerProposalDetailsPage"))
 const CreateQuotationPage = lazy(() => import("../../features/quotations/pages/customer/CreateQuotationPage"))
 const CustomerConversationsPage = lazy(() => import("../../features/conversations/pages/customer/CustomerConversationsPage"))
 const CustomerSettingsPage = lazy(()=> import("../../features/settings/pages/CustomerSttingsPage"))
@@ -29,8 +30,8 @@ const EnterpriseProfilePage = lazy(()=> import("../../features/profile/pages/Ent
 const CustomerProfilePage = lazy(()=> import("../../features/profile/pages/CustomerProfilePage"))
 const AdminDashboardPage = lazy(()=> import("../../features/dashboard/pages/AdminDashboardPage"))
 const EnterpriseDashboardPage = lazy(()=> import("../../features/dashboard/pages/EnterpriseDashboardPage"))
-const EnterpriseQuotationsPage = lazy(() => import("../../features/quotations/pages/enterprise/EnterpriseQuotationsPage"))
-const EnterpriseQuotationDetailsPage = lazy(() => import("../../features/quotations/pages/enterprise/EnterpriseQuotationDetailsPage"))
+const EnterpriseQuotationsPage = lazy(() => import("../../features/quotations/pages/enterprise/EnterpriseAvailableQuotationsPage"))
+const EnterpriseQuotationDetailsPage = lazy(() => import("../../features/quotations/pages/enterprise/EnterpriseAvailableQuotationDetailsPage"))
 const EnterpriseCreateProposalPage = lazy(() => import("../../features/quotations/pages/enterprise/EnterpriseCreateProposalPage"))
 const CustomerManagementPage = lazy(()=> import("../../features/user-management/pages/CustomerManagementPage"))
 const EnterpriseManagementPage = lazy(()=> import("../../features/user-management/pages/EnterpriseManagementPage"))
@@ -61,6 +62,7 @@ export function AppRouter() {
               <Route path="/customer/quotations" element={<CustomerQuotationsPage />} />
               <Route path="/customer/quotations/create" element={<CreateQuotationPage />} />
               <Route path="/customer/quotations/:id" element={<CustomerQuotationDetailsPage />} />
+              <Route path="/customer/quotations/:quotationId/proposals/:proposalId" element={<CustomerProposalDetailsPage />} />
               <Route path="/customer/conversations" element={<CustomerConversationsPage />} />
               <Route path="/customer/profile" element={<CustomerProfilePage />} />
               <Route path="/customer/settings" element={<CustomerSettingsPage />} />

@@ -1,16 +1,17 @@
 import { useNavigate } from "react-router-dom";
-import {MessageCircleMore, Package, Clock, Truck, Eye, } from "lucide-react";
+import { MessageCircleMore, Package, Clock, Truck, Eye } from "lucide-react";
 import { toast } from "react-toastify";
 import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
 import { formatTimeAgo } from "../../../../utils/dateFormatter";
-import type { CustomerReceivedProposal } from "../../types/customer-proposal.types";
+import type { CustomerReceivedProposal } from "../../types/customer-received-proposal.types";
 
 interface CustomerReceivedProposalCardProps {
   proposal: CustomerReceivedProposal;
 }
 
-export function CustomerReceivedProposalCard({proposal}: CustomerReceivedProposalCardProps) {
+export function CustomerReceivedProposalCard({ proposal }: CustomerReceivedProposalCardProps) {
   const navigate = useNavigate();
+
   const handleChat = (e: React.MouseEvent) => {
     e.stopPropagation();
     toast.info(`Opening secure chat with ${proposal.enterprise.name}...`);
@@ -67,12 +68,10 @@ export function CustomerReceivedProposalCard({proposal}: CustomerReceivedProposa
             <span>{proposal.quantity} Units</span>
           </div>
 
-      
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200/90 text-xs font-semibold">
-              <Truck size={12} className="text-emerald-700 shrink-0" />
-              <span className="truncate max-w-[125px]">{proposal.deliveryTimeline}</span>
-            </div>
-          
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200/90 text-xs font-semibold">
+            <Truck size={12} className="text-emerald-700 shrink-0" />
+            <span className="truncate max-w-[125px]">{proposal.deliveryTimeline}</span>
+          </div>
         </div>
 
         <div className="space-y-1">
@@ -98,7 +97,7 @@ export function CustomerReceivedProposalCard({proposal}: CustomerReceivedProposa
         <button
           type="button"
           onClick={handleViewDetails}
-          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 text-xs font-bold text-white bg-[#355982] hover:bg-[#284566] active:scale-[0.99] rounded-xl transition-all shadow-xs cursor-pointer"
+          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 text-xs font-bold text-white bg-[#355982] hover:bg-[#284566] active:scale-[0.99] rounded-xl transition-all cursor-pointer shadow-xs"
         >
           <Eye size={14} />
           <span>View Details</span>

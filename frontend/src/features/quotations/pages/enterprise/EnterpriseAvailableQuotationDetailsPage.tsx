@@ -1,37 +1,59 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { EnterpriseQuotationDetailsCard } from "../../components/enterprise/EnterpriseQuotationDetailsCard";
+import { EnterpriseAvailableQuotationDetailsCard } from "../../components/enterprise/EnterpriseAvailableQuotationDetailsCard";
 import { EnterpriseSubmittedProposalCard } from "../../components/enterprise/EnterpriseSubmittedProposalCard";
-import { EnterpriseQuotationDetailsSkeleton } from "../../components/enterprise/EnterpriseQuotationDetailsSkeleton";
-import { getEnterpriseQuotationDetails } from "../../services/enterprise-quotation.service";
+import { EnterpriseAvailableQuotationDetailsSkeleton } from "../../components/enterprise/EnterpriseAvailableQuotationDetailsSkeleton";
+import { getEnterpriseAvailableQuotationDetails } from "../../services/enterprise-quotation.service";
 import { handleApiError } from "../../../../utils/errorHandler";
-import type { EnterpriseQuotationDetails } from "../../types/enterprise-quotation-details.types";
+import type { AvailableQuotationDetails } from "../../types/enterprise-available-quotation-details.types";
 
-export function EnterpriseQuotationDetailsPage() {
+export function EnterpriseAvailableQuotationDetailsPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
-  const [quotation, setQuotation] = useState<EnterpriseQuotationDetails | null>(null);
+  const [quotation, setQuotation] = useState<AvailableQuotationDetails | null>(null);
 
   const fetchDetails = useCallback(async () => {
     if (!id) return;
-    setLoading(true);
     try {
-      const response = await getEnterpriseQuotationDetails(id);
+      const response = await getEnterpriseAvailableQuotationDetails(id);
       setQuotation(response.data);
     } catch (error) {
       handleApiError(error, "Failed to load quotation details");
       navigate("/enterprise/quotations");
-    } finally {
-      setLoading(false);
     }
   }, [id, navigate]);
 
   useEffect(() => {
-    void fetchDetails();
-  }, [fetchDetails]);
+    let cancelled = false;
+
+    const loadDetails = async () => {
+      if (!id) return;
+      setLoading(true);
+      try {
+        const response = await getEnterpriseAvailableQuotationDetails(id);
+        if (cancelled) return;
+        setQuotation(response.data);
+      } catch (error) {
+        if (!cancelled) {
+          handleApiError(error, "Failed to load quotation details");
+          navigate("/enterprise/quotations");
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    };
+
+    void loadDetails();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [id, navigate]);
 
   if (loading || !quotation) {
     return (
@@ -39,7 +61,7 @@ export function EnterpriseQuotationDetailsPage() {
         <div className="flex items-center justify-between">
           <div className="h-6 w-44 bg-slate-200/80 rounded-lg animate-pulse" />
         </div>
-        <EnterpriseQuotationDetailsSkeleton />
+        <EnterpriseAvailableQuotationDetailsSkeleton />
       </div>
     );
   }
@@ -57,7 +79,7 @@ export function EnterpriseQuotationDetailsPage() {
         </button>
       </div>
 
-      <EnterpriseQuotationDetailsCard quotation={quotation} />
+      <EnterpriseAvailableQuotationDetailsCard quotation={quotation} />
 
       {quotation.proposal && (
         <EnterpriseSubmittedProposalCard
@@ -69,4 +91,4 @@ export function EnterpriseQuotationDetailsPage() {
   );
 }
 
-export default EnterpriseQuotationDetailsPage;
+export default EnterpriseAvailableQuotationDetailsPage;

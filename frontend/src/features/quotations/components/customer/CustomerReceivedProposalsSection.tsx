@@ -7,7 +7,7 @@ import { Pagination } from "../../../../components/common/pagination/Pagination"
 import { getCustomerReceivedProposals } from "../../services/quotation.service";
 import { handleApiError } from "../../../../utils/errorHandler";
 import useDebounce from "../../../../hook/useDebounce";
-import type { CustomerReceivedProposal } from "../../types/customer-proposal.types";
+import type { CustomerReceivedProposal } from "../../types/customer-received-proposal.types";
 
 interface CustomerReceivedProposalsSectionProps {
   quotationId: string;

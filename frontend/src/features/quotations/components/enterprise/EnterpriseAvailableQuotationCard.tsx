@@ -1,15 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import { Tag, Package, Clock, Eye, MessageCircleMore } from "lucide-react";
 import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
-import type { EnterpriseQuotationListItem } from "../../types/enterprise-quotation.types";
+import type { AvailableQuotation } from "../../types/enterprise-available-quotation.types";
 import { formatTimeAgo } from "../../../../utils/dateFormatter";
 
-interface EnterpriseQuotationCardProps {
-  item: EnterpriseQuotationListItem;
-  onChat: (item: EnterpriseQuotationListItem) => void;
+interface EnterpriseAvailableQuotationCardProps {
+  item: AvailableQuotation;
+  onChat: (item: AvailableQuotation) => void;
 }
 
-export function EnterpriseQuotationCard({ item, onChat }: EnterpriseQuotationCardProps) {
+export function EnterpriseAvailableQuotationCard({ item, onChat }: EnterpriseAvailableQuotationCardProps) {
   const navigate = useNavigate();
   const isCancelled = item.status === "CANCELLED";
   const isClosed = item.status === "CLOSED";
@@ -88,4 +88,4 @@ export function EnterpriseQuotationCard({ item, onChat }: EnterpriseQuotationCar
   );
 }
 
-export default EnterpriseQuotationCard;
+export default EnterpriseAvailableQuotationCard;

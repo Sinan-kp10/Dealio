@@ -3,10 +3,10 @@ import { Search, FileText } from "lucide-react";
 import { toast } from "react-toastify";
 import { Pagination } from "../../../../components/common/pagination/Pagination";
 import { Select } from "../../../../components/common/select/Select";
-import { EnterpriseQuotationCard } from "../../components/enterprise/EnterpriseQuotationCard";
-import { EnterpriseQuotationSkeleton } from "../../components/enterprise/EnterpriseQuotationSkeleton";
+import { EnterpriseAvailableQuotationCard } from "../../components/enterprise/EnterpriseAvailableQuotationCard";
+import { EnterpriseAvailableQuotationSkeleton } from "../../components/enterprise/EnterpriseAvailableQuotationSkeleton";
 import { getAvailableEnterpriseQuotations } from "../../services/enterprise-quotation.service";
-import type { EnterpriseQuotationListItem, EnterpriseQuotationStatus } from "../../types/enterprise-quotation.types";
+import type { AvailableQuotation, AvailableQuotationStatus } from "../../types/enterprise-available-quotation.types";
 import useDebounce from "../../../../hook/useDebounce";
 import { handleApiError } from "../../../../utils/errorHandler";
 
@@ -21,8 +21,8 @@ const STATUS_OPTIONS = [
   { label: "Status: Cancelled", value: "CANCELLED" },
 ];
 
-export function EnterpriseQuotationsPage() {
-  const [quotations, setQuotations] = useState<EnterpriseQuotationListItem[]>([]);
+export function EnterpriseAvailableQuotationsPage() {
+  const [quotations, setQuotations] = useState<AvailableQuotation[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("ALL");
   const [currentPage, setCurrentPage] = useState(1);
@@ -39,7 +39,7 @@ export function EnterpriseQuotationsPage() {
       try {
         const response = await getAvailableEnterpriseQuotations({
           search: debouncedSearch.trim() || undefined,
-          status: selectedStatus === "ALL" ? undefined : (selectedStatus as EnterpriseQuotationStatus),
+          status: selectedStatus === "ALL" ? undefined : (selectedStatus as AvailableQuotationStatus),
           page: currentPage,
           limit: PAGE_SIZE,
         });
@@ -76,8 +76,8 @@ export function EnterpriseQuotationsPage() {
     setCurrentPage(1);
   };
 
-  const handleChat = (item: EnterpriseQuotationListItem) => {
-    toast.info(`Opening chat with buyer for "${item.productName}"...`);
+  const handleChat = (item: AvailableQuotation) => {
+    toast.info(`Opening chat with customer for "${item.productName}"...`);
   };
 
   return (
@@ -118,7 +118,7 @@ export function EnterpriseQuotationsPage() {
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {SKELETON_ITEMS.map((key) => (
-            <EnterpriseQuotationSkeleton key={key} />
+            <EnterpriseAvailableQuotationSkeleton key={key} />
           ))}
         </div>
       ) : quotations.length === 0 ? (
@@ -135,7 +135,7 @@ export function EnterpriseQuotationsPage() {
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {quotations.map((item) => (
-              <EnterpriseQuotationCard
+              <EnterpriseAvailableQuotationCard
                 key={item.id}
                 item={item}
                 onChat={handleChat}
@@ -155,4 +155,4 @@ export function EnterpriseQuotationsPage() {
   );
 }
 
-export default EnterpriseQuotationsPage;
+export default EnterpriseAvailableQuotationsPage;

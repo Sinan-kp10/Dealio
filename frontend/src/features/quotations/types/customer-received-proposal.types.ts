@@ -13,6 +13,23 @@ export interface CustomerReceivedProposal {
   unitPrice: number;
   totalAmount: number;
   deliveryTimeline: string;
+  status: CustomerProposalStatus;
+  createdAt: string;
+}
+
+export interface ReceivedProposalDetails {
+  id: string;
+  quotationId: string;
+  enterprise: {
+    id: string;
+    name: string;
+  };
+  itemName: string;
+  description: string;
+  quantity: number;
+  unitPrice: number;
+  totalAmount: number;
+  deliveryTimeline: string;
   warrantyCoverage: string;
   replacementPolicy: string;
   additionalNotes?: string | null;
@@ -38,4 +55,10 @@ export interface CustomerReceivedProposalsResponse {
   success: boolean;
   message: string;
   data: PaginatedCustomerReceivedProposals;
+}
+
+export interface ReceivedProposalDetailsResponse {
+  success: boolean;
+  message: string;
+  data: ReceivedProposalDetails;
 }

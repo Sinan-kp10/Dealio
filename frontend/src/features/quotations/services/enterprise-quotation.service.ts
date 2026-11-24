@@ -1,15 +1,15 @@
 import axiosInstance from "../../../app/lib/axios";
-import type {EnterpriseQuotationListParams,EnterpriseQuotationListResponse,MarkNotInterestedResponse} from "../types/enterprise-quotation.types";
-import type { EnterpriseQuotationDetailsResponse } from "../types/enterprise-quotation-details.types";
+import type { AvailableQuotationParams, AvailableQuotationsResponse, MarkNotInterestedResponse } from "../types/enterprise-available-quotation.types";
+import type { AvailableQuotationDetailsResponse } from "../types/enterprise-available-quotation-details.types";
 import type { CreateEnterpriseProposalPayload, CreateEnterpriseProposalResponse, WithdrawEnterpriseProposalResponse } from "../types/enterprise-proposal.types";
 
-export const getAvailableEnterpriseQuotations = async (params?: EnterpriseQuotationListParams): Promise<EnterpriseQuotationListResponse> => {
-  const response = await axiosInstance.get<EnterpriseQuotationListResponse>("/enterprise/quotations", { params });
+export const getAvailableEnterpriseQuotations = async (params?: AvailableQuotationParams): Promise<AvailableQuotationsResponse> => {
+  const response = await axiosInstance.get<AvailableQuotationsResponse>("/enterprise/quotations", { params });
   return response.data;
 };
 
-export const getEnterpriseQuotationDetails = async (id: string): Promise<EnterpriseQuotationDetailsResponse> => {
-  const response = await axiosInstance.get<EnterpriseQuotationDetailsResponse>(`/enterprise/quotations/${id}`);
+export const getEnterpriseAvailableQuotationDetails = async (id: string): Promise<AvailableQuotationDetailsResponse> => {
+  const response = await axiosInstance.get<AvailableQuotationDetailsResponse>(`/enterprise/quotations/${id}`);
   return response.data;
 };
 

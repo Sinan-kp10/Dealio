@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { FileText, Package, IndianRupee, MapPin } from "lucide-react";
+import { ClipboardList, FileText, Package, IndianRupee, MapPin } from "lucide-react";
 import { QuotationDescriptionModal } from "../QuotationDescriptionModal";
-import type { EnterpriseQuotationDetails } from "../../types/enterprise-quotation-details.types";
+import type { AvailableQuotationDetails } from "../../types/enterprise-available-quotation-details.types";
 
-export interface EnterpriseBuyerRequestSnapshotCardProps {
-  quotation: EnterpriseQuotationDetails;
+export interface EnterpriseCustomerRequestSnapshotCardProps {
+  quotation: AvailableQuotationDetails;
   className?: string;
 }
 
-export function EnterpriseBuyerRequestSnapshotCard({ quotation, className = "" }: EnterpriseBuyerRequestSnapshotCardProps) {
+export function EnterpriseCustomerRequestSnapshotCard({ quotation, className = "" }: EnterpriseCustomerRequestSnapshotCardProps) {
   const [isDescriptionModalOpen, setIsDescriptionModalOpen] = useState(false);
 
   return (
@@ -17,10 +17,10 @@ export function EnterpriseBuyerRequestSnapshotCard({ quotation, className = "" }
         <div className="flex items-center justify-between pb-3 border-b border-slate-100 gap-2">
           <div className="flex items-center gap-2 min-w-0">
             <div className="w-7 h-7 rounded-lg bg-[#edf4fb] text-[#1e3a5f] flex items-center justify-center font-bold text-xs shrink-0">
-              <FileText size={15} className="text-[#355982]" />
+              <ClipboardList size={15} className="text-[#355982]" />
             </div>
             <h2 className="text-sm font-bold text-[#0e2238] m-0 truncate">
-              Buyer Request Snapshot
+              Customer Request Snapshot
             </h2>
           </div>
           <span className="text-[11px] font-semibold text-blue-700 bg-blue-50 border border-blue-200/80 px-2.5 py-1 rounded-full shrink-0 shadow-2xs">
@@ -50,7 +50,7 @@ export function EnterpriseBuyerRequestSnapshotCard({ quotation, className = "" }
               </div>
               <div className="min-w-0">
                 <span className="text-slate-500 text-[11px] font-medium block">
-                  Buyer Budget
+                  Customer Budget
                 </span>
                 <span className="font-extrabold text-[#0e2238] text-sm mt-0.5 block truncate">
                   {quotation.budget && quotation.budget > 0 ? `₹${quotation.budget.toLocaleString("en-IN")}` : "Flexible"}
@@ -60,28 +60,20 @@ export function EnterpriseBuyerRequestSnapshotCard({ quotation, className = "" }
           </div>
 
           <div className="p-2.5 px-3 rounded-xl bg-slate-50/80 border border-slate-100 flex items-center gap-2 text-xs min-w-0">
-            <MapPin size={13.5} className="text-slate-500 shrink-0" />
-            <span className="text-slate-500 text-[11px] font-medium shrink-0">Delivery Location:</span>
-            <span className="font-semibold text-slate-800 truncate">
-              {quotation.location || "Not specified by buyer"}
+            <MapPin size={13.5} className="text-slate-700 shrink-0" />
+            <span className="text-slate-700 text-[11px] font-semibold shrink-0">Delivery Location:</span>
+            <span className="font-semibold text-slate-900 truncate">
+              {quotation.location || "Not specified by customer"}
             </span>
           </div>
 
           <div
-            role="button"
-            tabIndex={0}
             onClick={() => setIsDescriptionModalOpen(true)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                setIsDescriptionModalOpen(true);
-              }
-            }}
             className="p-3 rounded-xl bg-slate-50/80 hover:bg-slate-100/80 border border-slate-100 hover:border-slate-200 transition-all cursor-pointer group space-y-1.5"
             title="Click to view full specifications"
           >
             <div className="flex items-center justify-between pointer-events-none gap-2">
-              <span className="text-[11px] font-semibold text-slate-500 flex items-center gap-1.5 min-w-0 truncate">
+              <span className="text-[11px] font-semibold text-slate-800 flex items-center gap-1.5 min-w-0 truncate">
                 <FileText size={12} className="text-[#355982] shrink-0" />
                 <span className="truncate">Customer Specifications</span>
               </span>
@@ -90,7 +82,7 @@ export function EnterpriseBuyerRequestSnapshotCard({ quotation, className = "" }
                 <span className="transition-transform group-hover:translate-x-0.5">&rarr;</span>
               </span>
             </div>
-            <p className="text-xs text-slate-600 group-hover:text-slate-800 line-clamp-2 leading-relaxed m-0 transition-colors pointer-events-none">
+            <p className="text-xs text-slate-800 group-hover:text-slate-900 line-clamp-2 leading-relaxed m-0 transition-colors pointer-events-none">
               {quotation.description || "No specific instructions provided."}
             </p>
           </div>
@@ -107,4 +99,4 @@ export function EnterpriseBuyerRequestSnapshotCard({ quotation, className = "" }
   );
 }
 
-export default EnterpriseBuyerRequestSnapshotCard;
+export default EnterpriseCustomerRequestSnapshotCard;
