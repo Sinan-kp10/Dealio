@@ -270,7 +270,7 @@ enum quotation_request_status {
   PENDING
   PROPOSAL_RECEIVED
   ACCEPTED
-  PAY_ADVANCE
+  PAID
   COMPLETED
   CANCELLED
 }
@@ -290,7 +290,7 @@ model quotation_requests {
   updated_at     DateTime                 @updatedAt @db.Timestamptz
   cancelled_at   DateTime?                @db.Timestamptz
   accepted_at    DateTime?                @db.Timestamptz
-  advance_paid_at DateTime?               @db.Timestamptz
+  paid_at        DateTime?                @db.Timestamptz
   completed_at   DateTime?                @db.Timestamptz
 
 
@@ -334,7 +334,7 @@ model enterprise_quotation_requests {
 enum proposal_status {
   PENDING
   ACCEPTED
-  PAY_ADVANCE
+  PAID
   COMPLETED
   REJECTED
   WITHDRAWN

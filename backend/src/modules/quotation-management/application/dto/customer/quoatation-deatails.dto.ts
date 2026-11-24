@@ -19,6 +19,6 @@ export interface QuotationRequestDetailsDto {
     createdAt: Date;
     acceptedAt: Date | null;
     cancelledAt: Date | null;
-    advancePaidAt: Date | null;
+    paidAt: Date | null;
     completedAt: Date | null;
 }

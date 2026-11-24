@@ -8,7 +8,7 @@ interface QuotationStatusBarProps {
   createdAt: string;
   acceptedAt?: string | null;
   cancelledAt?: string | null;
-  advancePaidAt?: string | null;
+  paidAt?: string | null;
   completedAt?: string | null;
   className?: string;
 }
@@ -18,27 +18,27 @@ export function QuotationStatusBar({
   createdAt,
   acceptedAt,
   cancelledAt,
-  advancePaidAt,
+  paidAt,
   completedAt,
   className = "",
 }: QuotationStatusBarProps) {
   const isProposalReceived = status === "PROPOSAL_RECEIVED";
   const isAccepted = status === "ACCEPTED";
-  const isPayAdvance = status === "PAY_ADVANCE";
+  const isPaid = status === "PAID";
   const isCompleted = status === "COMPLETED";
   const isCancelled = status === "CANCELLED";
 
   const step1Done = true;
-  const step2Done = !isCancelled && (isProposalReceived || isAccepted || isPayAdvance || isCompleted);
-  const step3Done = !isCancelled && (isAccepted || isPayAdvance || isCompleted);
-  const step4Done = !isCancelled && (isPayAdvance || isCompleted);
+  const step2Done = !isCancelled && (isProposalReceived || isAccepted || isPaid || isCompleted);
+  const step3Done = !isCancelled && (isAccepted || isPaid || isCompleted);
+  const step4Done = !isCancelled && (isPaid || isCompleted);
   const step5Done = !isCancelled && isCompleted;
 
   const targetProgress = isCancelled
     ? 100
     : isCompleted
     ? 100
-    : isPayAdvance
+    : isPaid
     ? 87.5
     : isAccepted
     ? 62.5
@@ -58,46 +58,51 @@ export function QuotationStatusBar({
   const steps = [
     {
       title: "Request Created",
+      mobileTitle: "Created",
       subtitle: formatDate(createdAt) || "Sent to verified sellers",
       isDone: step1Done,
     },
     {
       title: "Proposal Received",
+      mobileTitle: "Received",
       subtitle: isCancelled
         ? "Skipped"
         : isProposalReceived
         ? "Proposals Available"
-        : isAccepted || isPayAdvance || isCompleted
+        : isAccepted || isPaid || isCompleted
         ? "Proposal Accepted"
         : "Awaiting Proposals",
       isDone: step2Done,
     },
     {
       title: "Proposal Accepted",
+      mobileTitle: "Accepted",
       subtitle: isCancelled
         ? "Skipped"
-        : (isAccepted || isPayAdvance || isCompleted) && acceptedAt
+        : (isAccepted || isPaid || isCompleted) && acceptedAt
         ? formatDate(acceptedAt)
-        : isAccepted || isPayAdvance || isCompleted
+        : isAccepted || isPaid || isCompleted
         ? "Proposal accepted"
         : "Accept a proposal",
       isDone: step3Done,
     },
     {
-      title: "Pay Advance",
+      title: "Paid",
+      mobileTitle: "Paid",
       subtitle: isCancelled
         ? "Skipped"
-        : advancePaidAt
-        ? formatDate(advancePaidAt)
+        : paidAt
+        ? formatDate(paidAt)
         : isCompleted
-        ? "Advance deposited"
-        : isPayAdvance
+        ? "Payment confirmed"
+        : isPaid
         ? "Payment in progress"
-        : "Lock deal & deposit",
+        : "Lock deal & pay",
       isDone: step4Done,
     },
     {
       title: isCancelled ? "Cancelled" : "Completed",
+      mobileTitle: isCancelled ? "Cancelled" : "Completed",
       subtitle: isCancelled
         ? (cancelledAt ? formatDate(cancelledAt) : "Request Cancelled")
         : isCompleted && completedAt
@@ -167,12 +172,12 @@ export function QuotationStatusBar({
               : isLast
               ? "text-right"
               : "text-center";
-            const widthClass = isFirst || isLast ? "w-[12.5%]" : "w-[25%]";
+            const widthClass = isFirst || isLast ? "w-[18%] sm:w-[12.5%]" : "w-[21%] sm:w-[25%]";
 
             return (
               <div key={step.title} className={`${widthClass} ${alignClass} min-w-0 overflow-visible`}>
                 <p
-                  className={`text-[11px] sm:text-xs font-bold leading-tight m-0 ${
+                  className={`text-[10px] sm:text-xs font-bold leading-tight m-0 ${
                     isCancelStep
                       ? "text-rose-700"
                       : step.isDone
@@ -180,7 +185,10 @@ export function QuotationStatusBar({
                       : "text-slate-500"
                   }`}
                 >
-                  {index + 1}. {step.title}
+                  <span className="sm:hidden">{step.mobileTitle}</span>
+                  <span className="hidden sm:inline">
+                    {index + 1}. {step.title}
+                  </span>
                 </p>
                 <p
                   className={`text-[10px] sm:text-[11px] mt-1 m-0 leading-tight hidden sm:block ${

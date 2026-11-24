@@ -15,7 +15,7 @@ export class CancelQuotationRequestUseCase implements IUseCase<string, void> {
             throw new NotFoundError("Quotation request not found")
         }
 
-        if(quotationRequest.status === "ACCEPTED" || quotationRequest.status === "PAY_ADVANCE" || quotationRequest.status === "COMPLETED"){
+        if(quotationRequest.status === "ACCEPTED" || quotationRequest.status === "PAID" || quotationRequest.status === "COMPLETED"){
             throw new ConflictError("This quotation request cannot be cancelled because it is already accepted or completed.")
         }
 

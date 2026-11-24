@@ -1,4 +1,4 @@
-export type CustomerProposalStatus = "PENDING" | "ACCEPTED" | "PAY_ADVANCE" | "COMPLETED" | "REJECTED";
+export type CustomerProposalStatus = "PENDING" | "ACCEPTED" | "PAID" | "COMPLETED" | "REJECTED"
 
 export interface CustomerReceivedProposal {
   id: string;

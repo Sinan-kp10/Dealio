@@ -13,7 +13,7 @@ export const quotationRequestDetailsSelect = {
     created_at: true,
     cancelled_at: true,
     accepted_at: true,
-    advance_paid_at: true,
+    paid_at: true,
     completed_at: true,
     category: {
         select: {
@@ -52,7 +52,7 @@ export class QuotationRequestDetailsMapper {
       createdAt: data.created_at,
       acceptedAt: data.accepted_at,
       cancelledAt: data.cancelled_at,
-      advancePaidAt: data.advance_paid_at,
+      paidAt: data.paid_at,
       completedAt: data.completed_at,
     };
   }

@@ -21,7 +21,7 @@ export class AcceptReceivedProposalUseCase implements IUseCase<AcceptReceivedPro
             throw new ForbiddenError("You are not authorized to accept proposals for this quotation");
         }
 
-        if (proposal.quotationStatus === "CANCELLED" || proposal.quotationStatus === "ACCEPTED" || proposal.quotationStatus === "PAY_ADVANCE" || proposal.quotationStatus === "COMPLETED") {
+        if (proposal.quotationStatus === "CANCELLED" || proposal.quotationStatus === "ACCEPTED" || proposal.quotationStatus === "PAID" || proposal.quotationStatus === "COMPLETED") {
             throw new BadRequestError("Cannot accept proposal because this quotation request is no longer open");
         }
 

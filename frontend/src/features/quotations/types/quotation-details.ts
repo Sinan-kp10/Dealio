@@ -19,7 +19,7 @@ export interface QuotationDetails {
     createdAt: string;
     acceptedAt?: string | null;
     cancelledAt?: string | null;
-    advancePaidAt?: string | null;
+    paidAt?: string | null;
     completedAt?: string | null;
 }
 

@@ -2,7 +2,7 @@ export type QuotationRequestStatus =
     | 'PENDING'
     | 'PROPOSAL_RECEIVED'
     | 'ACCEPTED'
-    | 'PAY_ADVANCE'
+    | 'PAID'
     | 'COMPLETED'
     | 'CANCELLED';
 

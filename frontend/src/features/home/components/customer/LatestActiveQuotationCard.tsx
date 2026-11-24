@@ -14,18 +14,18 @@ export function LatestActiveQuotationCard({ quotation }: LatestActiveQuotationCa
 
   const isProposalReceived = quotation.status === "PROPOSAL_RECEIVED";
   const isAccepted = quotation.status === "ACCEPTED";
-  const isPayAdvance = quotation.status === "PAY_ADVANCE";
+  const isPaid = quotation.status === "PAID";
   const isCompleted = quotation.status === "COMPLETED";
 
   const step1Done = true;
-  const step2Done = isProposalReceived || isAccepted || isPayAdvance || isCompleted;
-  const step3Done = isAccepted || isPayAdvance || isCompleted;
-  const step4Done = isPayAdvance || isCompleted;
+  const step2Done = isProposalReceived || isAccepted || isPaid || isCompleted;
+  const step3Done = isAccepted || isPaid || isCompleted;
+  const step4Done = isPaid || isCompleted;
   const step5Done = isCompleted;
 
   const targetProgress = isCompleted
     ? 100
-    : isPayAdvance
+    : isPaid
     ? 87.5
     : isAccepted
     ? 62.5
@@ -45,34 +45,39 @@ export function LatestActiveQuotationCard({ quotation }: LatestActiveQuotationCa
   const steps = [
     {
       title: "Request Created",
+      mobileTitle: "Created",
       subtitle: formatDate(quotation.createdAt) || "Sent to verified sellers",
       isDone: step1Done,
     },
     {
       title: "Proposal Received",
+      mobileTitle: "Received",
       subtitle: isProposalReceived
         ? "Proposals Available"
-        : isAccepted || isPayAdvance || isCompleted
+        : isAccepted || isPaid || isCompleted
         ? "Proposal Accepted"
         : "Awaiting Proposals",
       isDone: step2Done,
     },
     {
       title: "Proposal Accepted",
-      subtitle: isAccepted || isPayAdvance || isCompleted ? "Proposal accepted" : "Accept a proposal",
+      mobileTitle: "Accepted",
+      subtitle: isAccepted || isPaid || isCompleted ? "Proposal accepted" : "Accept a proposal",
       isDone: step3Done,
     },
     {
-      title: "Pay Advance",
+      title: "Paid",
+      mobileTitle: "Paid",
       subtitle: isCompleted
-        ? "Advance paid"
-        : isPayAdvance
+        ? "Payment confirmed"
+        : isPaid
         ? "Payment in progress"
-        : "Lock proposal & deposit",
+        : "Lock deal & pay",
       isDone: step4Done,
     },
     {
       title: "Completed",
+      mobileTitle: "Completed",
       subtitle: isCompleted ? "Request completed" : "Close the Request",
       isDone: step5Done,
     },
@@ -155,16 +160,19 @@ export function LatestActiveQuotationCard({ quotation }: LatestActiveQuotationCa
                   : isLast
                   ? "text-right"
                   : "text-center";
-                const widthClass = isFirst || isLast ? "w-[12.5%]" : "w-[25%]";
+                const widthClass = isFirst || isLast ? "w-[18%] sm:w-[12.5%]" : "w-[21%] sm:w-[25%]";
 
                 return (
                   <div key={step.title} className={`${widthClass} ${alignClass} min-w-0 overflow-visible`}>
                     <p
-                      className={`text-[11px] sm:text-xs font-bold leading-tight m-0 ${
+                      className={`text-[10px] sm:text-xs font-bold leading-tight m-0 ${
                         step.isDone ? "text-[#0e2238]" : "text-slate-500"
                       }`}
                     >
-                      {index + 1}. {step.title}
+                      <span className="sm:hidden">{step.mobileTitle}</span>
+                      <span className="hidden sm:inline">
+                        {index + 1}. {step.title}
+                      </span>
                     </p>
                     <p className="text-[10px] sm:text-[11px] text-slate-400 mt-1 m-0 leading-tight hidden sm:block">
                       {step.subtitle}

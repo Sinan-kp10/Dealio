@@ -25,7 +25,7 @@ export class CreateProposalUseCase implements IUseCase<CreateProposalInputDto, v
             throw new BadRequestError("This quotation request has been cancelled by the customer");
         }
 
-        if (quotation.status === "ACCEPTED" || quotation.status === "PAY_ADVANCE" || quotation.status === "COMPLETED") {
+        if (quotation.status === "ACCEPTED" || quotation.status === "PAID" || quotation.status === "COMPLETED") {
             throw new BadRequestError("This quotation request has already been closed by the customer");
         }
 

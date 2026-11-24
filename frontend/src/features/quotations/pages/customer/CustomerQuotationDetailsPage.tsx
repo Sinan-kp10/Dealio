@@ -259,7 +259,7 @@ export function CustomerQuotationDetailsPage() {
               createdAt={quotation.createdAt}
               acceptedAt={quotation.acceptedAt}
               cancelledAt={quotation.cancelledAt}
-              advancePaidAt={quotation.advancePaidAt}
+              paidAt={quotation.paidAt}
               completedAt={quotation.completedAt}
             />
           </div>

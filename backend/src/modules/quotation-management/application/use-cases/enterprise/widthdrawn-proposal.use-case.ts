@@ -27,7 +27,7 @@ export class WithdrawnProposalUseCase implements IUseCase<WithdrawProposalDto, v
             throw new BadRequestError("This quotation request has already been cancelled by the customer");
         }
 
-        if(proposal.quotationStatus === "ACCEPTED" ||proposal.quotationStatus === "PAY_ADVANCE" ||proposal.quotationStatus === "COMPLETED"){
+        if(proposal.quotationStatus === "ACCEPTED" ||proposal.quotationStatus === "PAID" ||proposal.quotationStatus === "COMPLETED"){
             throw new BadRequestError("This quotation request has already been closed by the customer");
         }
 
