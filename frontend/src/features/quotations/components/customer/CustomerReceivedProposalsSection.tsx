@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { ArrowLeftRight, Search, RotateCcw } from "lucide-react";
 import { toast } from "react-toastify";
 import { CustomerReceivedProposalCard } from "./CustomerReceivedProposalCard";
-import { CustomerReceivedProposalSkeleton } from "./CustomerReceivedProposalSkeleton";
+import { CustomerReceivedProposalSkeleton } from "./loading/CustomerReceivedProposalSkeleton";
 import { CustomerReceivedProposalDetailsDrawer } from "./CustomerReceivedProposalDetailsDrawer";
 import { Pagination } from "../../../../components/common/pagination/Pagination";
 import { getCustomerReceivedProposals } from "../../services/quotation.service";
@@ -12,10 +12,11 @@ import type { CustomerReceivedProposal } from "../../types/customer-received-pro
 
 interface CustomerReceivedProposalsSectionProps {
   quotationId: string;
+  onProposalAccepted?: () => void;
 }
 const PAGE_LIMIT = 9;
 
-export function CustomerReceivedProposalsSection({quotationId}: CustomerReceivedProposalsSectionProps) {
+export function CustomerReceivedProposalsSection({quotationId, onProposalAccepted}: CustomerReceivedProposalsSectionProps) {
   const [proposals, setProposals] = useState<CustomerReceivedProposal[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -162,6 +163,7 @@ export function CustomerReceivedProposalsSection({quotationId}: CustomerReceived
         proposalId={selectedProposalId}
         onProposalAccepted={() => {
           setRefreshKey((prev) => prev + 1);
+          onProposalAccepted?.();
         }}
       />
     </div>

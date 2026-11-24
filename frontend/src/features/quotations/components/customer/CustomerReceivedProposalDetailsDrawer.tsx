@@ -4,7 +4,8 @@ import { toast } from "react-toastify";
 import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
 import ConfirmationModal from "../../../../components/common/confirmationModel/ConfirmationModal";
 import { formatDate } from "../../../../utils/dateFormatter";
-import { getReceivedProposalDetails } from "../../services/quotation.service";
+import { getReceivedProposalDetails, acceptReceivedProposal } from "../../services/quotation.service";
+import { CustomerReceivedProposalDetailsSkeleton } from "./loading/CustomerReceivedProposalDetailsSkeleton";
 import { handleApiError } from "../../../../utils/errorHandler";
 import type { ReceivedProposalDetails } from "../../types/customer-received-proposal.types";
 
@@ -21,6 +22,7 @@ export function CustomerReceivedProposalDetailsDrawer({isOpen,onClose,quotationI
   const [proposal, setProposal] = useState<ReceivedProposalDetails | null>(null);
   const [currentStatus, setCurrentStatus] = useState<string>("PENDING");
   const [isAcceptModalOpen, setIsAcceptModalOpen] = useState(false);
+  const [isAccepting, setIsAccepting] = useState(false);
   const [isRendered, setIsRendered] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
 
@@ -94,12 +96,21 @@ export function CustomerReceivedProposalDetailsDrawer({isOpen,onClose,quotationI
     toast.info(`Opening secure chat with ${proposal.enterprise.name}...`);
   };
 
-  const handleConfirmAccept = () => {
-    if (!proposal) return;
-    setCurrentStatus("ACCEPTED");
-    setIsAcceptModalOpen(false);
-    toast.success(`Proposal from ${proposal.enterprise.name} accepted!`);
-    onProposalAccepted?.();
+  const handleConfirmAccept = async () => {
+    if (!proposal || !quotationId || !proposalId) return;
+    setIsAccepting(true);
+    try {
+      await acceptReceivedProposal(quotationId, proposalId);
+      setCurrentStatus("ACCEPTED");
+      setIsAcceptModalOpen(false);
+      toast.success(`Proposal from ${proposal.enterprise.name} accepted!`);
+      onProposalAccepted?.();
+      onClose();
+    } catch (error) {
+      handleApiError(error, "Failed to accept proposal, please try again");
+    } finally {
+      setIsAccepting(false);
+    }
   };
 
   return (
@@ -136,23 +147,7 @@ export function CustomerReceivedProposalDetailsDrawer({isOpen,onClose,quotationI
 
           <div className="flex-1 overflow-y-auto custom-scrollbar p-5 sm:p-7 space-y-5">
             {loading || !proposal ? (
-              <div className="space-y-5 animate-pulse">
-                <div className="space-y-3 pb-4 border-b border-slate-100">
-                  <div className="h-6 w-52 bg-slate-200 rounded-lg" />
-                  <div className="h-4 w-32 bg-slate-100 rounded" />
-                </div>
-                <div className="flex flex-wrap gap-2.5">
-                  <div className="h-9 w-32 bg-slate-100 rounded-xl" />
-                  <div className="h-9 w-28 bg-slate-100 rounded-xl" />
-                  <div className="h-9 w-36 bg-slate-100 rounded-xl" />
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div className="h-20 bg-slate-50 border border-slate-200/80 rounded-xl" />
-                  <div className="h-20 bg-slate-50 border border-slate-200/80 rounded-xl" />
-                  <div className="h-20 bg-slate-50 border border-slate-200/80 rounded-xl" />
-                </div>
-                <div className="h-32 bg-slate-50 border border-slate-200/80 rounded-2xl" />
-              </div>
+              <CustomerReceivedProposalDetailsSkeleton />
             ) : (
               <>
                 <div className="pb-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -299,8 +294,9 @@ export function CustomerReceivedProposalDetailsDrawer({isOpen,onClose,quotationI
       {proposal && (
         <ConfirmationModal
           isOpen={isAcceptModalOpen}
-          onClose={() => setIsAcceptModalOpen(false)}
+          onClose={() => !isAccepting && setIsAcceptModalOpen(false)}
           onConfirm={handleConfirmAccept}
+          loading={isAccepting}
           title="Accept Proposal?"
           message={`Accepting this proposal for ₹${proposal.totalAmount.toLocaleString("en-IN")} will confirm your supplier agreement with "${proposal.enterprise.name}".`}
         />

@@ -1,11 +1,26 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import {ArrowLeft,FileText,Layers,Tag,Package,IndianRupee,MapPin,Ban,ExternalLink,Handshake} from "lucide-react";
+import {
+  ArrowLeft,
+  FileText,
+  Layers,
+  Tag,
+  Package,
+  IndianRupee,
+  MapPin,
+  Ban,
+  ExternalLink,
+  Handshake,
+  MessageCircleMore,
+  CreditCard,
+  ArrowRight,
+} from "lucide-react";
+import { toast } from "react-toastify";
 import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
 import { QuotationStatusBar } from "../../components/customer/QuotationStatusBar";
 import { QuotationDescriptionModal } from "../../components/QuotationDescriptionModal";
 import { CustomerReceivedProposalsSection } from "../../components/customer/CustomerReceivedProposalsSection";
-import { CustomerQuotationDetailsSkeleton } from "../../components/customer/CustomerQuotationDetailsSkeleton";
+import { CustomerQuotationDetailsSkeleton } from "../../components/customer/loading/CustomerQuotationDetailsSkeleton";
 import ConfirmationModal from "../../../../components/common/confirmationModel/ConfirmationModal";
 import { cancelCustomerQuotation, getCustomerQuotationDetails } from "../../services/quotation.service";
 import { handleApiError } from "../../../../utils/errorHandler";
@@ -73,11 +88,24 @@ export function CustomerQuotationDetailsPage() {
     }
   };
 
+  const handleProposalAccepted = () => {
+    setQuotation((prev) =>
+      prev
+        ? {
+            ...prev,
+            status: "ACCEPTED",
+            acceptedAt: new Date().toISOString(),
+          }
+        : prev
+    );
+  };
+
   if (loading || !quotation) {
     return <CustomerQuotationDetailsSkeleton />;
   }
 
   const isCancellable = quotation.status === "PENDING" || quotation.status === "PROPOSAL_RECEIVED";
+  const isAccepted = quotation.status === "ACCEPTED";
 
   const hasBudget = quotation.budget !== null && quotation.budget !== undefined
   const hasLocation = Boolean(quotation.location);
@@ -103,7 +131,7 @@ export function CustomerQuotationDetailsPage() {
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-5">
-        <div className="flex items-start sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex flex-wrap items-center gap-3">
               <h1 className="text-xl sm:text-2xl font-extrabold text-[#0e2238] tracking-tight m-0">
@@ -125,6 +153,29 @@ export function CustomerQuotationDetailsPage() {
               >
                 <Ban size={13} strokeWidth={2.2} />
                 <span>Cancel Request</span>
+              </button>
+            </div>
+          )}
+
+          {isAccepted && (
+            <div className="flex items-center gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 sm:self-center shrink-0">
+              <button
+                type="button"
+                onClick={() => toast.info("Opening secure chat with seller...")}
+                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200/80 border border-slate-200/90 rounded-xl transition-all cursor-pointer shadow-2xs active:scale-[0.98]"
+              >
+                <MessageCircleMore size={13} className="text-slate-500" />
+                <span>Chat with Seller</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => toast.info("Proceeding to payment checkout...")}
+                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 text-xs font-bold text-white bg-[#355982] hover:bg-[#284566] border border-[#284566] rounded-xl transition-all cursor-pointer shadow-xs active:scale-[0.98]"
+              >
+                <CreditCard size={13} />
+                <span>Proceed to Payment</span>
+                <ArrowRight size={13} />
               </button>
             </div>
           )}
@@ -268,7 +319,10 @@ export function CustomerQuotationDetailsPage() {
       
       {isOtherTabLoaded && (
         <div className={activeTab === "PROPOSALS" ? "block" : "hidden"}>
-          <CustomerReceivedProposalsSection quotationId={quotation.id} />
+          <CustomerReceivedProposalsSection
+            quotationId={quotation.id}
+            onProposalAccepted={handleProposalAccepted}
+          />
         </div>
       )} 
 

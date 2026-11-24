@@ -160,21 +160,21 @@ export function LatestActiveQuotationCard({ quotation }: LatestActiveQuotationCa
                   : isLast
                   ? "text-right"
                   : "text-center";
-                const widthClass = isFirst || isLast ? "w-[18%] sm:w-[12.5%]" : "w-[21%] sm:w-[25%]";
+                const widthClass = isFirst || isLast ? "w-[18%] md:w-[12.5%]" : "w-[21%] md:w-[25%]";
 
                 return (
                   <div key={step.title} className={`${widthClass} ${alignClass} min-w-0 overflow-visible`}>
                     <p
-                      className={`text-[10px] sm:text-xs font-bold leading-tight m-0 ${
+                      className={`text-[10px] md:text-xs font-bold leading-tight m-0 ${
                         step.isDone ? "text-[#0e2238]" : "text-slate-500"
                       }`}
                     >
-                      <span className="sm:hidden">{step.mobileTitle}</span>
-                      <span className="hidden sm:inline">
+                      <span className="md:hidden">{step.mobileTitle}</span>
+                      <span className="hidden md:inline">
                         {index + 1}. {step.title}
                       </span>
                     </p>
-                    <p className="text-[10px] sm:text-[11px] text-slate-400 mt-1 m-0 leading-tight hidden sm:block">
+                    <p className="text-[10px] md:text-[11px] text-slate-400 mt-1 m-0 leading-tight hidden md:block">
                       {step.subtitle}
                     </p>
                   </div>

@@ -31,3 +31,7 @@ export const getReceivedProposalDetails = async (quotationId: string, proposalId
     const response = await axiosInstance.get<ReceivedProposalDetailsResponse>(`/customer/quotations/${quotationId}/proposals/${proposalId}`);
     return response.data;
 };
+
+export const acceptReceivedProposal = async (quotationId: string, proposalId: string): Promise<void> => {
+    await axiosInstance.patch<void>(`/customer/quotations/${quotationId}/proposals/${proposalId}/accept`);
+};

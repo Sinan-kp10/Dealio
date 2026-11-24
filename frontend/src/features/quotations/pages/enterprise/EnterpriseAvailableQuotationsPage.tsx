@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { Pagination } from "../../../../components/common/pagination/Pagination";
 import { Select } from "../../../../components/common/select/Select";
 import { EnterpriseAvailableQuotationCard } from "../../components/enterprise/EnterpriseAvailableQuotationCard";
-import { EnterpriseAvailableQuotationSkeleton } from "../../components/enterprise/EnterpriseAvailableQuotationSkeleton";
+import { EnterpriseAvailableQuotationSkeleton } from "../../components/enterprise/loading/EnterpriseAvailableQuotationSkeleton";
 import { getAvailableEnterpriseQuotations } from "../../services/enterprise-quotation.service";
 import type { AvailableQuotation, AvailableQuotationStatus } from "../../types/enterprise-available-quotation.types";
 import useDebounce from "../../../../hook/useDebounce";

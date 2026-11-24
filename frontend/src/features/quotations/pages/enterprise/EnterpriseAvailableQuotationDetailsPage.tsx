@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { EnterpriseAvailableQuotationDetailsCard } from "../../components/enterprise/EnterpriseAvailableQuotationDetailsCard";
 import { EnterpriseSubmittedProposalCard } from "../../components/enterprise/EnterpriseSubmittedProposalCard";
-import { EnterpriseAvailableQuotationDetailsSkeleton } from "../../components/enterprise/EnterpriseAvailableQuotationDetailsSkeleton";
+import { EnterpriseAvailableQuotationDetailsSkeleton } from "../../components/enterprise/loading/EnterpriseAvailableQuotationDetailsSkeleton";
 import { getEnterpriseAvailableQuotationDetails } from "../../services/enterprise-quotation.service";
 import { handleApiError } from "../../../../utils/errorHandler";
 import type { AvailableQuotationDetails } from "../../types/enterprise-available-quotation-details.types";

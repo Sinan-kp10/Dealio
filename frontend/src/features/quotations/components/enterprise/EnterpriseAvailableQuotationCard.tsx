@@ -16,7 +16,7 @@ export function EnterpriseAvailableQuotationCard({ item, onChat }: EnterpriseAva
   const isInactive = isCancelled || isClosed;
 
   return (
-    <div className={`bg-white rounded-2xl border border-slate-200/90 p-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)] ${isInactive ? "opacity-90" : "hover:border-slate-300 hover:shadow-md"} transition-all flex flex-col justify-between space-y-4`}>
+    <div className={`bg-white rounded-2xl border border-slate-200/90 p-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)] ${isInactive ? "" : "hover:border-slate-300 hover:shadow-md"} transition-all flex flex-col justify-between space-y-4`}>
       <div className="space-y-3.5">
         <div className="space-y-1">
           <div className="flex items-start justify-between gap-2.5">
@@ -59,7 +59,7 @@ export function EnterpriseAvailableQuotationCard({ item, onChat }: EnterpriseAva
             <span>Cancelled by Customer</span>
           </div>
         ) : isClosed ? (
-          <div className="w-full py-2.5 px-3 rounded-xl bg-slate-100/90 border border-slate-200/90 text-slate-600 text-xs font-semibold flex items-center justify-center gap-2">
+          <div className="w-full py-2.5 px-3 rounded-xl bg-amber-50/80 border border-amber-200/70 text-amber-700 text-xs font-semibold flex items-center justify-center gap-2">
             <span>Quotation Closed by Customer</span>
           </div>
         ) : (

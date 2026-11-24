@@ -9,7 +9,7 @@ import { formatDate } from "../../../../utils/dateFormatter";
 import { handleApiError } from "../../../../utils/errorHandler";
 import { getCustomerQuotations } from "../../services/quotation.service";
 import type { QuotationRequestListItem, QuotationRequestStatus } from "../../types/quotation.types";
-import { QuotationCardSkeleton } from "../../components/customer/QuotationCardSkeleton";
+import { QuotationCardSkeleton } from "../../components/customer/loading/QuotationCardSkeleton";
 import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
 
 const PAGE_LIMIT = 9;
