@@ -1,4 +1,4 @@
-export type ProposalStatus = "PENDING" | "ACCEPTED" | "PAY_ADVANCE" | "COMPLETED" | "REJECTED";
+export type ProposalStatus = "PENDING" | "ACCEPTED" | "PAY_ADVANCE" | "COMPLETED" | "REJECTED" | "WITHDRAWN";
 
 export interface QuotationBasicInfoDto {
     id: string;
@@ -32,4 +32,9 @@ export interface CreateProposalInputDto {
     warrantyCoverage: string;
     replacementPolicy: string;
     additionalNotes?: string | null;
+}
+
+export interface WithdrawProposalDto {
+    userId: string;
+    proposalId: string;
 }

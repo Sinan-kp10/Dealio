@@ -334,6 +334,7 @@ enum proposal_status {
   PAY_ADVANCE
   COMPLETED
   REJECTED
+  WITHDRAWN
 }
 
 model proposals {
@@ -356,7 +357,6 @@ model proposals {
   quotation  quotation_requests @relation(fields: [quotation_id], references: [id], onDelete: Cascade)
   enterprise enterprises        @relation(fields: [enterprise_id], references: [id], onDelete: Cascade)
 
-  @@unique([quotation_id, enterprise_id])
   @@index([quotation_id])
   @@index([enterprise_id])
   @@map("proposals")

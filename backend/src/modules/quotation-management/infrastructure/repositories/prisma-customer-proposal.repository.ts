@@ -6,8 +6,11 @@ import { customerProposalListItemSelect, CustomerProposalMapper } from "../mappe
 
 export class PrismaCustomerProposalRepository implements ICustomerProposalRepository {
     findById = async (id: string): Promise<{ id: string; status: ProposalStatus } | null> => {
-        const proposal = await prisma.proposals.findUnique({
-            where: { id },
+        const proposal = await prisma.proposals.findFirst({
+            where: {
+                id,
+                status: { not: "WITHDRAWN" },
+            },
             select: {
                 id: true,
                 status: true,
@@ -25,6 +28,7 @@ export class PrismaCustomerProposalRepository implements ICustomerProposalReposi
         const where: Prisma.proposalsWhereInput = {
             quotation_id: quotationId,
             quotation: { customer_id: userId },
+            status: { not: "WITHDRAWN" },
             ...(search
                 ? {
                     OR: [

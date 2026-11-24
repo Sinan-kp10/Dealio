@@ -1,5 +1,6 @@
 import { PrismaEnterpriseProposalRepository } from "../repositories/prisma-enterprise-proposal.repository";
 import { CreateProposalUseCase } from "../../application/use-cases/enterprise/create-proposal.use-case";
+import { WithdrawnProposalUseCase } from "../../application/use-cases/enterprise/widthdrawn-proposal.use-case";
 import { EnterpriseProposalController } from "../../presentation/controllers/enterprise/enterprise-proposal.controller";
 import { notificationService } from "../../../notification/infrastructure/container/notification.container";
 import { PrismaCustomerProposalRepository } from "../repositories/prisma-customer-proposal.repository";
@@ -8,8 +9,9 @@ import { CustomerProposalController } from "../../presentation/controllers/custo
 
 const enterpriseProposalRepository = new PrismaEnterpriseProposalRepository();
 const createProposalUseCase = new CreateProposalUseCase(enterpriseProposalRepository, notificationService);
+const withdrawnProposalUseCase = new WithdrawnProposalUseCase(enterpriseProposalRepository);
 
-export const enterpriseProposalController = new EnterpriseProposalController(createProposalUseCase);
+export const enterpriseProposalController = new EnterpriseProposalController(createProposalUseCase, withdrawnProposalUseCase);
 
 const customerProposalRepository = new PrismaCustomerProposalRepository();
 const getReceivedProposalsUseCase = new GetReceivedProposalsUseCase(customerProposalRepository);

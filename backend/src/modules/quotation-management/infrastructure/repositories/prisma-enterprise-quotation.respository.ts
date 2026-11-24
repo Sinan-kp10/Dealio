@@ -67,12 +67,16 @@ export class PrismaEnterpriseQuotationRepository implements IEnterpriseQuotation
         },
         select: enterpriseQuotationDetailsSelect,
       }),
-      prisma.proposals.findUnique({
+      prisma.proposals.findFirst({
         where: {
-          quotation_id_enterprise_id: {
-            quotation_id: quotationId,
-            enterprise_id: enterpriseId,
+          quotation_id: quotationId,
+          enterprise_id: enterpriseId,
+          status: {
+            not: "WITHDRAWN",
           },
+        },
+        orderBy: {
+          created_at: "desc",
         },
         select: enterpriseProposalDetailsSelect,
       }),

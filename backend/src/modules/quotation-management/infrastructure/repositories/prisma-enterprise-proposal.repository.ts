@@ -1,17 +1,22 @@
 import { prisma } from "../../../../infrastructure/database/prisma/prisma-client";
-import { CreateProposalInputDto, ProposalStatus, QuotationBasicInfoDto } from "../../application/dto/enterprise/enterprise-proposal.dto";
+import {
+    CreateProposalInputDto,
+    ProposalStatus,
+    QuotationBasicInfoDto,
+} from "../../application/dto/enterprise/enterprise-proposal.dto";
 import { IEnterpriseProposalRepository } from "../../domain/repositories/enterprise/enterprise-proposal.repository";
 
 export class PrismaEnterpriseProposalRepository implements IEnterpriseProposalRepository {
-    findById = async (id: string): Promise<{ id: string; status: ProposalStatus } | null> => {
+    findById = async (id: string): Promise<{ id: string; status: ProposalStatus; enterpriseId: string } | null> => {
         const proposal = await prisma.proposals.findUnique({
             where: { id },
             select: {
                 id: true,
                 status: true,
+                enterprise_id: true,
             },
         });
-        return proposal ? { id: proposal.id, status: proposal.status as ProposalStatus } : null;
+        return proposal ? { id: proposal.id, status: proposal.status as ProposalStatus, enterpriseId: proposal.enterprise_id } : null;
     };
 
     findEnterpriseIdByUserId = async (userId: string): Promise<string | null> => {
@@ -31,11 +36,12 @@ export class PrismaEnterpriseProposalRepository implements IEnterpriseProposalRe
     };
 
     findProposalByQuotationAndEnterprise = async (quotationId: string, enterpriseId: string): Promise<{ id: string } | null> => {
-        const proposal = await prisma.proposals.findUnique({
+        const proposal = await prisma.proposals.findFirst({
             where: {
-                quotation_id_enterprise_id: {
-                    quotation_id: quotationId,
-                    enterprise_id: enterpriseId,
+                quotation_id: quotationId,
+                enterprise_id: enterpriseId,
+                status: {
+                    not: "WITHDRAWN",
                 },
             },
             select: { id: true },
@@ -78,6 +84,30 @@ export class PrismaEnterpriseProposalRepository implements IEnterpriseProposalRe
                 },
                 data: {
                     status: "PROPOSAL_RECEIVED",
+                },
+            });
+        });
+    };
+
+    withdrawProposal = async (proposalId: string, enterpriseId: string): Promise<void> => {
+        await prisma.$transaction(async (tx) => {
+            const updated = await tx.proposals.update({
+                where: { id: proposalId },
+                data: {
+                    status: "WITHDRAWN",
+                },
+                select: {
+                    quotation_id: true,
+                },
+            });
+
+            await tx.enterprise_quotation_requests.updateMany({
+                where: {
+                    enterprise_id: enterpriseId,
+                    quotation_id: updated.quotation_id,
+                },
+                data: {
+                    status: "OPEN",
                 },
             });
         });
