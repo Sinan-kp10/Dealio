@@ -21,7 +21,7 @@ import { HomePage } from "../../features/home/pages/common/HomePage";
 const CustomerHomePage = lazy(()=> import("../../features/home/pages/customer/CustomerHomePage"))
 const CustomerQuotationsPage = lazy(() => import("../../features/quotations/pages/customer/CustomerQuotationsPage"))
 const CustomerQuotationDetailsPage = lazy(() => import("../../features/quotations/pages/customer/CustomerQuotationDetailsPage"))
-const CustomerProposalDetailsPage = lazy(() => import("../../features/quotations/pages/customer/CustomerProposalDetailsPage"))
+const CustomerProposalDetailsPage = lazy(() => import("../../features/quotations/pages/customer/CustomerReceivedProposalDetailsPage"))
 const CreateQuotationPage = lazy(() => import("../../features/quotations/pages/customer/CreateQuotationPage"))
 const CustomerConversationsPage = lazy(() => import("../../features/conversations/pages/customer/CustomerConversationsPage"))
 const CustomerSettingsPage = lazy(()=> import("../../features/settings/pages/CustomerSttingsPage"))

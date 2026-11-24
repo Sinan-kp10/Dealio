@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {ArrowLeft,FileText,Layers,Tag,Package,IndianRupee,MapPin,Ban,ExternalLink,Handshake} from "lucide-react";
 import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
 import { QuotationStatusBar } from "../../components/customer/QuotationStatusBar";
@@ -14,15 +14,19 @@ import type { QuotationDetails } from "../../types/quotation-details";
 
 export function CustomerQuotationDetailsPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams<{ id: string }>();
 
+  const isProposalsTab = location.state?.tab === "PROPOSALS";
   const [loading, setLoading] = useState(true);
   const [isCancelling, setIsCancelling] = useState(false);
   const [isCancelModal, setIsCancelModal] = useState(false);
   const [isDescriptionModalOpen, setIsDescriptionModalOpen] = useState(false);
   const [quotation, setQuotation] = useState<QuotationDetails | null>(null);
-  const [activeTab, setActiveTab] = useState<"OVERVIEW" | "PROPOSALS">("OVERVIEW");
-  const [isOtherTabLoaded, setIsOtherTabLoaded] = useState(false)
+  const [activeTab, setActiveTab] = useState<"OVERVIEW" | "PROPOSALS">(
+    isProposalsTab ? "PROPOSALS" : "OVERVIEW"
+  );
+  const [isOtherTabLoaded, setIsOtherTabLoaded] = useState(isProposalsTab);
 
   useEffect(() => {
     if (!id) return;

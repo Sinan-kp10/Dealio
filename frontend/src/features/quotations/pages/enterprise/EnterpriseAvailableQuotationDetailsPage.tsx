@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { EnterpriseAvailableQuotationDetailsCard } from "../../components/enterprise/EnterpriseAvailableQuotationDetailsCard";
@@ -14,23 +14,14 @@ export function EnterpriseAvailableQuotationDetailsPage() {
 
   const [loading, setLoading] = useState(true);
   const [quotation, setQuotation] = useState<AvailableQuotationDetails | null>(null);
-
-  const fetchDetails = useCallback(async () => {
-    if (!id) return;
-    try {
-      const response = await getEnterpriseAvailableQuotationDetails(id);
-      setQuotation(response.data);
-    } catch (error) {
-      handleApiError(error, "Failed to load quotation details");
-      navigate("/enterprise/quotations");
-    }
-  }, [id, navigate]);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
+    if (!id) return;
+
     let cancelled = false;
 
-    const loadDetails = async () => {
-      if (!id) return;
+    const fetchDetails = async () => {
       setLoading(true);
       try {
         const response = await getEnterpriseAvailableQuotationDetails(id);
@@ -48,12 +39,12 @@ export function EnterpriseAvailableQuotationDetailsPage() {
       }
     };
 
-    void loadDetails();
+    void fetchDetails();
 
     return () => {
       cancelled = true;
     };
-  }, [id, navigate]);
+  }, [id, navigate, refreshKey]);
 
   if (loading || !quotation) {
     return (
@@ -84,7 +75,7 @@ export function EnterpriseAvailableQuotationDetailsPage() {
       {quotation.proposal && (
         <EnterpriseSubmittedProposalCard
           proposal={quotation.proposal}
-          onWithdrawn={fetchDetails}
+          onWithdrawn={() => setRefreshKey((prev) => prev + 1)}
         />
       )}
     </div>
