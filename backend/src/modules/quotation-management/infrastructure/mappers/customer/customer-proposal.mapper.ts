@@ -1,7 +1,27 @@
 import { Prisma } from "../../../../../../generated/prisma/client";
 import { CustomerReceivedProposalItemDto, ProposalStatus } from "../../../application/dto/customer/customer-received-proposal.dto";
+import { CustomerProposalDetailsDto } from "../../../application/dto/customer/customer-proposal-details.dto";
 
 export const customerProposalListItemSelect = {
+    id: true,
+    quotation_id: true,
+    item_name: true,
+    description: true,
+    quantity: true,
+    unit_price: true,
+    total_amount: true,
+    delivery_timeline: true,
+    status: true,
+    created_at: true,
+    enterprise: {
+        select: {
+            id: true,
+            enterprise_name: true,
+        },
+    },
+} satisfies Prisma.proposalsSelect;
+
+export const customerProposalDetailsSelect = {
     id: true,
     quotation_id: true,
     item_name: true,
@@ -24,9 +44,29 @@ export const customerProposalListItemSelect = {
 } satisfies Prisma.proposalsSelect;
 
 export type CustomerProposalListItemRecord = Prisma.proposalsGetPayload<{ select: typeof customerProposalListItemSelect }>;
+export type CustomerProposalDetailsRecord = Prisma.proposalsGetPayload<{ select: typeof customerProposalDetailsSelect }>;
 
 export class CustomerProposalMapper {
     static toItemDto(data: CustomerProposalListItemRecord): CustomerReceivedProposalItemDto {
+        return {
+            id: data.id,
+            quotationId: data.quotation_id,
+            enterprise: {
+                id: data.enterprise.id,
+                name: data.enterprise.enterprise_name,
+            },
+            itemName: data.item_name,
+            description: data.description,
+            quantity: data.quantity,
+            unitPrice: Number(data.unit_price),
+            totalAmount: Number(data.total_amount),
+            deliveryTimeline: data.delivery_timeline,
+            status: data.status as ProposalStatus,
+            createdAt: data.created_at,
+        };
+    }
+
+    static toDetailsDto(data: CustomerProposalDetailsRecord): CustomerProposalDetailsDto {
         return {
             id: data.id,
             quotationId: data.quotation_id,

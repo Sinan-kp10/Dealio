@@ -5,6 +5,7 @@ import { EnterpriseProposalController } from "../../presentation/controllers/ent
 import { notificationService } from "../../../notification/infrastructure/container/notification.container";
 import { PrismaCustomerProposalRepository } from "../repositories/prisma-customer-proposal.repository";
 import { GetReceivedProposalsUseCase } from "../../application/use-cases/customer/get-received-proposals.use-case";
+import { GetCustomerProposalDetailsUseCase } from "../../application/use-cases/customer/get-customer-proposal-details.use-case";
 import { CustomerProposalController } from "../../presentation/controllers/customer/customer-proposal.controller";
 
 const enterpriseProposalRepository = new PrismaEnterpriseProposalRepository();
@@ -15,5 +16,6 @@ export const enterpriseProposalController = new EnterpriseProposalController(cre
 
 const customerProposalRepository = new PrismaCustomerProposalRepository();
 const getReceivedProposalsUseCase = new GetReceivedProposalsUseCase(customerProposalRepository);
+const getCustomerProposalDetailsUseCase = new GetCustomerProposalDetailsUseCase(customerProposalRepository);
 
-export const customerProposalController = new CustomerProposalController(getReceivedProposalsUseCase);
+export const customerProposalController = new CustomerProposalController(getReceivedProposalsUseCase, getCustomerProposalDetailsUseCase);

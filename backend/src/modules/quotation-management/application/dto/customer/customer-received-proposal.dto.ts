@@ -13,9 +13,6 @@ export interface CustomerReceivedProposalItemDto {
     unitPrice: number;
     totalAmount: number;
     deliveryTimeline: string;
-    warrantyCoverage: string;
-    replacementPolicy: string;
-    additionalNotes?: string | null;
     status: ProposalStatus;
     createdAt: Date;
 }

@@ -2,7 +2,8 @@ import { prisma } from "../../../../infrastructure/database/prisma/prisma-client
 import { Prisma } from "../../../../../generated/prisma/client";
 import { ICustomerProposalRepository } from "../../domain/repositories/customer/customer-proposal.repository";
 import { GetReceivedProposalsQueryDto, PaginatedCustomerReceivedProposalsDto, ProposalStatus } from "../../application/dto/customer/customer-received-proposal.dto";
-import { customerProposalListItemSelect, CustomerProposalMapper } from "../mappers/customer/customer-proposal.mapper";
+import { CustomerProposalDetailsDto } from "../../application/dto/customer/customer-proposal-details.dto";
+import { customerProposalListItemSelect, customerProposalDetailsSelect, CustomerProposalMapper } from "../mappers/customer/customer-proposal.mapper";
 
 export class PrismaCustomerProposalRepository implements ICustomerProposalRepository {
     findById = async (id: string): Promise<{ id: string; status: ProposalStatus } | null> => {
@@ -19,7 +20,7 @@ export class PrismaCustomerProposalRepository implements ICustomerProposalReposi
         return proposal ? { id: proposal.id, status: proposal.status as ProposalStatus } : null;
     };
 
-    findProposalsByQuotationId = async(quotationId: string,userId: string,query: GetReceivedProposalsQueryDto): Promise<PaginatedCustomerReceivedProposalsDto> => {
+    findProposalsByQuotationId = async (quotationId: string,userId: string,query: GetReceivedProposalsQueryDto): Promise<PaginatedCustomerReceivedProposalsDto> => {
         const DEFAULT_LIMIT = 6;
         const { search, limit, page } = query;
         const pageSize = limit || DEFAULT_LIMIT;
@@ -59,5 +60,21 @@ export class PrismaCustomerProposalRepository implements ICustomerProposalReposi
             total,
             totalPages,
         };
+    };
+
+    findProposalDetails = async (proposalId: string,quotationId: string,userId: string): Promise<CustomerProposalDetailsDto | null> => {
+        const proposal = await prisma.proposals.findFirst({
+            where: {
+                id: proposalId,
+                quotation_id: quotationId,
+                quotation: {
+                    customer_id: userId,
+                },
+                status: { not: "WITHDRAWN" },
+            },
+            select: customerProposalDetailsSelect,
+        });
+
+        return proposal ? CustomerProposalMapper.toDetailsDto(proposal) : null;
     };
 }
