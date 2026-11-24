@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { EnterpriseQuotationDetailsCard } from "../../components/enterprise/EnterpriseQuotationDetailsCard";
@@ -15,33 +15,23 @@ export function EnterpriseQuotationDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [quotation, setQuotation] = useState<EnterpriseQuotationDetails | null>(null);
 
-  useEffect(() => {
+  const fetchDetails = useCallback(async () => {
     if (!id) return;
-    let cancelled = false;
-
-    const fetchDetails = async () => {
-      setLoading(true);
-      try {
-        const response = await getEnterpriseQuotationDetails(id);
-        if (cancelled) return;
-        setQuotation(response.data);
-      } catch (error) {
-        if (cancelled) return;
-        handleApiError(error, "Failed to load quotation details");
-        navigate("/enterprise/quotations");
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      }
-    };
-
-    void fetchDetails();
-
-    return () => {
-      cancelled = true;
-    };
+    setLoading(true);
+    try {
+      const response = await getEnterpriseQuotationDetails(id);
+      setQuotation(response.data);
+    } catch (error) {
+      handleApiError(error, "Failed to load quotation details");
+      navigate("/enterprise/quotations");
+    } finally {
+      setLoading(false);
+    }
   }, [id, navigate]);
+
+  useEffect(() => {
+    void fetchDetails();
+  }, [fetchDetails]);
 
   if (loading || !quotation) {
     return (
@@ -70,7 +60,10 @@ export function EnterpriseQuotationDetailsPage() {
       <EnterpriseQuotationDetailsCard quotation={quotation} />
 
       {quotation.proposal && (
-        <EnterpriseSubmittedProposalCard proposal={quotation.proposal} />
+        <EnterpriseSubmittedProposalCard
+          proposal={quotation.proposal}
+          onWithdrawn={fetchDetails}
+        />
       )}
     </div>
   );
