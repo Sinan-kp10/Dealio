@@ -104,6 +104,13 @@ export class PrismaCustomerProposalRepository implements ICustomerProposalReposi
                 },
             });
 
+            await tx.enterprise_quotation_requests.deleteMany({
+                where: {
+                    quotation_id: quotationId,
+                    enterprise_id: enterpriseId,
+                },
+            });
+
             await tx.enterprise_quotation_requests.updateMany({
                 where: { quotation_id: quotationId },
                 data: {
