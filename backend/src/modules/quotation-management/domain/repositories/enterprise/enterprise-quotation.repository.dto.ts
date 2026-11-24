@@ -1,10 +1,10 @@
 import { IBaseRepository } from "../../../../../shared/domian/base.repository";
-import { CustomerQuotationDetailsDto } from "../../../application/dto/enterprise/customer-quotation-details.dto";
-import { EnterpriseQuotationListFiltersDto, PaginatedQuotationDto } from "../../../application/dto/enterprise/enterprise-quotation-list.dto";
+import { AvailableQuotationDetailsDto } from "../../../application/dto/enterprise/enterprise-available-quotation-details.dto";
+import { AvailableQuotationListFiltersDto, PaginatedAvailableQuotationsDto } from "../../../application/dto/enterprise/enterprise-available-quotation-list.dto";
 
 export interface IEnterpriseQuotationRepository extends IBaseRepository<{ id: string } | null> {
     findEnterpriseIdByUserId(userId: string): Promise<string | null>;
-    findAvailableQuotations(enterpriseId: string, filter: EnterpriseQuotationListFiltersDto): Promise<PaginatedQuotationDto>;
-    findQuotationDetails(enterpriseId: string, quotationId: string): Promise<CustomerQuotationDetailsDto | null>;
+    findAvailableQuotations(enterpriseId: string, filter: AvailableQuotationListFiltersDto): Promise<PaginatedAvailableQuotationsDto>;
+    findQuotationDetails(enterpriseId: string, quotationId: string): Promise<AvailableQuotationDetailsDto | null>;
     markNotInterested(enterpriseId: string, quotationId: string): Promise<void>;
 }

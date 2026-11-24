@@ -2,14 +2,14 @@ import type { Request, Response, NextFunction } from "express";
 import { HttpStatusCode } from "../../../../../shared/enums/http-status-code.enum";
 import { IUseCase } from "../../../../../shared/application/base.usecase";
 import { sendResponse } from "../../../../../shared/presentation/api-response";
-import { EnterpriseQuotationListFiltersDto, PaginatedQuotationDto, MarkNotInterestedDto, GetEnterpriseQuotationsDto, EnterpriseQuotationStatus } from "../../../application/dto/enterprise/enterprise-quotation-list.dto";
-import { CustomerQuotationDetailsDto, GetCustomerQuotationDetailsDto } from "../../../application/dto/enterprise/customer-quotation-details.dto";
+import { AvailableQuotationListFiltersDto, PaginatedAvailableQuotationsDto, MarkNotInterestedDto, GetAvailableQuotationsDto, AvailableQuotationStatus } from "../../../application/dto/enterprise/enterprise-available-quotation-list.dto";
+import { AvailableQuotationDetailsDto, GetAvailableQuotationDetailsDto } from "../../../application/dto/enterprise/enterprise-available-quotation-details.dto";
 
 export class EnterpriseQuotationController {
   constructor(
-    private readonly getAvailableQuotationsUseCase: IUseCase<GetEnterpriseQuotationsDto,PaginatedQuotationDto>,
+    private readonly getAvailableQuotationsUseCase: IUseCase<GetAvailableQuotationsDto, PaginatedAvailableQuotationsDto>,
     private readonly markNotInterestedUseCase: IUseCase<MarkNotInterestedDto, void>,
-    private readonly getCustomerQuotationDetailsUseCase: IUseCase<GetCustomerQuotationDetailsDto, CustomerQuotationDetailsDto>
+    private readonly getCustomerQuotationDetailsUseCase: IUseCase<GetAvailableQuotationDetailsDto, AvailableQuotationDetailsDto>
   ) {}
 
   getAvailableQuotations = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -21,7 +21,7 @@ export class EnterpriseQuotationController {
         userId: userId!,
         filter: {
           search: search as string,
-          status: status ? (status as EnterpriseQuotationStatus | "ALL") : undefined,
+          status: status ? (status as AvailableQuotationStatus | "ALL") : undefined,
           page: page ? Number(page) : undefined,
           limit: limit ? Number(limit) : undefined,
         },
@@ -59,7 +59,7 @@ export class EnterpriseQuotationController {
         quotationId,
       });
 
-      sendResponse(res, "Quotation marked as not interested", null, HttpStatusCode.OK);
+      sendResponse(res, "Quotation marked as not interested successfully", null, HttpStatusCode.OK);
     } catch (error) {
       next(error);
     }

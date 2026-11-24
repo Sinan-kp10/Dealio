@@ -1,9 +1,9 @@
 import { Prisma } from "../../../../../generated/prisma/client";
 import { prisma } from "../../../../infrastructure/database/prisma/prisma-client";
-import { CustomerQuotationDetailsDto } from "../../application/dto/enterprise/customer-quotation-details.dto";
-import { EnterpriseQuotationListFiltersDto, PaginatedQuotationDto } from "../../application/dto/enterprise/enterprise-quotation-list.dto";
+import { AvailableQuotationDetailsDto } from "../../application/dto/enterprise/enterprise-available-quotation-details.dto";
+import { AvailableQuotationListFiltersDto, PaginatedAvailableQuotationsDto } from "../../application/dto/enterprise/enterprise-available-quotation-list.dto";
 import { IEnterpriseQuotationRepository } from "../../domain/repositories/enterprise/enterprise-quotation.repository.dto";
-import { CustomerQuotationDetailsMapper, enterpriseProposalDetailsSelect, customerQuotationDetailsSelect } from "../mappers/enterprise/customer-quotation-details.mapper";
+import { CustomerQuotationDetailsMapper, customerQuotationDetailsSelect, enterpriseProposalDetailsSelect } from "../mappers/enterprise/customer-quotation-details.mapper";
 import { EnterpriseQuotationListMapper, enterpriseQuotationListItemSelect } from "../mappers/enterprise/enterprise-quotation-list.mapper";
 
 export class PrismaEnterpriseQuotationRepository implements IEnterpriseQuotationRepository {
@@ -21,7 +21,7 @@ export class PrismaEnterpriseQuotationRepository implements IEnterpriseQuotation
     return user?.enterprise_id || null;
   };
 
-  findAvailableQuotations = async (enterpriseId: string, filter: EnterpriseQuotationListFiltersDto): Promise<PaginatedQuotationDto> => {
+  findAvailableQuotations = async (enterpriseId: string, filter: AvailableQuotationListFiltersDto): Promise<PaginatedAvailableQuotationsDto> => {
     const DEFAULT_LIMIT = 9;
     const { search, limit, page, status } = filter;
     const pageSize = limit || DEFAULT_LIMIT;
@@ -55,15 +55,12 @@ export class PrismaEnterpriseQuotationRepository implements IEnterpriseQuotation
     };
   };
 
-  findQuotationDetails = async (enterpriseId: string, quotationId: string): Promise<CustomerQuotationDetailsDto | null> => {
+  findQuotationDetails = async (enterpriseId: string, quotationId: string): Promise<AvailableQuotationDetailsDto | null> => {
     const [record, proposal] = await Promise.all([
       prisma.enterprise_quotation_requests.findFirst({
         where: {
           enterprise_id: enterpriseId,
           quotation_id: quotationId,
-          status: {
-            notIn: ["CLOSED", "CANCELLED"],
-          },
         },
         select: customerQuotationDetailsSelect,
       }),
@@ -82,7 +79,9 @@ export class PrismaEnterpriseQuotationRepository implements IEnterpriseQuotation
       }),
     ]);
 
-    if (!record) return null;
+    if (!record) {
+      return null;
+    }
 
     return CustomerQuotationDetailsMapper.toDetailsDto(record, proposal);
   };

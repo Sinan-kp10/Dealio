@@ -1,7 +1,7 @@
-import { EnterpriseQuotationStatus } from "./enterprise-quotation-list.dto";
+import { AvailableQuotationStatus } from "./enterprise-available-quotation-list.dto";
 import { EnterpriseProposalDetailsDto } from "./enterprise-proposal.dto";
 
-export interface CustomerQuotationDetailsDto {
+export interface AvailableQuotationDetailsDto {
     id: string;
     productName: string;
     category: {
@@ -16,12 +16,12 @@ export interface CustomerQuotationDetailsDto {
     budget: number | null;
     location: string | null;
     description: string;
-    status: EnterpriseQuotationStatus;
+    status: AvailableQuotationStatus;
     createdAt: Date;
     proposal: EnterpriseProposalDetailsDto | null;
 }
 
-export interface GetCustomerQuotationDetailsDto {
+export interface GetAvailableQuotationDetailsDto {
     userId: string;
     quotationId: string;
 }
