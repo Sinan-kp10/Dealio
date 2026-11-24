@@ -1,14 +1,14 @@
 import { IUseCase } from "../../../../../shared/application/base.usecase";
 import { NotFoundError } from "../../../../../shared/errors/app-error";
 import { IEnterpriseQuotationRepository } from "../../../domain/repositories/enterprise/enterprise-quotation.repository.dto";
-import { EnterpriseQuotationDetailsDto, GetEnterpriseQuotationDetailsDto } from "../../dto/enterprise/enterprise-quotation-details.dto";
+import { CustomerQuotationDetailsDto, GetCustomerQuotationDetailsDto } from "../../dto/enterprise/customer-quotation-details.dto";
 
-export class GetEnterpriseQuotationDetailsUseCase implements IUseCase<GetEnterpriseQuotationDetailsDto, EnterpriseQuotationDetailsDto> {
+export class GetCustomerQuotationDetailsUseCase implements IUseCase<GetCustomerQuotationDetailsDto, CustomerQuotationDetailsDto> {
   constructor(
     private readonly enterpriseQuotationRepository: IEnterpriseQuotationRepository
   ) {}
 
-  execute = async (input: GetEnterpriseQuotationDetailsDto): Promise<EnterpriseQuotationDetailsDto> => {
+  execute = async (input: GetCustomerQuotationDetailsDto): Promise<CustomerQuotationDetailsDto> => {
     const enterpriseId = await this.enterpriseQuotationRepository.findEnterpriseIdByUserId(input.userId);
     if (!enterpriseId) {
       throw new NotFoundError("Enterprise not found");

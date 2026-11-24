@@ -2,27 +2,28 @@ import type { Request, Response, NextFunction } from "express";
 import { HttpStatusCode } from "../../../../../shared/enums/http-status-code.enum";
 import { IUseCase } from "../../../../../shared/application/base.usecase";
 import { sendResponse } from "../../../../../shared/presentation/api-response";
-import {EnterpriseQuotationStatus,GetEnterpriseQuotationsDto,MarkNotInterestedDto,PaginatedQuotationDto,} from "../../../application/dto/enterprise/enterprise-quotation-list.dto";
-import {EnterpriseQuotationDetailsDto,GetEnterpriseQuotationDetailsDto} from "../../../application/dto/enterprise/enterprise-quotation-details.dto";
+import { EnterpriseQuotationListFiltersDto, PaginatedQuotationDto, MarkNotInterestedDto, GetEnterpriseQuotationsDto, EnterpriseQuotationStatus } from "../../../application/dto/enterprise/enterprise-quotation-list.dto";
+import { CustomerQuotationDetailsDto, GetCustomerQuotationDetailsDto } from "../../../application/dto/enterprise/customer-quotation-details.dto";
 
 export class EnterpriseQuotationController {
   constructor(
-    private readonly getAvailableQuotationsUseCase: IUseCase<GetEnterpriseQuotationsDto, PaginatedQuotationDto>,
+    private readonly getAvailableQuotationsUseCase: IUseCase<GetEnterpriseQuotationsDto,PaginatedQuotationDto>,
     private readonly markNotInterestedUseCase: IUseCase<MarkNotInterestedDto, void>,
-    private readonly getEnterpriseQuotationDetailsUseCase: IUseCase<GetEnterpriseQuotationDetailsDto, EnterpriseQuotationDetailsDto>
+    private readonly getCustomerQuotationDetailsUseCase: IUseCase<GetCustomerQuotationDetailsDto, CustomerQuotationDetailsDto>
   ) {}
 
   getAvailableQuotations = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userId = req.auth?.userId;
+      const { search, status, page, limit } = req.query;
 
       const quotations = await this.getAvailableQuotationsUseCase.execute({
         userId: userId!,
         filter: {
-          search: req.query.search as string | undefined,
-          status: req.query.status as (EnterpriseQuotationStatus | "ALL") | undefined,
-          page: Number(req.query.page ?? 1),
-          limit: Number(req.query.limit ?? 9),
+          search: search as string,
+          status: status ? (status as EnterpriseQuotationStatus | "ALL") : undefined,
+          page: page ? Number(page) : undefined,
+          limit: limit ? Number(limit) : undefined,
         },
       });
 
@@ -37,7 +38,7 @@ export class EnterpriseQuotationController {
       const userId = req.auth?.userId;
       const quotationId = req.params.quotationId as string;
 
-      const quotation = await this.getEnterpriseQuotationDetailsUseCase.execute({
+      const quotation = await this.getCustomerQuotationDetailsUseCase.execute({
         userId: userId!,
         quotationId,
       });
@@ -58,7 +59,7 @@ export class EnterpriseQuotationController {
         quotationId,
       });
 
-      sendResponse(res, "Quotation marked as not interested successfully", undefined, HttpStatusCode.OK);
+      sendResponse(res, "Quotation marked as not interested", null, HttpStatusCode.OK);
     } catch (error) {
       next(error);
     }

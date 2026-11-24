@@ -2,7 +2,7 @@ import { prisma } from "../../../../infrastructure/database/prisma/prisma-client
 import { Prisma } from "../../../../../generated/prisma/client";
 import { ICustomerProposalRepository } from "../../domain/repositories/customer/customer-proposal.repository";
 import { GetReceivedProposalsQueryDto, PaginatedCustomerReceivedProposalsDto, ProposalStatus } from "../../application/dto/customer/customer-received-proposal.dto";
-import { CustomerProposalDetailsDto } from "../../application/dto/customer/customer-proposal-details.dto";
+import { ReceivedProposalDetailsDto } from "../../application/dto/customer/received-proposal-details.dto";
 import { customerProposalListItemSelect, customerProposalDetailsSelect, CustomerProposalMapper } from "../mappers/customer/customer-proposal.mapper";
 
 export class PrismaCustomerProposalRepository implements ICustomerProposalRepository {
@@ -62,7 +62,7 @@ export class PrismaCustomerProposalRepository implements ICustomerProposalReposi
         };
     };
 
-    findProposalDetails = async (proposalId: string,quotationId: string,userId: string): Promise<CustomerProposalDetailsDto | null> => {
+    findReceivedProposalDetails = async (proposalId: string,quotationId: string,userId: string): Promise<ReceivedProposalDetailsDto | null> => {
         const proposal = await prisma.proposals.findFirst({
             where: {
                 id: proposalId,

@@ -1,9 +1,9 @@
 import { Prisma } from "../../../../../generated/prisma/client";
 import { prisma } from "../../../../infrastructure/database/prisma/prisma-client";
-import { EnterpriseQuotationDetailsDto } from "../../application/dto/enterprise/enterprise-quotation-details.dto";
+import { CustomerQuotationDetailsDto } from "../../application/dto/enterprise/customer-quotation-details.dto";
 import { EnterpriseQuotationListFiltersDto, PaginatedQuotationDto } from "../../application/dto/enterprise/enterprise-quotation-list.dto";
 import { IEnterpriseQuotationRepository } from "../../domain/repositories/enterprise/enterprise-quotation.repository.dto";
-import { EnterpriseQuotationDetailsMapper, enterpriseProposalDetailsSelect, enterpriseQuotationDetailsSelect } from "../mappers/enterprise/enterprise-quotation-details.mapper";
+import { CustomerQuotationDetailsMapper, enterpriseProposalDetailsSelect, customerQuotationDetailsSelect } from "../mappers/enterprise/customer-quotation-details.mapper";
 import { EnterpriseQuotationListMapper, enterpriseQuotationListItemSelect } from "../mappers/enterprise/enterprise-quotation-list.mapper";
 
 export class PrismaEnterpriseQuotationRepository implements IEnterpriseQuotationRepository {
@@ -55,7 +55,7 @@ export class PrismaEnterpriseQuotationRepository implements IEnterpriseQuotation
     };
   };
 
-  findQuotationDetails = async (enterpriseId: string, quotationId: string): Promise<EnterpriseQuotationDetailsDto | null> => {
+  findQuotationDetails = async (enterpriseId: string, quotationId: string): Promise<CustomerQuotationDetailsDto | null> => {
     const [record, proposal] = await Promise.all([
       prisma.enterprise_quotation_requests.findFirst({
         where: {
@@ -65,7 +65,7 @@ export class PrismaEnterpriseQuotationRepository implements IEnterpriseQuotation
             notIn: ["CLOSED", "CANCELLED"],
           },
         },
-        select: enterpriseQuotationDetailsSelect,
+        select: customerQuotationDetailsSelect,
       }),
       prisma.proposals.findFirst({
         where: {
@@ -84,7 +84,7 @@ export class PrismaEnterpriseQuotationRepository implements IEnterpriseQuotation
 
     if (!record) return null;
 
-    return EnterpriseQuotationDetailsMapper.toDetailsDto(record, proposal);
+    return CustomerQuotationDetailsMapper.toDetailsDto(record, proposal);
   };
 
   markNotInterested = async (enterpriseId: string, quotationId: string): Promise<void> => {

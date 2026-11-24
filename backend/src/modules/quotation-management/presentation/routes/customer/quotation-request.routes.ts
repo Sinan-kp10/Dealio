@@ -8,7 +8,7 @@ import { createQuotationRequestSchema } from "../../validators/customer/create-q
 import { getQuotationRequestsSchema } from "../../validators/customer/get-quotation-requests.schema";
 import { getQuotationRequestSchema } from "../../validators/customer/get-quotation-request-details.schema";
 import { getReceivedProposalsSchema } from "../../validators/customer/get-received-proposals.schema";
-import { getProposalDetailsSchema } from "../../validators/customer/get-proposal-details.schema";
+import { getReceivedProposalDetailsSchema } from "../../validators/customer/get-received-proposal-details.schema";
 
 const router = Router();
 
@@ -18,10 +18,9 @@ router.use(requireRole("CUSTOMER"));
 router.get("/", validateRequest(getQuotationRequestsSchema, "query"), quotationRequestController.getQuotationRequests);
 router.get("/recent", quotationRequestController.getRecentQuotationRequests);
 router.get("/:quotationId", validateRequest(getQuotationRequestSchema, "params"), quotationRequestController.getQuotationRequestDetails);
+router.get("/:quotationId/proposals", validateRequest(getQuotationRequestSchema, "params"), validateRequest(getReceivedProposalsSchema, "query"), customerProposalController.getReceivedProposals);
+router.get("/:quotationId/proposals/:proposalId", validateRequest(getReceivedProposalDetailsSchema, "params"), customerProposalController.getReceivedProposalDetails);
 router.post("/", validateRequest(createQuotationRequestSchema), quotationRequestController.createQuotationRequest);
 router.patch("/:quotationId", validateRequest(getQuotationRequestSchema, "params"), quotationRequestController.cancelQuotationRequest);
-
-router.get("/:quotationId/proposals", validateRequest(getQuotationRequestSchema, "params"), validateRequest(getReceivedProposalsSchema, "query"), customerProposalController.getReceivedProposals);
-router.get("/:quotationId/proposals/:proposalId", validateRequest(getProposalDetailsSchema, "params"), customerProposalController.getProposalDetails);
 
 export default router;

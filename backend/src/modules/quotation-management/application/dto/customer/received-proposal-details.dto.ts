@@ -1,14 +1,14 @@
 import { ProposalStatus } from "./customer-received-proposal.dto";
 
-export interface CustomerProposalEnterpriseDto {
+export interface ReceivedProposalEnterpriseDto {
     id: string;
     name: string;
 }
 
-export interface CustomerProposalDetailsDto {
+export interface ReceivedProposalDetailsDto {
     id: string;
     quotationId: string;
-    enterprise: CustomerProposalEnterpriseDto;
+    enterprise: ReceivedProposalEnterpriseDto;
     itemName: string;
     description: string;
     quantity: number;
@@ -22,7 +22,7 @@ export interface CustomerProposalDetailsDto {
     createdAt: Date;
 }
 
-export interface GetCustomerProposalDetailsInputDto {
+export interface GetReceivedProposalDetailsInputDto {
     userId: string;
     proposalId: string;
     quotationId: string;

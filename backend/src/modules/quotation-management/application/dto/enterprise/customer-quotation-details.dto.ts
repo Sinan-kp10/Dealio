@@ -1,7 +1,7 @@
 import { EnterpriseQuotationStatus } from "./enterprise-quotation-list.dto";
 import { EnterpriseProposalDetailsDto } from "./enterprise-proposal.dto";
 
-export interface EnterpriseQuotationDetailsDto {
+export interface CustomerQuotationDetailsDto {
     id: string;
     productName: string;
     category: {
@@ -21,7 +21,7 @@ export interface EnterpriseQuotationDetailsDto {
     proposal: EnterpriseProposalDetailsDto | null;
 }
 
-export interface GetEnterpriseQuotationDetailsDto {
+export interface GetCustomerQuotationDetailsDto {
     userId: string;
     quotationId: string;
 }

@@ -1,6 +1,6 @@
 import { Prisma } from "../../../../../../generated/prisma/client";
 import { CustomerReceivedProposalItemDto, ProposalStatus } from "../../../application/dto/customer/customer-received-proposal.dto";
-import { CustomerProposalDetailsDto } from "../../../application/dto/customer/customer-proposal-details.dto";
+import { ReceivedProposalDetailsDto } from "../../../application/dto/customer/received-proposal-details.dto";
 
 export const customerProposalListItemSelect = {
     id: true,
@@ -66,7 +66,7 @@ export class CustomerProposalMapper {
         };
     }
 
-    static toDetailsDto(data: CustomerProposalDetailsRecord): CustomerProposalDetailsDto {
+    static toDetailsDto(data: CustomerProposalDetailsRecord): ReceivedProposalDetailsDto {
         return {
             id: data.id,
             quotationId: data.quotation_id,
