@@ -1,6 +1,16 @@
 export function LatestActiveQuotationSkeleton() {
   return (
-    <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 p-5 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-6 animate-pulse">
+    <section className="space-y-3.5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+        <h2 className="text-lg sm:text-xl font-bold text-[#0e2238] tracking-tight m-0">
+          Latest Active Quotation
+        </h2>
+        <span className="text-xs sm:text-sm text-slate-500 font-normal">
+          Tracking your current active quotation request
+        </span>
+      </div>
+
+      <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 p-5 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-6 animate-pulse">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-100">
         <div className="space-y-2">
           <div className="flex items-center gap-3">
@@ -10,7 +20,7 @@ export function LatestActiveQuotationSkeleton() {
           <div className="h-3.5 w-40 bg-slate-100 rounded" />
         </div>
 
-        <div className="self-start sm:self-center h-9 sm:h-10 w-28 bg-slate-100 rounded-xl" />
+        <div className="self-start sm:self-center h-8 sm:h-8.5 w-24 sm:w-26 bg-slate-100 rounded-xl" />
       </div>
 
       <div className="space-y-3">
@@ -35,6 +45,7 @@ export function LatestActiveQuotationSkeleton() {
         </div>
       </div>
     </div>
+  </section>
   );
 }
 

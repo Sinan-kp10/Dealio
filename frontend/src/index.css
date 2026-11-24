@@ -6,6 +6,19 @@
   }
 }
 
+@keyframes shimmerSweep {
+  0% {
+    transform: translateX(-150%);
+  }
+  35%, 100% {
+    transform: translateX(150%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmerSweep 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
 :root {
   /* Global Layout Tokens */
   --navbar-height: 5rem;

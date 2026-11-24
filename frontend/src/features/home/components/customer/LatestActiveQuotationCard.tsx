@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Eye, ArrowRight, Check } from "lucide-react";
+import { Eye, ArrowRight, Check, MessageCircleMore, CreditCard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
 import { formatDate } from "../../../../utils/dateFormatter";
 import type { CustomerRecentQuotationItem } from "../../types/customer/customer-home.types";
@@ -16,6 +17,9 @@ export function LatestActiveQuotationCard({ quotation }: LatestActiveQuotationCa
   const isAccepted = quotation.status === "ACCEPTED";
   const isPaid = quotation.status === "PAID";
   const isCompleted = quotation.status === "COMPLETED";
+
+  const showChat = isAccepted || isPaid;
+  const showProceedToPay = isAccepted;
 
   const step1Done = true;
   const step2Done = isProposalReceived || isAccepted || isPaid || isCompleted;
@@ -112,15 +116,40 @@ export function LatestActiveQuotationCard({ quotation }: LatestActiveQuotationCa
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={() => navigate(`/customer/quotations/${quotation.id}`)}
-            className="self-start sm:self-center inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-semibold text-[#1e3a5f] bg-[#edf4fb] hover:bg-[#e2effa] border border-[#d3e4f5] rounded-xl transition-all cursor-pointer shadow-2xs active:scale-[0.98]"
-          >
-            <Eye size={14} className="text-[#1e3a5f]" />
-            <span>View Details</span>
-            <ArrowRight size={14} className="text-[#1e3a5f]" />
-          </button>
+          <div className="flex flex-wrap items-center gap-2 self-start sm:self-center shrink-0">
+            <button
+              type="button"
+              onClick={() => navigate(`/customer/quotations/${quotation.id}`)}
+              className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 text-xs font-semibold text-[#1d4d7c] bg-[#edf5fd] hover:bg-[#e2f0fc] border border-[#b8d6f2] hover:border-[#9ec4ec] rounded-xl transition-all cursor-pointer shadow-2xs active:scale-[0.98]"
+            >
+              <Eye size={13.5} className="text-[#2b6cb0] shrink-0" />
+              <span>View Details</span>
+            </button>
+
+            {showChat && (
+              <button
+                type="button"
+                onClick={() => toast.info("Opening secure chat with seller...")}
+                className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 text-xs font-semibold text-[#1d4d7c] bg-[#edf5fd] hover:bg-[#e2f0fc] border border-[#b8d6f2] hover:border-[#9ec4ec] rounded-xl transition-all cursor-pointer shadow-2xs active:scale-[0.98]"
+              >
+                <MessageCircleMore size={13.5} className="text-[#2b6cb0] shrink-0" />
+                <span>Chat with Seller</span>
+              </button>
+            )}
+
+            {showProceedToPay && (
+              <button
+                type="button"
+                onClick={() => toast.info("Proceeding to payment checkout...")}
+                className="relative group overflow-hidden inline-flex items-center justify-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-[13px] font-bold text-white bg-gradient-to-r from-[#2c4f75] via-[#3d6b9d] to-[#2c4f75] hover:from-[#244365] hover:via-[#335c89] hover:to-[#244365] border border-white/25 rounded-xl transition-all duration-200 cursor-pointer shadow-[0_4px_14px_rgba(53,89,130,0.28),inset_0_1px_0_rgba(255,255,255,0.25)] hover:shadow-[0_6px_20px_rgba(53,89,130,0.38),inset_0_1px_0_rgba(255,255,255,0.35)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]"
+              >
+                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/15 to-transparent animate-shimmer pointer-events-none" />
+                <CreditCard size={14} className="text-sky-200 shrink-0 drop-shadow-xs" />
+                <span className="tracking-wide">Proceed to Payment</span>
+                <ArrowRight size={14} className="text-sky-200/90 shrink-0 group-hover:translate-x-1 transition-transform duration-200" />
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="space-y-3">

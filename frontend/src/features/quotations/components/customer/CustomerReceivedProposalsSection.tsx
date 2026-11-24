@@ -136,13 +136,19 @@ export function CustomerReceivedProposalsSection({quotationId, onProposalAccepte
       ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {proposals.map((proposal) => (
-              <CustomerReceivedProposalCard
-                key={proposal.id}
-                proposal={proposal}
-                onViewDetails={setSelectedProposalId}
-              />
-            ))}
+            {[...proposals]
+              .sort((a, b) => {
+                if (a.status === "ACCEPTED") return -1;
+                if (b.status === "ACCEPTED") return 1;
+                return 0;
+              })
+              .map((proposal) => (
+                <CustomerReceivedProposalCard
+                  key={proposal.id}
+                  proposal={proposal}
+                  onViewDetails={setSelectedProposalId}
+                />
+              ))}
           </div>
 
           {totalPages > 1 && (

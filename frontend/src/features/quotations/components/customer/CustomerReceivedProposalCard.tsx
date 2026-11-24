@@ -1,4 +1,4 @@
-import { MessageCircleMore, Package, Clock, Truck, Eye } from "lucide-react";
+import { MessageCircleMore, Package, Clock, Truck, Eye, Pin } from "lucide-react";
 import { toast } from "react-toastify";
 import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
 import { formatTimeAgo } from "../../../../utils/dateFormatter";
@@ -10,6 +10,9 @@ interface CustomerReceivedProposalCardProps {
 }
 
 export function CustomerReceivedProposalCard({ proposal, onViewDetails }: CustomerReceivedProposalCardProps) {
+  const isAccepted = proposal.status === "ACCEPTED";
+  const isRejected = proposal.status === "REJECTED";
+
   const handleChat = (e: React.MouseEvent) => {
     e.stopPropagation();
     toast.info(`Opening secure chat with ${proposal.enterprise.name}...`);
@@ -20,7 +23,13 @@ export function CustomerReceivedProposalCard({ proposal, onViewDetails }: Custom
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover:border-slate-300 hover:shadow-md transition-all flex flex-col justify-between space-y-4 group">
+    <div
+      className={`bg-white rounded-2xl transition-all flex flex-col justify-between space-y-4 group relative ${
+        isAccepted
+          ? "border-2 border-[#355982]/45 shadow-[0_0_25px_rgba(53,89,130,0.30),0_0_50px_rgba(53,89,130,0.15),0_12px_28px_rgba(14,34,56,0.12)] p-5 hover:shadow-[0_0_35px_rgba(53,89,130,0.40),0_0_60px_rgba(53,89,130,0.20),0_16px_32px_rgba(14,34,56,0.16)]"
+          : "border border-slate-200/90 p-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover:border-slate-300 hover:shadow-md"
+      }`}
+    >
       <div className="space-y-3.5">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
@@ -42,7 +51,17 @@ export function CustomerReceivedProposalCard({ proposal, onViewDetails }: Custom
             </div>
           </div>
 
-          <StatusBadge status={proposal.status} className="shrink-0" />
+          <div className="flex items-center gap-2 shrink-0">
+            <StatusBadge status={proposal.status} className="shrink-0" />
+            {isAccepted && (
+              <div
+                className="w-7 h-7 rounded-lg bg-[#edf4fb] text-[#355982] border border-[#b8d6f2] flex items-center justify-center shadow-2xs"
+                title="Pinned Accepted Proposal"
+              >
+                <Pin size={13} className="text-[#355982] fill-[#355982] rotate-45" />
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="p-3.5 rounded-xl bg-[#f8fafc] border border-slate-200/80 space-y-1">
@@ -53,8 +72,8 @@ export function CustomerReceivedProposalCard({ proposal, onViewDetails }: Custom
             </span>
           </div>
 
-          <div className="flex items-baseline gap-1 text-emerald-900">
-            <span className="text-xl sm:text-2xl font-black text-emerald-900 tracking-tight">
+          <div className="flex items-baseline gap-1 text-[#0e2238]">
+            <span className="text-xl sm:text-2xl font-black text-[#0e2238] tracking-tight">
               ₹{proposal.totalAmount.toLocaleString("en-IN")}
             </span>
           </div>
@@ -83,19 +102,23 @@ export function CustomerReceivedProposalCard({ proposal, onViewDetails }: Custom
       </div>
 
       <div className="pt-3 border-t border-slate-100 flex items-center gap-2">
-        <button
-          type="button"
-          onClick={handleChat}
-          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200/90 border border-slate-300 hover:border-slate-400 active:scale-[0.99] rounded-xl transition-all cursor-pointer shadow-2xs"
-        >
-          <MessageCircleMore size={14} className="text-slate-600 shrink-0" />
-          <span>Chat</span>
-        </button>
+        {!isRejected && (
+          <button
+            type="button"
+            onClick={handleChat}
+            className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200/90 border border-slate-300 hover:border-slate-400 active:scale-[0.99] rounded-xl transition-all cursor-pointer shadow-2xs"
+          >
+            <MessageCircleMore size={14} className="text-slate-600 shrink-0" />
+            <span>Chat</span>
+          </button>
+        )}
 
         <button
           type="button"
           onClick={handleViewDetails}
-          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 text-xs font-bold text-white bg-[#355982] hover:bg-[#284566] active:scale-[0.99] rounded-xl transition-all cursor-pointer shadow-xs"
+          className={`${
+            isRejected ? "w-full" : "flex-1"
+          } inline-flex items-center justify-center gap-1.5 px-3 py-2.5 text-xs font-bold text-white bg-[#355982] hover:bg-[#284566] active:scale-[0.99] rounded-xl transition-all cursor-pointer shadow-xs`}
         >
           <Eye size={14} />
           <span>View Details</span>
