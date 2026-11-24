@@ -11,6 +11,10 @@ export const quotationRequestDetailsSelect = {
     description: true,
     status: true,
     created_at: true,
+    cancelled_at: true,
+    accepted_at: true,
+    advance_paid_at: true,
+    completed_at: true,
     category: {
         select: {
             id: true,
@@ -46,6 +50,10 @@ export class QuotationRequestDetailsMapper {
       description: data.description,
       status: data.status as QuotationRequestStatus,
       createdAt: data.created_at,
+      acceptedAt: data.accepted_at,
+      cancelledAt: data.cancelled_at,
+      advancePaidAt: data.advance_paid_at,
+      completedAt: data.completed_at,
     };
   }
 }

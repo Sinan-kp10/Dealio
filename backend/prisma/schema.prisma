@@ -290,6 +290,8 @@ model quotation_requests {
   updated_at     DateTime                 @updatedAt @db.Timestamptz
   cancelled_at   DateTime?                @db.Timestamptz
   accepted_at    DateTime?                @db.Timestamptz
+  advance_paid_at DateTime?               @db.Timestamptz
+  completed_at   DateTime?                @db.Timestamptz
 
 
   customer       users                    @relation("customer_quotation_requests", fields: [customer_id], references: [id], onDelete: Cascade)

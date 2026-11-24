@@ -17,4 +17,8 @@ export interface QuotationRequestDetailsDto {
     description: string;
     status: QuotationRequestStatus;
     createdAt: Date;
+    acceptedAt: Date | null;
+    cancelledAt: Date | null;
+    advancePaidAt: Date | null;
+    completedAt: Date | null;
 }

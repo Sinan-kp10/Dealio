@@ -257,6 +257,10 @@ export function CustomerQuotationDetailsPage() {
             <QuotationStatusBar
               status={quotation.status}
               createdAt={quotation.createdAt}
+              acceptedAt={quotation.acceptedAt}
+              cancelledAt={quotation.cancelledAt}
+              advancePaidAt={quotation.advancePaidAt}
+              completedAt={quotation.completedAt}
             />
           </div>
         </div>

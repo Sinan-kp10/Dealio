@@ -17,6 +17,10 @@ export interface QuotationDetails {
     description: string;
     status: QuotationRequestStatus;
     createdAt: string;
+    acceptedAt?: string | null;
+    cancelledAt?: string | null;
+    advancePaidAt?: string | null;
+    completedAt?: string | null;
 }
 
 export interface QuotationDetailsResponse {

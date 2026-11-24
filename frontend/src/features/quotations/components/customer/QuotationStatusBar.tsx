@@ -6,10 +6,22 @@ import type { QuotationRequestStatus } from "../../types/quotation.types";
 interface QuotationStatusBarProps {
   status: QuotationRequestStatus;
   createdAt: string;
+  acceptedAt?: string | null;
+  cancelledAt?: string | null;
+  advancePaidAt?: string | null;
+  completedAt?: string | null;
   className?: string;
 }
 
-export function QuotationStatusBar({ status, createdAt, className = "" }: QuotationStatusBarProps) {
+export function QuotationStatusBar({
+  status,
+  createdAt,
+  acceptedAt,
+  cancelledAt,
+  advancePaidAt,
+  completedAt,
+  className = "",
+}: QuotationStatusBarProps) {
   const isProposalReceived = status === "PROPOSAL_RECEIVED";
   const isAccepted = status === "ACCEPTED";
   const isPayAdvance = status === "PAY_ADVANCE";
@@ -64,6 +76,8 @@ export function QuotationStatusBar({ status, createdAt, className = "" }: Quotat
       title: "Proposal Accepted",
       subtitle: isCancelled
         ? "Skipped"
+        : (isAccepted || isPayAdvance || isCompleted) && acceptedAt
+        ? formatDate(acceptedAt)
         : isAccepted || isPayAdvance || isCompleted
         ? "Proposal accepted"
         : "Accept a proposal",
@@ -73,6 +87,8 @@ export function QuotationStatusBar({ status, createdAt, className = "" }: Quotat
       title: "Pay Advance",
       subtitle: isCancelled
         ? "Skipped"
+        : advancePaidAt
+        ? formatDate(advancePaidAt)
         : isCompleted
         ? "Advance deposited"
         : isPayAdvance
@@ -82,7 +98,13 @@ export function QuotationStatusBar({ status, createdAt, className = "" }: Quotat
     },
     {
       title: isCancelled ? "Cancelled" : "Completed",
-      subtitle: isCancelled ? "Request Cancelled" : isCompleted ? "Deal Closed" : "Close the Deal",
+      subtitle: isCancelled
+        ? (cancelledAt ? formatDate(cancelledAt) : "Request Cancelled")
+        : isCompleted && completedAt
+        ? formatDate(completedAt)
+        : isCompleted
+        ? "Deal Closed"
+        : "Close the Deal",
       isDone: step5Done,
     },
   ];
