@@ -8,6 +8,7 @@ import { formatDate } from "../../../../utils/dateFormatter";
 import { withdrawEnterpriseProposal } from "../../services/enterprise-quotation.service";
 import { handleApiError } from "../../../../utils/errorHandler";
 import type { EnterpriseProposalDetails } from "../../types/enterprise-proposal.types";
+import { useNavigate } from "react-router-dom";
 
 interface EnterpriseSubmittedProposalCardProps {
   proposal: EnterpriseProposalDetails;
@@ -15,6 +16,7 @@ interface EnterpriseSubmittedProposalCardProps {
 }
 
 export function EnterpriseSubmittedProposalCard({ proposal, onWithdrawn }: EnterpriseSubmittedProposalCardProps) {
+  const navigate = useNavigate()
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
   const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
@@ -29,6 +31,7 @@ export function EnterpriseSubmittedProposalCard({ proposal, onWithdrawn }: Enter
       onWithdrawn?.();
     } catch (error) {
       handleApiError(error, "Failed to withdraw proposal");
+      navigate("/enterprise/quotations");
     } finally {
       setIsWithdrawing(false);
     }

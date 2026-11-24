@@ -2,21 +2,32 @@ import { prisma } from "../../../../infrastructure/database/prisma/prisma-client
 import {
     CreateProposalInputDto,
     ProposalStatus,
+    ProposalWithQuotationInfoDto,
     QuotationBasicInfoDto,
 } from "../../application/dto/enterprise/enterprise-proposal.dto";
 import { IEnterpriseProposalRepository } from "../../domain/repositories/enterprise/enterprise-proposal.repository";
 
 export class PrismaEnterpriseProposalRepository implements IEnterpriseProposalRepository {
-    findById = async (id: string): Promise<{ id: string; status: ProposalStatus; enterpriseId: string } | null> => {
+    findById = async (id: string): Promise<ProposalWithQuotationInfoDto | null> => {
         const proposal = await prisma.proposals.findUnique({
             where: { id },
             select: {
-                id: true,
                 status: true,
                 enterprise_id: true,
+                quotation: {
+                    select: {
+                        status: true,
+                    },
+                },
             },
         });
-        return proposal ? { id: proposal.id, status: proposal.status as ProposalStatus, enterpriseId: proposal.enterprise_id } : null;
+        return proposal
+            ? {
+                status: proposal.status as ProposalStatus,
+                enterpriseId: proposal.enterprise_id,
+                quotationStatus: proposal.quotation.status,
+              }
+            : null;
     };
 
     findEnterpriseIdByUserId = async (userId: string): Promise<string | null> => {
@@ -30,9 +41,15 @@ export class PrismaEnterpriseProposalRepository implements IEnterpriseProposalRe
     findQuotationById = async (quotationId: string): Promise<QuotationBasicInfoDto | null> => {
         const quotation = await prisma.quotation_requests.findUnique({
             where: { id: quotationId },
-            select: { id: true, customer_id: true, product_name: true },
+            select: { customer_id: true, product_name: true, status: true },
         });
-        return quotation ? { id: quotation.id, customerId: quotation.customer_id, productName: quotation.product_name } : null;
+        return quotation
+            ? {
+                customerId: quotation.customer_id,
+                productName: quotation.product_name,
+                status: quotation.status,
+              }
+            : null;
     };
 
     findProposalByQuotationAndEnterprise = async (quotationId: string, enterpriseId: string): Promise<{ id: string } | null> => {

@@ -79,11 +79,7 @@ export class PrismaEnterpriseQuotationRepository implements IEnterpriseQuotation
       }),
     ]);
 
-    if (!record) {
-      return null;
-    }
-
-    return CustomerQuotationDetailsMapper.toDetailsDto(record, proposal);
+    return record ? CustomerQuotationDetailsMapper.toDetailsDto(record, proposal) : null;
   };
 
   markNotInterested = async (enterpriseId: string, quotationId: string): Promise<void> => {

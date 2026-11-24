@@ -91,6 +91,7 @@ export function EnterpriseCreateProposalPage() {
       navigate(`/enterprise/quotations/${targetQuotationId}`);
     } catch (error) {
       handleApiError(error, "Failed to submit proposal");
+      navigate("/enterprise/quotations");
     }
   };
 

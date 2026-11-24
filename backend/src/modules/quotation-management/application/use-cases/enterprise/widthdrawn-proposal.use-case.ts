@@ -23,6 +23,14 @@ export class WithdrawnProposalUseCase implements IUseCase<WithdrawProposalDto, v
             throw new BadRequestError("This proposal has been withdrawn by the enterprise");
         }
 
+        if (proposal.quotationStatus === "CANCELLED") {
+            throw new BadRequestError("This quotation request has already been cancelled by the customer");
+        }
+
+        if(proposal.quotationStatus === "ACCEPTED" ||proposal.quotationStatus === "PAY_ADVANCE" ||proposal.quotationStatus === "COMPLETED"){
+            throw new BadRequestError("This quotation request has already been closed by the customer");
+        }
+
         if (proposal.status !== "PENDING") {
             throw new BadRequestError("Only pending proposals can be withdrawn");
         }

@@ -1,9 +1,15 @@
 export type ProposalStatus = "PENDING" | "ACCEPTED" | "PAY_ADVANCE" | "COMPLETED" | "REJECTED" | "WITHDRAWN";
 
 export interface QuotationBasicInfoDto {
-    id: string;
     customerId: string;
     productName: string;
+    status: string;
+}
+
+export interface ProposalWithQuotationInfoDto {
+    status: ProposalStatus;
+    enterpriseId: string;
+    quotationStatus: string;
 }
 
 export interface EnterpriseProposalDetailsDto {
