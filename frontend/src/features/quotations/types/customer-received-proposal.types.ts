@@ -20,6 +20,7 @@ export interface CustomerReceivedProposal {
 export interface ReceivedProposalDetails {
   id: string;
   quotationId: string;
+  quotationStatus: string;
   enterprise: {
     id: string;
     name: string;

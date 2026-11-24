@@ -3,6 +3,7 @@ import { ArrowLeftRight, Search, RotateCcw } from "lucide-react";
 import { toast } from "react-toastify";
 import { CustomerReceivedProposalCard } from "./CustomerReceivedProposalCard";
 import { CustomerReceivedProposalSkeleton } from "./CustomerReceivedProposalSkeleton";
+import { CustomerReceivedProposalDetailsDrawer } from "./CustomerReceivedProposalDetailsDrawer";
 import { Pagination } from "../../../../components/common/pagination/Pagination";
 import { getCustomerReceivedProposals } from "../../services/quotation.service";
 import { handleApiError } from "../../../../utils/errorHandler";
@@ -20,6 +21,8 @@ export function CustomerReceivedProposalsSection({quotationId}: CustomerReceived
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedProposalId, setSelectedProposalId] = useState<string | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const debouncedSearch = useDebounce(search, 400);
 
@@ -54,7 +57,7 @@ export function CustomerReceivedProposalsSection({quotationId}: CustomerReceived
     return () => {
       cancelled = true;
     };
-  }, [quotationId, debouncedSearch, currentPage]);
+  }, [quotationId, debouncedSearch, currentPage, refreshKey]);
 
   const handleCompareProposals = () => {
     toast.info("Proposal comparison will be available here soon");
@@ -136,6 +139,7 @@ export function CustomerReceivedProposalsSection({quotationId}: CustomerReceived
               <CustomerReceivedProposalCard
                 key={proposal.id}
                 proposal={proposal}
+                onViewDetails={setSelectedProposalId}
               />
             ))}
           </div>
@@ -150,6 +154,16 @@ export function CustomerReceivedProposalsSection({quotationId}: CustomerReceived
           )}
         </>
       )}
+
+      <CustomerReceivedProposalDetailsDrawer
+        isOpen={Boolean(selectedProposalId)}
+        onClose={() => setSelectedProposalId(null)}
+        quotationId={quotationId}
+        proposalId={selectedProposalId}
+        onProposalAccepted={() => {
+          setRefreshKey((prev) => prev + 1);
+        }}
+      />
     </div>
   );
 }

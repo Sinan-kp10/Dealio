@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { MessageCircleMore, Package, Clock, Truck, Eye } from "lucide-react";
 import { toast } from "react-toastify";
 import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
@@ -7,18 +6,17 @@ import type { CustomerReceivedProposal } from "../../types/customer-received-pro
 
 interface CustomerReceivedProposalCardProps {
   proposal: CustomerReceivedProposal;
+  onViewDetails?: (proposalId: string) => void;
 }
 
-export function CustomerReceivedProposalCard({ proposal }: CustomerReceivedProposalCardProps) {
-  const navigate = useNavigate();
-
+export function CustomerReceivedProposalCard({ proposal, onViewDetails }: CustomerReceivedProposalCardProps) {
   const handleChat = (e: React.MouseEvent) => {
     e.stopPropagation();
     toast.info(`Opening secure chat with ${proposal.enterprise.name}...`);
   };
 
   const handleViewDetails = () => {
-    navigate(`/customer/quotations/${proposal.quotationId}/proposals/${proposal.id}`);
+    onViewDetails?.(proposal.id);
   };
 
   return (
