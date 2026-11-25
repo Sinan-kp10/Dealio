@@ -100,9 +100,9 @@ export function CustomerReceivedProposalCard({ proposal, onViewDetails, onChat }
               e.stopPropagation();
               onChat?.(proposal);
             }}
-            className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200/90 border border-slate-300 hover:border-slate-400 active:scale-[0.99] rounded-xl transition-all cursor-pointer shadow-2xs"
+            className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 text-xs font-semibold text-[#1d4d7c] bg-[#edf5fd] hover:bg-[#e2f0fc] border border-[#b8d6f2] hover:border-[#9ec4ec] active:scale-[0.99] rounded-xl transition-all cursor-pointer shadow-2xs"
           >
-            <MessageCircleMore size={14} className="text-slate-600 shrink-0" />
+            <MessageCircleMore size={14} className="text-[#2b6cb0] shrink-0" />
             <span>Chat</span>
           </button>
         )}

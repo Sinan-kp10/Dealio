@@ -3,12 +3,15 @@ import { Search, SquareCheckBig } from "lucide-react";
 import { toast } from "react-toastify";
 import { Pagination } from "../../../../components/common/pagination/Pagination";
 import { Select } from "../../../../components/common/select/Select";
-import { EnterpriseAcceptedRequestCard } from "../../components/enterprise/EnterpriseAcceptedRequestCard";
+import { EnterpriseAcceptedProposalCard } from "../../components/enterprise/EnterpriseAcceptedProposalCard";
 import { EnterpriseAvailableQuotationSkeleton } from "../../components/enterprise/loading/EnterpriseAvailableQuotationSkeleton";
-import { getEnterpriseAcceptedRequests } from "../../services/enterprise-quotation.service";
+import { getEnterpriseAcceptedProposals } from "../../services/enterprise-quotation.service";
 import useDebounce from "../../../../hook/useDebounce";
 import { handleApiError } from "../../../../utils/errorHandler";
-import type {AcceptedRequestStatus,EnterpriseAcceptedRequestListItem} from "../../types/enterprise-accepted-request.types";
+import type {
+  AcceptedProposalStatus,
+  EnterpriseAcceptedProposalListItem,
+} from "../../types/enterprise-accepted-proposal.types";
 
 const PAGE_SIZE = 9;
 const SKELETON_ITEMS = [1, 2, 3, 4, 5, 6];
@@ -20,8 +23,8 @@ const STATUS_OPTIONS = [
   { label: "Status: Completed", value: "COMPLETED" },
 ];
 
-export function EnterpriseAcceptedRequestsPage() {
-  const [requests, setRequests] = useState<EnterpriseAcceptedRequestListItem[]>([]);
+export function EnterpriseAcceptedProposalsPage() {
+  const [proposals, setProposals] = useState<EnterpriseAcceptedProposalListItem[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("ALL");
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,19 +36,19 @@ export function EnterpriseAcceptedRequestsPage() {
   useEffect(() => {
     let cancelled = false;
 
-    const fetchAcceptedRequests = async () => {
+    const fetchAcceptedProposals = async () => {
       setLoading(true);
       try {
-        const response = await getEnterpriseAcceptedRequests({
+        const response = await getEnterpriseAcceptedProposals({
           search: debouncedSearch.trim() || undefined,
-          status: selectedStatus === "ALL"? undefined : (selectedStatus as AcceptedRequestStatus),
+          status: selectedStatus === "ALL" ? undefined : (selectedStatus as AcceptedProposalStatus),
           page: currentPage,
           limit: PAGE_SIZE,
         });
 
         if (cancelled) return;
 
-        setRequests(response.data.items);
+        setProposals(response.data.items);
         setTotalPages(response.data.totalPages || 1);
       } catch (error) {
         if (!cancelled) {
@@ -58,7 +61,7 @@ export function EnterpriseAcceptedRequestsPage() {
       }
     };
 
-    void fetchAcceptedRequests();
+    void fetchAcceptedProposals();
 
     return () => {
       cancelled = true;
@@ -75,7 +78,7 @@ export function EnterpriseAcceptedRequestsPage() {
     setCurrentPage(1);
   };
 
-  const handleChat = (item: EnterpriseAcceptedRequestListItem) => {
+  const handleChat = (item: EnterpriseAcceptedProposalListItem) => {
     toast.info(`Opening secure chat for "${item.productName}"...`);
   };
 
@@ -120,7 +123,7 @@ export function EnterpriseAcceptedRequestsPage() {
             <EnterpriseAvailableQuotationSkeleton key={key} />
           ))}
         </div>
-      ) : requests.length === 0 ? (
+      ) : proposals.length === 0 ? (
         <div className="bg-white rounded-2xl border border-slate-200/90 p-10 sm:p-14 text-center flex flex-col items-center justify-center shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
           <div className="w-12 h-12 rounded-2xl bg-[#edf4fb] text-[#204066] flex items-center justify-center mb-3.5 border border-[#d8e7f5]">
             <SquareCheckBig size={22} />
@@ -133,8 +136,8 @@ export function EnterpriseAcceptedRequestsPage() {
       ) : (
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {requests.map((item) => (
-              <EnterpriseAcceptedRequestCard
+            {proposals.map((item) => (
+              <EnterpriseAcceptedProposalCard
                 key={item.id}
                 item={item}
                 onChat={handleChat}
@@ -154,4 +157,4 @@ export function EnterpriseAcceptedRequestsPage() {
   );
 }
 
-export default EnterpriseAcceptedRequestsPage;
+export default EnterpriseAcceptedProposalsPage;

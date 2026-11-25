@@ -2,14 +2,14 @@ import { useNavigate } from "react-router-dom";
 import { Clock, Package, Truck, MessageCircleMore, Eye } from "lucide-react";
 import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
 import { formatTimeAgo } from "../../../../utils/dateFormatter";
-import type { EnterpriseAcceptedRequestListItem } from "../../types/enterprise-accepted-request.types";
+import type { EnterpriseAcceptedProposalListItem } from "../../types/enterprise-accepted-proposal.types";
 
-interface EnterpriseAcceptedRequestCardProps {
-  item: EnterpriseAcceptedRequestListItem;
-  onChat?: (item: EnterpriseAcceptedRequestListItem) => void;
+interface EnterpriseAcceptedProposalCardProps {
+  item: EnterpriseAcceptedProposalListItem;
+  onChat?: (item: EnterpriseAcceptedProposalListItem) => void;
 }
 
-export function EnterpriseAcceptedRequestCard({ item, onChat }: EnterpriseAcceptedRequestCardProps) {
+export function EnterpriseAcceptedProposalCard({ item, onChat }: EnterpriseAcceptedProposalCardProps) {
   const navigate = useNavigate();
 
   return (
@@ -92,4 +92,4 @@ export function EnterpriseAcceptedRequestCard({ item, onChat }: EnterpriseAccept
   );
 }
 
-export default EnterpriseAcceptedRequestCard;
+export default EnterpriseAcceptedProposalCard;
