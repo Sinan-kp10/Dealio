@@ -300,7 +300,7 @@ export function CustomerReceivedProposalDetailsDrawer({isOpen,onClose,quotationI
           onConfirm={handleConfirmAccept}
           loading={isAccepting}
           title="Accept Proposal?"
-          message={`Accepting this proposal for ₹${proposal.totalAmount.toLocaleString("en-IN")} will confirm your supplier agreement with "${proposal.enterprise.name}".`}
+          message={`Accepting this proposal for ₹${proposal.totalAmount.toLocaleString("en-IN")} will confirm your supplier agreement with "${proposal.enterprise.name}". All other proposals for this quotation will be automatically rejected, and this action cannot be undone.`}
         />
       )}
     </div>
