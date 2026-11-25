@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const getAcceptedRequestsSchema = z.object({
+export const getAcceptedProposalsSchema = z.object({
   search: z.string().trim().optional(),
   status: z.enum(["ALL", "ACCEPTED", "PAID", "COMPLETED"]).optional(),
   page: z.coerce.number().int().min(1).default(1),

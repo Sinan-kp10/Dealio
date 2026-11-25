@@ -1,7 +1,10 @@
 import { Prisma } from "../../../../../../generated/prisma/client";
-import {EnterpriseAcceptedRequestListItemDto,EnterpriseAcceptedRequestStatus,} from "../../../application/dto/enterprise/enterprise-accepted-request-list.dto";
+import {
+  EnterpriseAcceptedProposalListItemDto,
+  EnterpriseAcceptedProposalStatus,
+} from "../../../application/dto/enterprise/enterprise-accepted-proposal-list.dto";
 
-export const enterpriseAcceptedRequestListItemSelect = {
+export const enterpriseAcceptedProposalListItemSelect = {
   id: true,
   quotation_id: true,
   quantity: true,
@@ -19,15 +22,15 @@ export const enterpriseAcceptedRequestListItemSelect = {
   },
 } satisfies Prisma.proposalsSelect;
 
-export type EnterpriseAcceptedRequestListItemRecord = Prisma.proposalsGetPayload<{select: typeof enterpriseAcceptedRequestListItemSelect}>;
+export type EnterpriseAcceptedProposalListItemRecord = Prisma.proposalsGetPayload<{select: typeof enterpriseAcceptedProposalListItemSelect;}>;
 
-export class EnterpriseAcceptedRequestListMapper {
-  static toListItemDto(data: EnterpriseAcceptedRequestListItemRecord): EnterpriseAcceptedRequestListItemDto {
+export class EnterpriseAcceptedProposalListMapper {
+  static toListItemDto(data: EnterpriseAcceptedProposalListItemRecord): EnterpriseAcceptedProposalListItemDto {
     return {
       id: data.id,
       quotationId: data.quotation_id,
       productName: data.quotation.product_name,
-      status: data.status as EnterpriseAcceptedRequestStatus,
+      status: data.status as EnterpriseAcceptedProposalStatus,
       quantity: data.quantity,
       unitPrice: Number(data.unit_price),
       totalAmount: Number(data.total_amount),

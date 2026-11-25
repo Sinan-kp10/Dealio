@@ -9,11 +9,11 @@ import { GetAvailableQuotationsUseCase } from "../../application/use-cases/enter
 import { MarkNotInterestedUseCase } from "../../application/use-cases/enterprise/mark-not-interested.use-case";
 import { GetCustomerQuotationDetailsUseCase } from "../../application/use-cases/enterprise/get-customer-quotation-details.use-case";
 import { EnterpriseQuotationController } from "../../presentation/controllers/enterprise/enterprise-quotation.controller";
-import { GetAcceptedRequestsUseCase } from "../../application/use-cases/enterprise/get-accepted-requests.use-case";
-import { EnterpriseAcceptedRequestController } from "../../presentation/controllers/enterprise/enterprise-accepted-request.controller";
+import { GetAcceptedProposalsUseCase } from "../../application/use-cases/enterprise/get-accepted-proposal.use-case";
+import { EnterpriseAcceptedProposalController } from "../../presentation/controllers/enterprise/enterprise-accepted-proposal.controller";
 import { PrismaQuotationRequestRepository } from "../repositories/customer/prisma-quotation-request.repository";
 import { PrismaEnterpriseQuotationRepository } from "../repositories/enterprise/prisma-enterprise-quotation.respository";
-import { PrismaEnterpriseAcceptedRequestRepository } from "../repositories/enterprise/prisma-enterprise-accepted-request.repository";
+import { PrismaEnterpriseAcceptedProposalRepository } from "../repositories/enterprise/prisma-enterprise-accepted-proposal.repository";
 
 const quotationRequestRepository = new PrismaQuotationRequestRepository();
 const createQuotationRequestUseCase = new CreateQuotationRequestUseCase(quotationRequestRepository, notificationService);
@@ -41,9 +41,9 @@ export const enterpriseQuotationController = new EnterpriseQuotationController(
     getCustomerQuotationDetailsUseCase
 );
 
-const enterpriseAcceptedRequestRepository = new PrismaEnterpriseAcceptedRequestRepository();
-const getAcceptedRequestsUseCase = new GetAcceptedRequestsUseCase(enterpriseAcceptedRequestRepository);
+const enterpriseAcceptedProposalRepository = new PrismaEnterpriseAcceptedProposalRepository();
+const getAcceptedProposalsUseCase = new GetAcceptedProposalsUseCase(enterpriseAcceptedProposalRepository);
 
-export const enterpriseAcceptedRequestController = new EnterpriseAcceptedRequestController(
-    getAcceptedRequestsUseCase
+export const enterpriseAcceptedProposalController = new EnterpriseAcceptedProposalController(
+    getAcceptedProposalsUseCase
 );
