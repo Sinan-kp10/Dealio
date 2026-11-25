@@ -1,13 +1,12 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import {Bell,LogOut,UserRound,Settings,Plus,MessageCircleMore,Menu,X,Home,FileText,} from "lucide-react";
-import { toast } from "react-toastify";
-import { logout } from "../../../features/auth/services/auth.service";
 import useAuthStore from "../../../stores/auth.store";
 import ConfirmationModal from "../../common/confirmationModel/ConfirmationModal";
-import useNotificationStore from "../../../stores/notification.store";
-import { getUnreadCount } from "../../../services/notification.service";
 import { NotificationDropdown } from "../../common/notification/NotificationDropdown";
+import { useUnreadNotificationCount } from "../../../hook/useUnreadNotificationCount";
+import { useClickOutside } from "../../../hook/useClickOutside";
+import { useLogout } from "../../../hook/useLogout";
 
 export function CustomerNavbar() {
     const navigate = useNavigate();
@@ -16,61 +15,15 @@ export function CustomerNavbar() {
     const [isNotificationOpen, setIsNotificationOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
-    const [isLoggingOut, setIsLoggingOut] = useState(false);
 
     const profileRef = useRef<HTMLDivElement>(null);
     const notificationRef = useRef<HTMLDivElement>(null);
     const user = useAuthStore((state) => state.user);
-    const clearAuth = useAuthStore((state) => state.clearAuth);
-    const unreadCount = useNotificationStore((state) => state.unreadCount);
-    const setUnreadCount = useNotificationStore((state) => state.setUnreadCount);
+    const unreadCount = useUnreadNotificationCount();
+    const { isLoggingOut, handleLogout } = useLogout();
 
-    useEffect(() => {
-        let isMounted = true;
-        const fetchCount = async () => {
-            try {
-                const count = await getUnreadCount();
-                if (isMounted) {
-                    setUnreadCount(count);
-                }
-            } catch {
-            }
-        };
-
-        fetchCount();
-        return () => {
-            isMounted = false;
-        };
-    }, [setUnreadCount]);
-
-    useEffect(() => {
-        function handleClickOutside(event: MouseEvent) {
-            if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
-                setIsProfileOpen(false);
-            }
-            if ( notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
-                setIsNotificationOpen(false);
-            }
-        }
-
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
-
-    const handleLogout = async () => {
-        setIsLoggingOut(true);
-        try {
-            await logout();
-            clearAuth();
-            toast.success("Successfully logged out");
-            navigate("/login", { replace: true });
-        } catch {
-            toast.error("Failed to log out");
-        } finally {
-            setIsLoggingOut(false);
-            setIsLogoutModalOpen(false);
-        }
-    };
+    useClickOutside(profileRef, () => setIsProfileOpen(false));
+    useClickOutside(notificationRef, () => setIsNotificationOpen(false));
 
     return (
         <header className="sticky top-0 z-30 w-full bg-white border-b border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
@@ -464,7 +417,7 @@ export function CustomerNavbar() {
             <ConfirmationModal
                 isOpen={isLogoutModalOpen}
                 onClose={() => setIsLogoutModalOpen(false)}
-                onConfirm={handleLogout}
+                onConfirm={() => handleLogout(() => setIsLogoutModalOpen(false))}
                 loading={isLoggingOut}
                 title="Log Out"
                 message="Are you sure you want to log out?"

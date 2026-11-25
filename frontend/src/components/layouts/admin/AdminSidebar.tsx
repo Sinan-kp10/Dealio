@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { LayoutDashboard, FileCheck, BriefcaseBusiness, Users, Menu, DollarSign, LogOut, X } from "lucide-react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { logout } from "../../../features/auth/services/auth.service";
-import useAuthStore from "../../../stores/auth.store";
+import { NavLink } from "react-router-dom";
 import ConfirmationModal from "../../common/confirmationModel/ConfirmationModal";
+import { useLogout } from "../../../hook/useLogout";
 
 interface AdminSidebarProps {
   isOpen: boolean;
@@ -12,25 +10,8 @@ interface AdminSidebarProps {
 }
 
 export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
-    const navigate = useNavigate();
-    const clearAuth = useAuthStore((state) => state.clearAuth);
     const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
-    const [isLoggingOut, setIsLoggingOut] = useState(false);
-
-    const handleLogout = async () => {
-        setIsLoggingOut(true);
-        try {
-            await logout();
-            clearAuth();
-            toast.success("Successfully logged out");
-            navigate("/login", { replace: true });
-        } catch {
-            toast.error("Failed to log out");
-        } finally {
-            setIsLoggingOut(false);
-            setIsLogoutModalOpen(false);
-        }
-    };
+    const { isLoggingOut, handleLogout } = useLogout();
 
     return (
         <>
@@ -247,7 +228,7 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
             <ConfirmationModal
                 isOpen={isLogoutModalOpen}
                 onClose={() => setIsLogoutModalOpen(false)}
-                onConfirm={handleLogout}
+                onConfirm={() => handleLogout(() => setIsLogoutModalOpen(false))}
                 loading={isLoggingOut}
                 title="Log Out"
                 message="Are you sure you want to log out?"
