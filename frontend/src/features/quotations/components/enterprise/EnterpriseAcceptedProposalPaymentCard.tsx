@@ -104,7 +104,7 @@ export function EnterpriseAcceptedProposalPaymentCard({
           />
         </div>
         <p className="text-[11.5px] text-slate-500 m-0 leading-relaxed">
-          Customer payments are held securely by the platform admin until order verification, then released directly to your enterprise account.
+          Customer payments are received securely by the platform administration and transferred directly to your enterprise bank account once verified.
         </p>
       </div>
     </div>

@@ -3,7 +3,7 @@ import type { AvailableQuotationParams, AvailableQuotationsResponse, MarkNotInte
 import type { AvailableQuotationDetailsResponse } from "../types/enterprise-available-quotation-details.types";
 import type { CreateEnterpriseProposalPayload, CreateEnterpriseProposalResponse, WithdrawEnterpriseProposalResponse } from "../types/enterprise-proposal.types";
 import type { EnterpriseAcceptedProposalParams, EnterpriseAcceptedProposalsResponse } from "../types/enterprise-accepted-proposal.types";
-import type { EnterpriseAcceptedProposalDetailsResponse } from "../types/enterprise-accepted-proposal-details.types";
+import type { EnterpriseAcceptedProposalDetailsResponse, EnterpriseAcceptedProposalQuotationDetailsResponse } from "../types/enterprise-accepted-proposal-details.types";
 
 export const getAvailableEnterpriseQuotations = async (params?: AvailableQuotationParams): Promise<AvailableQuotationsResponse> => {
   const response = await axiosInstance.get<AvailableQuotationsResponse>("/enterprise/quotations", { params });
@@ -37,5 +37,10 @@ export const getEnterpriseAcceptedProposals = async (params?: EnterpriseAccepted
 
 export const getEnterpriseAcceptedProposalDetails = async (proposalId: string): Promise<EnterpriseAcceptedProposalDetailsResponse> => {
   const response = await axiosInstance.get<EnterpriseAcceptedProposalDetailsResponse>(`/enterprise/quotations/accepted-requests/${proposalId}`);
+  return response.data;
+};
+
+export const getEnterpriseAcceptedProposalQuotationDetails = async (proposalId: string): Promise<EnterpriseAcceptedProposalQuotationDetailsResponse> => {
+  const response = await axiosInstance.get<EnterpriseAcceptedProposalQuotationDetailsResponse>(`/enterprise/quotations/accepted-requests/${proposalId}/quotation-details`);
   return response.data;
 };

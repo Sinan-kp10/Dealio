@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { MessageCircleMore, Check, Clock, User, CheckCircle2, ArrowUpRight } from "lucide-react";
 import { toast } from "react-toastify";
 import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
+import { EnterpriseAcceptedProposalQuotationDrawer } from "./EnterpriseAcceptedProposalQuotationDrawer";
 import { formatDate } from "../../../../utils/dateFormatter";
 import type { EnterpriseAcceptedProposalDetails } from "../../types/enterprise-accepted-proposal-details.types";
 
@@ -11,13 +11,13 @@ interface EnterpriseAcceptedProposalOverviewCardProps {
 }
 
 export function EnterpriseAcceptedProposalOverviewCard({proposal}: EnterpriseAcceptedProposalOverviewCardProps) {
-  const navigate = useNavigate();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const isAccepted = proposal.status === "ACCEPTED";
   const isPaid = proposal.status === "PAID";
   const isCompleted = proposal.status === "COMPLETED";
 
-  const targetProgress = isCompleted ? 100 : isPaid ? 75 : isAccepted ? 37.5 : 0;
+  const targetProgress = isCompleted ? 100 : isPaid ? 50 : isAccepted ? 16.5 : 0;
   const [progressWidth, setProgressWidth] = useState(0);
 
   useEffect(() => {
@@ -45,12 +45,12 @@ export function EnterpriseAcceptedProposalOverviewCard({proposal}: EnterpriseAcc
       isDone: isPaid || isCompleted,
     },
     {
-      title: "Order Fulfillment",
+      title: "Deal Fulfillment",
       mobileTitle: "Fulfillment",
       subtitle: isCompleted
-        ? "Delivered to customer"
+        ? "Deal fulfilled"
         : isPaid
-        ? "Ready to dispatch"
+        ? "Ready for fulfillment"
         : "Pending payment",
       isDone: isCompleted,
     },
@@ -67,11 +67,12 @@ export function EnterpriseAcceptedProposalOverviewCard({proposal}: EnterpriseAcc
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-6">
+    <>
+      <div className="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-6">
       <div className="pb-5 border-b border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div className="space-y-1 min-w-0">
           <span className="text-[11px] sm:text-xs font-bold text-[#204066] uppercase tracking-wider block">
-            Accepted Deal Overview
+            Accepted Proposal Overview
           </span>
           <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
             <h1 className="text-xl sm:text-2xl font-extrabold text-[#0e2238] tracking-tight m-0 break-words">
@@ -95,7 +96,7 @@ export function EnterpriseAcceptedProposalOverviewCard({proposal}: EnterpriseAcc
         <div className="flex flex-wrap items-center gap-2 self-start lg:self-center shrink-0">
           <button
             type="button"
-            onClick={() => navigate(`/enterprise/quotations/${proposal.quotationId}`)}
+            onClick={() => setIsDrawerOpen(true)}
             className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-slate-700 hover:text-[#0e2238] bg-slate-100 hover:bg-slate-200/80 border border-slate-200/90 rounded-xl transition-all cursor-pointer shadow-2xs active:scale-[0.98]"
           >
             <span>View Quotation & Proposal</span>
@@ -110,6 +111,34 @@ export function EnterpriseAcceptedProposalOverviewCard({proposal}: EnterpriseAcc
             <MessageCircleMore size={13.5} className="text-[#2b6cb0]" />
             <span>Chat with Customer</span>
           </button>
+        </div>
+      </div>
+
+      <div
+        className={`p-4 rounded-xl border flex items-start gap-3 ${
+          isCompleted
+            ? "bg-teal-50/70 border-teal-200/80 text-teal-900"
+            : isPaid
+            ? "bg-indigo-50/70 border-indigo-200/80 text-indigo-900"
+            : "bg-emerald-50/70 border-emerald-200/80 text-emerald-900"
+        }`}
+      >
+        <CheckCircle2 size={18} className="shrink-0 mt-0.5" />
+        <div className="space-y-0.5">
+          <p className="text-xs sm:text-sm font-bold m-0">
+            {isCompleted
+              ? "Deal Completed & Settled"
+              : isPaid
+              ? "Payment Received by Administration"
+              : "Proposal Accepted — Awaiting Customer Payment"}
+          </p>
+          <p className="text-xs opacity-90 m-0 leading-relaxed">
+            {isCompleted
+              ? "This deal has been completed and the administration has transferred the payout to your enterprise bank account."
+              : isPaid
+              ? "Customer payment has been received by the administration and will be transferred to your enterprise bank account once verified."
+              : "Your proposal won this quotation! Once the customer completes payment to the platform, you will be notified to proceed with the deal."}
+          </p>
         </div>
       </div>
 
@@ -169,35 +198,14 @@ export function EnterpriseAcceptedProposalOverviewCard({proposal}: EnterpriseAcc
           </div>
         </div>
       </div>
-
-      <div
-        className={`p-4 rounded-xl border flex items-start gap-3 ${
-          isCompleted
-            ? "bg-teal-50/70 border-teal-200/80 text-teal-900"
-            : isPaid
-            ? "bg-indigo-50/70 border-indigo-200/80 text-indigo-900"
-            : "bg-emerald-50/70 border-emerald-200/80 text-emerald-900"
-        }`}
-      >
-        <CheckCircle2 size={18} className="shrink-0 mt-0.5" />
-        <div className="space-y-0.5">
-          <p className="text-xs sm:text-sm font-bold m-0">
-            {isCompleted
-              ? "Deal Completed & Settled"
-              : isPaid
-              ? "Payment Received by Administration — Ready for Fulfillment"
-              : "Proposal Accepted — Awaiting Customer Payment"}
-          </p>
-          <p className="text-xs opacity-90 m-0 leading-relaxed">
-            {isCompleted
-              ? "This order has been fulfilled and the administration has released the payout to your enterprise."
-              : isPaid
-              ? "Customer payment has been received and is held securely by the administration. Dispatch within your promised timeline to trigger payout release."
-              : "Your proposal won this quotation! Once the customer completes payment to the platform, you will be notified to begin fulfillment."}
-          </p>
-        </div>
       </div>
-    </div>
+
+      <EnterpriseAcceptedProposalQuotationDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        proposalId={proposal.id}
+      />
+    </>
   );
 }
 

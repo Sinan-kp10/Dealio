@@ -48,8 +48,8 @@ export function EnterpriseAcceptedProposalDetailsPage() {
   if (loading || !proposal) {
     return (
       <div className="w-full space-y-6 pb-16 animate-in fade-in duration-200">
-        <div className="flex items-center justify-between">
-          <div className="h-6 w-48 bg-slate-200/80 rounded-lg animate-pulse" />
+        <div className="flex items-center justify-between py-1">
+          <div className="h-5 w-44 bg-slate-200/80 rounded-lg animate-pulse" />
         </div>
         <EnterpriseAcceptedProposalDetailsSkeleton />
       </div>
