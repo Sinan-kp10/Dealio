@@ -1,5 +1,4 @@
 import { MessageCircleMore, Package, Clock, Truck, Eye, Pin } from "lucide-react";
-import { toast } from "react-toastify";
 import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
 import { formatTimeAgo } from "../../../../utils/dateFormatter";
 import type { CustomerReceivedProposal } from "../../types/customer-received-proposal.types";
@@ -7,20 +6,12 @@ import type { CustomerReceivedProposal } from "../../types/customer-received-pro
 interface CustomerReceivedProposalCardProps {
   proposal: CustomerReceivedProposal;
   onViewDetails?: (proposalId: string) => void;
+  onChat?: (proposal: CustomerReceivedProposal) => void;
 }
 
-export function CustomerReceivedProposalCard({ proposal, onViewDetails }: CustomerReceivedProposalCardProps) {
+export function CustomerReceivedProposalCard({ proposal, onViewDetails, onChat }: CustomerReceivedProposalCardProps) {
   const isAccepted = proposal.status === "ACCEPTED";
   const isRejected = proposal.status === "REJECTED";
-
-  const handleChat = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    toast.info(`Opening secure chat with ${proposal.enterprise.name}...`);
-  };
-
-  const handleViewDetails = () => {
-    onViewDetails?.(proposal.id);
-  };
 
   return (
     <div
@@ -36,7 +27,7 @@ export function CustomerReceivedProposalCard({ proposal, onViewDetails }: Custom
             <div className="min-w-0 space-y-0.5">
               <div className="flex items-center gap-1.5 min-w-0">
                 <span
-                  onClick={handleViewDetails}
+                  onClick={() => onViewDetails?.(proposal.id)}
                   className="text-sm font-extrabold text-[#0e2238] hover:text-[#355982] transition-colors truncate block cursor-pointer"
                   title={proposal.enterprise.name}
                 >
@@ -105,7 +96,10 @@ export function CustomerReceivedProposalCard({ proposal, onViewDetails }: Custom
         {!isRejected && (
           <button
             type="button"
-            onClick={handleChat}
+            onClick={(e) => {
+              e.stopPropagation();
+              onChat?.(proposal);
+            }}
             className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200/90 border border-slate-300 hover:border-slate-400 active:scale-[0.99] rounded-xl transition-all cursor-pointer shadow-2xs"
           >
             <MessageCircleMore size={14} className="text-slate-600 shrink-0" />
@@ -115,7 +109,7 @@ export function CustomerReceivedProposalCard({ proposal, onViewDetails }: Custom
 
         <button
           type="button"
-          onClick={handleViewDetails}
+          onClick={() => onViewDetails?.(proposal.id)}
           className={`${
             isRejected ? "w-full" : "flex-1"
           } inline-flex items-center justify-center gap-1.5 px-3 py-2.5 text-xs font-bold text-white bg-[#355982] hover:bg-[#284566] active:scale-[0.99] rounded-xl transition-all cursor-pointer shadow-xs`}

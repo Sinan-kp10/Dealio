@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {Trash2,Package,IndianRupee,FileText,Truck,ShieldCheck,RotateCcw,Info,Handshake,Clock} from "lucide-react";
+import {Trash2,Package,IndianRupee,FileText,Truck,ShieldCheck,RotateCcw,Info,Clock} from "lucide-react";
 import { toast } from "react-toastify";
 import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
 import ConfirmationModal from "../../../../components/common/confirmationModel/ConfirmationModal";
@@ -42,10 +42,6 @@ export function EnterpriseSubmittedProposalCard({ proposal, onWithdrawn }: Enter
       <div className="space-y-6">
         <div className="pb-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-start justify-between gap-4">
           <div className="flex items-start gap-3.5 sm:gap-4 min-w-0">
-            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#edf4fb] border border-[#204066]/15 flex items-center justify-center text-[#204066] shrink-0 mt-0.5 shadow-2xs">
-              <Handshake size={22} className="text-[#204066]" />
-            </div>
-
             <div className="space-y-1 min-w-0">
               <span className="text-[11px] sm:text-xs font-bold text-[#204066] uppercase tracking-wider block">
                 Your Submitted Proposal

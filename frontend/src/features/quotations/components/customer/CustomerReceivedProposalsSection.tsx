@@ -63,6 +63,10 @@ export function CustomerReceivedProposalsSection({quotationId, onProposalAccepte
   const handleCompareProposals = () => {
     toast.info("Proposal comparison will be available here soon");
   };
+  
+  const handleChat = (proposal: CustomerReceivedProposal) => {
+    toast.info(`Opening secure chat with ${proposal.enterprise.name}...`);
+  };
 
   return (
     <div className="space-y-4">
@@ -147,6 +151,7 @@ export function CustomerReceivedProposalsSection({quotationId, onProposalAccepte
                   key={proposal.id}
                   proposal={proposal}
                   onViewDetails={setSelectedProposalId}
+                  onChat={handleChat}
                 />
               ))}
           </div>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Tag, Package, IndianRupee, MapPin, Clock, MessageCircleMore, Ban, Send, FileText, ExternalLink, ShoppingCart } from "lucide-react";
+import { Tag, Package, IndianRupee, MapPin, Clock, MessageCircleMore, Ban, Send, FileText, ExternalLink } from "lucide-react";
 import { toast } from "react-toastify";
 import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
 import ConfirmationModal from "../../../../components/common/confirmationModel/ConfirmationModal";
@@ -43,10 +43,6 @@ export function EnterpriseAvailableQuotationDetailsCard({ quotation }: Enterpris
       <div className="space-y-6">
         <div className="pb-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-start justify-between gap-4">
           <div className="flex items-start gap-3.5 sm:gap-4 min-w-0">
-            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#edf4fb] border border-[#204066]/15 flex items-center justify-center text-[#204066] shrink-0 mt-0.5 shadow-2xs">
-              <ShoppingCart size={22} className="text-[#204066]" />
-            </div>
-
             <div className="space-y-1 min-w-0">
               <span className="text-[11px] sm:text-xs font-bold text-[#204066] uppercase tracking-wider block">
                 Customer Quotation Request
@@ -76,9 +72,9 @@ export function EnterpriseAvailableQuotationDetailsCard({ quotation }: Enterpris
             <button
               type="button"
               onClick={handleChat}
-              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-slate-700 hover:text-[#0e2238] bg-slate-100 hover:bg-slate-200/80 rounded-xl transition-all cursor-pointer shadow-2xs"
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-[#1d4d7c] bg-[#edf5fd] hover:bg-[#e2f0fc] border border-[#b8d6f2] hover:border-[#9ec4ec] rounded-xl transition-all cursor-pointer shadow-2xs active:scale-[0.98]"
             >
-              <MessageCircleMore size={14} className="text-slate-500" />
+              <MessageCircleMore size={13.5} className="text-[#2b6cb0]" />
               <span>Chat with Customer</span>
             </button>
 
