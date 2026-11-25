@@ -19,6 +19,7 @@ router.use(requireRole("ENTERPRISE_MANAGER"));
 router.get("/", validateRequest(getEnterpriseQuotationsSchema, "query"), enterpriseQuotationController.getAvailableQuotations);
 router.get("/accepted-requests", validateRequest(getAcceptedProposalsSchema, "query"), enterpriseAcceptedProposalController.getAcceptedProposals);
 router.get("/accepted-requests/:proposalId", validateRequest(proposalIdSchema, "params"), enterpriseAcceptedProposalController.getAcceptedProposalDetails);
+router.get("/accepted-requests/:proposalId/quotation-details", validateRequest(proposalIdSchema, "params"), enterpriseAcceptedProposalController.getAcceptedProposalQuotationDetails);
 router.get("/:quotationId", validateRequest(getEnterpriseIdSchema, "params"), enterpriseQuotationController.getQuotationDetails);
 router.post("/:quotationId/not-interested", validateRequest(getEnterpriseIdSchema, "params"), enterpriseQuotationController.markNotInterested);
 router.post("/:quotationId/proposals", validateRequest(getEnterpriseIdSchema, "params"), validateRequest(createProposalSchema, "body"), enterpriseProposalController.createProposal);
