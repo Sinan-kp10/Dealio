@@ -1,11 +1,6 @@
-import { prisma } from "../../../../infrastructure/database/prisma/prisma-client";
-import {
-    CreateProposalInputDto,
-    ProposalStatus,
-    ProposalWithQuotationInfoDto,
-    QuotationBasicInfoDto,
-} from "../../application/dto/enterprise/enterprise-proposal.dto";
-import { IEnterpriseProposalRepository } from "../../domain/repositories/enterprise/enterprise-proposal.repository";
+import { prisma } from "../../../../../infrastructure/database/prisma/prisma-client";
+import {CreateProposalInputDto,ProposalStatus,ProposalWithQuotationInfoDto,QuotationBasicInfoDto} from "../../../application/dto/enterprise/enterprise-proposal.dto";
+import { IEnterpriseProposalRepository } from "../../../domain/repositories/enterprise/enterprise-proposal.repository";
 
 export class PrismaEnterpriseProposalRepository implements IEnterpriseProposalRepository {
     findById = async (id: string): Promise<ProposalWithQuotationInfoDto | null> => {

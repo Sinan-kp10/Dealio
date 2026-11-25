@@ -1,9 +1,9 @@
-import { PrismaEnterpriseProposalRepository } from "../repositories/prisma-enterprise-proposal.repository";
+import { PrismaEnterpriseProposalRepository } from "../repositories/enterprise/prisma-enterprise-proposal.repository";
 import { CreateProposalUseCase } from "../../application/use-cases/enterprise/create-proposal.use-case";
 import { WithdrawnProposalUseCase } from "../../application/use-cases/enterprise/widthdrawn-proposal.use-case";
 import { EnterpriseProposalController } from "../../presentation/controllers/enterprise/enterprise-proposal.controller";
 import { notificationService } from "../../../notification/infrastructure/container/notification.container";
-import { PrismaCustomerProposalRepository } from "../repositories/prisma-customer-proposal.repository";
+import { PrismaCustomerProposalRepository } from "../repositories/customer/prisma-customer-proposal.repository";
 import { GetReceivedProposalsUseCase } from "../../application/use-cases/customer/get-received-proposals.use-case";
 import { GetReceivedProposalDetailsUseCase } from "../../application/use-cases/customer/get-received-proposal-details.use-case";
 import { AcceptReceivedProposalUseCase } from "../../application/use-cases/customer/accept-received-proposal.use-case";

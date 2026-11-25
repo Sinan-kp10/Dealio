@@ -1,11 +1,12 @@
-import { prisma } from "../../../../infrastructure/database/prisma/prisma-client";
-import { Prisma, quotation_request_status } from "../../../../../generated/prisma/client";
-import { CreateQuotationRequestDto } from "../../application/dto/customer/quotation-request.dto";
-import { IQuotationRequestRepository } from "../../domain/repositories/customer/quotation.request.repository";
-import { QuotationRequestMapper, quotationRequestListItemSelect } from "../mappers/customer/quotation-request.mapper";
-import { PaginatedQuotationDto, QuotationListFiltersDto, QuotationRequestListItemDto, QuotationRequestStatus } from "../../application/dto/customer/quotation-request-list.dto";
-import { QuotationRequestDetailsDto } from "../../application/dto/customer/quoatation-deatails.dto";
-import { QuotationRequestDetailsMapper, quotationRequestDetailsSelect } from "../mappers/customer/quoatation-reqeust.details.repository";
+import { Prisma } from "../../../../../../generated/prisma/client";
+import { quotation_request_status } from "../../../../../../generated/prisma/enums";
+import { prisma } from "../../../../../infrastructure/database/prisma/prisma-client";
+import { QuotationRequestDetailsDto } from "../../../application/dto/customer/quoatation-deatails.dto";
+import { PaginatedQuotationDto, QuotationListFiltersDto, QuotationRequestListItemDto, QuotationRequestStatus } from "../../../application/dto/customer/quotation-request-list.dto";
+import { CreateQuotationRequestDto } from "../../../application/dto/customer/quotation-request.dto";
+import { IQuotationRequestRepository } from "../../../domain/repositories/customer/quotation.request.repository";
+import { QuotationRequestDetailsMapper, quotationRequestDetailsSelect } from "../../mappers/customer/quoatation-reqeust.details.repository";
+import { quotationRequestListItemSelect, QuotationRequestMapper } from "../../mappers/customer/quotation-request.mapper";
 
 export class PrismaQuotationRequestRepository implements IQuotationRequestRepository {
 
