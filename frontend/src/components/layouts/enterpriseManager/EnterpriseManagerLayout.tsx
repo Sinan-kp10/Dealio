@@ -15,13 +15,13 @@ function EnterpriseManagerLayout() {
     }, []);
 
     return (
-      <div className="min-h-screen bg-[#F4F7FB] text-slate-800 flex flex-col antialiased">
+      <div className="h-screen bg-[#F4F7FB] text-slate-800 flex flex-col antialiased overflow-hidden">
         <EnterpriseManagerNavbar
           onToggleSidebar={handleToggleSidebar}
           isSidebarOpen={isMobileSidebarOpen}
         />
 
-        <div className="flex-1 flex w-full relative">
+        <div className="flex-1 flex w-full min-h-0 relative">
           <EnterpriseManagerSidebar
             isOpen={isMobileSidebarOpen}
             onClose={handleCloseSidebar}

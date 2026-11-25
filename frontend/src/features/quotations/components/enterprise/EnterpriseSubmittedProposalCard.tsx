@@ -1,21 +1,40 @@
 import { useState } from "react";
-import {Trash2,Package,IndianRupee,FileText,Truck,ShieldCheck,RotateCcw,Info,Handshake,Clock} from "lucide-react";
+import {Trash2,Package,IndianRupee,FileText,Truck,ShieldCheck,RotateCcw,Info,Clock} from "lucide-react";
 import { toast } from "react-toastify";
 import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
+import ConfirmationModal from "../../../../components/common/confirmationModel/ConfirmationModal";
 import { QuotationDescriptionModal } from "../QuotationDescriptionModal";
 import { formatDate } from "../../../../utils/dateFormatter";
+import { withdrawEnterpriseProposal } from "../../services/enterprise-quotation.service";
+import { handleApiError } from "../../../../utils/errorHandler";
 import type { EnterpriseProposalDetails } from "../../types/enterprise-proposal.types";
+import { useNavigate } from "react-router-dom";
 
 interface EnterpriseSubmittedProposalCardProps {
   proposal: EnterpriseProposalDetails;
+  onWithdrawn?: () => void;
 }
 
-export function EnterpriseSubmittedProposalCard({ proposal }: EnterpriseSubmittedProposalCardProps) {
+export function EnterpriseSubmittedProposalCard({ proposal, onWithdrawn }: EnterpriseSubmittedProposalCardProps) {
+  const navigate = useNavigate()
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
   const [isNotesOpen, setIsNotesOpen] = useState(false);
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+  const [isWithdrawing, setIsWithdrawing] = useState(false);
 
-  const handleDelete = () => {
-    toast.info("Proposal deletion requested");
+  const handleWithdraw = async () => {
+    setIsWithdrawing(true);
+    try {
+      await withdrawEnterpriseProposal(proposal.id);
+      toast.success("Proposal withdrawn successfully");
+      setIsWithdrawModalOpen(false);
+      onWithdrawn?.();
+    } catch (error) {
+      handleApiError(error, "Failed to withdraw proposal");
+      navigate("/enterprise/quotations");
+    } finally {
+      setIsWithdrawing(false);
+    }
   };
 
   return (
@@ -23,10 +42,6 @@ export function EnterpriseSubmittedProposalCard({ proposal }: EnterpriseSubmitte
       <div className="space-y-6">
         <div className="pb-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-start justify-between gap-4">
           <div className="flex items-start gap-3.5 sm:gap-4 min-w-0">
-            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#edf4fb] border border-[#204066]/15 flex items-center justify-center text-[#204066] shrink-0 mt-0.5 shadow-2xs">
-              <Handshake size={22} className="text-[#204066]" />
-            </div>
-
             <div className="space-y-1 min-w-0">
               <span className="text-[11px] sm:text-xs font-bold text-[#204066] uppercase tracking-wider block">
                 Your Submitted Proposal
@@ -41,16 +56,18 @@ export function EnterpriseSubmittedProposalCard({ proposal }: EnterpriseSubmitte
             </div>
           </div>
 
-          <div className="flex items-center self-start sm:self-center w-full sm:w-auto justify-end sm:justify-start">
-            <button
-              type="button"
-              onClick={handleDelete}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100/90 border border-rose-200/90 rounded-xl transition-all cursor-pointer shadow-2xs"
-            >
-              <Trash2 size={13} />
-              <span>Delete Proposal</span>
-            </button>
-          </div>
+          {proposal.status === "PENDING" && (
+            <div className="flex items-center self-start sm:self-center w-full sm:w-auto justify-end sm:justify-start">
+              <button
+                type="button"
+                onClick={() => setIsWithdrawModalOpen(true)}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100/90 border border-rose-200/90 rounded-xl transition-all cursor-pointer shadow-2xs"
+              >
+                <Trash2 size={13} />
+                <span>Withdraw Proposal</span>
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
@@ -159,6 +176,17 @@ export function EnterpriseSubmittedProposalCard({ proposal }: EnterpriseSubmitte
           </div>
         )}
       </div>
+
+      <ConfirmationModal
+        isOpen={isWithdrawModalOpen}
+        onClose={() => {
+          if (!isWithdrawing) setIsWithdrawModalOpen(false);
+        }}
+        onConfirm={handleWithdraw}
+        title="Withdraw Proposal?"
+        message="Are you sure you want to withdraw this proposal? This action cannot be undone, and the proposal cannot be restored once withdrawn."
+        loading={isWithdrawing}
+      />
 
       <QuotationDescriptionModal
         isOpen={isDescriptionOpen}

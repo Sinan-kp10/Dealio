@@ -1,4 +1,4 @@
-export type EnterpriseProposalStatus = "PENDING" | "ACCEPTED" | "PAY_ADVANCE" | "COMPLETED" | "REJECTED";
+export type EnterpriseProposalStatus = "PENDING" | "ACCEPTED" | "PAID" | "COMPLETED" | "REJECTED" | "WITHDRAWN"
 
 export interface EnterpriseProposalDetails {
   id: string;
@@ -27,6 +27,11 @@ export interface CreateEnterpriseProposalPayload {
 }
 
 export interface CreateEnterpriseProposalResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface WithdrawEnterpriseProposalResponse {
   success: boolean;
   message: string;
 }

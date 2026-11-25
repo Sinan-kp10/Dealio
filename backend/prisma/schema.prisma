@@ -246,6 +246,7 @@ enum notification_type {
   BANK_DETAILS_REJECTED
   QUOTATION_RECEIVED
   NEW_PROPOSAL_RECEIVED
+  PROPOSAL_ACCEPTED
 }
 
 model notifications {
@@ -269,7 +270,7 @@ enum quotation_request_status {
   PENDING
   PROPOSAL_RECEIVED
   ACCEPTED
-  PAY_ADVANCE
+  PAID
   COMPLETED
   CANCELLED
 }
@@ -289,6 +290,8 @@ model quotation_requests {
   updated_at     DateTime                 @updatedAt @db.Timestamptz
   cancelled_at   DateTime?                @db.Timestamptz
   accepted_at    DateTime?                @db.Timestamptz
+  paid_at        DateTime?                @db.Timestamptz
+  completed_at   DateTime?                @db.Timestamptz
 
 
   customer       users                    @relation("customer_quotation_requests", fields: [customer_id], references: [id], onDelete: Cascade)
@@ -297,10 +300,10 @@ model quotation_requests {
   enterprise_requests enterprise_quotation_requests[]
   proposals      proposals[]
 
-  @@index([customer_id])
+  @@index([customer_id, created_at(sort: Desc)])
+  @@index([customer_id, status, created_at(sort: Desc)])
   @@index([category_id])
   @@index([subcategory_id])
-  @@index([status])
   @@map("quotation_requests")
 }
 
@@ -331,9 +334,10 @@ model enterprise_quotation_requests {
 enum proposal_status {
   PENDING
   ACCEPTED
-  PAY_ADVANCE
+  PAID
   COMPLETED
   REJECTED
+  WITHDRAWN
 }
 
 model proposals {
@@ -356,7 +360,6 @@ model proposals {
   quotation  quotation_requests @relation(fields: [quotation_id], references: [id], onDelete: Cascade)
   enterprise enterprises        @relation(fields: [enterprise_id], references: [id], onDelete: Cascade)
 
-  @@unique([quotation_id, enterprise_id])
   @@index([quotation_id])
   @@index([enterprise_id])
   @@map("proposals")

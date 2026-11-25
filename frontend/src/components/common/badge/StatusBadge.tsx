@@ -5,7 +5,7 @@ export type BadgeStatus =
   | "CLOSED"
   | "PROPOSAL_RECEIVED"
   | "ACCEPTED"
-  | "PAY_ADVANCE"
+  | "PAID"
   | "COMPLETED"
   | "CANCELLED"
   | "REJECTED"
@@ -45,7 +45,7 @@ export function StatusBadge({ status, className = "" }: StatusBadgeProps) {
     case "CLOSED":
       return (
         <span
-          className={`inline-flex items-center px-2.5 py-1 text-[11px] font-semibold tracking-wide rounded-md bg-slate-100 text-slate-600 border border-slate-200/80 ${className}`}
+          className={`inline-flex items-center px-2.5 py-1 text-[11px] font-semibold tracking-wide rounded-md bg-amber-50 text-amber-700 border border-amber-200/70 ${className}`}
         >
           Closed
         </span>
@@ -66,12 +66,12 @@ export function StatusBadge({ status, className = "" }: StatusBadgeProps) {
           Accepted
         </span>
       );
-    case "PAY_ADVANCE":
+    case "PAID":
       return (
         <span
           className={`inline-flex items-center px-2.5 py-1 text-[11px] font-semibold tracking-wide rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200/70 ${className}`}
         >
-          Pay Advance
+          Paid
         </span>
       );
     case "COMPLETED":

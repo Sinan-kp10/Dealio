@@ -1,5 +1,5 @@
 import { IUseCase } from "../../../../../shared/application/base.usecase";
-import { ConflictError, NotFoundError } from "../../../../../shared/errors/app-error";
+import { BadRequestError, ConflictError, NotFoundError } from "../../../../../shared/errors/app-error";
 import { INotificationService } from "../../../../../shared/interfaces/INotificationService";
 import { IEnterpriseProposalRepository } from "../../../domain/repositories/enterprise/enterprise-proposal.repository";
 import { CreateProposalInputDto } from "../../dto/enterprise/enterprise-proposal.dto";
@@ -19,6 +19,14 @@ export class CreateProposalUseCase implements IUseCase<CreateProposalInputDto, v
         const quotation = await this.enterpriseProposalRepository.findQuotationById(input.quotationId);
         if (!quotation) {
             throw new NotFoundError("Quotation not found");
+        }
+
+        if (quotation.status === "CANCELLED") {
+            throw new BadRequestError("This quotation request has been cancelled by the customer");
+        }
+
+        if (quotation.status === "ACCEPTED" || quotation.status === "PAID" || quotation.status === "COMPLETED") {
+            throw new BadRequestError("This quotation request has already been closed by the customer");
         }
 
         const existingProposal = await this.enterpriseProposalRepository.findProposalByQuotationAndEnterprise(

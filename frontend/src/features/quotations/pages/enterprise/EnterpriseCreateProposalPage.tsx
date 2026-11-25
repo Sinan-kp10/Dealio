@@ -3,12 +3,12 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {ArrowLeft,ShieldCheck,Truck,Send,Calculator,RotateCcw,} from "lucide-react";
-import { EnterpriseBuyerRequestSnapshotCard } from "../../components/enterprise/EnterpriseBuyerRequestSnapshotCard";
+import { EnterpriseCustomerRequestSnapshotCard } from "../../components/enterprise/EnterpriseCustomerRequestSnapshotCard";
 import { Select, type SelectOption } from "../../../../components/common/select/Select";
 import { ButtonSpinner } from "../../../../components/common/loading/ButtonSpinner";
 import { submitEnterpriseProposal } from "../../services/enterprise-quotation.service";
 import { handleApiError } from "../../../../utils/errorHandler";
-import type { EnterpriseQuotationDetails } from "../../types/enterprise-quotation-details.types";
+import type { AvailableQuotationDetails } from "../../types/enterprise-available-quotation-details.types";
 import {createEnterpriseProposalSchema,type CreateEnterpriseProposalFormData,} from "../../schemas/create-enterprise-proposal.schema";
 
 const DELIVERY_OPTIONS: SelectOption[] = [
@@ -39,7 +39,7 @@ export function EnterpriseCreateProposalPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const location = useLocation();
-  const quotation = (location.state as { quotation?: EnterpriseQuotationDetails } | null)?.quotation;
+  const quotation = (location.state as { quotation?: AvailableQuotationDetails } | null)?.quotation;
 
   const [isCustomDelivery, setIsCustomDelivery] = useState(false);
   const [isCustomWarranty, setIsCustomWarranty] = useState(false);
@@ -91,6 +91,7 @@ export function EnterpriseCreateProposalPage() {
       navigate(`/enterprise/quotations/${targetQuotationId}`);
     } catch (error) {
       handleApiError(error, "Failed to submit proposal");
+      navigate("/enterprise/quotations");
     }
   };
 
@@ -121,7 +122,7 @@ export function EnterpriseCreateProposalPage() {
       </div>
 
       <form noValidate onSubmit={handleSubmit(onSubmit)}>
-        <EnterpriseBuyerRequestSnapshotCard
+        <EnterpriseCustomerRequestSnapshotCard
           quotation={quotation}
           className="block lg:hidden mb-5"
         />
@@ -411,7 +412,7 @@ export function EnterpriseCreateProposalPage() {
           </div>
 
           <div className="lg:col-span-5 flex flex-col gap-5">
-            <EnterpriseBuyerRequestSnapshotCard
+            <EnterpriseCustomerRequestSnapshotCard
               quotation={quotation}
               className="hidden lg:block"
             />
@@ -513,7 +514,7 @@ export function EnterpriseCreateProposalPage() {
                             Total Proposal Offer
                           </span>
                           <span className="text-[11px] text-slate-400">
-                            Final commercial quote for buyer
+                            Final commercial quote for customer
                           </span>
                         </div>
                         <span className="text-lg sm:text-xl font-black text-[#355982] tracking-tight text-right truncate min-w-0 max-w-[65%]">

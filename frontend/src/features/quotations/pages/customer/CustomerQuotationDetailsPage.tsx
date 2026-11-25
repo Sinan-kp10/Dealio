@@ -1,9 +1,26 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import {ArrowLeft,FileText,Layers,Tag,Package,IndianRupee,MapPin,Ban,Loader2,ExternalLink,ShieldCheck,} from "lucide-react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import {
+  ArrowLeft,
+  FileText,
+  Layers,
+  Tag,
+  Package,
+  IndianRupee,
+  MapPin,
+  Ban,
+  ExternalLink,
+  Handshake,
+  MessageCircleMore,
+  CreditCard,
+  ArrowRight,
+} from "lucide-react";
+import { toast } from "react-toastify";
 import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
 import { QuotationStatusBar } from "../../components/customer/QuotationStatusBar";
 import { QuotationDescriptionModal } from "../../components/QuotationDescriptionModal";
+import { CustomerReceivedProposalsSection } from "../../components/customer/CustomerReceivedProposalsSection";
+import { CustomerQuotationDetailsSkeleton } from "../../components/customer/loading/CustomerQuotationDetailsSkeleton";
 import ConfirmationModal from "../../../../components/common/confirmationModel/ConfirmationModal";
 import { cancelCustomerQuotation, getCustomerQuotationDetails } from "../../services/quotation.service";
 import { handleApiError } from "../../../../utils/errorHandler";
@@ -12,13 +29,19 @@ import type { QuotationDetails } from "../../types/quotation-details";
 
 export function CustomerQuotationDetailsPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams<{ id: string }>();
 
+  const isProposalsTab = location.state?.tab === "PROPOSALS";
   const [loading, setLoading] = useState(true);
   const [isCancelling, setIsCancelling] = useState(false);
   const [isCancelModal, setIsCancelModal] = useState(false);
   const [isDescriptionModalOpen, setIsDescriptionModalOpen] = useState(false);
   const [quotation, setQuotation] = useState<QuotationDetails | null>(null);
+  const [activeTab, setActiveTab] = useState<"OVERVIEW" | "PROPOSALS">(
+    isProposalsTab ? "PROPOSALS" : "OVERVIEW"
+  );
+  const [isOtherTabLoaded, setIsOtherTabLoaded] = useState(isProposalsTab);
 
   useEffect(() => {
     if (!id) return;
@@ -65,31 +88,31 @@ export function CustomerQuotationDetailsPage() {
     }
   };
 
-  if (loading || !quotation) {
-    return (
-      <div className="w-full flex items-center justify-center py-24">
-        <Loader2 size={36} strokeWidth={2.2} className="animate-spin text-[#2f5581]" />
-      </div>
+  const handleProposalAccepted = () => {
+    setQuotation((prev) =>
+      prev
+        ? {
+            ...prev,
+            status: "ACCEPTED",
+            acceptedAt: new Date().toISOString(),
+          }
+        : prev
     );
+  };
+
+  if (loading || !quotation) {
+    return <CustomerQuotationDetailsSkeleton />;
   }
 
   const isCancellable = quotation.status === "PENDING" || quotation.status === "PROPOSAL_RECEIVED";
+  const isAccepted = quotation.status === "ACCEPTED";
 
-  const hasBudget = quotation.budget !== null && quotation.budget > 0;
-  const hasLocation = Boolean(quotation.location && quotation.location.trim().length > 0);
+  const hasBudget = quotation.budget !== null && quotation.budget !== undefined
+  const hasLocation = Boolean(quotation.location);
   const formattedQuantity = String(quotation.quantity).padStart(2, "0");
 
-  const overviewItemCount = 3 + (hasBudget ? 1 : 0) + (hasLocation ? 1 : 0);
   const isLongDescription =
-    quotation.description.length > (overviewItemCount <= 3 ? 120 : overviewItemCount === 4 ? 160 : 200) ||
-    quotation.description.split("\n").length > 2;
-
-  const descriptionClampClass =
-    overviewItemCount <= 3
-      ? "line-clamp-3 sm:line-clamp-4"
-      : overviewItemCount === 4
-      ? "line-clamp-4 sm:line-clamp-5"
-      : "line-clamp-5 sm:line-clamp-6";
+    quotation.description.length > 140 || quotation.description.split("\n").length > 2;
 
   return (
     <div className="w-full space-y-4 pb-16 animate-in fade-in duration-200">
@@ -107,166 +130,202 @@ export function CustomerQuotationDetailsPage() {
         </button>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-6">
-        <div className="pb-5 sm:pb-6 border-b border-slate-100">
-          <div className="flex items-start sm:items-center justify-between gap-4">
-            <div>
-              <div className="flex flex-wrap items-center gap-3">
-                <h1 className="text-xl sm:text-2xl font-extrabold text-[#0e2238] tracking-tight m-0">
-                  {quotation.productName}
-                </h1>
-                <StatusBadge status={quotation.status} />
-              </div>
-              <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs sm:text-sm text-slate-500 mt-1.5 font-normal">
-                <span>Created on {formatDate(quotation.createdAt)}</span>
-              </div>
+      <div className="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="text-xl sm:text-2xl font-extrabold text-[#0e2238] tracking-tight m-0">
+                {quotation.productName}
+              </h1>
+              <StatusBadge status={quotation.status} />
             </div>
-
-            {isCancellable && (
-              <div className="hidden sm:block self-center shrink-0">
-                <button
-                  type="button"
-                  onClick={() => setIsCancelModal(true)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200/90 rounded-xl transition-all cursor-pointer shadow-2xs active:scale-[0.98]"
-                >
-                  <Ban size={13} strokeWidth={2.2} />
-                  <span>Cancel Request</span>
-                </button>
-              </div>
-            )}
+            <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs sm:text-sm text-slate-500 mt-1.5 font-normal">
+              <span>Created on {formatDate(quotation.createdAt)}</span>
+            </div>
           </div>
 
           {isCancellable && (
-            <div className="flex sm:hidden mt-3 pt-2 border-t border-slate-100">
+            <div className="hidden sm:block self-center shrink-0">
               <button
                 type="button"
                 onClick={() => setIsCancelModal(true)}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200/80 rounded-lg transition-all cursor-pointer shadow-2xs active:scale-[0.98]"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200/90 rounded-xl transition-all cursor-pointer shadow-2xs active:scale-[0.98]"
               >
-                <Ban size={12} strokeWidth={2.2} />
+                <Ban size={13} strokeWidth={2.2} />
                 <span>Cancel Request</span>
+              </button>
+            </div>
+          )}
+
+          {isAccepted && (
+            <div className="flex items-center gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 sm:self-center shrink-0">
+              <button
+                type="button"
+                onClick={() => toast.info("Opening secure chat with seller...")}
+                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-[#1d4d7c] bg-[#edf5fd] hover:bg-[#e2f0fc] border border-[#b8d6f2] hover:border-[#9ec4ec] rounded-xl transition-all cursor-pointer shadow-2xs active:scale-[0.98]"
+              >
+                <MessageCircleMore size={13.5} className="text-[#2b6cb0]" />
+                <span>Chat with Seller</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => toast.info("Proceeding to payment checkout...")}
+                className="relative group overflow-hidden flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2 sm:px-4.5 sm:py-2 text-xs sm:text-[13px] font-bold text-white bg-gradient-to-r from-[#2c4f75] via-[#3d6b9d] to-[#2c4f75] hover:from-[#244365] hover:via-[#335c89] hover:to-[#244365] border border-white/25 rounded-xl transition-all duration-200 cursor-pointer shadow-[0_4px_14px_rgba(53,89,130,0.28),inset_0_1px_0_rgba(255,255,255,0.25)] hover:shadow-[0_6px_20px_rgba(53,89,130,0.38),inset_0_1px_0_rgba(255,255,255,0.35)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]"
+              >
+                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/15 to-transparent animate-shimmer pointer-events-none" />
+                <CreditCard size={14} className="text-sky-200 shrink-0 drop-shadow-xs" />
+                <span className="tracking-wide">Proceed to Payment</span>
+                <ArrowRight size={14} className="text-sky-200/90 shrink-0 group-hover:translate-x-1 transition-transform duration-200" />
               </button>
             </div>
           )}
         </div>
 
-        <div className="rounded-2xl border border-slate-200/90 bg-[#f8fafc] p-5 sm:p-6 shadow-2xs">
-          <QuotationStatusBar
-            status={quotation.status}
-            createdAt={quotation.createdAt}
-          />
+        {isCancellable && (
+          <div className="flex sm:hidden pt-2 border-t border-slate-100">
+            <button
+              type="button"
+              onClick={() => setIsCancelModal(true)}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200/80 rounded-lg transition-all cursor-pointer shadow-2xs active:scale-[0.98]"
+            >
+              <Ban size={12} strokeWidth={2.2} />
+              <span>Cancel Request</span>
+            </button>
+          </div>
+        )}
+
+        <div className="flex items-center gap-1 sm:gap-2 border-b border-slate-200 -mb-5 sm:-mb-6 pt-1 overflow-x-auto scrollbar-none">
+          <button
+            type="button"
+            onClick={() => setActiveTab("OVERVIEW")}
+            className={`inline-flex items-center gap-2 pb-3.5 px-3 sm:px-4 text-xs sm:text-sm font-bold border-b-2 transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === "OVERVIEW"
+                ? "border-[#204066] text-[#204066]"
+                : "border-transparent text-slate-500 hover:text-slate-800"
+            }`}
+          >
+            <FileText size={16} />
+            <span>Quotation Overview</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setActiveTab("PROPOSALS");
+              setIsOtherTabLoaded(true);
+            }}
+            className={`inline-flex items-center gap-2 pb-3.5 px-3 sm:px-4 text-xs sm:text-sm font-bold border-b-2 transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === "PROPOSALS"
+                ? "border-[#204066] text-[#204066]"
+                : "border-transparent text-slate-500 hover:text-slate-800"
+            }`}
+          >
+            <Handshake size={16} />
+            <span>Received Proposals</span>
+          </button>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6 items-stretch">
-          <div className="rounded-2xl border border-slate-200/90 bg-[#f8fafc] p-4 sm:p-5 flex flex-col justify-between">
-            <div>
-              <div className="flex items-center gap-2 pb-2.5 border-b border-slate-200/70 text-xs sm:text-sm font-bold text-[#0e2238]">
-                <Layers size={15} className="text-[#2f5581]" />
-                <span>Quotation Overview</span>
-              </div>
-
-              <div className="divide-y divide-slate-200/70 text-xs sm:text-sm">
-                <div className="flex items-center justify-between py-2">
-                  <div className="flex items-center gap-2 text-slate-600 font-medium">
-                    <Package size={14} className="text-[#2f5581]" />
-                    <span>Quantity</span>
-                  </div>
-                  <span className="font-bold text-[#0e2238]">{formattedQuantity} Units</span>
-                </div>
-
-                <div className="flex items-center justify-between py-2">
-                  <div className="flex items-center gap-2 text-slate-600 font-medium">
-                    <Layers size={14} className="text-[#2f5581]" />
-                    <span>Category</span>
-                  </div>
-                  <span
-                    className="font-bold text-[#0e2238] capitalize truncate max-w-[55%]"
-                    title={quotation.category.name}
-                  >
-                    {quotation.category.name}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between py-2">
-                  <div className="flex items-center gap-2 text-slate-600 font-medium">
-                    <Tag size={14} className="text-[#2f5581]" />
-                    <span>Subcategory</span>
-                  </div>
-                  <span
-                    className="font-bold text-[#0e2238] capitalize truncate max-w-[55%]"
-                    title={quotation.subCategory.name}
-                  >
-                    {quotation.subCategory.name}
-                  </span>
-                </div>
-
-                {hasBudget && (
-                  <div className="flex items-center justify-between py-2">
-                    <div className="flex items-center gap-2 text-slate-600 font-medium">
-                      <IndianRupee size={14} className="text-[#2f5581]" />
-                      <span>Budget</span>
-                    </div>
-                    <span className="font-bold text-[#0e2238]">
-                      ₹{quotation.budget?.toLocaleString("en-IN")}
-                    </span>
-                  </div>
-                )}
-
-                {hasLocation && (
-                  <div className="flex items-start justify-between py-2 gap-2">
-                    <div className="flex items-center gap-2 text-slate-600 font-medium shrink-0 mt-0.5">
-                      <MapPin size={14} className="text-[#2f5581]" />
-                      <span>Delivery Location</span>
-                    </div>
-                    <span
-                      className="font-semibold text-[#0e2238] text-right truncate max-w-[60%]"
-                      title={quotation.location || undefined}
-                    >
-                      {quotation.location}
-                    </span>
-                  </div>
-                )}
-              </div>
+      <div className={activeTab === "OVERVIEW" ? "space-y-6" : "hidden"}>
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-6">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <div className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-indigo-50/70 text-indigo-900 border border-indigo-100/90 text-xs font-semibold">
+              <Layers size={14} className="text-indigo-600 shrink-0" />
+              <span>
+                Category: <strong className="font-bold text-indigo-950 capitalize">{quotation.category.name}</strong>
+              </span>
             </div>
+
+            <div className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-100 text-slate-700 border border-slate-200/90 text-xs font-semibold">
+              <Tag size={14} className="text-slate-500 shrink-0" />
+              <span>
+                Subcategory: <strong className="font-bold text-slate-900 capitalize">{quotation.subCategory.name}</strong>
+              </span>
+            </div>
+
+            <div className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-blue-50/70 text-[#1e3a5f] border border-blue-100/90 text-xs font-semibold">
+              <Package size={14} className="text-blue-600 shrink-0" />
+              <span>
+                Quantity: <strong className="font-extrabold text-[#0e2238]">{formattedQuantity} Units</strong>
+              </span>
+            </div>
+
+            {hasBudget && (
+              <div className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-50/70 text-emerald-800 border border-emerald-200/90 text-xs font-semibold">
+                <IndianRupee size={14} className="text-emerald-700 shrink-0" />
+                <span>
+                  Budget:{" "}
+                  <strong className="font-extrabold text-emerald-950">
+                    ₹{quotation.budget?.toLocaleString("en-IN")}
+                  </strong>
+                </span>
+              </div>
+            )}
+
+            {hasLocation && (
+              <div className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-[#f8fafc] text-slate-700 border border-slate-200/90 text-xs font-semibold">
+                <MapPin size={14} className="text-slate-500 shrink-0" />
+                <span>
+                  Location: <strong className="font-bold text-slate-800">{quotation.location}</strong>
+                </span>
+              </div>
+            )}
           </div>
 
-          <div className="rounded-2xl border border-slate-200/90 bg-[#f8fafc] p-4 sm:p-5 flex flex-col justify-between">
-            <div className="flex items-center gap-2 pb-2.5 border-b border-slate-200/70 text-xs sm:text-sm font-bold text-[#0e2238]">
-              <FileText size={15} className="text-[#2f5581]" />
-              <span>Requirement Specifications</span>
-            </div>
+          <div className="rounded-xl border border-slate-200/80 bg-slate-50/70 border-l-[3.5px] border-l-[#355982] p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-colors">
+            <div className="min-w-0 space-y-1">
+              <div className="flex items-center gap-2">
+                <FileText size={15} className="text-[#355982] shrink-0" />
+                <span className="text-xs sm:text-sm font-bold text-[#0e2238]">
+                  Requirement Specifications
+                </span>
+              </div>
 
-            <div className="pt-2 flex-1 flex flex-col justify-between">
               <p
                 onClick={() => isLongDescription && setIsDescriptionModalOpen(true)}
-                className={`text-xs sm:text-sm text-slate-700 leading-relaxed font-normal m-0 whitespace-pre-wrap select-text ${descriptionClampClass} ${
+                className={`text-xs sm:text-sm text-slate-700 leading-relaxed font-normal m-0 whitespace-pre-wrap select-text line-clamp-2 ${
                   isLongDescription ? "cursor-pointer hover:text-slate-900" : ""
                 }`}
                 title={isLongDescription ? "Click to view full specifications" : undefined}
               >
                 {quotation.description}
               </p>
-
-              <div className="mt-3 pt-2.5 border-t border-slate-200/70 flex items-center justify-between text-[11px] font-medium min-h-[22px]">
-                <span className="inline-flex items-center gap-1.5 text-slate-500">
-                  <ShieldCheck size={13} className="text-[#2f5581]" />
-                  Verified Request
-                </span>
-                {isLongDescription && (
-                  <button
-                    type="button"
-                    onClick={() => setIsDescriptionModalOpen(true)}
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#2f5581] hover:text-[#0e2238] hover:underline cursor-pointer transition-colors"
-                  >
-                    <span>View Full Specifications</span>
-                    <ExternalLink size={12} />
-                  </button>
-                )}
-              </div>
             </div>
+
+            {isLongDescription && (
+              <button
+                type="button"
+                onClick={() => setIsDescriptionModalOpen(true)}
+                className="self-start sm:self-center inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[#355982] hover:text-[#0e2238] bg-white hover:bg-slate-100 border border-slate-200/90 rounded-lg cursor-pointer transition-colors shrink-0 shadow-2xs"
+              >
+                <span>View Full Specifications</span>
+                <ExternalLink size={12} />
+              </button>
+            )}
+          </div>
+
+          <div className="rounded-2xl border border-slate-200/90 bg-[#f8fafc] p-5 sm:p-6 shadow-2xs">
+            <QuotationStatusBar
+              status={quotation.status}
+              createdAt={quotation.createdAt}
+              acceptedAt={quotation.acceptedAt}
+              cancelledAt={quotation.cancelledAt}
+              paidAt={quotation.paidAt}
+              completedAt={quotation.completedAt}
+            />
           </div>
         </div>
       </div>
+      
+      {isOtherTabLoaded && (
+        <div className={activeTab === "PROPOSALS" ? "block" : "hidden"}>
+          <CustomerReceivedProposalsSection
+            quotationId={quotation.id}
+            onProposalAccepted={handleProposalAccepted}
+          />
+        </div>
+      )} 
 
       <QuotationDescriptionModal
         isOpen={isDescriptionModalOpen}

@@ -4,6 +4,7 @@ import { Plus, FilePlus, ArrowRight, ShieldCheck, Clock, CheckCircle2 } from "lu
 import { getCustomerRecentQuotations } from "../../services/customer/customer-home.service";
 import type { CustomerRecentQuotationItem } from "../../types/customer/customer-home.types";
 import { LatestActiveQuotationCard } from "../../components/customer/LatestActiveQuotationCard";
+import { LatestActiveQuotationSkeleton } from "../../components/customer/LatestActiveQuotationSkeleton";
 import { RecentQuotationCard } from "../../components/customer/RecentQuotationCard";
 import { QuotationCardSkeleton } from "../../components/customer/QuotationCardSkeleton";
 import { handleApiError } from "../../../../utils/errorHandler";
@@ -137,7 +138,7 @@ function CustomerHomePage() {
 
       {loading ? (
         <div className="space-y-6">
-          <div className="w-full h-56 bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 p-6 animate-pulse" />
+          <LatestActiveQuotationSkeleton />
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6">
             {[1, 2, 3].map((key) => (
               <QuotationCardSkeleton key={key} />
@@ -145,7 +146,6 @@ function CustomerHomePage() {
           </div>
         </div>
       ) : recentQuotations.length === 0 ? (
-        /* Empty State Card when customer has no quotations */
         <section className="w-full bg-white rounded-2xl sm:rounded-3xl border border-dashed border-slate-300/80 p-8 sm:p-12 lg:p-16 text-center flex flex-col items-center justify-center min-h-[360px] sm:min-h-[420px] shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition-all">
           <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#edf4fb] text-[#204066] flex items-center justify-center mb-5 shadow-xs border border-[#d8e7f5]">
             <FilePlus size={26} strokeWidth={1.9} className="text-[#204066]" />
@@ -170,7 +170,6 @@ function CustomerHomePage() {
         </section>
       ) : (
         <div className="space-y-8">
-          {/* Section 1: Latest Active Quotation */}
           {latestQuotation && <LatestActiveQuotationCard quotation={latestQuotation} />}
 
           <section className="space-y-3.5">
