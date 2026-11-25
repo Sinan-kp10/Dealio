@@ -32,6 +32,8 @@ const EnterpriseDashboardPage = lazy(()=> import("../../features/dashboard/pages
 const EnterpriseQuotationsPage = lazy(() => import("../../features/quotations/pages/enterprise/EnterpriseAvailableQuotationsPage"))
 const EnterpriseQuotationDetailsPage = lazy(() => import("../../features/quotations/pages/enterprise/EnterpriseAvailableQuotationDetailsPage"))
 const EnterpriseCreateProposalPage = lazy(() => import("../../features/quotations/pages/enterprise/EnterpriseCreateProposalPage"))
+const EnterpriseAcceptedRequestsPage = lazy(() => import("../../features/quotations/pages/enterprise/EnterpriseAcceptedRequestsPage"))
+const EnterpriseAcceptedRequestDetailsPage = lazy(() => import("../../features/quotations/pages/enterprise/EnterpriseAcceptedRequestDetailsPage"))
 const CustomerManagementPage = lazy(()=> import("../../features/user-management/pages/CustomerManagementPage"))
 const EnterpriseManagementPage = lazy(()=> import("../../features/user-management/pages/EnterpriseManagementPage"))
 const EnterpriseApprovalsPage = lazy(() => import("../../features/enterprise-approvals/pages/EnterpriseApprovalsPage"))
@@ -74,6 +76,8 @@ export function AppRouter() {
               <Route path="/enterprise/quotations" element={<EnterpriseQuotationsPage />} />
               <Route path="/enterprise/quotations/:id" element={<EnterpriseQuotationDetailsPage />} />
               <Route path="/enterprise/quotations/:id/proposal" element={<EnterpriseCreateProposalPage />} />
+              <Route path="/enterprise/accepted-requests" element={<EnterpriseAcceptedRequestsPage />} />
+              <Route path="/enterprise/accepted-requests/:id" element={<EnterpriseAcceptedRequestDetailsPage />} />
               <Route path="/enterprise/profile" element={<EnterpriseProfilePage />} />
               <Route path="/enterprise/settings" element={<EnterpriseSettingsPage />} />
             </Route>

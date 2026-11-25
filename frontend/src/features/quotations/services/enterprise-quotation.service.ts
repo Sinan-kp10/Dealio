@@ -2,6 +2,7 @@ import axiosInstance from "../../../app/lib/axios";
 import type { AvailableQuotationParams, AvailableQuotationsResponse, MarkNotInterestedResponse } from "../types/enterprise-available-quotation.types";
 import type { AvailableQuotationDetailsResponse } from "../types/enterprise-available-quotation-details.types";
 import type { CreateEnterpriseProposalPayload, CreateEnterpriseProposalResponse, WithdrawEnterpriseProposalResponse } from "../types/enterprise-proposal.types";
+import type { EnterpriseAcceptedRequestParams, EnterpriseAcceptedRequestsResponse } from "../types/enterprise-accepted-request.types";
 
 export const getAvailableEnterpriseQuotations = async (params?: AvailableQuotationParams): Promise<AvailableQuotationsResponse> => {
   const response = await axiosInstance.get<AvailableQuotationsResponse>("/enterprise/quotations", { params });
@@ -25,5 +26,10 @@ export const submitEnterpriseProposal = async (quotationId: string, payload: Cre
 
 export const withdrawEnterpriseProposal = async (proposalId: string): Promise<WithdrawEnterpriseProposalResponse> => {
   const response = await axiosInstance.patch<WithdrawEnterpriseProposalResponse>(`/enterprise/quotations/proposals/${proposalId}/withdraw`);
+  return response.data;
+};
+
+export const getEnterpriseAcceptedRequests = async (params?: EnterpriseAcceptedRequestParams): Promise<EnterpriseAcceptedRequestsResponse> => {
+  const response = await axiosInstance.get<EnterpriseAcceptedRequestsResponse>("/enterprise/quotations/accepted-requests", { params });
   return response.data;
 };
