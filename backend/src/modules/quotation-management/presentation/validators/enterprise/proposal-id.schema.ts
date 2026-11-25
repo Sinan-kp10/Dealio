@@ -1,5 +1,5 @@
 import { z } from "zod";
 
-export const withdrawProposalSchema = z.object({
+export const proposalIdSchema = z.object({
     proposalId: z.string().uuid("Invalid proposal ID format"),
 });

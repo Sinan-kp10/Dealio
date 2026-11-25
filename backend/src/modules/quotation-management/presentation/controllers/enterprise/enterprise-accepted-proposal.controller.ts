@@ -3,6 +3,10 @@ import { HttpStatusCode } from "../../../../../shared/enums/http-status-code.enu
 import { IUseCase } from "../../../../../shared/application/base.usecase";
 import { sendResponse } from "../../../../../shared/presentation/api-response";
 import {
+  EnterpriseAcceptedProposalDetailsDto,
+  GetEnterpriseAcceptedProposalDetailsDto,
+} from "../../../application/dto/enterprise/enterprise-accepted-proposal-details.dto";
+import {
   EnterpriseAcceptedProposalStatus,
   GetEnterpriseAcceptedProposalsDto,
   PaginatedEnterpriseAcceptedProposalsDto,
@@ -10,7 +14,8 @@ import {
 
 export class EnterpriseAcceptedProposalController {
   constructor(
-    private readonly getAcceptedProposalsUseCase: IUseCase<GetEnterpriseAcceptedProposalsDto,PaginatedEnterpriseAcceptedProposalsDto>
+    private readonly getAcceptedProposalsUseCase: IUseCase<GetEnterpriseAcceptedProposalsDto,PaginatedEnterpriseAcceptedProposalsDto>,
+    private readonly getAcceptedProposalDetailsUseCase: IUseCase<GetEnterpriseAcceptedProposalDetailsDto,EnterpriseAcceptedProposalDetailsDto>
   ) {}
 
   getAcceptedProposals = async (req: Request,res: Response,next: NextFunction): Promise<void> => {
@@ -31,6 +36,22 @@ export class EnterpriseAcceptedProposalController {
       });
 
       sendResponse(res,"Accepted proposals retrieved successfully",acceptedProposals,HttpStatusCode.OK);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getAcceptedProposalDetails = async (req: Request,res: Response,next: NextFunction): Promise<void> => {
+    try {
+      const userId = req.auth?.userId;
+      const proposalId = req.params.proposalId as string;
+
+      const proposalDetails = await this.getAcceptedProposalDetailsUseCase.execute({
+        userId: userId!,
+        proposalId,
+      });
+
+      sendResponse(res,"Accepted proposal details retrieved successfully",proposalDetails,HttpStatusCode.OK);
     } catch (error) {
       next(error);
     }

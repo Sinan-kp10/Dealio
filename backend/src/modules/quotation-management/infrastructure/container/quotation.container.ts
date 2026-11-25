@@ -10,6 +10,7 @@ import { MarkNotInterestedUseCase } from "../../application/use-cases/enterprise
 import { GetCustomerQuotationDetailsUseCase } from "../../application/use-cases/enterprise/get-customer-quotation-details.use-case";
 import { EnterpriseQuotationController } from "../../presentation/controllers/enterprise/enterprise-quotation.controller";
 import { GetAcceptedProposalsUseCase } from "../../application/use-cases/enterprise/get-accepted-proposal.use-case";
+import { GetAcceptedProposalDetailsUseCase } from "../../application/use-cases/enterprise/get-accepted-proposal-details.use-case";
 import { EnterpriseAcceptedProposalController } from "../../presentation/controllers/enterprise/enterprise-accepted-proposal.controller";
 import { PrismaQuotationRequestRepository } from "../repositories/customer/prisma-quotation-request.repository";
 import { PrismaEnterpriseQuotationRepository } from "../repositories/enterprise/prisma-enterprise-quotation.respository";
@@ -43,7 +44,9 @@ export const enterpriseQuotationController = new EnterpriseQuotationController(
 
 const enterpriseAcceptedProposalRepository = new PrismaEnterpriseAcceptedProposalRepository();
 const getAcceptedProposalsUseCase = new GetAcceptedProposalsUseCase(enterpriseAcceptedProposalRepository);
+const getAcceptedProposalDetailsUseCase = new GetAcceptedProposalDetailsUseCase(enterpriseAcceptedProposalRepository);
 
 export const enterpriseAcceptedProposalController = new EnterpriseAcceptedProposalController(
-    getAcceptedProposalsUseCase
+    getAcceptedProposalsUseCase,
+    getAcceptedProposalDetailsUseCase
 );
