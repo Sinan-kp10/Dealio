@@ -15,6 +15,7 @@ import profileVerificationRoutes from "../modules/profile/presentation/routes/pr
 import notificationRoutes from "../modules/notification/presentation/routes/notification.routes";
 import customerQuotationRoutes from "../modules/quotation-management/presentation/routes/customer/quotation-request.routes";
 import enterpriseQuotationRoutes from "../modules/quotation-management/presentation/routes/enterprise/enterprise-quotation.routes";
+import chatRoutes from "../modules/chat/presentation/routes/chat.routes";
 import cookieParser from "cookie-parser";
 import { env } from "../config/env";
 const app = express();
@@ -46,6 +47,7 @@ app.use("/api/enterprise", enterpriseProfileRouter);
 app.use("/api/enterprise/quotations", enterpriseQuotationRoutes);
 app.use("/api/profile", profilePictureRouter);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/chat", chatRoutes);
 app.use("/api", categoryRoutes);
 
 
