@@ -3,7 +3,7 @@ import { CustomerNavbar } from "./CustomerNavbar";
 
 function CustomerLayout() {
     const location = useLocation();
-    const isConversations = location.pathname.startsWith("/customer/conversations");
+    const isConversations = location.pathname.startsWith("/customer/chat");
 
     return (
         <div className="h-screen bg-[#F4F7FB] text-slate-800 flex flex-col antialiased overflow-hidden">

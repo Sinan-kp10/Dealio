@@ -81,9 +81,9 @@ export function CustomerNavbar() {
 
                     <button
                         type="button"
-                        onClick={() => navigate("/customer/conversations")}
+                        onClick={() => navigate("/customer/chat")}
                         className={`relative p-2.5 rounded-full transition-colors cursor-pointer ${
-                            location.pathname.startsWith("/customer/conversations")
+                            location.pathname.startsWith("/customer/chat")
                                 ? "bg-[#edf4fb] text-[#183252]"
                                 : "text-[#244673] hover:text-[#183252] hover:bg-[#f0f6fc]"
                         }`}
@@ -223,9 +223,9 @@ export function CustomerNavbar() {
                 <div className="flex md:hidden items-center gap-1.5">
                     <button
                         type="button"
-                        onClick={() => navigate("/customer/conversations")}
+                        onClick={() => navigate("/customer/chat")}
                         className={`relative p-2 rounded-full transition-colors cursor-pointer ${
-                            location.pathname.startsWith("/customer/conversations")
+                            location.pathname.startsWith("/customer/chat")
                                 ? "bg-[#edf4fb] text-[#183252]"
                                 : "text-[#244673] hover:text-[#183252] hover:bg-[#f0f6fc]"
                         }`}
@@ -351,7 +351,7 @@ export function CustomerNavbar() {
                         </NavLink>
 
                         <NavLink
-                            to="/customer/conversations"
+                            to="/customer/chat"
                             onClick={() => setIsMobileMenuOpen(false)}
                             className={({ isActive }) =>
                                 `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors ${
