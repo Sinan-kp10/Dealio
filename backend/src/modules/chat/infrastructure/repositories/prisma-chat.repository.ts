@@ -1,12 +1,40 @@
 import { Prisma } from "../../../../../generated/prisma/client.js";
 import { prisma } from "../../../../infrastructure/database/prisma/prisma-client.js";
-import type { ChatFiltersDto, ChatListItemDto, PaginatedChatsDto } from "../../application/dto/chat.dto.js";
+import type {
+  ChatAccessDto,
+  ChatFiltersDto,
+  ChatListItemDto,
+  PaginatedChatsDto,
+} from "../../application/dto/chat.dto.js";
+import type { PaginatedMessagesDto } from "../../application/dto/message.dto.js";
 import type { IChatRepository } from "../../domain/repositories/chat.repository.js";
 import { ChatMapper, chatListSelect } from "../mappers/chat.mapper.js";
+import { MessageMapper, messageSelect } from "../mappers/message.mapper.js";
 
 const DEFAULT_CHAT_LIMIT = 20;
+const DEFAULT_MESSAGE_LIMIT = 30;
 
 export class PrismaChatRepository implements IChatRepository {
+  findById = async (chatId: string): Promise<ChatAccessDto | null> => {
+    const chat = await prisma.chats.findUnique({
+      where: { id: chatId },
+      select: {
+        id: true,
+        customer_id: true,
+        enterprise_id: true,
+      },
+    });
+
+    if (!chat) {
+      return null;
+    }
+
+    return {
+      id: chat.id,
+      customerId: chat.customer_id,
+      enterpriseId: chat.enterprise_id,
+    };
+  };
   findEnterpriseIdByUserId = async (userId: string): Promise<string | null> => {
     const user = await prisma.users.findUnique({
       where: { id: userId },
@@ -110,5 +138,30 @@ export class PrismaChatRepository implements IChatRepository {
     });
 
     return ChatMapper.toListItemDto(created, role);
+  };
+
+  getMessages = async (chatId: string,cursor?: string): Promise<PaginatedMessagesDto> => {
+    const limit = DEFAULT_MESSAGE_LIMIT;
+
+    const rows = await prisma.messages.findMany({
+      where: { chat_id: chatId },
+      ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+      take: limit + 1,
+      orderBy: [
+        { created_at: "desc" },
+        { id: "desc" },
+      ],
+      select: messageSelect,
+    });
+
+    const hasMore = rows.length > limit;
+    const sliced = rows.slice(0, limit);
+    const nextCursor = hasMore ? sliced[sliced.length - 1].id : null;
+
+    return {
+      items: sliced.reverse().map(MessageMapper.toDto),
+      nextCursor,
+      hasMore,
+    };
   };
 }

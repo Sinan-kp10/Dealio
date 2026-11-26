@@ -29,3 +29,9 @@ export interface PaginatedChatsDto {
   hasMore: boolean;
   totalUnreadChats: number;
 }
+
+export interface ChatAccessDto {
+  id: string;
+  customerId: string;
+  enterpriseId: string;
+}

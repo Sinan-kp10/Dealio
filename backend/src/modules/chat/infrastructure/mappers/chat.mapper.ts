@@ -16,6 +16,12 @@ export const chatListSelect = {
   enterprise: {
     select: {
       enterprise_name: true,
+      users: {
+        select: {
+          profile_picture_key: true,
+        },
+        take: 1,
+      },
     },
   },
 } satisfies Prisma.chatsSelect;
@@ -29,7 +35,9 @@ export class ChatMapper {
     return {
       id: record.id,
       name: isCustomer ? record.enterprise.enterprise_name : record.customer.name,
-      avatarUrl: isCustomer ? null : record.customer.profile_picture_key,
+      avatarUrl: isCustomer
+        ? (record.enterprise.users[0]?.profile_picture_key ?? null)
+        : record.customer.profile_picture_key,
       lastMessageText: record.last_message_text,
       lastMessageAt: record.last_message_at,
       unreadCount: isCustomer
