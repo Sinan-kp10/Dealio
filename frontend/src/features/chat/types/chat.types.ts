@@ -21,10 +21,3 @@ export interface PaginatedChatsResponse {
   hasMore: boolean;
   totalUnreadChats: number;
 }
-
-export interface ChatMessage {
-  id: string;
-  sender: "customer" | "enterprise";
-  text: string;
-  timestamp: string;
-}

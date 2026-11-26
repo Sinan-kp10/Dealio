@@ -1,25 +1,25 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { MessageCircleMore } from "lucide-react";
-import useDebounce from "../../../../hook/useDebounce";
-import { handleApiError } from "../../../../utils/errorHandler";
-import { ChatList } from "../../components/customer/ChatList";
-import { ChatHeader } from "../../components/customer/ChatHeader";
-import { MessageArea } from "../../components/customer/MessageArea";
-import { ChatInputBar } from "../../components/customer/ChatInputBar";
-import { ChatPanelSkeleton } from "../../components/customer/loading/ChatPanelSkeleton";
-import { getChats, startChat } from "../../services/chat.service";
-import type { ChatFilterTab, ChatListItem } from "../../types/chat.types";
+import useDebounce from "../../../hook/useDebounce";
+import { handleApiError } from "../../../utils/errorHandler";
+import { ChatHeader } from "../components/ChatHeader";
+import { MessageArea } from "../components/MessageArea";
+import { ChatInputBar } from "../components/ChatInputBar";
+import { ChatPanelSkeleton } from "../components/loading/ChatPanelSkeleton";
+import { getChats, getMessages, startChat } from "../services/chat.service";
+import type { ChatFilterTab, ChatListItem } from "../types/chat.types";
+import type { MessageItem } from "../types/message.types";
+import ChatList from "../components/ChatList";
 
 export function CustomerChatPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const targetId = searchParams.get("targetId");
 
   const [chats, setChats] = useState<ChatListItem[]>([]);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedChat, setSelectedChat] = useState<ChatListItem | null>(null);
   const [filterTab, setFilterTab] = useState<ChatFilterTab>("all");
   const [search, setSearch] = useState("");
-  const debouncedSearch = useDebounce(search, 400);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(false);
   const [totalUnreadChats, setTotalUnreadChats] = useState(0);
@@ -27,6 +27,16 @@ export function CustomerChatPage() {
   const [isStartingChat, setIsStartingChat] = useState(Boolean(targetId));
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [mobileShowChat, setMobileShowChat] = useState(Boolean(targetId));
+
+  const [messages, setMessages] = useState<MessageItem[]>([]);
+  const [messagesCursor, setMessagesCursor] = useState<string | null>(null);
+  const [hasMoreMessages, setHasMoreMessages] = useState(false);
+  const [isLoadingMessages, setIsLoadingMessages] = useState(false);
+  const [isLoadingMoreMessages, setIsLoadingMoreMessages] = useState(false);
+
+  const selectedId = selectedChat?.id ?? null;
+  const debouncedSearch = useDebounce(search, 500);
+
 
   useEffect(() => {
     if (!targetId) return;
@@ -39,7 +49,7 @@ export function CustomerChatPage() {
         const chat = await startChat(targetId);
         if (!isMounted) return;
         setChats((prev) => [chat, ...prev.filter((c) => c.id !== chat.id)]);
-        setSelectedId(chat.id);
+        setSelectedChat(chat);
       } catch (error) {
         if (isMounted) {
           handleApiError(error, "Failed to open chat");
@@ -92,6 +102,36 @@ export function CustomerChatPage() {
     };
   }, [filterTab, debouncedSearch, targetId]);
 
+  useEffect(() => {
+    if (!selectedId) return;
+
+    let isMounted = true;
+
+    const fetchMessages = async () => {
+      setIsLoadingMessages(true);
+      try {
+        const data = await getMessages(selectedId);
+        if (!isMounted) return;
+        setMessages(data.items);
+        setMessagesCursor(data.nextCursor);
+        setHasMoreMessages(data.hasMore);
+      } catch (error) {
+        if (isMounted) {
+          handleApiError(error, "Failed to load messages");
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoadingMessages(false);
+        }
+      }
+    };
+
+    fetchMessages();
+    return () => {
+      isMounted = false;
+    };
+  }, [selectedId]);
+
   const handleLoadMore = async () => {
     if (!nextCursor || isLoadingMore) return;
     setIsLoadingMore(true);
@@ -112,10 +152,26 @@ export function CustomerChatPage() {
     }
   };
 
-  const selectedChat = chats.find((c) => c.id === selectedId) ?? null;
+  const handleLoadMoreMessages = async () => {
+    if (!selectedId || !messagesCursor || isLoadingMoreMessages) return;
+    setIsLoadingMoreMessages(true);
+    try {
+      const data = await getMessages(selectedId, { cursor: messagesCursor });
+      setMessages((prev) => [...data.items, ...prev]);
+      setMessagesCursor(data.nextCursor);
+      setHasMoreMessages(data.hasMore);
+    } catch (error) {
+      handleApiError(error, "Failed to load older messages");
+    } finally {
+      setIsLoadingMoreMessages(false);
+    }
+  };
 
   const handleSelectChat = (id: string) => {
-    setSelectedId(id);
+    const chat = chats.find((c) => c.id === id) ?? null;
+    if (chat) {
+      setSelectedChat(chat);
+    }
     setMobileShowChat(true);
   };
 
@@ -150,7 +206,14 @@ export function CustomerChatPage() {
               avatarUrl={selectedChat.avatarUrl}
               onBack={() => setMobileShowChat(false)}
             />
-            <MessageArea messages={[]} />
+            <MessageArea
+              messages={messages}
+              currentRole="CUSTOMER"
+              isLoading={isLoadingMessages}
+              hasMore={hasMoreMessages}
+              isLoadingMore={isLoadingMoreMessages}
+              onLoadMore={handleLoadMoreMessages}
+            />
             <ChatInputBar />
           </>
         ) : isStartingChat || targetId ? (

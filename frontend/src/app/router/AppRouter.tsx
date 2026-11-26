@@ -22,7 +22,7 @@ const CustomerHomePage = lazy(()=> import("../../features/home/pages/customer/Cu
 const CustomerQuotationsPage = lazy(() => import("../../features/quotations/pages/customer/CustomerQuotationsPage"))
 const CustomerQuotationDetailsPage = lazy(() => import("../../features/quotations/pages/customer/CustomerQuotationDetailsPage"))
 const CreateQuotationPage = lazy(() => import("../../features/quotations/pages/customer/CreateQuotationPage"))
-const CustomerChatPage = lazy(() => import("../../features/chat/pages/customer/CustomerChatPage"))
+const CustomerChatPage = lazy(() => import("../../features/chat/pages/CustomerChatPage"))
 const CustomerSettingsPage = lazy(()=> import("../../features/settings/pages/CustomerSttingsPage"))
 const EnterpriseSettingsPage = lazy(()=> import("../../features/settings/pages/EnterpriseSettingsPage"))
 const EnterpriseProfilePage = lazy(()=> import("../../features/profile/pages/EnterpriseProfilePage"))

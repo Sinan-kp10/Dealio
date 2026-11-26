@@ -46,3 +46,18 @@ export const formatTimeAgo = (dateString?: string | Date | null): string => {
     if (diffInMonths < 12) return `${diffInMonths}mo ago`;
     return `${Math.floor(diffInDays / 365)}y ago`;
 };
+
+export const formatChatDateLabel = (dateString?: string | Date | null): string => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "";
+
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    if (date.toDateString() === today.toDateString()) return "Today";
+    if (date.toDateString() === yesterday.toDateString()) return "Yesterday";
+
+    return formatDate(date);
+};

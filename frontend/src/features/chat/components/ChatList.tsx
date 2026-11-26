@@ -1,6 +1,7 @@
+import { useRef } from "react";
 import { Search, Loader2 } from "lucide-react";
-import { formatTimeAgo } from "../../../../utils/dateFormatter";
-import type { ChatFilterTab, ChatListItem } from "../../types/chat.types";
+import type { ChatFilterTab, ChatListItem } from "../types/chat.types";
+import { formatTimeAgo } from "../../../utils/dateFormatter";
 
 interface ChatListProps {
   chats: ChatListItem[];
@@ -33,6 +34,18 @@ export function ChatList({
   onLoadMore,
   className = "",
 }: ChatListProps) {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = () => {
+    const container = scrollContainerRef.current;
+    if (!container || isLoading || isLoadingMore || !hasMore) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = container;
+    if (scrollHeight - scrollTop - clientHeight < 30) {
+      onLoadMore();
+    }
+  };
+
   return (
     <aside
       className={`w-full md:w-80 lg:w-[350px] xl:w-[380px] shrink-0 border-r border-slate-200 flex flex-col bg-white h-full ${className}`}
@@ -91,7 +104,11 @@ export function ChatList({
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto divide-y divide-slate-100/80 custom-scrollbar">
+      <div
+        ref={scrollContainerRef}
+        onScroll={handleScroll}
+        className="flex-1 overflow-y-auto divide-y divide-slate-100/80 custom-scrollbar"
+      >
         {isLoading ? (
           <div className="p-4 space-y-3">
             {Array.from({ length: 5 }).map((_, index) => (
@@ -115,8 +132,8 @@ export function ChatList({
             </p>
             <p className="text-xs text-slate-400 mt-1">
               {filterTab === "unread"
-                ? "You're all caught up on your messages."
-                : "Your chats with suppliers will appear here."}
+                ? "You're all caught up."
+                : "Your chats with seller will appear here."}
             </p>
           </div>
         ) : (
@@ -177,17 +194,10 @@ export function ChatList({
               );
             })}
 
-            {hasMore && (
-              <div className="p-3 flex justify-center">
-                <button
-                  type="button"
-                  onClick={onLoadMore}
-                  disabled={isLoadingMore}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[#2f5581] hover:bg-slate-100 rounded-lg transition-colors cursor-pointer disabled:opacity-50"
-                >
-                  {isLoadingMore && <Loader2 size={13} className="animate-spin" />}
-                  <span>{isLoadingMore ? "Loading..." : "Load more"}</span>
-                </button>
+            {isLoadingMore && (
+              <div className="py-3 flex items-center justify-center gap-2 text-slate-500">
+                <Loader2 size={15} className="animate-spin text-[#244673]" />
+                <span className="text-[11px] font-medium text-slate-400">Loading more...</span>
               </div>
             )}
           </>
