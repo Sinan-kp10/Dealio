@@ -56,6 +56,16 @@ export const envSchema = z.object({
   AWS_ACCESS_KEY_ID: z.string().min(1, "AWS_ACCESS_KEY_ID is required"),
   AWS_SECRET_ACCESS_KEY: z.string().min(1, "AWS_SECRET_ACCESS_KEY is required"),
   AWS_S3_BUCKET_NAME: z.string().min(1, "AWS_S3_BUCKET_NAME is required"),
+
+  LIVEKIT_URL: z
+    .string()
+    .min(1, "LIVEKIT_URL is required")
+    .refine(
+      (val) => val.startsWith("wss://") || val.startsWith("ws://"),
+      "LIVEKIT_URL must start with ws:// or wss://"
+    ),
+  LIVEKIT_API_KEY: z.string().min(1, "LIVEKIT_API_KEY is required"),
+  LIVEKIT_API_SECRET: z.string().min(1, "LIVEKIT_API_SECRET is required"),
 });
 
 export type RawEnv = z.infer<typeof envSchema>;

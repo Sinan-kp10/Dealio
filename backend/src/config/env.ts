@@ -41,6 +41,11 @@ export const env = {
     secretAccessKey: rawEnv.AWS_SECRET_ACCESS_KEY,
     bucketName: rawEnv.AWS_S3_BUCKET_NAME,
   },
+  livekit: {
+    url: rawEnv.LIVEKIT_URL,
+    apiKey: rawEnv.LIVEKIT_API_KEY,
+    apiSecret: rawEnv.LIVEKIT_API_SECRET,
+  },
 } as const;
 
 export type Env = typeof env;
