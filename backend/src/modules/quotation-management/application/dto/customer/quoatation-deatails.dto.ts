@@ -21,4 +21,5 @@ export interface QuotationRequestDetailsDto {
     cancelledAt: Date | null;
     paidAt: Date | null;
     completedAt: Date | null;
+    acceptedEnterpriseId: string | null;
 }

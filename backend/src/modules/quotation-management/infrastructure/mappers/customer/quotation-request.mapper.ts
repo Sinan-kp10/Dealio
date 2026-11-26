@@ -20,6 +20,15 @@ export const quotationRequestListItemSelect = {
             name: true,
         },
     },
+    proposals: {
+        where: {
+            status: { in: ["ACCEPTED", "PAID", "COMPLETED"] },
+        },
+        select: {
+            enterprise_id: true,
+        },
+        take: 1,
+    },
 } satisfies Prisma.quotation_requestsSelect;
 
 export type QuotationRequestListItemRecord = Prisma.quotation_requestsGetPayload<{ select: typeof quotationRequestListItemSelect }>;
@@ -41,6 +50,7 @@ export class QuotationRequestMapper {
       description: data.description,
       status: data.status as QuotationRequestStatus,
       createdAt: data.created_at,
+      acceptedEnterpriseId: data.proposals[0]?.enterprise_id ?? null,
     };
   }
 }

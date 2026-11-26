@@ -28,6 +28,7 @@ export interface QuotationRequestListItemDto {
     description: string;
     status: QuotationRequestStatus;
     createdAt: Date;
+    acceptedEnterpriseId: string | null;
 }
 
 export interface PaginatedQuotationDto {

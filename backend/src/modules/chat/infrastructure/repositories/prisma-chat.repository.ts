@@ -1,6 +1,6 @@
 import { Prisma } from "../../../../../generated/prisma/client.js";
 import { prisma } from "../../../../infrastructure/database/prisma/prisma-client.js";
-import type {ChatFiltersDto,PaginatedChatsDto,} from "../../application/dto/chat.dto.js";
+import type { ChatFiltersDto, ChatListItemDto, PaginatedChatsDto } from "../../application/dto/chat.dto.js";
 import type { IChatRepository } from "../../domain/repositories/chat.repository.js";
 import { ChatMapper, chatListSelect } from "../mappers/chat.mapper.js";
 
@@ -63,5 +63,52 @@ export class PrismaChatRepository implements IChatRepository {
       hasMore,
       totalUnreadChats,
     };
+  };
+
+  hasSharedQuotation = async (customerId: string,enterpriseId: string): Promise<boolean> => {
+    const [requestMatch, proposalMatch] = await Promise.all([
+      prisma.enterprise_quotation_requests.findFirst({
+        where: {
+          enterprise_id: enterpriseId,
+          quotation: { customer_id: customerId },
+        },
+        select: { id: true },
+      }),
+      prisma.proposals.findFirst({
+        where: {
+          enterprise_id: enterpriseId,
+          quotation: { customer_id: customerId },
+        },
+        select: { id: true },
+      }),
+    ]);
+
+    return Boolean(requestMatch || proposalMatch);
+  };
+
+  findChatByParticipants = async (customerId: string,enterpriseId: string,role: string): Promise<ChatListItemDto | null> => {
+    const existing = await prisma.chats.findUnique({
+      where: {
+        customer_id_enterprise_id: {
+          customer_id: customerId,
+          enterprise_id: enterpriseId,
+        },
+      },
+      select: chatListSelect,
+    });
+
+    return existing ? ChatMapper.toListItemDto(existing, role) : null;
+  };
+
+  createChat = async (customerId: string,enterpriseId: string,role: string): Promise<ChatListItemDto> => {
+    const created = await prisma.chats.create({
+      data: {
+        customer_id: customerId,
+        enterprise_id: enterpriseId,
+      },
+      select: chatListSelect,
+    });
+
+    return ChatMapper.toListItemDto(created, role);
   };
 }

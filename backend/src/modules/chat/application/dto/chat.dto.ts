@@ -8,6 +8,12 @@ export interface ChatFiltersDto {
   cursor?: string;
 }
 
+export interface StartChatDto {
+  userId: string;
+  role: string;
+  targetId: string;
+}
+
 export interface ChatListItemDto {
   id: string;
   name: string;
