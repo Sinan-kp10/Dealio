@@ -21,6 +21,7 @@ export interface QuotationDetails {
     cancelledAt?: string | null;
     paidAt?: string | null;
     completedAt?: string | null;
+    acceptedEnterpriseId?: string | null;
 }
 
 export interface QuotationDetailsResponse {

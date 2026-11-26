@@ -1,20 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import {
-  ArrowLeft,
-  FileText,
-  Layers,
-  Tag,
-  Package,
-  IndianRupee,
-  MapPin,
-  Ban,
-  ExternalLink,
-  Handshake,
-  MessageCircleMore,
-  CreditCard,
-  ArrowRight,
-} from "lucide-react";
+import {ArrowLeft,FileText,Layers,Tag,Package,IndianRupee,MapPin,Ban,ExternalLink,Handshake,MessageCircleMore,CreditCard,ArrowRight,} from "lucide-react";
 import { toast } from "react-toastify";
 import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
 import { QuotationStatusBar } from "../../components/customer/QuotationStatusBar";
@@ -157,11 +143,11 @@ export function CustomerQuotationDetailsPage() {
             </div>
           )}
 
-          {isAccepted && (
+          {isAccepted && quotation.acceptedEnterpriseId && (
             <div className="flex items-center gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 sm:self-center shrink-0">
               <button
                 type="button"
-                onClick={() => toast.info("Opening secure chat with seller...")}
+                onClick={() => navigate(`/customer/chat?targetId=${quotation.acceptedEnterpriseId}`)}
                 className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-[#1d4d7c] bg-[#edf5fd] hover:bg-[#e2f0fc] border border-[#b8d6f2] hover:border-[#9ec4ec] rounded-xl transition-all cursor-pointer shadow-2xs active:scale-[0.98]"
               >
                 <MessageCircleMore size={13.5} className="text-[#2b6cb0]" />

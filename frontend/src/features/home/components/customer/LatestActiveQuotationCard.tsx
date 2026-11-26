@@ -18,7 +18,7 @@ export function LatestActiveQuotationCard({ quotation }: LatestActiveQuotationCa
   const isPaid = quotation.status === "PAID";
   const isCompleted = quotation.status === "COMPLETED";
 
-  const showChat = isAccepted || isPaid;
+  const showChat = (isAccepted || isPaid) && Boolean(quotation.acceptedEnterpriseId);
   const showProceedToPay = isAccepted;
 
   const step1Done = true;
@@ -129,7 +129,7 @@ export function LatestActiveQuotationCard({ quotation }: LatestActiveQuotationCa
             {showChat && (
               <button
                 type="button"
-                onClick={() => toast.info("Opening secure chat with seller...")}
+                onClick={() => navigate(`/customer/chat?targetId=${quotation.acceptedEnterpriseId}`)}
                 className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 text-xs font-semibold text-[#1d4d7c] bg-[#edf5fd] hover:bg-[#e2f0fc] border border-[#b8d6f2] hover:border-[#9ec4ec] rounded-xl transition-all cursor-pointer shadow-2xs active:scale-[0.98]"
               >
                 <MessageCircleMore size={13.5} className="text-[#2b6cb0] shrink-0" />

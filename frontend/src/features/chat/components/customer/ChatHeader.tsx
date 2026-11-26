@@ -1,4 +1,4 @@
-import { ArrowLeft, FileText, Video } from "lucide-react";
+import { ArrowLeft, Video } from "lucide-react";
 
 interface ChatHeaderProps {
   name: string;
@@ -41,14 +41,6 @@ export function ChatHeader({ name, avatarUrl, onBack }: ChatHeaderProps) {
       </div>
 
       <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-        <button
-          type="button"
-          className="inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 text-xs font-semibold text-[#2f5581] bg-white hover:bg-slate-100/80 border border-slate-200/80 rounded-xl transition-all shadow-xs cursor-pointer active:scale-[0.98]"
-        >
-          <FileText size={14} className="text-[#2f5581]" />
-          <span className="hidden sm:inline">View Request</span>
-        </button>
-
         <button
           type="button"
           className="inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 text-xs font-semibold text-white bg-[#2f5581] hover:bg-[#25456b] rounded-xl transition-all shadow-xs cursor-pointer active:scale-[0.98]"

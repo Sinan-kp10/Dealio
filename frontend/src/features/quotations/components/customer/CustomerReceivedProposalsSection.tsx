@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { ArrowLeftRight, Search, RotateCcw } from "lucide-react";
 import { toast } from "react-toastify";
 import { CustomerReceivedProposalCard } from "./CustomerReceivedProposalCard";
@@ -17,6 +18,7 @@ interface CustomerReceivedProposalsSectionProps {
 const PAGE_LIMIT = 9;
 
 export function CustomerReceivedProposalsSection({quotationId, onProposalAccepted}: CustomerReceivedProposalsSectionProps) {
+  const navigate = useNavigate();
   const [proposals, setProposals] = useState<CustomerReceivedProposal[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -65,7 +67,7 @@ export function CustomerReceivedProposalsSection({quotationId, onProposalAccepte
   };
   
   const handleChat = (proposal: CustomerReceivedProposal) => {
-    toast.info(`Opening secure chat with ${proposal.enterprise.name}...`);
+    navigate(`/customer/chat?targetId=${proposal.enterprise.id}`);
   };
 
   return (

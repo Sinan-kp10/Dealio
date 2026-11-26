@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { X, MessageCircleMore, Package, IndianRupee, Clock, Truck, ShieldCheck, RotateCcw, Info, Check, FileText } from "lucide-react";
 import { toast } from "react-toastify";
 import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
@@ -18,6 +19,7 @@ interface CustomerReceivedProposalDetailsDrawerProps {
 }
 
 export function CustomerReceivedProposalDetailsDrawer({isOpen,onClose,quotationId,proposalId,onProposalAccepted}: CustomerReceivedProposalDetailsDrawerProps) {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [proposal, setProposal] = useState<ReceivedProposalDetails | null>(null);
   const [currentStatus, setCurrentStatus] = useState<string>("PENDING");
@@ -93,7 +95,7 @@ export function CustomerReceivedProposalDetailsDrawer({isOpen,onClose,quotationI
 
   const handleChat = () => {
     if (!proposal) return;
-    toast.info(`Opening secure chat with ${proposal.enterprise.name}...`);
+    navigate(`/customer/chat?targetId=${proposal.enterprise.id}`);
   };
 
   const handleConfirmAccept = async () => {

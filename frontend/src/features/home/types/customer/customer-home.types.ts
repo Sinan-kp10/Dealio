@@ -21,6 +21,7 @@ export interface CustomerRecentQuotationItem {
   quantity: number;
   status: CustomerQuotationStatus;
   createdAt: string;
+  acceptedEnterpriseId?: string | null;
 }
 
 export interface CustomerRecentQuotationsResponse {

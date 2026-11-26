@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { MessageCircleMore } from "lucide-react";
 import useDebounce from "../../../../hook/useDebounce";
 import { handleApiError } from "../../../../utils/errorHandler";
@@ -6,10 +7,14 @@ import { ChatList } from "../../components/customer/ChatList";
 import { ChatHeader } from "../../components/customer/ChatHeader";
 import { MessageArea } from "../../components/customer/MessageArea";
 import { ChatInputBar } from "../../components/customer/ChatInputBar";
-import { getChats } from "../../services/chat.service";
+import { ChatPanelSkeleton } from "../../components/customer/loading/ChatPanelSkeleton";
+import { getChats, startChat } from "../../services/chat.service";
 import type { ChatFilterTab, ChatListItem } from "../../types/chat.types";
 
 export function CustomerChatPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const targetId = searchParams.get("targetId");
+
   const [chats, setChats] = useState<ChatListItem[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [filterTab, setFilterTab] = useState<ChatFilterTab>("all");
@@ -19,10 +24,43 @@ export function CustomerChatPage() {
   const [hasMore, setHasMore] = useState(false);
   const [totalUnreadChats, setTotalUnreadChats] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [isStartingChat, setIsStartingChat] = useState(Boolean(targetId));
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [mobileShowChat, setMobileShowChat] = useState(false);
+  const [mobileShowChat, setMobileShowChat] = useState(Boolean(targetId));
 
   useEffect(() => {
+    if (!targetId) return;
+    let isMounted = true;
+
+    const openTargetChat = async () => {
+      setIsStartingChat(true);
+      setMobileShowChat(true);
+      try {
+        const chat = await startChat(targetId);
+        if (!isMounted) return;
+        setChats((prev) => [chat, ...prev.filter((c) => c.id !== chat.id)]);
+        setSelectedId(chat.id);
+      } catch (error) {
+        if (isMounted) {
+          handleApiError(error, "Failed to open chat");
+          setMobileShowChat(false);
+        }
+      } finally {
+        if (isMounted) {
+          setIsStartingChat(false);
+          setSearchParams({}, { replace: true });
+        }
+      }
+    };
+
+    openTargetChat();
+    return () => {
+      isMounted = false;
+    };
+  }, [targetId, setSearchParams]);
+
+  useEffect(() => {
+    if (targetId) return;
     let isMounted = true;
 
     const fetchChats = async () => {
@@ -52,7 +90,7 @@ export function CustomerChatPage() {
     return () => {
       isMounted = false;
     };
-  }, [filterTab, debouncedSearch]);
+  }, [filterTab, debouncedSearch, targetId]);
 
   const handleLoadMore = async () => {
     if (!nextCursor || isLoadingMore) return;
@@ -115,6 +153,8 @@ export function CustomerChatPage() {
             <MessageArea messages={[]} />
             <ChatInputBar />
           </>
+        ) : isStartingChat || targetId ? (
+          <ChatPanelSkeleton />
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center p-6 text-center bg-[#f4f7fb]">
             <div className="w-16 h-16 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex items-center justify-center text-[#2f5581] mb-4">
