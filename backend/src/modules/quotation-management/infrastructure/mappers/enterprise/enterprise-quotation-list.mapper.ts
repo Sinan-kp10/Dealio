@@ -8,6 +8,7 @@ export const enterpriseQuotationListItemSelect = {
   created_at: true,
   quotation: {
     select: {
+      customer_id: true,
       product_name: true,
       quantity: true,
       description: true,
@@ -27,6 +28,7 @@ export class EnterpriseQuotationListMapper {
   static toListItemDto(data: EnterpriseQuotationListItemRecord): AvailableQuotationDto {
     return {
       id: data.quotation_id,
+      customerId: data.quotation.customer_id,
       productName: data.quotation.product_name,
       subCategory: {
         id: data.quotation.subcategory.id,

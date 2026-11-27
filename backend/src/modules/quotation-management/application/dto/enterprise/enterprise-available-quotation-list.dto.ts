@@ -19,6 +19,7 @@ export interface MarkNotInterestedDto {
 
 export interface AvailableQuotationDto {
     id: string;
+    customerId: string;
     productName: string;
     subCategory: {
         id: string;

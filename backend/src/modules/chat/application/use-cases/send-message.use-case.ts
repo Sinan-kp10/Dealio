@@ -97,6 +97,7 @@ export class SendMessageUseCase implements IUseCase<SendMessageDto, MessageDto> 
         });
       }
     } catch {
+      //
     }
   };
 }

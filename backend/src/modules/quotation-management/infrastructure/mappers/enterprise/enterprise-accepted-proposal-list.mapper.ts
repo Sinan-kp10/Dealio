@@ -15,6 +15,7 @@ export const enterpriseAcceptedProposalListItemSelect = {
   updated_at: true,
   quotation: {
     select: {
+      customer_id: true,
       product_name: true,
       description: true,
       accepted_at: true,
@@ -29,6 +30,7 @@ export class EnterpriseAcceptedProposalListMapper {
     return {
       id: data.id,
       quotationId: data.quotation_id,
+      customerId: data.quotation.customer_id,
       productName: data.quotation.product_name,
       status: data.status as EnterpriseAcceptedProposalStatus,
       quantity: data.quantity,

@@ -10,6 +10,7 @@ export const customerQuotationDetailsSelect = {
   quotation: {
     select: {
       id: true,
+      customer_id: true,
       product_name: true,
       quantity: true,
       budget: true,
@@ -71,6 +72,7 @@ export class CustomerQuotationDetailsMapper {
   static toDetailsDto(data: CustomerQuotationDetailsRecord, proposal?: EnterpriseProposalDetailsRecord | null): AvailableQuotationDetailsDto {
     return {
       id: data.quotation_id,
+      customerId: data.quotation.customer_id,
       productName: data.quotation.product_name,
       category: {
         id: data.quotation.category.id,

@@ -15,6 +15,7 @@ export interface GetEnterpriseAcceptedProposalsDto {
 export interface EnterpriseAcceptedProposalListItemDto {
   id: string;
   quotationId: string;
+  customerId: string;
   productName: string;
   status: EnterpriseAcceptedProposalStatus;
   quantity: number;

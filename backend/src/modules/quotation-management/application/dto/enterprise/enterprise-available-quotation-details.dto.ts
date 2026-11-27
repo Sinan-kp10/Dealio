@@ -3,6 +3,7 @@ import { EnterpriseProposalDetailsDto } from "./enterprise-proposal.dto";
 
 export interface AvailableQuotationDetailsDto {
     id: string;
+    customerId: string;
     productName: string;
     category: {
         id: string;

@@ -3,6 +3,7 @@ import { EnterpriseAcceptedProposalStatus } from "./enterprise-accepted-proposal
 export interface EnterpriseAcceptedProposalDetailsDto {
   id: string;
   quotationId: string;
+  customerId: string;
   productName: string;
   status: EnterpriseAcceptedProposalStatus;
   quantity: number;
