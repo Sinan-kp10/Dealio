@@ -24,6 +24,11 @@ interface ChatWorkspaceProps {
   currentRole: MessageSenderRole;
 }
 
+interface CachedChatMessages {
+  items: MessageItem[];
+  nextCursor: string | null;
+}
+
 export function ChatWorkspace({ currentRole }: ChatWorkspaceProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const targetId = searchParams.get("targetId");
@@ -38,28 +43,41 @@ export function ChatWorkspace({ currentRole }: ChatWorkspaceProps) {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [mobileShowChat, setMobileShowChat] = useState(Boolean(targetId));
 
-  const [messages, setMessages] = useState<MessageItem[]>([]);
-  const [messagesCursor, setMessagesCursor] = useState<string | null>(null);
+  const [messagesByChatId, setMessagesByChatId] = useState<Record<string, CachedChatMessages>>({});
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const [isLoadingMoreMessages, setIsLoadingMoreMessages] = useState(false);
   const [isSending, setIsSending] = useState(false);
 
   const selectedId = selectedChat?.id ?? null;
+  const activeMessagesData = selectedId ? messagesByChatId[selectedId] : undefined;
+  const messages = activeMessagesData?.items ?? [];
+  const messagesCursor = activeMessagesData?.nextCursor ?? null;
   const debouncedSearch = useDebounce(search, 500);
+
+  const appendMessageToCache = useCallback((chatId: string, newMessage: MessageItem) => {
+    setMessagesByChatId((prev) => {
+      const existing = prev[chatId];
+      if (!existing) return prev;
+      if (existing.items.some((msg) => msg.id === newMessage.id)) return prev;
+
+      return {
+        ...prev,
+        [chatId]: {
+          ...existing,
+          items: [newMessage, ...existing.items],
+        },
+      };
+    });
+  }, []);
 
   const handleIncomingMessage = useCallback(
     (incomingMessage: MessageItem) => {
-      if (incomingMessage.chatId !== selectedId) return;
-      setMessages((prev) =>
-        prev.some((msg) => msg.id === incomingMessage.id)
-          ? prev
-          : [incomingMessage, ...prev]
-      );
-      if (incomingMessage.senderRole !== currentRole) {
+      appendMessageToCache(incomingMessage.chatId, incomingMessage);
+      if (incomingMessage.chatId === selectedId && incomingMessage.senderRole !== currentRole) {
         markChatAsReadViaSocket(selectedId);
       }
     },
-    [selectedId, currentRole]
+    [selectedId, currentRole, appendMessageToCache]
   );
 
   const updateChatPreview = useCallback(
@@ -88,6 +106,12 @@ export function ChatWorkspace({ currentRole }: ChatWorkspaceProps) {
         if (existing && existing.unreadCount === 0) {
           setTotalUnreadChats((prev) => prev + 1);
         }
+        setMessagesByChatId((prev) => {
+          if (!prev[update.chatId]) return prev;
+          const next = { ...prev };
+          delete next[update.chatId];
+          return next;
+        });
       }
       updateChatPreview(update, isUnreadChat);
     },
@@ -96,16 +120,25 @@ export function ChatWorkspace({ currentRole }: ChatWorkspaceProps) {
 
   const handleMessagesRead = useCallback(
     (payload: MessagesReadPayload) => {
-      if (payload.chatId !== selectedId || payload.readByRole === currentRole) return;
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.senderRole === currentRole && !msg.isRead
-            ? { ...msg, isRead: true }
-            : msg
-        )
-      );
+      if (payload.readByRole === currentRole) return;
+      setMessagesByChatId((prev) => {
+        const existing = prev[payload.chatId];
+        if (!existing) return prev;
+
+        return {
+          ...prev,
+          [payload.chatId]: {
+            ...existing,
+            items: existing.items.map((msg) =>
+              msg.senderRole === currentRole && !msg.isRead
+                ? { ...msg, isRead: true }
+                : msg
+            ),
+          },
+        };
+      });
     },
-    [selectedId, currentRole]
+    [currentRole]
   );
 
   const isRecipientOnline = useChatSocket({
@@ -182,7 +215,7 @@ export function ChatWorkspace({ currentRole }: ChatWorkspaceProps) {
   }, [filterTab, debouncedSearch, targetId]);
 
   useEffect(() => {
-    if (!selectedId) return;
+    if (!selectedId || messagesByChatId[selectedId]) return;
 
     let isMounted = true;
 
@@ -191,8 +224,13 @@ export function ChatWorkspace({ currentRole }: ChatWorkspaceProps) {
       try {
         const data = await getMessages(selectedId);
         if (!isMounted) return;
-        setMessages(data.items);
-        setMessagesCursor(data.nextCursor);
+        setMessagesByChatId((prev) => ({
+          ...prev,
+          [selectedId]: {
+            items: data.items,
+            nextCursor: data.nextCursor,
+          },
+        }));
       } catch (error) {
         if (isMounted) {
           handleApiError(error, "Failed to load messages");
@@ -208,7 +246,7 @@ export function ChatWorkspace({ currentRole }: ChatWorkspaceProps) {
     return () => {
       isMounted = false;
     };
-  }, [selectedId]);
+  }, [selectedId, messagesByChatId]);
 
   const handleLoadMore = async () => {
     if (!nextCursor || isLoadingMore) return;
@@ -234,8 +272,17 @@ export function ChatWorkspace({ currentRole }: ChatWorkspaceProps) {
     setIsLoadingMoreMessages(true);
     try {
       const data = await getMessages(selectedId, { cursor: messagesCursor });
-      setMessages((prev) => [...prev, ...data.items]);
-      setMessagesCursor(data.nextCursor);
+      setMessagesByChatId((prev) => {
+        const existing = prev[selectedId];
+        if (!existing) return prev;
+        return {
+          ...prev,
+          [selectedId]: {
+            items: [...existing.items, ...data.items],
+            nextCursor: data.nextCursor,
+          },
+        };
+      });
     } catch (error) {
       handleApiError(error, "Failed to load older messages");
     } finally {
@@ -244,10 +291,6 @@ export function ChatWorkspace({ currentRole }: ChatWorkspaceProps) {
   };
 
   const handleSelectChat = (id: string) => {
-    if (id !== selectedId) {
-      setMessages([]);
-      setMessagesCursor(null);
-    }
     const chat = chats.find((c) => c.id === id);
     if (chat) {
       if (chat.unreadCount > 0) {
@@ -270,9 +313,7 @@ export function ChatWorkspace({ currentRole }: ChatWorkspaceProps) {
         ? await sendTextMessageViaSocket(selectedChat.id, payload.content!)
         : await sendMessage(selectedChat.id, payload);
 
-      setMessages((prev) =>
-        prev.some((msg) => msg.id === newMessage.id) ? prev : [newMessage, ...prev]
-      );
+      appendMessageToCache(selectedChat.id, newMessage);
 
       const preview = newMessage.content || "Photo";
       setSelectedChat({
