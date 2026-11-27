@@ -35,7 +35,7 @@ export function EnterpriseAvailableQuotationDetailsCard({ quotation }: Enterpris
   };
 
   const handleChat = () => {
-    toast.info(`Opening secure chat with customer for "${quotation.productName}"...`);
+    navigate(`/enterprise/chat?targetId=${quotation.customerId}`);
   };
 
   return (

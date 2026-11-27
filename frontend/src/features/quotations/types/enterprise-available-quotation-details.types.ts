@@ -3,6 +3,7 @@ import type { AvailableQuotationStatus } from "./enterprise-available-quotation.
 
 export interface AvailableQuotationDetails {
   id: string;
+  customerId: string;
   productName: string;
   category: {
     id: string;

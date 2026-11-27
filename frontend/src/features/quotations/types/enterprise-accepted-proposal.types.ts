@@ -3,6 +3,7 @@ export type AcceptedProposalStatus = "ACCEPTED" | "PAID" | "COMPLETED";
 export interface EnterpriseAcceptedProposalListItem {
   id: string;
   quotationId: string;
+  customerId: string;
   productName: string;
   status: AcceptedProposalStatus;
   quantity: number;

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Search, FileText } from "lucide-react";
-import { toast } from "react-toastify";
 import { Pagination } from "../../../../components/common/pagination/Pagination";
 import { Select } from "../../../../components/common/select/Select";
 import { EnterpriseAvailableQuotationCard } from "../../components/enterprise/EnterpriseAvailableQuotationCard";
@@ -22,6 +22,7 @@ const STATUS_OPTIONS = [
 ];
 
 export function EnterpriseAvailableQuotationsPage() {
+  const navigate = useNavigate();
   const [quotations, setQuotations] = useState<AvailableQuotation[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("ALL");
@@ -77,7 +78,7 @@ export function EnterpriseAvailableQuotationsPage() {
   };
 
   const handleChat = (item: AvailableQuotation) => {
-    toast.info(`Opening chat with customer for "${item.productName}"...`);
+    navigate(`/enterprise/chat?targetId=${item.customerId}`);
   };
 
   return (

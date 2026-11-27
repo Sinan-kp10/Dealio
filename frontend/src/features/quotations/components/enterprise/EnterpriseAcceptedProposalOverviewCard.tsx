@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { MessageCircleMore, Check, Clock, User, CheckCircle2, ArrowUpRight } from "lucide-react";
-import { toast } from "react-toastify";
 import { StatusBadge } from "../../../../components/common/badge/StatusBadge";
 import { EnterpriseAcceptedProposalQuotationDrawer } from "./EnterpriseAcceptedProposalQuotationDrawer";
 import { formatDate } from "../../../../utils/dateFormatter";
@@ -11,6 +11,7 @@ interface EnterpriseAcceptedProposalOverviewCardProps {
 }
 
 export function EnterpriseAcceptedProposalOverviewCard({proposal}: EnterpriseAcceptedProposalOverviewCardProps) {
+  const navigate = useNavigate();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const isAccepted = proposal.status === "ACCEPTED";
@@ -63,7 +64,7 @@ export function EnterpriseAcceptedProposalOverviewCard({proposal}: EnterpriseAcc
   ];
 
   const handleChat = () => {
-    toast.info(`Opening secure chat with ${proposal.customer.name} for "${proposal.productName}"...`);
+    navigate(`/enterprise/chat?targetId=${proposal.customerId}`);
   };
 
   return (

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Search, SquareCheckBig } from "lucide-react";
-import { toast } from "react-toastify";
 import { Pagination } from "../../../../components/common/pagination/Pagination";
 import { Select } from "../../../../components/common/select/Select";
 import { EnterpriseAcceptedProposalCard } from "../../components/enterprise/EnterpriseAcceptedProposalCard";
@@ -24,6 +24,7 @@ const STATUS_OPTIONS = [
 ];
 
 export function EnterpriseAcceptedProposalsPage() {
+  const navigate = useNavigate();
   const [proposals, setProposals] = useState<EnterpriseAcceptedProposalListItem[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("ALL");
@@ -79,7 +80,7 @@ export function EnterpriseAcceptedProposalsPage() {
   };
 
   const handleChat = (item: EnterpriseAcceptedProposalListItem) => {
-    toast.info(`Opening secure chat for "${item.productName}"...`);
+    navigate(`/enterprise/chat?targetId=${item.customerId}`);
   };
 
   return (

@@ -4,6 +4,7 @@ import type { EnterpriseProposalDetails } from "./enterprise-proposal.types";
 export interface EnterpriseAcceptedProposalDetails {
   id: string;
   quotationId: string;
+  customerId: string;
   productName: string;
   status: AcceptedProposalStatus;
   quantity: number;

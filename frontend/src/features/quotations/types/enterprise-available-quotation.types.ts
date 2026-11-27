@@ -2,6 +2,7 @@ export type AvailableQuotationStatus = "OPEN" | "PROPOSAL_SENT" | "CLOSED" | "CA
 
 export interface AvailableQuotation {
   id: string;
+  customerId: string;
   productName: string;
   subCategory: {
     id: string;
