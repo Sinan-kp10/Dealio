@@ -3,7 +3,7 @@ import { z } from "zod";
 import { isUserOnline } from "../../../../infrastructure/socket/socket-server.js";
 import type { MessageDto } from "../../application/dto/message.dto.js";
 import { sendMessageSchema } from "../../presentation/validators/send-message.schema.js";
-import { chatRepository, sendMessageUseCase } from "../container/chat.container.js";
+import { chatRepository, markChatReadUseCase, sendMessageUseCase } from "../container/chat.container.js";
 
 const chatIdSchema = z.string().uuid("Invalid chat ID.");
 
@@ -86,6 +86,29 @@ export const registerChatSocketHandlers = (socket: Socket): void => {
         callback?.({ success: true, data: message });
       } catch (error) {
         const message = error instanceof Error ? error.message : "Failed to send message.";
+        callback?.({ success: false, error: message });
+      }
+    }
+  );
+
+  socket.on(
+    "chat:mark_read",
+    async (chatId: unknown, callback?: (res: SocketResponse) => void) => {
+      const parsedId = chatIdSchema.safeParse(chatId);
+      if (!parsedId.success) {
+        callback?.({ success: false, error: "Invalid chat ID." });
+        return;
+      }
+
+      try {
+        await markChatReadUseCase.execute({
+          chatId: parsedId.data,
+          userId,
+          role,
+        });
+        callback?.({ success: true });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "Failed to mark chat as read.";
         callback?.({ success: false, error: message });
       }
     }

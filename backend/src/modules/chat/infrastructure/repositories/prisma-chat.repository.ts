@@ -199,4 +199,29 @@ export class PrismaChatRepository implements IChatRepository {
 
     return MessageMapper.toDto(message);
   };
+
+  markChatAsRead = async (chatId: string,readerRole: "CUSTOMER" | "ENTERPRISE"): Promise<void> => {
+    const senderRoleToMark = readerRole === "CUSTOMER" ? "ENTERPRISE" : "CUSTOMER";
+
+    await prisma.$transaction([
+      prisma.messages.updateMany({
+        where: {
+          chat_id: chatId,
+          sender_role: senderRoleToMark,
+          is_read: false,
+        },
+        data: {
+          is_read: true,
+          read_at: new Date(),
+        },
+      }),
+      prisma.chats.update({
+        where: { id: chatId },
+        data:
+          readerRole === "CUSTOMER"
+            ? { customer_unread_count: 0 }
+            : { enterprise_unread_count: 0 },
+      }),
+    ]);
+  };
 }

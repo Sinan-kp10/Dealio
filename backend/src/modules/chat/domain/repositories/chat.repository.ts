@@ -11,4 +11,5 @@ export interface IChatRepository extends IBaseRepository<ChatAccessDto | null> {
   createChat(customerId: string, enterpriseId: string, role: string): Promise<ChatListItemDto>;
   getMessages(chatId: string, cursor?: string): Promise<PaginatedMessagesDto>;
   sendMessage(data: SendMessageDataDto): Promise<MessageDto>;
+  markChatAsRead(chatId: string, readerRole: "CUSTOMER" | "ENTERPRISE"): Promise<void>;
 }
