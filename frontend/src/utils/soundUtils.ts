@@ -33,43 +33,68 @@ if (typeof window !== "undefined") {
   window.addEventListener("touchstart", unlockAudio);
 }
 
+function playTone(
+  ctx: AudioContext,
+  frequency: number,
+  startTime: number,
+  duration: number,
+  peakVolume: number,
+  type: OscillatorType = "sine"
+): void {
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+
+  osc.type = type;
+  osc.frequency.setValueAtTime(frequency, startTime);
+
+  gain.gain.setValueAtTime(0.0001, startTime);
+  gain.gain.linearRampToValueAtTime(peakVolume, startTime + 0.006);
+  gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+
+  osc.start(startTime);
+  osc.stop(startTime + duration);
+}
+
+async function getReadyAudioContext(): Promise<AudioContext | null> {
+  const ctx = getAudioContext();
+  if (!ctx) return null;
+
+  if (ctx.state === "suspended") {
+    await ctx.resume();
+  }
+
+  return ctx;
+}
+
 export async function playNotificationSound(): Promise<void> {
   try {
-    const ctx = getAudioContext();
+    const ctx = await getReadyAudioContext();
     if (!ctx) return;
-
-    if (ctx.state === "suspended") {
-      await ctx.resume();
-    }
 
     const now = ctx.currentTime;
 
-    const playNote = (frequency: number, startTime: number, duration: number, peakVolume: number) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(frequency, startTime);
-
-      // Sharp attack gives a crisp physical bell strike
-      gain.gain.setValueAtTime(0.0001, startTime);
-      gain.gain.linearRampToValueAtTime(peakVolume, startTime + 0.006);
-      gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start(startTime);
-      osc.stop(startTime + duration);
-    };
-
     // Crisp, uplifting two-tone crystal chime
-    // Note 1: Clear strike
-    playNote(987.77, now, 0.16, 0.40);
+    playTone(ctx, 987.77, now, 0.16, 0.40);
+    playTone(ctx, 1318.51, now + 0.09, 0.38, 0.44);
+    playTone(ctx, 2637.02, now + 0.09, 0.22, 0.12);
+  } catch {
+    // Silently ignore if audio is blocked
+  }
+}
 
-    // Note 2: Harmonious higher chime + subtle shimmer overtone
-    playNote(1318.51, now + 0.09, 0.38, 0.44);
-    playNote(2637.02, now + 0.09, 0.22, 0.12);
+export async function playChatMessageSound(): Promise<void> {
+  try {
+    const ctx = await getReadyAudioContext();
+    if (!ctx) return;
+
+    const now = ctx.currentTime;
+
+    // Soft, quick WhatsApp-style double pop
+    playTone(ctx, 587.33, now, 0.08, 0.22, "triangle");
+    playTone(ctx, 880.0, now + 0.055, 0.13, 0.26, "sine");
   } catch {
     // Silently ignore if audio is blocked
   }

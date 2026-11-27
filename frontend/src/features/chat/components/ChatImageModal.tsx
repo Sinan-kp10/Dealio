@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Download, X, ZoomIn, ZoomOut } from "lucide-react";
+import { X, ZoomIn, ZoomOut } from "lucide-react";
 
 interface ChatImageModalProps {
   imageUrl: string;
@@ -32,23 +32,6 @@ export function ChatImageModal({ imageUrl, onClose }: ChatImageModalProps) {
     setScale((prev) => Math.max(MIN_SCALE, prev - SCALE_STEP));
   };
 
-  const handleDownload = async () => {
-    try {
-      const response = await fetch(imageUrl);
-      const blob = await response.blob();
-      const objectUrl = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = objectUrl;
-      link.download = `dealio-chat-${Date.now()}.jpg`;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      URL.revokeObjectURL(objectUrl);
-    } catch {
-      window.open(imageUrl, "_blank", "noopener,noreferrer");
-    }
-  };
-
   return (
     <div
       className="fixed inset-0 z-50 bg-black/85 backdrop-blur-xs flex flex-col animate-in fade-in duration-150"
@@ -79,15 +62,6 @@ export function ChatImageModal({ imageUrl, onClose }: ChatImageModalProps) {
           aria-label="Zoom in"
         >
           <ZoomIn size={18} />
-        </button>
-
-        <button
-          type="button"
-          onClick={handleDownload}
-          className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
-          aria-label="Download image"
-        >
-          <Download size={18} />
         </button>
 
         <button

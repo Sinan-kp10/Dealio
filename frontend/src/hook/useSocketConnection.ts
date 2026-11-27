@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import useAuthStore from "../stores/auth.store";
 import socket from "../services/socket.service";
 import useNotificationStore from "../stores/notification.store";
-import { playNotificationSound } from "../utils/soundUtils";
+import { playChatMessageSound, playNotificationSound } from "../utils/soundUtils";
 
 function useSocketConnection(): void {
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -22,7 +22,12 @@ function useSocketConnection(): void {
             void playNotificationSound();
         };
 
+        const handleIncomingChatSound = () => {
+            void playChatMessageSound();
+        };
+
         socket.on("notification:new", handleNewNotification);
+        socket.on("chat:list_update", handleIncomingChatSound);
 
         if (!socket.connected) {
             socket.connect();
@@ -30,6 +35,7 @@ function useSocketConnection(): void {
 
         return () => {
             socket.off("notification:new", handleNewNotification);
+            socket.off("chat:list_update", handleIncomingChatSound);
         };
     }, [isAuthenticated, isLoading, incrementUnreadCount]);
 }
