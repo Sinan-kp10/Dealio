@@ -135,7 +135,7 @@ export function EnterpriseManagerSidebar({ isOpen, onClose }: EnterpriseManagerS
                         </NavLink>
 
                         <NavLink
-                            to="/enterprise/conversations"
+                            to="/enterprise/chat"
                             onClick={onClose}
                             className={({ isActive }) =>
                                 `group flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${

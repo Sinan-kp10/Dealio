@@ -1,7 +1,8 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { CheckCheck, Loader2 } from "lucide-react";
 import { formatChatDateLabel, formatDateTime } from "../../../utils/dateFormatter";
 import { isEmojiOnlyMessage } from "../utils/emoji.utils";
+import { ChatImageModal } from "./ChatImageModal";
 import type { MessageItem, MessageSenderRole } from "../types/message.types";
 
 interface MessageAreaProps {
@@ -22,6 +23,7 @@ export function MessageArea({
   onLoadMore,
 }: MessageAreaProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
 
   const handleScroll = () => {
     const container = scrollContainerRef.current;
@@ -102,7 +104,8 @@ export function MessageArea({
                       <img
                         src={msg.mediaUrl!}
                         alt="Attachment"
-                        className="max-h-64 w-auto object-cover block"
+                        onClick={() => setPreviewImageUrl(msg.mediaUrl)}
+                        className="max-h-64 w-auto object-cover block cursor-pointer"
                       />
                       <div className="absolute bottom-2 right-2 flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/50 backdrop-blur-[2px] text-white select-none">
                         <span className="text-[10px] sm:text-[10.5px] font-normal leading-none">
@@ -124,7 +127,8 @@ export function MessageArea({
                         <img
                           src={msg.mediaUrl!}
                           alt="Attachment"
-                          className="max-h-64 w-full object-cover block"
+                          onClick={() => setPreviewImageUrl(msg.mediaUrl)}
+                          className="max-h-64 w-full object-cover block cursor-pointer"
                         />
                       )}
                       <div className="px-3.5 py-2 sm:px-4 sm:py-2.5">
@@ -159,6 +163,13 @@ export function MessageArea({
             </div>
           )}
         </>
+      )}
+
+      {previewImageUrl && (
+        <ChatImageModal
+          imageUrl={previewImageUrl}
+          onClose={() => setPreviewImageUrl(null)}
+        />
       )}
     </div>
   );

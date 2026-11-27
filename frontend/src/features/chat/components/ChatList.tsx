@@ -134,7 +134,7 @@ export function ChatList({
             <p className="text-xs text-slate-400 mt-1">
               {filterTab === "unread"
                 ? "You're all caught up."
-                : "Your chats with seller will appear here."}
+                : "Your chats will appear here."}
             </p>
           </div>
         ) : (

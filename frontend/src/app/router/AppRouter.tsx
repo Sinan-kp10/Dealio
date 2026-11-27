@@ -23,6 +23,7 @@ const CustomerQuotationsPage = lazy(() => import("../../features/quotations/page
 const CustomerQuotationDetailsPage = lazy(() => import("../../features/quotations/pages/customer/CustomerQuotationDetailsPage"))
 const CreateQuotationPage = lazy(() => import("../../features/quotations/pages/customer/CreateQuotationPage"))
 const CustomerChatPage = lazy(() => import("../../features/chat/pages/CustomerChatPage"))
+const EnterpriseChatPage = lazy(() => import("../../features/chat/pages/EnterpriseChatPage"))
 const CustomerSettingsPage = lazy(()=> import("../../features/settings/pages/CustomerSttingsPage"))
 const EnterpriseSettingsPage = lazy(()=> import("../../features/settings/pages/EnterpriseSettingsPage"))
 const EnterpriseProfilePage = lazy(()=> import("../../features/profile/pages/EnterpriseProfilePage"))
@@ -78,6 +79,7 @@ export function AppRouter() {
               <Route path="/enterprise/quotations/:id/proposal" element={<EnterpriseCreateProposalPage />} />
               <Route path="/enterprise/accepted-requests" element={<EnterpriseAcceptedProposalsPage />} />
               <Route path="/enterprise/accepted-requests/:id" element={<EnterpriseAcceptedProposalDetailsPage />} />
+              <Route path="/enterprise/chat" element={<EnterpriseChatPage />} />
               <Route path="/enterprise/profile" element={<EnterpriseProfilePage />} />
               <Route path="/enterprise/settings" element={<EnterpriseSettingsPage />} />
             </Route>
