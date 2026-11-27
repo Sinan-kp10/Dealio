@@ -1,6 +1,6 @@
 import { IBaseRepository } from "../../../../shared/domian/base.repository.js";
 import type {ChatAccessDto,ChatFiltersDto,ChatListItemDto,PaginatedChatsDto} from "../../application/dto/chat.dto.js";
-import type { PaginatedMessagesDto } from "../../application/dto/message.dto.js";
+import type {SendMessageDataDto,MessageDto,PaginatedMessagesDto} from "../../application/dto/message.dto.js";
 
 export interface IChatRepository extends IBaseRepository<ChatAccessDto | null> {
   findEnterpriseIdByUserId(userId: string): Promise<string | null>;
@@ -9,4 +9,5 @@ export interface IChatRepository extends IBaseRepository<ChatAccessDto | null> {
   findChatByParticipants(customerId: string, enterpriseId: string, role: string): Promise<ChatListItemDto | null>;
   createChat(customerId: string, enterpriseId: string, role: string): Promise<ChatListItemDto>;
   getMessages(chatId: string, cursor?: string): Promise<PaginatedMessagesDto>;
+  sendMessage(data: SendMessageDataDto): Promise<MessageDto>;
 }

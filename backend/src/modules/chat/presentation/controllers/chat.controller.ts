@@ -1,14 +1,16 @@
 import type { Request, Response, NextFunction } from "express";
+import { HttpStatusCode } from "../../../../shared/enums/http-status-code.enum.js";
 import type { IUseCase } from "../../../../shared/application/base.usecase.js";
 import { sendResponse } from "../../../../shared/presentation/api-response.js";
-import type {ChatFiltersDto,ChatFilterTab,ChatListItemDto,PaginatedChatsDto,StartChatDto} from "../../application/dto/chat.dto.js";
-import type {GetMessagesDto,PaginatedMessagesDto} from "../../application/dto/message.dto.js";
+import type {ChatFiltersDto,ChatFilterTab,ChatListItemDto,PaginatedChatsDto,StartChatDto,} from "../../application/dto/chat.dto.js";
+import type {GetMessagesDto,MessageDto,PaginatedMessagesDto,SendMessageDto,} from "../../application/dto/message.dto.js";
 
 export class ChatController {
   constructor(
     private readonly getChatsUseCase: IUseCase<ChatFiltersDto, PaginatedChatsDto>,
     private readonly startChatUseCase: IUseCase<StartChatDto, ChatListItemDto>,
-    private readonly getMessagesUseCase: IUseCase<GetMessagesDto, PaginatedMessagesDto>
+    private readonly getMessagesUseCase: IUseCase<GetMessagesDto, PaginatedMessagesDto>,
+    private readonly sendMessageUseCase: IUseCase<SendMessageDto, MessageDto>
   ) {}
 
   getChats = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -61,6 +63,26 @@ export class ChatController {
       });
 
       sendResponse(res, "Messages retrieved successfully", result);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  sendMessage = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { userId, role } = req.auth!;
+      const chatId = req.params.chatId as string;
+      const { content } = req.body as { content?: string };
+
+      const result = await this.sendMessageUseCase.execute({
+        chatId,
+        userId,
+        role,
+        content,
+        file: req.file,
+      });
+
+      sendResponse(res, "Message sent successfully", result, HttpStatusCode.CREATED);
     } catch (error) {
       next(error);
     }

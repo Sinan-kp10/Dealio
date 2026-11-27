@@ -1,12 +1,7 @@
 import { Prisma } from "../../../../../generated/prisma/client.js";
 import { prisma } from "../../../../infrastructure/database/prisma/prisma-client.js";
-import type {
-  ChatAccessDto,
-  ChatFiltersDto,
-  ChatListItemDto,
-  PaginatedChatsDto,
-} from "../../application/dto/chat.dto.js";
-import type { PaginatedMessagesDto } from "../../application/dto/message.dto.js";
+import type {ChatAccessDto,ChatFiltersDto,ChatListItemDto,PaginatedChatsDto} from "../../application/dto/chat.dto.js";
+import type {MessageDto, PaginatedMessagesDto, SendMessageDataDto} from "../../application/dto/message.dto.js";
 import type { IChatRepository } from "../../domain/repositories/chat.repository.js";
 import { ChatMapper, chatListSelect } from "../mappers/chat.mapper.js";
 import { MessageMapper, messageSelect } from "../mappers/message.mapper.js";
@@ -159,9 +154,40 @@ export class PrismaChatRepository implements IChatRepository {
     const nextCursor = hasMore ? sliced[sliced.length - 1].id : null;
 
     return {
-      items: sliced.reverse().map(MessageMapper.toDto),
+      items: sliced.map(MessageMapper.toDto),
       nextCursor,
       hasMore,
     };
+  };
+
+  sendMessage = async (data: SendMessageDataDto): Promise<MessageDto> => {
+    const message = await prisma.$transaction(async (tx) => {
+      const created = await tx.messages.create({
+        data: {
+          chat_id: data.chatId,
+          sender_id: data.senderId,
+          sender_role: data.senderRole,
+          type: data.type,
+          content: data.content,
+          media_key: data.mediaKey,
+        },
+        select: messageSelect,
+      });
+
+      await tx.chats.update({
+        where: { id: data.chatId },
+        data: {
+          last_message_text: data.lastMessagePreview,
+          last_message_at: created.created_at,
+          ...(data.senderRole === "CUSTOMER"
+            ? { enterprise_unread_count: { increment: 1 } }
+            : { customer_unread_count: { increment: 1 } }),
+        },
+      });
+
+      return created;
+    });
+
+    return MessageMapper.toDto(message);
   };
 }

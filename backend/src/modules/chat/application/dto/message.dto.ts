@@ -27,3 +27,25 @@ export interface PaginatedMessagesDto {
   nextCursor: string | null;
   hasMore: boolean;
 }
+
+export interface SendMessageDto {
+  chatId: string;
+  userId: string;
+  role: string;
+  content?: string;
+  file?: {
+    buffer: Buffer;
+    mimetype: string;
+    originalname: string;
+  };
+}
+
+export interface SendMessageDataDto {
+  chatId: string;
+  senderId: string;
+  senderRole: MessageSenderRole;
+  type: MessageType;
+  content: string | null;
+  mediaKey: string | null;
+  lastMessagePreview: string;
+}
