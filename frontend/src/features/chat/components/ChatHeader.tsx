@@ -4,10 +4,11 @@ import { ChatAvatar } from "./ChatAvatar";
 interface ChatHeaderProps {
   name: string;
   avatarUrl: string | null;
+  isOnline?: boolean;
   onBack: () => void;
 }
 
-export function ChatHeader({ name, avatarUrl, onBack }: ChatHeaderProps) {
+export function ChatHeader({ name, avatarUrl, isOnline = false, onBack }: ChatHeaderProps) {
   return (
     <header className="relative z-10 p-3.5 sm:px-6 sm:py-3.5 bg-[#f4f7fb] border-b border-slate-200/90 shadow-[0_1px_2px_rgba(15,23,42,0.04)] flex items-center justify-between gap-3 shrink-0">
       <div className="flex items-center gap-3 min-w-0">
@@ -26,6 +27,16 @@ export function ChatHeader({ name, avatarUrl, onBack }: ChatHeaderProps) {
           <h2 className="text-sm sm:text-base font-bold text-slate-800 truncate leading-tight">
             {name}
           </h2>
+          <div className="flex items-center gap-1.5 mt-0.5">
+            <span
+              className={`w-2 h-2 rounded-full shrink-0 ${
+                isOnline ? "bg-emerald-500" : "bg-slate-300"
+              }`}
+            />
+            <span className="text-[11px] font-medium text-slate-500 leading-none">
+              {isOnline ? "Online" : "Offline"}
+            </span>
+          </div>
         </div>
       </div>
 

@@ -8,6 +8,7 @@ export interface GetChatsParams {
 
 export interface ChatListItem {
   id: string;
+  participantUserId: string | null;
   name: string;
   avatarUrl: string | null;
   lastMessageText: string | null;

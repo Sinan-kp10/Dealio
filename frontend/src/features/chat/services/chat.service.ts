@@ -27,17 +27,10 @@ export const sendMessage = async (chatId: string, payload: SendMessagePayload): 
     if (content) {
       formData.append("content", content);
     }
-    const response = await axiosInstance.post<ApiResponse<MessageItem>>(
-      `/chat/${chatId}/messages`,
-      formData,
-      { headers: { "Content-Type": "multipart/form-data" } },
-    );
+    const response = await axiosInstance.post<ApiResponse<MessageItem>>(`/chat/${chatId}/messages`,formData,{ headers: { "Content-Type": "multipart/form-data" } },);
     return response.data.data;
   }
 
-  const response = await axiosInstance.post<ApiResponse<MessageItem>>(
-    `/chat/${chatId}/messages`,
-    { content },
-  );
+  const response = await axiosInstance.post<ApiResponse<MessageItem>>(`/chat/${chatId}/messages`,{ content },);
   return response.data.data;
 };

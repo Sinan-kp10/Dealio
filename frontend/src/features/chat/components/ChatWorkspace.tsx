@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import useDebounce from "../../../hook/useDebounce";
+import socket from "../../../services/socket.service";
 import { handleApiError } from "../../../utils/errorHandler";
 import { ChatHeader } from "./ChatHeader";
 import { MessageArea } from "./MessageArea";
@@ -8,6 +9,11 @@ import { ChatInputBar } from "./ChatInputBar";
 import { ChatList } from "./ChatList";
 import { ChatPanelSkeleton } from "./loading/ChatPanelSkeleton";
 import { CHAT_WALLPAPER_SVG } from "../constants/chat.constants";
+import {
+  sendTextMessageViaSocket,
+  useChatSocket,
+  type ChatListUpdatePayload,
+} from "../hooks/useChatSocket";
 import { getChats, getMessages, sendMessage, startChat } from "../services/chat.service";
 import type { ChatFilterTab, ChatListItem } from "../types/chat.types";
 import type { MessageItem, MessageSenderRole, SendMessagePayload } from "../types/message.types";
@@ -38,6 +44,39 @@ export function ChatWorkspace({ currentRole }: ChatWorkspaceProps) {
 
   const selectedId = selectedChat?.id ?? null;
   const debouncedSearch = useDebounce(search, 500);
+
+  const handleIncomingMessage = useCallback(
+    (incomingMessage: MessageItem) => {
+      if (incomingMessage.chatId !== selectedId) return;
+      setMessages((prev) =>
+        prev.some((msg) => msg.id === incomingMessage.id)
+          ? prev
+          : [incomingMessage, ...prev]
+      );
+    },
+    [selectedId]
+  );
+
+  const handleChatListUpdate = useCallback((update: ChatListUpdatePayload) => {
+    setChats((prev) => {
+      const target = prev.find((c) => c.id === update.chatId);
+      if (!target) return prev;
+
+      const updated: ChatListItem = {
+        ...target,
+        lastMessageText: update.lastMessageText,
+        lastMessageAt: update.lastMessageAt,
+      };
+      return [updated, ...prev.filter((c) => c.id !== update.chatId)];
+    });
+  }, []);
+
+  const isRecipientOnline = useChatSocket({
+    selectedId,
+    participantUserId: selectedChat?.participantUserId ?? null,
+    onNewMessage: handleIncomingMessage,
+    onChatListUpdate: handleChatListUpdate,
+  });
 
   useEffect(() => {
     if (!targetId) return;
@@ -178,21 +217,27 @@ export function ChatWorkspace({ currentRole }: ChatWorkspaceProps) {
     if (!selectedChat || isSending) return false;
     setIsSending(true);
     try {
-      const newMessage = await sendMessage(selectedChat.id, payload);
-      setMessages((prev) => [newMessage, ...prev]);
+      const useSocketForText = !payload.image && Boolean(payload.content) && socket.connected;
+      const newMessage = useSocketForText
+        ? await sendTextMessageViaSocket(selectedChat.id, payload.content!)
+        : await sendMessage(selectedChat.id, payload);
+
+      setMessages((prev) =>
+        prev.some((msg) => msg.id === newMessage.id) ? prev : [newMessage, ...prev]
+      );
 
       const preview = newMessage.content || "Photo";
-      const updatedChat: ChatListItem = {
+      setSelectedChat({
         ...selectedChat,
         lastMessageText: preview,
         lastMessageAt: newMessage.createdAt,
-      };
-
-      setSelectedChat(updatedChat);
-      setChats((prev) => [
-        updatedChat,
-        ...prev.filter((c) => c.id !== updatedChat.id),
-      ]);
+      });
+      handleChatListUpdate({
+        chatId: selectedChat.id,
+        lastMessageText: preview,
+        lastMessageAt: newMessage.createdAt,
+        senderId: newMessage.senderId,
+      });
       return true;
     } catch (error) {
       handleApiError(error, "Failed to send message");
@@ -231,6 +276,7 @@ export function ChatWorkspace({ currentRole }: ChatWorkspaceProps) {
             <ChatHeader
               name={selectedChat.name}
               avatarUrl={selectedChat.avatarUrl}
+              isOnline={isRecipientOnline}
               onBack={() => setMobileShowChat(false)}
             />
             <div
