@@ -9,6 +9,7 @@ export const chatListSelect = {
   enterprise_unread_count: true,
   customer: {
     select: {
+      id: true,
       name: true,
       profile_picture_key: true,
     },
@@ -18,6 +19,7 @@ export const chatListSelect = {
       enterprise_name: true,
       users: {
         select: {
+          id: true,
           profile_picture_key: true,
         },
         take: 1,
@@ -34,15 +36,12 @@ export class ChatMapper {
 
     return {
       id: record.id,
+      participantUserId: isCustomer? (record.enterprise.users[0]?.id ?? null) : record.customer.id,
       name: isCustomer ? record.enterprise.enterprise_name : record.customer.name,
-      avatarUrl: isCustomer
-        ? (record.enterprise.users[0]?.profile_picture_key ?? null)
-        : record.customer.profile_picture_key,
+      avatarUrl: isCustomer ? (record.enterprise.users[0]?.profile_picture_key ?? null) : record.customer.profile_picture_key,
       lastMessageText: record.last_message_text,
       lastMessageAt: record.last_message_at,
-      unreadCount: isCustomer
-        ? record.customer_unread_count
-        : record.enterprise_unread_count,
+      unreadCount: isCustomer ? record.customer_unread_count : record.enterprise_unread_count,
     };
   }
 }

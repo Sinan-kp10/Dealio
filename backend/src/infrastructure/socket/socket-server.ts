@@ -4,8 +4,15 @@ import { AppError, UnauthorizedError, ForbiddenError, InternalServerError } from
 import { jwtTokenService } from "../../modules/auth/infrastructure/container/infrastructure.container.js";
 import { prisma } from "../database/prisma/prisma-client.js";
 import { env } from "../../config/env.js";
+import { registerChatSocketHandlers } from "../../modules/chat/infrastructure/socket/chat.socket.js";
 
 let io: Server | null = null;
+const onlineUsers = new Map<string, Set<string>>();
+
+export const isUserOnline = (userId: string): boolean => {
+    const sockets = onlineUsers.get(userId);
+    return Boolean(sockets && sockets.size > 0);
+};
 
 export const initializeSocketServer = (httpServer: HttpServer): Server => {
     io = new Server(httpServer, {
@@ -29,7 +36,11 @@ export const initializeSocketServer = (httpServer: HttpServer): Server => {
 
             const user = await prisma.users.findUnique({
                 where: { id: payload.userId },
-                select: { status: true },
+                select: { 
+                    status: true,
+                    role : true,
+                    enterprise_id : true
+                },
             });
 
             if (!user) {
@@ -41,6 +52,9 @@ export const initializeSocketServer = (httpServer: HttpServer): Server => {
             }
 
             socket.data.userId = payload.userId;
+            socket.data.role = user.role;
+            socket.data.enterpriseId = user.enterprise_id;
+            
             next();
         } catch (error) {
             if (error instanceof AppError) {
@@ -51,9 +65,34 @@ export const initializeSocketServer = (httpServer: HttpServer): Server => {
     });
 
     io.on("connection", (socket) => {
-        const userId = socket.data.userId;
+        const userId = socket.data.userId as string;
 
         socket.join(`user:${userId}`);
+
+        const existingSockets = onlineUsers.get(userId);
+        const wasOffline = !existingSockets || existingSockets.size === 0;
+        if (existingSockets) {
+            existingSockets.add(socket.id);
+        } else {
+            onlineUsers.set(userId, new Set([socket.id]));
+        }
+
+        if (wasOffline) {
+            io?.emit("user:status", { userId, isOnline: true });
+        }
+
+        registerChatSocketHandlers(socket);
+
+        socket.on("disconnect", () => {
+            const userSockets = onlineUsers.get(userId);
+            if (!userSockets) return;
+
+            userSockets.delete(socket.id);
+            if (userSockets.size === 0) {
+                onlineUsers.delete(userId);
+                io?.emit("user:status", { userId, isOnline: false });
+            }
+        });
     });
 
     return io;

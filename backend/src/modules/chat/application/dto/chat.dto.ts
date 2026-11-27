@@ -16,6 +16,7 @@ export interface StartChatDto {
 
 export interface ChatListItemDto {
   id: string;
+  participantUserId: string | null;
   name: string;
   avatarUrl: string | null;
   lastMessageText: string | null;

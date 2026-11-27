@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 import type { IUseCase } from "../../../../shared/application/base.usecase.js";
 import {BadRequestError,ForbiddenError,NotFoundError,} from "../../../../shared/errors/app-error.js";
 import type { IStorageService } from "../../../../shared/interfaces/IStorageService.js";
+import { getSocketServer } from "../../../../infrastructure/socket/socket-server.js";
 import type { IChatRepository } from "../../domain/repositories/chat.repository.js";
 import type {MessageDto,MessageSenderRole,SendMessageDto,} from "../dto/message.dto.js";
 
@@ -63,14 +64,39 @@ export class SendMessageUseCase implements IUseCase<SendMessageDto, MessageDto> 
       lastMessagePreview,
     });
 
-    if (!message.mediaUrl) {
-      return message;
+    let finalMessage = message;
+    if (message.mediaUrl) {
+      const signedUrl = await this.storageService.getFileUrl(message.mediaUrl);
+      finalMessage = {
+        ...message,
+        mediaUrl: signedUrl,
+      };
     }
 
-    const signedUrl = await this.storageService.getFileUrl(message.mediaUrl);
-    return {
-      ...message,
-      mediaUrl: signedUrl,
-    };
+    const recipientUserId =
+      role === "CUSTOMER"
+        ? await this.chatRepository.findUserIdByEnterpriseId(chat.enterpriseId)
+        : chat.customerId;
+
+    this.emitMessageToSocket(chatId, finalMessage, lastMessagePreview, recipientUserId);
+
+    return finalMessage;
+  };
+
+  private emitMessageToSocket = (chatId: string, message: MessageDto, lastMessagePreview: string, recipientUserId: string | null): void => {
+    try {
+      const io = getSocketServer();
+      io.to(`chat:${chatId}`).emit("chat:new_message", message);
+
+      if (recipientUserId) {
+        io.to(`user:${recipientUserId}`).emit("chat:list_update", {
+          chatId,
+          lastMessageText: lastMessagePreview,
+          lastMessageAt: message.createdAt,
+          senderId: message.senderId,
+        });
+      }
+    } catch {
+    }
   };
 }

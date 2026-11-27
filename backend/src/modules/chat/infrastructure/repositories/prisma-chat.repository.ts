@@ -39,6 +39,15 @@ export class PrismaChatRepository implements IChatRepository {
     return user?.enterprise_id ?? null;
   };
 
+  findUserIdByEnterpriseId = async (enterpriseId: string): Promise<string | null> => {
+    const user = await prisma.users.findFirst({
+      where: { enterprise_id: enterpriseId },
+      select: { id: true },
+    });
+
+    return user?.id ?? null;
+  };
+
   getChats = async (filters: ChatFiltersDto): Promise<PaginatedChatsDto> => {
     const { role, userId, filter, search, cursor } = filters;
     const limit = DEFAULT_CHAT_LIMIT;

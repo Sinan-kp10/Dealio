@@ -4,6 +4,7 @@ import type {SendMessageDataDto,MessageDto,PaginatedMessagesDto} from "../../app
 
 export interface IChatRepository extends IBaseRepository<ChatAccessDto | null> {
   findEnterpriseIdByUserId(userId: string): Promise<string | null>;
+  findUserIdByEnterpriseId(enterpriseId: string): Promise<string | null>;
   getChats(filters: ChatFiltersDto): Promise<PaginatedChatsDto>;
   hasSharedQuotation(customerId: string, enterpriseId: string): Promise<boolean>;
   findChatByParticipants(customerId: string, enterpriseId: string, role: string): Promise<ChatListItemDto | null>;

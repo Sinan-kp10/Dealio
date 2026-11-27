@@ -6,13 +6,13 @@ import { StartChatUseCase } from "../../application/use-cases/start-chat.use-cas
 import { ChatController } from "../../presentation/controllers/chat.controller.js";
 import { PrismaChatRepository } from "../repositories/prisma-chat.repository.js";
 
-const chatRepository = new PrismaChatRepository();
+export const chatRepository = new PrismaChatRepository();
 const storageService = new S3StorageService();
 
 const getChatsUseCase = new GetChatsUseCase(chatRepository, storageService);
 const startChatUseCase = new StartChatUseCase(chatRepository, storageService);
 const getMessagesUseCase = new GetMessagesUseCase(chatRepository, storageService);
-const sendMessageUseCase = new SendMessageUseCase(chatRepository, storageService);
+export const sendMessageUseCase = new SendMessageUseCase(chatRepository, storageService);
 
 export const chatController = new ChatController(
   getChatsUseCase,
