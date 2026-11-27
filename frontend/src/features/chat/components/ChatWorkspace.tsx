@@ -10,9 +10,11 @@ import { ChatList } from "./ChatList";
 import { ChatPanelSkeleton } from "./loading/ChatPanelSkeleton";
 import { CHAT_WALLPAPER_SVG } from "../constants/chat.constants";
 import {
+  markChatAsReadViaSocket,
   sendTextMessageViaSocket,
   useChatSocket,
   type ChatListUpdatePayload,
+  type MessagesReadPayload,
 } from "../hooks/useChatSocket";
 import { getChats, getMessages, sendMessage, startChat } from "../services/chat.service";
 import type { ChatFilterTab, ChatListItem } from "../types/chat.types";
@@ -53,29 +55,65 @@ export function ChatWorkspace({ currentRole }: ChatWorkspaceProps) {
           ? prev
           : [incomingMessage, ...prev]
       );
+      if (incomingMessage.senderRole !== currentRole) {
+        markChatAsReadViaSocket(selectedId);
+      }
     },
-    [selectedId]
+    [selectedId, currentRole]
   );
 
-  const handleChatListUpdate = useCallback((update: ChatListUpdatePayload) => {
-    setChats((prev) => {
-      const target = prev.find((c) => c.id === update.chatId);
-      if (!target) return prev;
+  const updateChatPreview = useCallback(
+    (update: ChatListUpdatePayload, incrementUnread: boolean) => {
+      setChats((prev) => {
+        const target = prev.find((c) => c.id === update.chatId);
+        if (!target) return prev;
 
-      const updated: ChatListItem = {
-        ...target,
-        lastMessageText: update.lastMessageText,
-        lastMessageAt: update.lastMessageAt,
-      };
-      return [updated, ...prev.filter((c) => c.id !== update.chatId)];
-    });
-  }, []);
+        const updated: ChatListItem = {
+          ...target,
+          lastMessageText: update.lastMessageText,
+          lastMessageAt: update.lastMessageAt,
+          unreadCount: incrementUnread ? target.unreadCount + 1 : target.unreadCount,
+        };
+        return [updated, ...prev.filter((c) => c.id !== update.chatId)];
+      });
+    },
+    []
+  );
+
+  const handleSocketListUpdate = useCallback(
+    (update: ChatListUpdatePayload) => {
+      const isUnreadChat = update.chatId !== selectedId;
+      if (isUnreadChat) {
+        const existing = chats.find((c) => c.id === update.chatId);
+        if (existing && existing.unreadCount === 0) {
+          setTotalUnreadChats((prev) => prev + 1);
+        }
+      }
+      updateChatPreview(update, isUnreadChat);
+    },
+    [selectedId, chats, updateChatPreview]
+  );
+
+  const handleMessagesRead = useCallback(
+    (payload: MessagesReadPayload) => {
+      if (payload.chatId !== selectedId || payload.readByRole === currentRole) return;
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.senderRole === currentRole && !msg.isRead
+            ? { ...msg, isRead: true }
+            : msg
+        )
+      );
+    },
+    [selectedId, currentRole]
+  );
 
   const isRecipientOnline = useChatSocket({
     selectedId,
     participantUserId: selectedChat?.participantUserId ?? null,
     onNewMessage: handleIncomingMessage,
-    onChatListUpdate: handleChatListUpdate,
+    onChatListUpdate: handleSocketListUpdate,
+    onMessagesRead: handleMessagesRead,
   });
 
   useEffect(() => {
@@ -87,8 +125,12 @@ export function ChatWorkspace({ currentRole }: ChatWorkspaceProps) {
       try {
         const chat = await startChat(targetId);
         if (!isMounted) return;
-        setChats((prev) => [chat, ...prev.filter((c) => c.id !== chat.id)]);
-        setSelectedChat(chat);
+        if (chat.unreadCount > 0) {
+          setTotalUnreadChats((prev) => Math.max(0, prev - 1));
+        }
+        const clearedChat: ChatListItem = { ...chat, unreadCount: 0 };
+        setChats((prev) => [clearedChat, ...prev.filter((c) => c.id !== chat.id)]);
+        setSelectedChat(clearedChat);
       } catch (error) {
         if (isMounted) {
           handleApiError(error, "Failed to open chat");
@@ -208,7 +250,13 @@ export function ChatWorkspace({ currentRole }: ChatWorkspaceProps) {
     }
     const chat = chats.find((c) => c.id === id);
     if (chat) {
-      setSelectedChat(chat);
+      if (chat.unreadCount > 0) {
+        setChats((prev) =>
+          prev.map((c) => (c.id === id ? { ...c, unreadCount: 0 } : c))
+        );
+        setTotalUnreadChats((prev) => Math.max(0, prev - 1));
+      }
+      setSelectedChat({ ...chat, unreadCount: 0 });
     }
     setMobileShowChat(true);
   };
@@ -232,12 +280,15 @@ export function ChatWorkspace({ currentRole }: ChatWorkspaceProps) {
         lastMessageText: preview,
         lastMessageAt: newMessage.createdAt,
       });
-      handleChatListUpdate({
-        chatId: selectedChat.id,
-        lastMessageText: preview,
-        lastMessageAt: newMessage.createdAt,
-        senderId: newMessage.senderId,
-      });
+      updateChatPreview(
+        {
+          chatId: selectedChat.id,
+          lastMessageText: preview,
+          lastMessageAt: newMessage.createdAt,
+          senderId: newMessage.senderId,
+        },
+        false
+      );
       return true;
     } catch (error) {
       handleApiError(error, "Failed to send message");

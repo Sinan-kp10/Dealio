@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
 import socket from "../../../services/socket.service";
-import type { MessageItem } from "../types/message.types";
+import type { MessageItem, MessageSenderRole } from "../types/message.types";
 
 export interface ChatListUpdatePayload {
   chatId: string;
   lastMessageText: string;
   lastMessageAt: string;
   senderId: string;
+}
+
+export interface MessagesReadPayload {
+  chatId: string;
+  readByRole: MessageSenderRole;
 }
 
 interface UserStatusPayload {
@@ -25,7 +30,14 @@ interface UseChatSocketParams {
   participantUserId: string | null;
   onNewMessage: (message: MessageItem) => void;
   onChatListUpdate: (update: ChatListUpdatePayload) => void;
+  onMessagesRead: (payload: MessagesReadPayload) => void;
 }
+
+export const markChatAsReadViaSocket = (chatId: string): void => {
+  if (socket.connected) {
+    socket.emit("chat:mark_read", chatId);
+  }
+};
 
 export const sendTextMessageViaSocket = (chatId: string, content: string): Promise<MessageItem> => {
   return new Promise((resolve, reject) => {
@@ -43,23 +55,32 @@ export const sendTextMessageViaSocket = (chatId: string, content: string): Promi
   });
 };
 
-export function useChatSocket({selectedId,participantUserId,onNewMessage,onChatListUpdate}: UseChatSocketParams): boolean {
+export function useChatSocket({
+  selectedId,
+  participantUserId,
+  onNewMessage,
+  onChatListUpdate,
+  onMessagesRead,
+}: UseChatSocketParams): boolean {
   const [isRecipientOnline, setIsRecipientOnline] = useState(false);
 
   useEffect(() => {
     socket.on("chat:new_message", onNewMessage);
     socket.on("chat:list_update", onChatListUpdate);
+    socket.on("chat:messages_read", onMessagesRead);
 
     return () => {
       socket.off("chat:new_message", onNewMessage);
       socket.off("chat:list_update", onChatListUpdate);
+      socket.off("chat:messages_read", onMessagesRead);
     };
-  }, [onNewMessage, onChatListUpdate]);
+  }, [onNewMessage, onChatListUpdate, onMessagesRead]);
 
   useEffect(() => {
     if (!selectedId) return;
 
     socket.emit("chat:join", selectedId);
+    socket.emit("chat:mark_read", selectedId);
 
     return () => {
       socket.emit("chat:leave", selectedId);
