@@ -132,9 +132,16 @@ export class PrismaChatRepository implements IChatRepository {
     return existing ? ChatMapper.toListItemDto(existing, role) : null;
   };
 
-  createChat = async (customerId: string,enterpriseId: string,role: string): Promise<ChatListItemDto> => {
-    const created = await prisma.chats.create({
-      data: {
+  createChat = async (customerId: string, enterpriseId: string, role: string): Promise<ChatListItemDto> => {
+    const created = await prisma.chats.upsert({
+      where: {
+        customer_id_enterprise_id: {
+          customer_id: customerId,
+          enterprise_id: enterpriseId,
+        },
+      },
+      update: {},
+      create: {
         customer_id: customerId,
         enterprise_id: enterpriseId,
       },
