@@ -1,4 +1,5 @@
 import { ArrowLeft, Video } from "lucide-react";
+import { ChatAvatar } from "./ChatAvatar";
 
 interface ChatHeaderProps {
   name: string;
@@ -19,19 +20,7 @@ export function ChatHeader({ name, avatarUrl, onBack }: ChatHeaderProps) {
           <ArrowLeft size={19} />
         </button>
 
-        <div className="w-10 h-10 rounded-full bg-[#2f5581] flex items-center justify-center text-white shrink-0 shadow-xs overflow-hidden">
-          {avatarUrl ? (
-            <img
-              src={avatarUrl}
-              alt={name}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z" />
-            </svg>
-          )}
-        </div>
+        <ChatAvatar name={name} avatarUrl={avatarUrl} />
 
         <div className="min-w-0">
           <h2 className="text-sm sm:text-base font-bold text-slate-800 truncate leading-tight">

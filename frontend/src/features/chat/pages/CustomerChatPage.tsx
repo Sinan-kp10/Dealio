@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { MessageCircleMore } from "lucide-react";
 import useDebounce from "../../../hook/useDebounce";
 import { handleApiError } from "../../../utils/errorHandler";
 import { ChatHeader } from "../components/ChatHeader";
 import { MessageArea } from "../components/MessageArea";
 import { ChatInputBar } from "../components/ChatInputBar";
 import { ChatPanelSkeleton } from "../components/loading/ChatPanelSkeleton";
-import { getChats, getMessages, startChat } from "../services/chat.service";
+import { CHAT_WALLPAPER_SVG } from "../constants/chat.constants";
+import { getChats, getMessages, sendMessage, startChat } from "../services/chat.service";
 import type { ChatFilterTab, ChatListItem } from "../types/chat.types";
-import type { MessageItem } from "../types/message.types";
-import ChatList from "../components/ChatList";
+import type { MessageItem, SendMessagePayload } from "../types/message.types";
+import { ChatList } from "../components/ChatList";
 
 export function CustomerChatPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -21,29 +21,25 @@ export function CustomerChatPage() {
   const [filterTab, setFilterTab] = useState<ChatFilterTab>("all");
   const [search, setSearch] = useState("");
   const [nextCursor, setNextCursor] = useState<string | null>(null);
-  const [hasMore, setHasMore] = useState(false);
   const [totalUnreadChats, setTotalUnreadChats] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [isStartingChat, setIsStartingChat] = useState(Boolean(targetId));
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [mobileShowChat, setMobileShowChat] = useState(Boolean(targetId));
 
   const [messages, setMessages] = useState<MessageItem[]>([]);
   const [messagesCursor, setMessagesCursor] = useState<string | null>(null);
-  const [hasMoreMessages, setHasMoreMessages] = useState(false);
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const [isLoadingMoreMessages, setIsLoadingMoreMessages] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
   const selectedId = selectedChat?.id ?? null;
   const debouncedSearch = useDebounce(search, 500);
-
 
   useEffect(() => {
     if (!targetId) return;
     let isMounted = true;
 
     const openTargetChat = async () => {
-      setIsStartingChat(true);
       setMobileShowChat(true);
       try {
         const chat = await startChat(targetId);
@@ -57,7 +53,6 @@ export function CustomerChatPage() {
         }
       } finally {
         if (isMounted) {
-          setIsStartingChat(false);
           setSearchParams({}, { replace: true });
         }
       }
@@ -83,7 +78,6 @@ export function CustomerChatPage() {
         if (!isMounted) return;
         setChats(data.items);
         setNextCursor(data.nextCursor);
-        setHasMore(data.hasMore);
         setTotalUnreadChats(data.totalUnreadChats);
       } catch (error) {
         if (isMounted) {
@@ -114,7 +108,6 @@ export function CustomerChatPage() {
         if (!isMounted) return;
         setMessages(data.items);
         setMessagesCursor(data.nextCursor);
-        setHasMoreMessages(data.hasMore);
       } catch (error) {
         if (isMounted) {
           handleApiError(error, "Failed to load messages");
@@ -143,7 +136,6 @@ export function CustomerChatPage() {
       });
       setChats((prev) => [...prev, ...data.items]);
       setNextCursor(data.nextCursor);
-      setHasMore(data.hasMore);
       setTotalUnreadChats(data.totalUnreadChats);
     } catch (error) {
       handleApiError(error, "Failed to load more chats");
@@ -157,9 +149,8 @@ export function CustomerChatPage() {
     setIsLoadingMoreMessages(true);
     try {
       const data = await getMessages(selectedId, { cursor: messagesCursor });
-      setMessages((prev) => [...data.items, ...prev]);
+      setMessages((prev) => [...prev, ...data.items]);
       setMessagesCursor(data.nextCursor);
-      setHasMoreMessages(data.hasMore);
     } catch (error) {
       handleApiError(error, "Failed to load older messages");
     } finally {
@@ -168,11 +159,43 @@ export function CustomerChatPage() {
   };
 
   const handleSelectChat = (id: string) => {
-    const chat = chats.find((c) => c.id === id) ?? null;
+    if (id !== selectedId) {
+      setMessages([]);
+      setMessagesCursor(null);
+    }
+    const chat = chats.find((c) => c.id === id);
     if (chat) {
       setSelectedChat(chat);
     }
     setMobileShowChat(true);
+  };
+
+  const handleSendMessage = async (payload: SendMessagePayload): Promise<boolean> => {
+    if (!selectedChat || isSending) return false;
+    setIsSending(true);
+    try {
+      const newMessage = await sendMessage(selectedChat.id, payload);
+      setMessages((prev) => [newMessage, ...prev]);
+
+      const preview = newMessage.content || "Photo";
+      const updatedChat: ChatListItem = {
+        ...selectedChat,
+        lastMessageText: preview,
+        lastMessageAt: newMessage.createdAt,
+      };
+
+      setSelectedChat(updatedChat);
+      setChats((prev) => [
+        updatedChat,
+        ...prev.filter((c) => c.id !== updatedChat.id),
+      ]);
+      return true;
+    } catch (error) {
+      handleApiError(error, "Failed to send message");
+      return false;
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -187,7 +210,7 @@ export function CustomerChatPage() {
         onSearchChange={setSearch}
         totalUnreadChats={totalUnreadChats}
         isLoading={isLoading}
-        hasMore={hasMore}
+        hasMore={Boolean(nextCursor)}
         isLoadingMore={isLoadingMore}
         onLoadMore={handleLoadMore}
         className={mobileShowChat ? "hidden md:flex" : "flex"}
@@ -206,23 +229,34 @@ export function CustomerChatPage() {
               avatarUrl={selectedChat.avatarUrl}
               onBack={() => setMobileShowChat(false)}
             />
-            <MessageArea
-              messages={messages}
-              currentRole="CUSTOMER"
-              isLoading={isLoadingMessages}
-              hasMore={hasMoreMessages}
-              isLoadingMore={isLoadingMoreMessages}
-              onLoadMore={handleLoadMoreMessages}
-            />
-            <ChatInputBar />
+            <div
+              className="flex-1 flex flex-col min-h-0 bg-[#e6edf5]"
+              style={{
+                backgroundImage: CHAT_WALLPAPER_SVG,
+                backgroundRepeat: "repeat",
+                backgroundSize: "180px 180px",
+              }}
+            >
+              <MessageArea
+                messages={messages}
+                currentRole="CUSTOMER"
+                isLoading={isLoadingMessages}
+                hasMore={Boolean(messagesCursor)}
+                isLoadingMore={isLoadingMoreMessages}
+                onLoadMore={handleLoadMoreMessages}
+              />
+              <ChatInputBar isSending={isSending} onSend={handleSendMessage} />
+            </div>
           </>
-        ) : isStartingChat || targetId ? (
+        ) : targetId ? (
           <ChatPanelSkeleton />
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center p-6 text-center bg-[#f4f7fb]">
-            <div className="w-16 h-16 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex items-center justify-center text-[#2f5581] mb-4">
-              <MessageCircleMore size={30} />
-            </div>
+            <img
+              src="/chat-image.png"
+              alt="Dealio Chat"
+              className="w-64 sm:w-80 md:w-96 lg:w-[420px] h-auto object-contain mb-2 select-none"
+            />
             <h2 className="text-base sm:text-lg font-bold text-[#0e2238] m-0">
               Dealio Chat
             </h2>

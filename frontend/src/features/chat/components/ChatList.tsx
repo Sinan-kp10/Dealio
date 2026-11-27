@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { Search, Loader2 } from "lucide-react";
 import type { ChatFilterTab, ChatListItem } from "../types/chat.types";
 import { formatTimeAgo } from "../../../utils/dateFormatter";
+import { ChatAvatar } from "./ChatAvatar";
 
 interface ChatListProps {
   chats: ChatListItem[];
@@ -153,19 +154,7 @@ export function ChatList({
                     <span className="absolute left-0 top-0 bottom-0 w-1 bg-[#2f5581] rounded-r" />
                   )}
 
-                  <div className="w-10 h-10 rounded-full bg-[#2f5581] flex items-center justify-center text-white shrink-0 shadow-xs overflow-hidden">
-                    {item.avatarUrl ? (
-                      <img
-                        src={item.avatarUrl}
-                        alt={item.name}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                        <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z" />
-                      </svg>
-                    )}
-                  </div>
+                  <ChatAvatar name={item.name} avatarUrl={item.avatarUrl} />
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2">

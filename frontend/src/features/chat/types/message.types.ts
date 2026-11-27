@@ -24,3 +24,8 @@ export interface PaginatedMessagesResponse {
   nextCursor: string | null;
   hasMore: boolean;
 }
+
+export interface SendMessagePayload {
+  content?: string;
+  image?: File;
+}
