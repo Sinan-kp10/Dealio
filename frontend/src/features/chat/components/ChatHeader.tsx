@@ -6,9 +6,16 @@ interface ChatHeaderProps {
   avatarUrl: string | null;
   isOnline?: boolean;
   onBack: () => void;
+  onVideoCall?: () => void;
 }
 
-export function ChatHeader({ name, avatarUrl, isOnline = false, onBack }: ChatHeaderProps) {
+export function ChatHeader({
+  name,
+  avatarUrl,
+  isOnline = false,
+  onBack,
+  onVideoCall,
+}: ChatHeaderProps) {
   return (
     <header className="relative z-10 p-3.5 sm:px-6 sm:py-3.5 bg-[#f4f7fb] border-b border-slate-200/90 shadow-[0_1px_2px_rgba(15,23,42,0.04)] flex items-center justify-between gap-3 shrink-0">
       <div className="flex items-center gap-3 min-w-0">
@@ -43,6 +50,7 @@ export function ChatHeader({ name, avatarUrl, isOnline = false, onBack }: ChatHe
       <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
         <button
           type="button"
+          onClick={onVideoCall}
           className="inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 text-xs font-semibold text-white bg-[#2f5581] hover:bg-[#25456b] rounded-xl transition-all shadow-xs cursor-pointer active:scale-[0.98]"
         >
           <Video size={14} />

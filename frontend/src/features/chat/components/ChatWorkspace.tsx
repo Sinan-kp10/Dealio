@@ -2,11 +2,14 @@ import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import useDebounce from "../../../hook/useDebounce";
 import socket from "../../../services/socket.service";
+import useAuthStore from "../../../stores/auth.store";
 import { handleApiError } from "../../../utils/errorHandler";
 import { ChatHeader } from "./ChatHeader";
 import { MessageArea } from "./MessageArea";
 import { ChatInputBar } from "./ChatInputBar";
 import { ChatList } from "./ChatList";
+import { IncomingCallModal } from "./IncomingCallModal";
+import { VideoCallModal } from "./VideoCallModal";
 import { ChatPanelSkeleton } from "./loading/ChatPanelSkeleton";
 import { CHAT_WALLPAPER_SVG } from "../constants/chat.constants";
 import {
@@ -16,6 +19,7 @@ import {
   type ChatListUpdatePayload,
   type MessagesReadPayload,
 } from "../hooks/useChatSocket";
+import { useVideoCall } from "../hooks/useVideoCall";
 import { getChats, getMessages, sendMessage, startChat } from "../services/chat.service";
 import type { ChatFilterTab, ChatListItem } from "../types/chat.types";
 import type { MessageItem, MessageSenderRole, SendMessagePayload } from "../types/message.types";
@@ -32,6 +36,8 @@ interface CachedChatMessages {
 export function ChatWorkspace({ currentRole }: ChatWorkspaceProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const targetId = searchParams.get("targetId");
+  const currentUser = useAuthStore((state) => state.user);
+  const { callState, startCall, acceptCall, declineCall, cancelCall, endCall } = useVideoCall();
 
   const [chats, setChats] = useState<ChatListItem[]>([]);
   const [selectedChat, setSelectedChat] = useState<ChatListItem | null>(null);
@@ -370,6 +376,15 @@ export function ChatWorkspace({ currentRole }: ChatWorkspaceProps) {
               avatarUrl={selectedChat.avatarUrl}
               isOnline={isRecipientOnline}
               onBack={() => setMobileShowChat(false)}
+              onVideoCall={() =>
+                startCall({
+                  chatId: selectedChat.id,
+                  participantName: selectedChat.name,
+                  participantAvatarUrl: selectedChat.avatarUrl,
+                  callerName: currentUser?.name || "User",
+                  callerAvatarUrl: currentUser?.profilePictureUrl ?? null,
+                })
+              }
             />
             <div
               className="flex-1 flex flex-col min-h-0 bg-[#e6edf5]"
@@ -408,6 +423,18 @@ export function ChatWorkspace({ currentRole }: ChatWorkspaceProps) {
           </div>
         )}
       </section>
+
+      <IncomingCallModal
+        callState={callState}
+        onAccept={() => acceptCall(currentUser?.name || "User")}
+        onDecline={declineCall}
+        onCancel={cancelCall}
+      />
+
+      <VideoCallModal
+        callState={callState}
+        onEndCall={endCall}
+      />
     </div>
   );
 }

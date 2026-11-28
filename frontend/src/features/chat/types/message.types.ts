@@ -1,6 +1,6 @@
 export type MessageSenderRole = "CUSTOMER" | "ENTERPRISE";
 
-export type MessageType = "TEXT" | "IMAGE";
+export type MessageType = "TEXT" | "IMAGE" | "CALL";
 
 export interface GetMessagesParams {
   cursor?: string;

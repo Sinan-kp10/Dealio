@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { CheckCheck, Loader2 } from "lucide-react";
+import { CheckCheck, Loader2, Video, VideoOff } from "lucide-react";
 import { formatChatDateLabel, formatDateTime } from "../../../utils/dateFormatter";
 import { isEmojiOnlyMessage } from "../utils/emoji.utils";
 import { ChatImageModal } from "./ChatImageModal";
@@ -80,7 +80,37 @@ export function MessageArea({
                     isOwn ? "justify-end ml-auto" : "justify-start mr-auto"
                   }`}
                 >
-                  {isEmojiOnly ? (
+                  {msg.type === "CALL" ? (
+                    <div
+                      className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl ${bubbleCorner} ${bubbleTheme}`}
+                    >
+                      <div
+                        className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${
+                          msg.content?.startsWith("Missed") || msg.content?.startsWith("Declined")
+                            ? isOwn
+                              ? "bg-rose-400/20 text-rose-200"
+                              : "bg-rose-50 text-rose-500"
+                            : isOwn
+                            ? "bg-white/15 text-white"
+                            : "bg-[#2f5581]/10 text-[#2f5581]"
+                        }`}
+                      >
+                        {msg.content?.startsWith("Missed") || msg.content?.startsWith("Declined") ? (
+                          <VideoOff size={17} />
+                        ) : (
+                          <Video size={17} />
+                        )}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-xs sm:text-[13px] font-semibold leading-tight m-0">
+                          {msg.content || "Video call"}
+                        </p>
+                        <span className={`text-[10px] sm:text-[10.5px] font-normal ${metaColor}`}>
+                          {formatDateTime(msg.createdAt).time}
+                        </span>
+                      </div>
+                    </div>
+                  ) : isEmojiOnly ? (
                     <div className={`flex flex-col gap-1 ${isOwn ? "items-end" : "items-start"}`}>
                       <span className="text-4xl sm:text-5xl leading-none px-1 select-text">
                         {msg.content}
