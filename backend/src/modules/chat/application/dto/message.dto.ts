@@ -1,6 +1,16 @@
 export type MessageSenderRole = "CUSTOMER" | "ENTERPRISE";
 
-export type MessageType = "TEXT" | "IMAGE";
+export type MessageType = "TEXT" | "IMAGE" | "CALL";
+
+export type CallLogStatus = "COMPLETED" | "MISSED" | "DECLINED";
+
+export interface SaveCallLogDto {
+  chatId: string;
+  callerId: string;
+  callerRole: string;
+  status: CallLogStatus;
+  durationSeconds?: number;
+}
 
 export interface GetMessagesDto {
   chatId: string;

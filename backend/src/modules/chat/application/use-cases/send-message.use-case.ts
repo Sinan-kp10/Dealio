@@ -96,8 +96,8 @@ export class SendMessageUseCase implements IUseCase<SendMessageDto, MessageDto> 
           senderId: message.senderId,
         });
       }
-    } catch {
-      //
+    } catch(error) {
+      console.error("Failed to emit message:", error)
     }
   };
 }

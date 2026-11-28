@@ -376,6 +376,7 @@ enum message_sender_role {
 enum message_type {
   TEXT
   IMAGE
+  CALL
 }
 
 model chats {

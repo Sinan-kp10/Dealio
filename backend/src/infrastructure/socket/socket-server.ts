@@ -5,6 +5,10 @@ import { jwtTokenService } from "../../modules/auth/infrastructure/container/inf
 import { prisma } from "../database/prisma/prisma-client.js";
 import { env } from "../../config/env.js";
 import { registerChatSocketHandlers } from "../../modules/chat/infrastructure/socket/chat.socket.js";
+import {
+    handleUserDisconnectVideoCall,
+    registerVideoCallSocketHandlers,
+} from "../../modules/chat/infrastructure/socket/video-call.socket.js";
 
 let io: Server | null = null;
 const onlineUsers = new Map<string, Set<string>>();
@@ -82,6 +86,7 @@ export const initializeSocketServer = (httpServer: HttpServer): Server => {
         }
 
         registerChatSocketHandlers(socket);
+        registerVideoCallSocketHandlers(socket);
 
         socket.on("disconnect", () => {
             const userSockets = onlineUsers.get(userId);
@@ -91,6 +96,7 @@ export const initializeSocketServer = (httpServer: HttpServer): Server => {
             if (userSockets.size === 0) {
                 onlineUsers.delete(userId);
                 io?.emit("user:status", { userId, isOnline: false });
+                handleUserDisconnectVideoCall(userId);
             }
         });
     });

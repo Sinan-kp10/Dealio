@@ -5,20 +5,20 @@ import type { MessageDto } from "../../application/dto/message.dto.js";
 import { sendMessageSchema } from "../../presentation/validators/send-message.schema.js";
 import { chatRepository, markChatReadUseCase, sendMessageUseCase } from "../container/chat.container.js";
 
-const chatIdSchema = z.string().uuid("Invalid chat ID.");
+export const chatIdSchema = z.string().uuid("Invalid chat ID.");
+
+export interface SocketResponse<T = unknown> {
+  success: boolean;
+  data?: T;
+  error?: string;
+}
 
 interface SocketSendMessagePayload {
   chatId: string;
   content?: string;
 }
 
-interface SocketResponse<T = unknown> {
-  success: boolean;
-  data?: T;
-  error?: string;
-}
-
-const hasChatAccess = async (chatId: string,userId: string,role: string): Promise<boolean> => {
+export const hasChatAccess = async (chatId: string, userId: string, role: string): Promise<boolean> => {
   const chat = await chatRepository.findById(chatId);
   if (!chat) return false;
 

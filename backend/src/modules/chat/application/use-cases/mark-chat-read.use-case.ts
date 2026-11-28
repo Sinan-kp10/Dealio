@@ -42,8 +42,8 @@ export class MarkChatReadUseCase implements IUseCase<MarkChatReadDto, void> {
         chatId,
         readByRole: readerRole,
       });
-    } catch {
-      // Socket server may not be initialized in isolated unit tests
+    } catch(error) {
+      console.error("Failed to emit read status:", error)
     }
   };
 }
